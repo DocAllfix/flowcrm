@@ -794,6 +794,67 @@ export type Database = {
           },
         ]
       }
+      milestone: {
+        Row: {
+          completata: boolean
+          created_at: string
+          created_by: string | null
+          data: string | null
+          id: string
+          ordine: number
+          progetto_id: string
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          completata?: boolean
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          id?: string
+          ordine?: number
+          progetto_id: string
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          completata?: boolean
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          id?: string
+          ordine?: number
+          progetto_id?: string
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milestone_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestone_progetto_id_fkey"
+            columns: ["progetto_id"]
+            isOneToOne: false
+            referencedRelation: "progetti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "milestone_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifiche: {
         Row: {
           azione_url: string | null

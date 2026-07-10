@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
+import { MilestoneSection } from '@/components/MilestoneSection'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
 
 const fmtEuro = (n: number) =>
@@ -60,11 +61,15 @@ export function ProgettoDettaglioPage() {
         {p.descrizione && <p className="mt-4 whitespace-pre-wrap border-t border-border pt-4 text-sm text-foreground">{p.descrizione}</p>}
       </div>
 
-      <Tabs defaultValue="allegati">
+      <Tabs defaultValue="milestone">
         <TabsList>
+          <TabsTrigger value="milestone">Milestone</TabsTrigger>
           <TabsTrigger value="allegati">Allegati</TabsTrigger>
           <TabsTrigger value="storico">Storico</TabsTrigger>
         </TabsList>
+        <TabsContent value="milestone" className="mt-4">
+          <MilestoneSection progettoId={p.id} />
+        </TabsContent>
         <TabsContent value="allegati" className="mt-4">
           <AllegatiSection entita="progetti" entitaId={p.id} />
         </TabsContent>
