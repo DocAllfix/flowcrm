@@ -1,0 +1,53 @@
+import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from '@/components/layout/AuthProvider'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { LoginPage } from '@/pages/auth/LoginPage'
+import { DashboardPage } from '@/pages/DashboardPage'
+import { DashboardEconomicaPage } from '@/pages/DashboardEconomicaPage'
+import { ProfiloPage } from '@/pages/ProfiloPage'
+import { UtentiPage } from '@/pages/admin/UtentiPage'
+import { OrganizzazioniPage } from '@/pages/OrganizzazioniPage'
+import { OrganizzazioneDettaglioPage } from '@/pages/OrganizzazioneDettaglioPage'
+import { ContattiPage } from '@/pages/ContattiPage'
+import { ImportaPage } from '@/pages/ImportaPage'
+import { KanbanPage } from '@/pages/KanbanPage'
+import { DealListPage } from '@/pages/DealListPage'
+import { DealDettaglioPage } from '@/pages/DealDettaglioPage'
+import { AttivitaPage } from '@/pages/AttivitaPage'
+import { TeamPage } from '@/pages/TeamPage'
+import { ProgettiPage } from '@/pages/ProgettiPage'
+import { CommessePage } from '@/pages/CommessePage'
+import { FatturePage } from '@/pages/FatturePage'
+import { IncassiPage } from '@/pages/IncassiPage'
+import { TassePage } from '@/pages/TassePage'
+import { ManagerOnly } from '@/components/ManagerOnly'
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/dashboard-economica" element={<ManagerOnly><DashboardEconomicaPage /></ManagerOnly>} />
+          <Route path="/organizzazioni" element={<OrganizzazioniPage />} />
+          <Route path="/organizzazioni/:id" element={<OrganizzazioneDettaglioPage />} />
+          <Route path="/contatti" element={<ContattiPage />} />
+          <Route path="/importa" element={<ImportaPage />} />
+          <Route path="/deal" element={<DealListPage />} />
+          <Route path="/deal/:id" element={<DealDettaglioPage />} />
+          <Route path="/kanban" element={<KanbanPage />} />
+          <Route path="/attivita" element={<AttivitaPage />} />
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/progetti" element={<ProgettiPage />} />
+          <Route path="/commesse" element={<CommessePage />} />
+          <Route path="/fatture" element={<ManagerOnly><FatturePage /></ManagerOnly>} />
+          <Route path="/incassi" element={<ManagerOnly><IncassiPage /></ManagerOnly>} />
+          <Route path="/tasse" element={<ManagerOnly><TassePage /></ManagerOnly>} />
+          <Route path="/profilo" element={<ProfiloPage />} />
+          <Route path="/utenti" element={<UtentiPage />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
+  )
+}

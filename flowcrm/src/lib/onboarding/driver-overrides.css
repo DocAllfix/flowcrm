@@ -1,0 +1,104 @@
+/* Onboarding driver.js — override brandizzati FlowCRM (scoped .flowcrm-popover) */
+@import 'driver.js/dist/driver.css';
+
+.flowcrm-popover {
+  background-color: hsl(var(--popover)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 12px 32px -8px rgb(0 0 0 / 0.25) !important;
+  color: hsl(var(--foreground)) !important;
+  font-family: inherit;
+  max-width: 360px !important;
+  padding: 1rem 1.125rem !important;
+}
+
+.flowcrm-popover .driver-popover-arrow-side-top { border-top-color: hsl(var(--popover)) !important; }
+.flowcrm-popover .driver-popover-arrow-side-bottom { border-bottom-color: hsl(var(--popover)) !important; }
+.flowcrm-popover .driver-popover-arrow-side-left { border-left-color: hsl(var(--popover)) !important; }
+.flowcrm-popover .driver-popover-arrow-side-right { border-right-color: hsl(var(--popover)) !important; }
+
+.flowcrm-popover .driver-popover-title {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+  margin: 0 0 0.375rem 0 !important;
+  padding: 0 !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.flowcrm-popover .driver-popover-description {
+  font-size: 0.8125rem !important;
+  line-height: 1.55 !important;
+  color: hsl(var(--muted-foreground)) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.flowcrm-popover .driver-popover-footer {
+  margin-top: 0.875rem !important;
+  padding: 0 !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.5rem;
+}
+
+.flowcrm-popover .driver-popover-progress-text {
+  font-size: 0.6875rem !important;
+  font-weight: 500 !important;
+  color: hsl(var(--muted-foreground)) !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.flowcrm-popover .driver-popover-navigation-btns { display: flex !important; gap: 0.375rem; }
+
+.flowcrm-popover .driver-popover-next-btn,
+.flowcrm-popover .driver-popover-prev-btn {
+  font-size: 0.8125rem !important;
+  font-weight: 500 !important;
+  padding: 0.375rem 0.875rem !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  text-shadow: none !important;
+  transition: background-color 120ms ease;
+}
+
+.flowcrm-popover .driver-popover-next-btn {
+  background-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  box-shadow: none !important;
+}
+.flowcrm-popover .driver-popover-next-btn:hover { background-color: hsl(var(--primary) / 0.9) !important; }
+
+.flowcrm-popover .driver-popover-prev-btn {
+  background-color: transparent !important;
+  color: hsl(var(--muted-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+.flowcrm-popover .driver-popover-prev-btn:hover {
+  background-color: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+}
+
+.flowcrm-popover .driver-popover-close-btn {
+  background: transparent !important;
+  border: none !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 1.125rem !important;
+  line-height: 1 !important;
+  cursor: pointer;
+  padding: 0.25rem !important;
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 0.5rem !important;
+}
+.flowcrm-popover .driver-popover-close-btn:hover { color: hsl(var(--foreground)) !important; }
+
+/* Spotlight ring brand arancio */
+.driver-active-element {
+  outline: 2px solid hsl(var(--primary)) !important;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
