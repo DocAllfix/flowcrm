@@ -20,6 +20,7 @@ import { CommessePage } from '@/pages/CommessePage'
 import { FatturePage } from '@/pages/FatturePage'
 import { IncassiPage } from '@/pages/IncassiPage'
 import { TassePage } from '@/pages/TassePage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ManagerOnly } from '@/components/ManagerOnly'
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
           <Route path="/tasse" element={<ManagerOnly><TassePage /></ManagerOnly>} />
           <Route path="/profilo" element={<ProfiloPage />} />
           <Route path="/utenti" element={<UtentiPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </AuthProvider>

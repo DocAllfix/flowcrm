@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase, type Tables, type Inserts } from '@/lib/supabase'
-import { useAuth } from '@/hooks/useAuth'
 
 export type Contatto = Tables<'contatti'>
 
@@ -32,19 +31,20 @@ type ContattoInput = Omit<Inserts<'contatti'>, 'created_by' | 'updated_by'>
 
 export function useSaveContatto() {
   const qc = useQueryClient()
-  const { user } = useAuth()
   return useMutation({
     mutationFn: async ({ id, values }: { id?: string; values: ContattoInput }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const uid = auth.user!.id
       if (id) {
         const { error } = await supabase
           .from('contatti')
-          .update({ ...values, updated_by: user!.id })
+          .update({ ...values, updated_by: uid })
           .eq('id', id)
         if (error) throw error
       } else {
         const { error } = await supabase
           .from('contatti')
-          .insert({ ...values, created_by: user!.id })
+          .insert({ ...values, created_by: uid })
         if (error) throw error
       }
     },

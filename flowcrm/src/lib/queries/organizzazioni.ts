@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase, type Tables, type Inserts, type DbEnum } from '@/lib/supabase'
-import { useAuth } from '@/hooks/useAuth'
 
 export type Organizzazione = Tables<'organizzazioni'>
 export type OrgRuolo = DbEnum<'org_ruolo'>
@@ -69,22 +68,23 @@ type OrgInput = Omit<Inserts<'organizzazioni'>, 'created_by' | 'updated_by'>
 
 export function useSaveOrganizzazione() {
   const qc = useQueryClient()
-  const { user } = useAuth()
   return useMutation({
     mutationFn: async ({
       id, values, ruoli,
     }: { id?: string; values: OrgInput; ruoli: OrgRuolo[] }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const uid = auth.user!.id
       let orgId = id
       if (id) {
         const { error } = await supabase
           .from('organizzazioni')
-          .update({ ...values, updated_by: user!.id })
+          .update({ ...values, updated_by: uid })
           .eq('id', id)
         if (error) throw error
       } else {
         const { data, error } = await supabase
           .from('organizzazioni')
-          .insert({ ...values, created_by: user!.id })
+          .insert({ ...values, created_by: uid })
           .select('id')
           .single()
         if (error) throw error

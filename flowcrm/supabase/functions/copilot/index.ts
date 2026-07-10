@@ -214,7 +214,27 @@ Deno.serve(async (req) => {
     })
   }
 
-  const { messages } = await req.json()
+  let body: { messages?: unknown }
+  try { body = await req.json() } catch {
+    return new Response(JSON.stringify({ error: 'Richiesta non valida' }), {
+      status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
+  // Validazione: messages deve essere un array; tetto sulla lunghezza dello
+  // storico (anti-abuso costi). Si tengono solo gli ultimi 20 turni.
+  if (!Array.isArray(body.messages)) {
+    return new Response(JSON.stringify({ error: 'Formato conversazione non valido' }), {
+      status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
+  const messages = (body.messages as Record<string, unknown>[])
+    .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+    .slice(-20)
+  if (messages.length === 0) {
+    return new Response(JSON.stringify({ error: 'Nessun messaggio' }), {
+      status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
   const endpoint = Deno.env.get('AZURE_OPENAI_ENDPOINT')!
   const apiKey = Deno.env.get('AZURE_OPENAI_API_KEY')!
   const model = Deno.env.get('AZURE_OPENAI_DEPLOYMENT') ?? 'gpt-4.1-mini'

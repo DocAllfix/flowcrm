@@ -116,9 +116,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           return
         }
 
-        if (authUser && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
+        if (authUser && event === 'SIGNED_IN') {
           setIsLoading(true)
           loadUserProfile(authUser).finally(() => setIsLoading(false))
+        } else if (authUser && event === 'TOKEN_REFRESHED') {
+          // Refresh silenzioso: ricarico il profilo senza spinner/remount
+          // (altrimenti a ogni rinnovo token la pagina lampeggia).
+          void loadUserProfile(authUser)
         }
       }
     )

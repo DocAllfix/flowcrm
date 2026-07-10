@@ -38,6 +38,9 @@ const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.
 // ── Helpers ───────────────────────────────────────────────────────
 
 function validateFile(file: File): string | null {
+  if (file.size === 0) {
+    return `"${file.name}" è vuoto (0 byte)`
+  }
   if (file.size > MAX_SIZE_BYTES) {
     return `"${file.name}" supera il limite di 50 MB`
   }
