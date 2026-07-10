@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { Plus, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
@@ -7,7 +8,8 @@ import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { CircleDollarSign } from 'lucide-react'
 import { DealDialog } from '@/features/deal/DealDialog'
-import { useDeals, usePipelineStages } from '@/lib/queries/deals'
+import { RowActions } from '@/components/RowActions'
+import { useDeals, usePipelineStages, useArchiveDeal, useDeleteDeal, type Deal } from '@/lib/queries/deals'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -17,6 +19,9 @@ export function DealListPage() {
   const { data: deals = [], isLoading } = useDeals()
   const { data: stages = [] } = usePipelineStages()
   const [createOpen, setCreateOpen] = useState(false)
+  const [editDeal, setEditDeal] = useState<Deal | null>(null)
+  const archive = useArchiveDeal()
+  const del = useDeleteDeal()
 
   const stageById = new Map(stages.map((s) => [s.id, s]))
 
@@ -48,6 +53,7 @@ export function DealListPage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Organizzazione</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Fase</th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -69,6 +75,20 @@ export function DealListPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(d.importo))}</td>
+                    <td className="px-4 py-3 text-right">
+                      <RowActions
+                        nome={d.nome}
+                        onEdit={() => setEditDeal(d)}
+                        onArchive={() => archive.mutate(d.id, {
+                          onSuccess: () => toast.success('Deal archiviato'),
+                          onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                        })}
+                        onDelete={() => del.mutate(d.id, {
+                          onSuccess: () => toast.success('Deal eliminato'),
+                          onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                        })}
+                      />
+                    </td>
                   </tr>
                 )
               })}
@@ -77,7 +97,11 @@ export function DealListPage() {
         </div>
       )}
 
-      <DealDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <DealDialog
+        open={createOpen || !!editDeal}
+        deal={editDeal ?? undefined}
+        onOpenChange={(o) => { if (!o) { setCreateOpen(false); setEditDeal(null) } }}
+      />
     </div>
   )
 }

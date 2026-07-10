@@ -77,6 +77,47 @@ export function useCreateDeal() {
   })
 }
 
+/** Aggiorna i dati di un deal (nome, importo, organizzazione, chiusura). */
+export function useUpdateDeal() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, values }: { id: string; values: Partial<Inserts<'deals'>> }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('deals').update({ ...values, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: (_d, v) => {
+      qc.invalidateQueries({ queryKey: dealsKeys.all })
+      qc.invalidateQueries({ queryKey: ['deal', v.id] })
+    },
+  })
+}
+
+/** Archivia (soft-delete) un deal: sparisce dalle liste, recuperabile. */
+export function useArchiveDeal() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('deals').update({ attivo: false, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: dealsKeys.all }),
+  })
+}
+
+/** Elimina definitivamente un deal (RLS: solo admin). */
+export function useDeleteDeal() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('deals').delete().eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: dealsKeys.all }),
+  })
+}
+
 /**
  * Sposta un deal in un altro stage. Il trigger DB registra lo storico e
  * gestisce chiuso_at. Il chiamante Kanban fa l'optimistic update locale.
