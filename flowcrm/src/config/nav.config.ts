@@ -62,6 +62,7 @@ export const NAV_SECTIONS: NavSection[] = [
     title: 'Operazioni',
     items: [
       { label: 'Attività', path: '/attivita', icon: ListChecks },
+      { label: 'Calendario', path: '/calendario', icon: CalendarDays },
       { label: 'Riunioni', path: '/riunioni', icon: CalendarDays },
       { label: 'Progetti', path: '/progetti', icon: FolderKanban },
       { label: 'Commesse', path: '/commesse', icon: Briefcase },
