@@ -48,6 +48,24 @@ export function useDeals() {
   })
 }
 
+/** Deal attivi di una singola organizzazione (tab nel 360°). */
+export function useDealsByOrg(orgId: string | undefined) {
+  return useQuery({
+    queryKey: ['deals', 'org', orgId],
+    enabled: !!orgId,
+    queryFn: async (): Promise<(Deal & { stage: PipelineStage | null })[]> => {
+      const { data, error } = await supabase
+        .from('deals')
+        .select('*, stage:pipeline_stages(*)')
+        .eq('organizzazione_id', orgId!)
+        .eq('attivo', true)
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return data as (Deal & { stage: PipelineStage | null })[]
+    },
+  })
+}
+
 /** Singolo deal con organizzazione e stage correnti. */
 export function useDeal(id: string | undefined) {
   return useQuery({

@@ -6,6 +6,7 @@ import {
   useOrganizzazione, useDeleteOrganizzazione, RUOLO_LABEL, type OrgRuolo,
 } from '@/lib/queries/organizzazioni'
 import { useContatti } from '@/lib/queries/contatti'
+import { useDealsByOrg } from '@/lib/queries/deals'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -36,6 +37,7 @@ export function OrganizzazioneDettaglioPage() {
   const { isAdmin } = useAuth()
   const { data: org, isLoading } = useOrganizzazione(id)
   const { data: contatti } = useContatti(id)
+  const { data: dealsOrg = [] } = useDealsByOrg(id)
   const del = useDeleteOrganizzazione()
   const [editOpen, setEditOpen] = useState(false)
   const [contattoOpen, setContattoOpen] = useState(false)
@@ -125,7 +127,7 @@ export function OrganizzazioneDettaglioPage() {
           <TabsTrigger value="contatti">Contatti ({contatti?.length ?? 0})</TabsTrigger>
           <TabsTrigger value="attivita">Attività</TabsTrigger>
           <TabsTrigger value="commenti">Commenti</TabsTrigger>
-          <TabsTrigger value="deal" disabled>Deal</TabsTrigger>
+          <TabsTrigger value="deal">Deal ({dealsOrg.length})</TabsTrigger>
           <TabsTrigger value="allegati">Allegati</TabsTrigger>
           <TabsTrigger value="storico">Storico</TabsTrigger>
         </TabsList>
@@ -166,6 +168,32 @@ export function OrganizzazioneDettaglioPage() {
                     <p className="text-xs text-muted-foreground">{c.ruolo_aziendale ?? c.email ?? ''}</p>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="deal" className="mt-4">
+          {dealsOrg.length === 0 ? (
+            <EmptyState icon={Building2} title="Nessun deal"
+              description="Le offerte commerciali di questa organizzazione compariranno qui." />
+          ) : (
+            <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+              {dealsOrg.map((d) => (
+                <button key={d.id} onClick={() => navigate(`/deal/${d.id}`)}
+                  className="flex w-full items-center justify-between gap-3 p-4 text-left hover:bg-muted/30">
+                  <span className="font-medium text-foreground">{d.nome}</span>
+                  <span className="flex items-center gap-3">
+                    {d.stage && (
+                      <Badge className="text-white" style={{ backgroundColor: d.stage.colore ?? undefined }}>
+                        {d.stage.nome}
+                      </Badge>
+                    )}
+                    <span className="font-bold text-foreground">
+                      {new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(Number(d.importo))}
+                    </span>
+                  </span>
+                </button>
               ))}
             </div>
           )}
