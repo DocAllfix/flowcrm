@@ -17,7 +17,7 @@ export function useContatti(orgId?: string) {
     queryFn: async (): Promise<ContattoConOrg[]> => {
       let q = supabase
         .from('contatti')
-        .select('*, organizzazione:organizzazioni(id, ragione_sociale)')
+        .select('*, organizzazione:organizzazioni!contatti_organizzazione_id_fkey(id, ragione_sociale)')
         .eq('attivo', true)
         .order('cognome', { nullsFirst: false })
       if (orgId) q = q.eq('organizzazione_id', orgId)
