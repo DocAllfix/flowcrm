@@ -86,6 +86,70 @@ export type Database = {
           },
         ]
       }
+      assenze: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data_fine: string
+          data_inizio: string
+          dipendente_id: string
+          id: string
+          note: string | null
+          stato: Database["public"]["Enums"]["assenza_stato"]
+          tipo: Database["public"]["Enums"]["assenza_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data_fine: string
+          data_inizio: string
+          dipendente_id: string
+          id?: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["assenza_stato"]
+          tipo?: Database["public"]["Enums"]["assenza_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string
+          data_inizio?: string
+          dipendente_id?: string
+          id?: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["assenza_stato"]
+          tipo?: Database["public"]["Enums"]["assenza_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assenze_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assenze_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assenze_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       attivita: {
         Row: {
           assegnato_a: string | null
@@ -630,6 +694,75 @@ export type Database = {
           },
         ]
       }
+      dipendenti: {
+        Row: {
+          attivo: boolean
+          cognome: string | null
+          created_at: string
+          created_by: string | null
+          data_assunzione: string | null
+          data_fine: string | null
+          email: string | null
+          id: string
+          nome: string
+          note: string | null
+          qualifica: string | null
+          telefono: string | null
+          tipo_contratto: Database["public"]["Enums"]["tipo_contratto"] | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          cognome?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_assunzione?: string | null
+          data_fine?: string | null
+          email?: string | null
+          id?: string
+          nome: string
+          note?: string | null
+          qualifica?: string | null
+          telefono?: string | null
+          tipo_contratto?: Database["public"]["Enums"]["tipo_contratto"] | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          cognome?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_assunzione?: string | null
+          data_fine?: string | null
+          email?: string | null
+          id?: string
+          nome?: string
+          note?: string | null
+          qualifica?: string | null
+          telefono?: string | null
+          tipo_contratto?: Database["public"]["Enums"]["tipo_contratto"] | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dipendenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dipendenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fatture: {
         Row: {
           aliquota_iva: number
@@ -715,6 +848,70 @@ export type Database = {
           },
           {
             foreignKeyName: "fatture_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      formazione: {
+        Row: {
+          completato: boolean
+          corso: string
+          created_at: string
+          created_by: string | null
+          data: string | null
+          dipendente_id: string
+          id: string
+          note: string | null
+          ore: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          completato?: boolean
+          corso: string
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          dipendente_id: string
+          id?: string
+          note?: string | null
+          ore?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          completato?: boolean
+          corso?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          dipendente_id?: string
+          id?: string
+          note?: string | null
+          ore?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "formazione_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "formazione_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "formazione_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -1567,6 +1764,8 @@ export type Database = {
       }
     }
     Enums: {
+      assenza_stato: "richiesta" | "approvata" | "rifiutata"
+      assenza_tipo: "ferie" | "permesso" | "malattia"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
       attivita_tipo: "task" | "chiamata" | "email" | "riunione" | "nota"
       commessa_stato: "attiva" | "in_pausa" | "completata" | "annullata"
@@ -1598,6 +1797,13 @@ export type Database = {
         | "scartata"
         | "mancata_consegna"
       tassa_stato: "da_pagare" | "pagata" | "scaduta"
+      tipo_contratto:
+        | "indeterminato"
+        | "determinato"
+        | "apprendistato"
+        | "collaborazione"
+        | "stage"
+        | "partita_iva"
       user_role: "admin" | "manager" | "operatore"
     }
     CompositeTypes: {
@@ -2179,6 +2385,8 @@ export const Constants = {
   },
   public: {
     Enums: {
+      assenza_stato: ["richiesta", "approvata", "rifiutata"],
+      assenza_tipo: ["ferie", "permesso", "malattia"],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
       attivita_tipo: ["task", "chiamata", "email", "riunione", "nota"],
       commessa_stato: ["attiva", "in_pausa", "completata", "annullata"],
@@ -2213,6 +2421,14 @@ export const Constants = {
         "mancata_consegna",
       ],
       tassa_stato: ["da_pagare", "pagata", "scaduta"],
+      tipo_contratto: [
+        "indeterminato",
+        "determinato",
+        "apprendistato",
+        "collaborazione",
+        "stage",
+        "partita_iva",
+      ],
       user_role: ["admin", "manager", "operatore"],
     },
   },

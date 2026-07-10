@@ -26,6 +26,8 @@ import { FatturePage } from '@/pages/FatturePage'
 import { FatturaDettaglioPage } from '@/pages/FatturaDettaglioPage'
 import { IncassiPage } from '@/pages/IncassiPage'
 import { TassePage } from '@/pages/TassePage'
+import { HRPage } from '@/pages/HRPage'
+import { DipendenteDettaglioPage } from '@/pages/DipendenteDettaglioPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { ManagerOnly } from '@/components/ManagerOnly'
 
@@ -57,6 +59,8 @@ export default function App() {
           <Route path="/fatture/:id" element={<ManagerOnly><FatturaDettaglioPage /></ManagerOnly>} />
           <Route path="/incassi" element={<ManagerOnly><IncassiPage /></ManagerOnly>} />
           <Route path="/tasse" element={<ManagerOnly><TassePage /></ManagerOnly>} />
+          <Route path="/personale" element={<ManagerOnly><HRPage /></ManagerOnly>} />
+          <Route path="/personale/:id" element={<ManagerOnly><DipendenteDettaglioPage /></ManagerOnly>} />
           <Route path="/profilo" element={<ProfiloPage />} />
           <Route path="/utenti" element={<UtentiPage />} />
           <Route path="*" element={<NotFoundPage />} />

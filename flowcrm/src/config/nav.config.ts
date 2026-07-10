@@ -13,6 +13,7 @@ import {
   FileText,
   Receipt,
   MessagesSquare,
+  UsersRound,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -75,6 +76,12 @@ export const NAV_SECTIONS: NavSection[] = [
       { label: 'Registro fatture', path: '/fatture', icon: FileText, managerOnly: true },
       { label: 'Incassi previsti', path: '/incassi', icon: Banknote, managerOnly: true },
       { label: 'Scadenze tasse', path: '/tasse', icon: Receipt, managerOnly: true },
+    ],
+  },
+  {
+    title: 'HR',
+    items: [
+      { label: 'Personale', path: '/personale', icon: UsersRound, managerOnly: true },
     ],
   },
 ]
