@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: flowcrm
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: flowcrm/package-lock.json
+
+      - name: Install
+        # npm install (non ci): il lockfile generato su Windows omette le
+        # dipendenze opzionali Linux (bug npm #4828) e npm ci fallirebbe.
+        run: npm install --no-audit --no-fund
+
+      - name: Typecheck
+        run: npx tsc -b
+
+      - name: Unit tests
+        run: npx vitest run
+
+      - name: Build
+        run: npx vite build
+        env:
+          VITE_SUPABASE_URL: http://localhost:54321
+          VITE_SUPABASE_ANON_KEY: ci-placeholder
+
+  # I test pgTAP (supabase test db) e Playwright si attivano in F1,
+  # quando esistono migrazioni e login reale da esercitare.

@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+*.tsbuildinfo
+
+# Environment — MAI committare credenziali
+.env
+.env.*
+!.env.example
+
+# Supabase local
+flowcrm/supabase/.temp/
+flowcrm/supabase/.branches/
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.local
+desktop.ini
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Playwright MCP artifacts
+.playwright-mcp/
+*.png
