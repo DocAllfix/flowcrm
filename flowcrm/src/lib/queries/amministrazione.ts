@@ -69,6 +69,42 @@ export function useIncassi() {
   })
 }
 
+/** Crea un incasso previsto MANUALE (senza fattura, es. da contratto). */
+export function useCreateIncasso() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: Omit<Inserts<'scadenze_pagamento'>, 'created_by'>) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('scadenze_pagamento').insert({ ...input, created_by: auth.user!.id })
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_pagamento'] }),
+  })
+}
+
+export function useUpdateIncasso() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, values }: { id: string; values: Partial<Inserts<'scadenze_pagamento'>> }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('scadenze_pagamento').update({ ...values, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_pagamento'] }),
+  })
+}
+
+export function useDeleteIncasso() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('scadenze_pagamento').delete().eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_pagamento'] }),
+  })
+}
+
 export function useSetIncassato() {
   const qc = useQueryClient()
   return useMutation({
@@ -109,6 +145,46 @@ export function useCreateTassa() {
     mutationFn: async (input: Omit<Inserts<'scadenze_tasse'>, 'created_by'>) => {
       const { data: auth } = await supabase.auth.getUser()
       const { error } = await supabase.from('scadenze_tasse').insert({ ...input, created_by: auth.user!.id })
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_tasse'] }),
+  })
+}
+
+export function useUpdateTassa() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, values }: { id: string; values: Partial<Inserts<'scadenze_tasse'>> }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('scadenze_tasse').update({ ...values, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_tasse'] }),
+  })
+}
+
+/** Segna una tassa come pagata / da pagare. */
+export function useSetTassaPagata() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, pagata }: { id: string; pagata: boolean }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('scadenze_tasse').update({
+        stato: pagata ? 'pagata' : 'da_pagare',
+        data_pagamento: pagata ? new Date().toISOString().slice(0, 10) : null,
+        updated_by: auth.user!.id,
+      }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_tasse'] }),
+  })
+}
+
+export function useDeleteTassa() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('scadenze_tasse').delete().eq('id', id)
       if (error) throw error
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['scadenze_tasse'] }),
