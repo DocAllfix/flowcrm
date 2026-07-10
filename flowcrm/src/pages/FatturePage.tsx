@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Plus, FileText, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ const STATO_TONE = {
 } as const
 
 export function FatturePage() {
+  const navigate = useNavigate()
   const [direzione, setDirezione] = useState<FatturaDirezione>('attiva')
   const { data: fatture = [], isLoading } = useFatture(direzione)
   const [createOpen, setCreateOpen] = useState(false)
@@ -63,7 +65,8 @@ export function FatturePage() {
             </thead>
             <tbody>
               {fatture.map((f) => (
-                <tr key={f.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                <tr key={f.id} onClick={() => navigate(`/fatture/${f.id}`)}
+                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-semibold text-foreground">{f.numero}</td>
                   <td className="px-4 py-3 text-muted-foreground">{new Date(f.data).toLocaleDateString('it-IT')}</td>
                   <td className="px-4 py-3 text-muted-foreground">{f.organizzazione?.ragione_sociale ?? '—'}</td>

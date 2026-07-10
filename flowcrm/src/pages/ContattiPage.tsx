@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, BookUser, Search, Mail, Phone } from 'lucide-react'
 import { useContatti, useArchiveContatto, useDeleteContatto, type Contatto } from '@/lib/queries/contatti'
@@ -10,6 +11,7 @@ import { RowActions } from '@/components/RowActions'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 
 export function ContattiPage() {
+  const navigate = useNavigate()
   const [q, setQ] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editContatto, setEditContatto] = useState<Contatto | null>(null)
@@ -64,7 +66,8 @@ export function ContattiPage() {
             </thead>
             <tbody>
               {filtered.map((c) => (
-                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                <tr key={c.id} onClick={() => navigate(`/contatti/${c.id}`)}
+                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">

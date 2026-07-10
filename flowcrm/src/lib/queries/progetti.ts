@@ -24,6 +24,22 @@ export function useProgetti() {
   })
 }
 
+export function useProgetto(id: string | undefined) {
+  return useQuery({
+    queryKey: ['progetti', 'detail', id],
+    enabled: !!id,
+    queryFn: async (): Promise<Progetto> => {
+      const { data, error } = await supabase
+        .from('progetti')
+        .select('*, organizzazione:organizzazioni(id, ragione_sociale)')
+        .eq('id', id!)
+        .single()
+      if (error) throw error
+      return data as Progetto
+    },
+  })
+}
+
 export function useCreateProgetto() {
   const qc = useQueryClient()
   return useMutation({

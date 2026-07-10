@@ -27,6 +27,22 @@ export function useContatti(orgId?: string) {
   })
 }
 
+export function useContatto(id: string | undefined) {
+  return useQuery({
+    queryKey: [KEY, 'detail', id],
+    enabled: !!id,
+    queryFn: async (): Promise<ContattoConOrg> => {
+      const { data, error } = await supabase
+        .from('contatti')
+        .select('*, organizzazione:organizzazioni!contatti_organizzazione_id_fkey(id, ragione_sociale)')
+        .eq('id', id!)
+        .single()
+      if (error) throw error
+      return data as unknown as ContattoConOrg
+    },
+  })
+}
+
 type ContattoInput = Omit<Inserts<'contatti'>, 'created_by' | 'updated_by'>
 
 export function useSaveContatto() {

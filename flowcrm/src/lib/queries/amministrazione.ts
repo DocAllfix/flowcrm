@@ -26,6 +26,22 @@ export function useFatture(direzione: FatturaDirezione) {
   })
 }
 
+export function useFattura(id: string | undefined) {
+  return useQuery({
+    queryKey: ['fatture', 'detail', id],
+    enabled: !!id,
+    queryFn: async (): Promise<Fattura> => {
+      const { data, error } = await supabase
+        .from('fatture')
+        .select('*, organizzazione:organizzazioni(id, ragione_sociale)')
+        .eq('id', id!)
+        .single()
+      if (error) throw error
+      return data as Fattura
+    },
+  })
+}
+
 export function useCreateFattura() {
   const qc = useQueryClient()
   return useMutation({

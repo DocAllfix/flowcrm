@@ -43,7 +43,7 @@ export function CommandPalette() {
   function go(r: (typeof results)[number]) {
     setOpen(false)
     if (r.tipo === 'organizzazione') navigate(`/organizzazioni/${r.id}`)
-    else navigate('/contatti')
+    else navigate(`/contatti/${r.id}`)
   }
 
   function onKeyDown(e: React.KeyboardEvent) {

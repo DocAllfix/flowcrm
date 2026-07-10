@@ -40,6 +40,22 @@ export function useCommessePerDeal(dealId: string | undefined) {
   })
 }
 
+export function useCommessa(id: string | undefined) {
+  return useQuery({
+    queryKey: ['commesse', 'detail', id],
+    enabled: !!id,
+    queryFn: async (): Promise<Commessa> => {
+      const { data, error } = await supabase
+        .from('commesse')
+        .select('*, organizzazione:organizzazioni(id, ragione_sociale)')
+        .eq('id', id!)
+        .single()
+      if (error) throw error
+      return data as Commessa
+    },
+  })
+}
+
 export function useCreateCommessa() {
   const qc = useQueryClient()
   return useMutation({

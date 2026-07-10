@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, Briefcase, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
@@ -22,6 +23,7 @@ const STATO_LABEL: Record<CommessaStato, string> = {
 }
 
 export function CommessePage() {
+  const navigate = useNavigate()
   const { data: commesse = [], isLoading } = useCommesse()
   const [createOpen, setCreateOpen] = useState(false)
   const [editCommessa, setEditCommessa] = useState<Commessa | null>(null)
@@ -56,7 +58,8 @@ export function CommessePage() {
             </thead>
             <tbody>
               {commesse.map((c) => (
-                <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                <tr key={c.id} onClick={() => navigate(`/commesse/${c.id}`)}
+                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{c.codice}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</td>
                   <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{c.descrizione}</td>

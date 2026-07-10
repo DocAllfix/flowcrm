@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, FolderKanban, Loader2, Building2, Cog } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
@@ -24,6 +25,7 @@ const STATO_LABEL: Record<ProgettoStato, string> = {
 }
 
 export function ProgettiPage() {
+  const navigate = useNavigate()
   const { data: progetti = [], isLoading } = useProgetti()
   const [createOpen, setCreateOpen] = useState(false)
   const [editProgetto, setEditProgetto] = useState<Progetto | null>(null)
@@ -46,7 +48,8 @@ export function ProgettiPage() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {progetti.map((p) => (
-            <div key={p.id} className="rounded-xl border border-border bg-card p-4 shadow-sm">
+            <div key={p.id} onClick={() => navigate(`/progetti/${p.id}`)}
+              className="cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/40 hover:bg-muted/20">
               <div className="mb-2 flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   {p.tipo === 'cliente' ? <Building2 className="h-3.5 w-3.5" /> : <Cog className="h-3.5 w-3.5" />}
