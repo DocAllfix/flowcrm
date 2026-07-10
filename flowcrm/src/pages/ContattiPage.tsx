@@ -1,15 +1,20 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Plus, BookUser, Search, Mail, Phone } from 'lucide-react'
-import { useContatti } from '@/lib/queries/contatti'
+import { useContatti, useArchiveContatto, useDeleteContatto, type Contatto } from '@/lib/queries/contatti'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
+import { RowActions } from '@/components/RowActions'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 
 export function ContattiPage() {
   const [q, setQ] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editContatto, setEditContatto] = useState<Contatto | null>(null)
+  const archive = useArchiveContatto()
+  const del = useDeleteContatto()
   const { data, isLoading } = useContatti()
 
   const filtered = (data ?? []).filter((c) => {
@@ -54,6 +59,7 @@ export function ContattiPage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Organizzazione</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Contatti</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ruolo</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -76,6 +82,20 @@ export function ContattiPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">{c.ruolo_aziendale ?? '—'}</td>
+                  <td className="px-4 py-3 text-right">
+                    <RowActions
+                      nome={`${c.nome} ${c.cognome ?? ''}`.trim()}
+                      onEdit={() => setEditContatto(c)}
+                      onArchive={() => archive.mutate(c.id, {
+                        onSuccess: () => toast.success('Contatto archiviato'),
+                        onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                      })}
+                      onDelete={() => del.mutate(c.id, {
+                        onSuccess: () => toast.success('Contatto eliminato'),
+                        onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                      })}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -83,7 +103,11 @@ export function ContattiPage() {
         </div>
       )}
 
-      <ContattoDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <ContattoDialog
+        open={dialogOpen || !!editContatto}
+        contatto={editContatto ?? undefined}
+        onOpenChange={(o) => { if (!o) { setDialogOpen(false); setEditContatto(null) } }}
+      />
     </div>
   )
 }

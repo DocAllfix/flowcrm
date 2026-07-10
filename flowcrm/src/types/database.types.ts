@@ -89,6 +89,7 @@ export type Database = {
       attivita: {
         Row: {
           assegnato_a: string | null
+          attivo: boolean
           commessa_id: string | null
           completata_at: string | null
           contatto_id: string | null
@@ -112,6 +113,7 @@ export type Database = {
         }
         Insert: {
           assegnato_a?: string | null
+          attivo?: boolean
           commessa_id?: string | null
           completata_at?: string | null
           contatto_id?: string | null
@@ -135,6 +137,7 @@ export type Database = {
         }
         Update: {
           assegnato_a?: string | null
+          attivo?: boolean
           commessa_id?: string | null
           completata_at?: string | null
           contatto_id?: string | null
@@ -255,6 +258,7 @@ export type Database = {
       }
       commesse: {
         Row: {
+          attivo: boolean
           codice: string | null
           created_at: string
           created_by: string | null
@@ -271,6 +275,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          attivo?: boolean
           codice?: string | null
           created_at?: string
           created_by?: string | null
@@ -287,6 +292,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          attivo?: boolean
           codice?: string | null
           created_at?: string
           created_by?: string | null
@@ -412,6 +418,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      copilot_usage: {
+        Row: {
+          creato_at: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          creato_at?: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          creato_at?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: []
       }
       deal_stage_history: {
         Row: {
@@ -697,6 +721,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      kb_guida: {
+        Row: {
+          contenuto: string
+          created_at: string
+          embedding: string | null
+          id: string
+          titolo: string
+        }
+        Insert: {
+          contenuto: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          titolo: string
+        }
+        Update: {
+          contenuto?: string
+          created_at?: string
+          embedding?: string | null
+          id?: string
+          titolo?: string
+        }
+        Relationships: []
       }
       messaggi: {
         Row: {
@@ -1366,6 +1414,11 @@ export type Database = {
       }
     }
     Functions: {
+      allegato_riservato: { Args: { p_path: string }; Returns: boolean }
+      copilot_rate_check: {
+        Args: { per_giorno?: number; per_minuto?: number }
+        Returns: Json
+      }
       crea_notifica: {
         Args: {
           p_azione_url?: string
@@ -1381,6 +1434,15 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      match_kb_guida: {
+        Args: { match_count?: number; query_embedding: string; soglia?: number }
+        Returns: {
+          contenuto: string
+          similarita: number
+          titolo: string
+        }[]
+      }
+      notifica_deal_a_rischio: { Args: { giorni?: number }; Returns: number }
       processa_scadenze: { Args: never; Returns: number }
       puo_amministrazione: { Args: never; Returns: boolean }
       ricerca_globale: {

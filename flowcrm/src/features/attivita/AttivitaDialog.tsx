@@ -1,6 +1,8 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { toast } from 'sonner'
-import { useCreateAttivita, type AttivitaScope, type AttivitaTipo } from '@/lib/queries/attivita'
+import {
+  useCreateAttivita, useUpdateAttivita, type AttivitaScope, type AttivitaTipo, type Attivita,
+} from '@/lib/queries/attivita'
 import { useAuth } from '@/hooks/useAuth'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -28,11 +30,14 @@ interface Props {
   scope?: AttivitaScope
   /** Tipo iniziale (default task). */
   tipoIniziale?: AttivitaTipo
+  /** Se presente, il dialog è in modalità modifica. */
+  attivita?: Attivita
 }
 
-export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task' }: Props) {
+export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task', attivita }: Props) {
   const { userProfile } = useAuth()
   const create = useCreateAttivita()
+  const update = useUpdateAttivita()
   const [tipo, setTipo] = useState<AttivitaTipo>(tipoIniziale)
   const [titolo, setTitolo] = useState('')
   const [descrizione, setDescrizione] = useState('')
@@ -40,14 +45,24 @@ export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task
   const [inizio, setInizio] = useState('')
   const [durata, setDurata] = useState('60')
   const [luogo, setLuogo] = useState('')
+  const isEdit = !!attivita
+  const pending = create.isPending || update.isPending
 
   useEffect(() => {
-    if (open) {
+    if (!open) return
+    if (attivita) {
+      setTipo(attivita.tipo)
+      setTitolo(attivita.titolo); setDescrizione(attivita.descrizione ?? '')
+      setScadenza(attivita.scadenza ? attivita.scadenza.slice(0, 10) : '')
+      setInizio(attivita.inizio ? attivita.inizio.slice(0, 16) : '')
+      setDurata(attivita.durata_minuti != null ? String(attivita.durata_minuti) : '60')
+      setLuogo(attivita.luogo ?? '')
+    } else {
       setTipo(tipoIniziale)
       setTitolo(''); setDescrizione(''); setScadenza('')
       setInizio(''); setDurata('60'); setLuogo('')
     }
-  }, [open, tipoIniziale])
+  }, [open, tipoIniziale, attivita])
 
   const isRiunione = tipo === 'riunione'
 
@@ -61,22 +76,26 @@ export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task
       toast.error('Data e ora di inizio obbligatorie per una riunione')
       return
     }
+    const campi = {
+      tipo,
+      titolo: titolo.trim(),
+      descrizione: descrizione.trim() || null,
+      scadenza: !isRiunione && scadenza ? new Date(scadenza).toISOString() : null,
+      inizio: isRiunione && inizio ? new Date(inizio).toISOString() : null,
+      durata_minuti: isRiunione ? Number(durata) || 60 : null,
+      luogo: isRiunione ? luogo.trim() || null : null,
+    }
     try {
-      await create.mutateAsync({
-        tipo,
-        titolo: titolo.trim(),
-        descrizione: descrizione.trim() || null,
-        scadenza: !isRiunione && scadenza ? new Date(scadenza).toISOString() : null,
-        inizio: isRiunione && inizio ? new Date(inizio).toISOString() : null,
-        durata_minuti: isRiunione ? Number(durata) || 60 : null,
-        luogo: isRiunione ? luogo.trim() || null : null,
-        assegnato_a: userProfile?.id ?? null,
-        ...scope,
-      })
-      toast.success('Attività creata')
+      if (attivita) {
+        await update.mutateAsync({ id: attivita.id, values: campi })
+        toast.success('Attività aggiornata')
+      } else {
+        await create.mutateAsync({ ...campi, assegnato_a: userProfile?.id ?? null, ...scope })
+        toast.success('Attività creata')
+      }
       onOpenChange(false)
     } catch (err) {
-      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
+      toast.error((err as Error)?.message ?? 'Errore durante il salvataggio')
     }
   }
 
@@ -84,7 +103,7 @@ export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Nuova attività</DialogTitle>
+          <DialogTitle>{isEdit ? 'Modifica attività' : 'Nuova attività'}</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,8 +160,8 @@ export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Annulla
             </Button>
-            <Button type="submit" disabled={create.isPending} data-testid="attivita-salva">
-              {create.isPending ? 'Creazione…' : 'Crea'}
+            <Button type="submit" disabled={pending} data-testid="attivita-salva">
+              {pending ? 'Salvataggio…' : isEdit ? 'Salva' : 'Crea'}
             </Button>
           </DialogFooter>
         </form>

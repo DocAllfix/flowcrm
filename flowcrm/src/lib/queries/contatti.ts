@@ -52,6 +52,19 @@ export function useSaveContatto() {
   })
 }
 
+export function useArchiveContatto() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('contatti')
+        .update({ attivo: false, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: [KEY] }),
+  })
+}
+
 export function useDeleteContatto() {
   const qc = useQueryClient()
   return useMutation({

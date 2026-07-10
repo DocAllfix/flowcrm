@@ -35,3 +35,38 @@ export function useCreateProgetto() {
     onSuccess: () => qc.invalidateQueries({ queryKey: progettiKeys.all }),
   })
 }
+
+export function useUpdateProgetto() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, values }: { id: string; values: Partial<Inserts<'progetti'>> }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('progetti').update({ ...values, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: progettiKeys.all }),
+  })
+}
+
+export function useArchiveProgetto() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('progetti').update({ attivo: false, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: progettiKeys.all }),
+  })
+}
+
+export function useDeleteProgetto() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('progetti').delete().eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: progettiKeys.all }),
+  })
+}

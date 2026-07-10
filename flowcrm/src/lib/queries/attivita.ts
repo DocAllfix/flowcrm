@@ -28,6 +28,7 @@ export function useAttivitaScope(scope: AttivitaScope) {
         .from('attivita')
         .select('*')
         .eq(key as 'deal_id', value!)
+        .eq('attivo', true)
         .order('created_at', { ascending: false })
       if (error) throw error
       return data
@@ -45,6 +46,7 @@ export function useMieAttivita(userId: string | undefined) {
         .from('attivita')
         .select('*')
         .eq('assegnato_a', userId!)
+        .eq('attivo', true)
         .order('stato')
         .order('scadenza', { ascending: true, nullsFirst: false })
       if (error) throw error
@@ -65,6 +67,41 @@ export function useCreateAttivita() {
         .single()
       if (error) throw error
       return data
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['attivita'] }),
+  })
+}
+
+export function useUpdateAttivita() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ id, values }: { id: string; values: Partial<Inserts<'attivita'>> }) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('attivita').update({ ...values, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['attivita'] }),
+  })
+}
+
+export function useArchiveAttivita() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { data: auth } = await supabase.auth.getUser()
+      const { error } = await supabase.from('attivita').update({ attivo: false, updated_by: auth.user!.id }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['attivita'] }),
+  })
+}
+
+export function useDeleteAttivita() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from('attivita').delete().eq('id', id)
+      if (error) throw error
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['attivita'] }),
   })

@@ -1,11 +1,15 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Plus, Briefcase, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
+import { RowActions } from '@/components/RowActions'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
-import { useCommesse, type CommessaStato } from '@/lib/queries/commesse'
+import {
+  useCommesse, useArchiveCommessa, useDeleteCommessa, type CommessaStato, type Commessa,
+} from '@/lib/queries/commesse'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -20,6 +24,9 @@ const STATO_LABEL: Record<CommessaStato, string> = {
 export function CommessePage() {
   const { data: commesse = [], isLoading } = useCommesse()
   const [createOpen, setCreateOpen] = useState(false)
+  const [editCommessa, setEditCommessa] = useState<Commessa | null>(null)
+  const archive = useArchiveCommessa()
+  const del = useDeleteCommessa()
 
   return (
     <div>
@@ -44,6 +51,7 @@ export function CommessePage() {
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Descrizione</th>
                 <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
                 <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
+                <th className="px-4 py-3"></th>
               </tr>
             </thead>
             <tbody>
@@ -54,6 +62,20 @@ export function CommessePage() {
                   <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{c.descrizione}</td>
                   <td className="px-4 py-3"><Badge tone={STATO_TONE[c.stato]}>{STATO_LABEL[c.stato]}</Badge></td>
                   <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(c.importo))}</td>
+                  <td className="px-4 py-3 text-right">
+                    <RowActions
+                      nome={c.codice ?? undefined}
+                      onEdit={() => setEditCommessa(c)}
+                      onArchive={() => archive.mutate(c.id, {
+                        onSuccess: () => toast.success('Commessa archiviata'),
+                        onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                      })}
+                      onDelete={() => del.mutate(c.id, {
+                        onSuccess: () => toast.success('Commessa eliminata'),
+                        onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                      })}
+                    />
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -61,7 +83,11 @@ export function CommessePage() {
         </div>
       )}
 
-      <CommessaDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <CommessaDialog
+        open={createOpen || !!editCommessa}
+        commessa={editCommessa ?? undefined}
+        onOpenChange={(o) => { if (!o) { setCreateOpen(false); setEditCommessa(null) } }}
+      />
     </div>
   )
 }

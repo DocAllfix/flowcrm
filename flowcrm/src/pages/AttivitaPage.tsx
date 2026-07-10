@@ -1,14 +1,17 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import {
   Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, Loader2,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
+import { RowActions } from '@/components/RowActions'
 import { AttivitaDialog } from '@/features/attivita/AttivitaDialog'
 import { useAuth } from '@/hooks/useAuth'
 import {
-  useMieAttivita, useToggleAttivitaStato, type AttivitaTipo, type Attivita,
+  useMieAttivita, useToggleAttivitaStato, useArchiveAttivita, useDeleteAttivita,
+  type AttivitaTipo, type Attivita,
 } from '@/lib/queries/attivita'
 
 const TIPO_ICON: Record<AttivitaTipo, React.ElementType> = {
@@ -19,7 +22,10 @@ export function AttivitaPage() {
   const { userProfile } = useAuth()
   const { data: attivita = [], isLoading } = useMieAttivita(userProfile?.id)
   const toggle = useToggleAttivitaStato()
+  const archive = useArchiveAttivita()
+  const del = useDeleteAttivita()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [editAttivita, setEditAttivita] = useState<Attivita | null>(null)
 
   const aperte = attivita.filter((a) => a.stato !== 'completata' && a.stato !== 'annullata')
   const completate = attivita.filter((a) => a.stato === 'completata')
@@ -49,6 +55,18 @@ export function AttivitaPage() {
             {new Date(a.scadenza).toLocaleDateString('it-IT')}
           </span>
         )}
+        <RowActions
+          nome={a.titolo}
+          onEdit={() => setEditAttivita(a)}
+          onArchive={() => archive.mutate(a.id, {
+            onSuccess: () => toast.success('Attività archiviata'),
+            onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+          })}
+          onDelete={() => del.mutate(a.id, {
+            onSuccess: () => toast.success('Attività eliminata'),
+            onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+          })}
+        />
       </li>
     )
   }
@@ -87,7 +105,11 @@ export function AttivitaPage() {
         </div>
       )}
 
-      <AttivitaDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <AttivitaDialog
+        open={dialogOpen || !!editAttivita}
+        attivita={editAttivita ?? undefined}
+        onOpenChange={(o) => { if (!o) { setDialogOpen(false); setEditAttivita(null) } }}
+      />
     </div>
   )
 }

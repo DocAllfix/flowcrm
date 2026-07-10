@@ -1,6 +1,6 @@
 import { useState, useEffect, type FormEvent } from 'react'
 import { toast } from 'sonner'
-import { useCreateProgetto, type ProgettoTipo } from '@/lib/queries/progetti'
+import { useCreateProgetto, useUpdateProgetto, type ProgettoTipo, type Progetto } from '@/lib/queries/progetti'
 import { useOrganizzazioni } from '@/lib/queries/organizzazioni'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
@@ -16,10 +16,12 @@ import { Textarea } from '@/components/ui/textarea'
 interface Props {
   open: boolean
   onOpenChange: (o: boolean) => void
+  progetto?: Progetto
 }
 
-export function ProgettoDialog({ open, onOpenChange }: Props) {
+export function ProgettoDialog({ open, onOpenChange, progetto }: Props) {
   const create = useCreateProgetto()
+  const update = useUpdateProgetto()
   const { data: organizzazioni = [] } = useOrganizzazioni()
   const [tipo, setTipo] = useState<ProgettoTipo>('cliente')
   const [nome, setNome] = useState('')
@@ -27,12 +29,19 @@ export function ProgettoDialog({ open, onOpenChange }: Props) {
   const [budget, setBudget] = useState('')
   const [scadenza, setScadenza] = useState('')
   const [descrizione, setDescrizione] = useState('')
+  const isEdit = !!progetto
+  const pending = create.isPending || update.isPending
 
   useEffect(() => {
-    if (open) {
+    if (!open) return
+    if (progetto) {
+      setTipo(progetto.tipo); setNome(progetto.nome); setOrgId(progetto.organizzazione_id ?? '')
+      setBudget(progetto.budget != null ? String(progetto.budget) : '')
+      setScadenza(progetto.scadenza ?? ''); setDescrizione(progetto.descrizione ?? '')
+    } else {
       setTipo('cliente'); setNome(''); setOrgId(''); setBudget(''); setScadenza(''); setDescrizione('')
     }
-  }, [open])
+  }, [open, progetto])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -41,26 +50,34 @@ export function ProgettoDialog({ open, onOpenChange }: Props) {
       toast.error("Un progetto cliente richiede un'organizzazione")
       return
     }
+    const budgetN = budget ? Number(budget) : null
+    if (budgetN != null && Number.isNaN(budgetN)) { toast.error('Budget non valido'); return }
+    const values = {
+      tipo,
+      nome: nome.trim(),
+      organizzazione_id: tipo === 'cliente' ? orgId : (orgId || null),
+      budget: budgetN,
+      scadenza: scadenza || null,
+      descrizione: descrizione.trim() || null,
+    }
     try {
-      await create.mutateAsync({
-        tipo,
-        nome: nome.trim(),
-        organizzazione_id: tipo === 'cliente' ? orgId : (orgId || null),
-        budget: budget ? Number(budget) : null,
-        scadenza: scadenza || null,
-        descrizione: descrizione.trim() || null,
-      })
-      toast.success('Progetto creato')
+      if (progetto) {
+        await update.mutateAsync({ id: progetto.id, values })
+        toast.success('Progetto aggiornato')
+      } else {
+        await create.mutateAsync(values)
+        toast.success('Progetto creato')
+      }
       onOpenChange(false)
     } catch (err) {
-      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
+      toast.error((err as Error)?.message ?? 'Errore durante il salvataggio')
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg">
-        <DialogHeader><DialogTitle>Nuovo progetto</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{isEdit ? 'Modifica progetto' : 'Nuovo progetto'}</DialogTitle></DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
             <Label>Tipo</Label>
@@ -109,8 +126,8 @@ export function ProgettoDialog({ open, onOpenChange }: Props) {
           </div>
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annulla</Button>
-            <Button type="submit" disabled={create.isPending} data-testid="progetto-salva">
-              {create.isPending ? 'Creazione…' : 'Crea progetto'}
+            <Button type="submit" disabled={pending} data-testid="progetto-salva">
+              {pending ? 'Salvataggio…' : isEdit ? 'Salva' : 'Crea progetto'}
             </Button>
           </DialogFooter>
         </form>

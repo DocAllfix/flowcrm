@@ -1,11 +1,15 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Plus, FolderKanban, Loader2, Building2, Cog } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
+import { RowActions } from '@/components/RowActions'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
-import { useProgetti, type ProgettoStato } from '@/lib/queries/progetti'
+import {
+  useProgetti, useArchiveProgetto, useDeleteProgetto, type ProgettoStato, type Progetto,
+} from '@/lib/queries/progetti'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -22,6 +26,9 @@ const STATO_LABEL: Record<ProgettoStato, string> = {
 export function ProgettiPage() {
   const { data: progetti = [], isLoading } = useProgetti()
   const [createOpen, setCreateOpen] = useState(false)
+  const [editProgetto, setEditProgetto] = useState<Progetto | null>(null)
+  const archive = useArchiveProgetto()
+  const del = useDeleteProgetto()
 
   return (
     <div>
@@ -45,7 +52,21 @@ export function ProgettiPage() {
                   {p.tipo === 'cliente' ? <Building2 className="h-3.5 w-3.5" /> : <Cog className="h-3.5 w-3.5" />}
                   {p.tipo === 'cliente' ? 'Cliente' : 'Interno'}
                 </span>
-                <Badge tone={STATO_TONE[p.stato]}>{STATO_LABEL[p.stato]}</Badge>
+                <div className="flex items-center gap-1">
+                  <Badge tone={STATO_TONE[p.stato]}>{STATO_LABEL[p.stato]}</Badge>
+                  <RowActions
+                    nome={p.nome}
+                    onEdit={() => setEditProgetto(p)}
+                    onArchive={() => archive.mutate(p.id, {
+                      onSuccess: () => toast.success('Progetto archiviato'),
+                      onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                    })}
+                    onDelete={() => del.mutate(p.id, {
+                      onSuccess: () => toast.success('Progetto eliminato'),
+                      onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
+                    })}
+                  />
+                </div>
               </div>
               <h3 className="font-semibold text-foreground">{p.nome}</h3>
               {p.organizzazione && (
@@ -64,7 +85,11 @@ export function ProgettiPage() {
         </div>
       )}
 
-      <ProgettoDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <ProgettoDialog
+        open={createOpen || !!editProgetto}
+        progetto={editProgetto ?? undefined}
+        onOpenChange={(o) => { if (!o) { setCreateOpen(false); setEditProgetto(null) } }}
+      />
     </div>
   )
 }
