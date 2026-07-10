@@ -46,6 +46,34 @@ export function useSetUserRole() {
   })
 }
 
+export interface NuovoUtente {
+  email: string; password: string; nome: string; cognome?: string; ruolo: UserRole
+}
+
+/** Admin: crea un nuovo utente via Edge Function (signup pubblico disabilitato). */
+export function useCreateUser() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (input: NuovoUtente) => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session) throw new Error('Sessione non valida')
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/crea-utente`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(input),
+      })
+      const j = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(j.error ?? 'Impossibile creare l\'utente')
+      return j as { id: string; email: string }
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: KEY }),
+  })
+}
+
 /** Admin: attiva/disattiva un account (soft-lock, RLS: solo admin). */
 export function useSetUserAttivo() {
   const qc = useQueryClient()

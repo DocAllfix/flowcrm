@@ -53,8 +53,8 @@ export function CommessaDialog({ open, onOpenChange, preset }: Props) {
       })
       toast.success(`Commessa ${c.codice} creata`)
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante la creazione')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
     }
   }
 

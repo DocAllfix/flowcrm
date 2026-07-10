@@ -75,8 +75,8 @@ export function AttivitaDialog({ open, onOpenChange, scope, tipoIniziale = 'task
       })
       toast.success('Attività creata')
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante la creazione')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
     }
   }
 

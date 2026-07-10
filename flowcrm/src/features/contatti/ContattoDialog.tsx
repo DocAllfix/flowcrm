@@ -63,8 +63,8 @@ export function ContattoDialog({ open, onOpenChange, contatto, organizzazioneId 
       })
       toast.success(contatto ? 'Contatto aggiornato' : 'Contatto creato')
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante il salvataggio')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante il salvataggio')
     }
   }
 

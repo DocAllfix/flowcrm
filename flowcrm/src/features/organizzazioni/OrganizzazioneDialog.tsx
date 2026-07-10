@@ -58,6 +58,14 @@ export function OrganizzazioneDialog({ open, onOpenChange, organizzazione }: Pro
       toast.error('La ragione sociale è obbligatoria')
       return
     }
+    if (form.piva.trim() && !/^\d{11}$/.test(form.piva.trim())) {
+      toast.error('La P.IVA deve essere di 11 cifre')
+      return
+    }
+    if (form.email.trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email.trim())) {
+      toast.error('Indirizzo email non valido')
+      return
+    }
     try {
       await save.mutateAsync({
         id: organizzazione?.id,
@@ -74,8 +82,8 @@ export function OrganizzazioneDialog({ open, onOpenChange, organizzazione }: Pro
       })
       toast.success(organizzazione ? 'Organizzazione aggiornata' : 'Organizzazione creata')
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante il salvataggio')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante il salvataggio')
     }
   }
 

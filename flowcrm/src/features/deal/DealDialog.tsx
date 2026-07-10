@@ -54,8 +54,8 @@ export function DealDialog({ open, onOpenChange, organizzazioneId }: Props) {
       })
       toast.success('Deal creato')
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante la creazione')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
     }
   }
 

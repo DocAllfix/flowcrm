@@ -52,8 +52,8 @@ export function ProgettoDialog({ open, onOpenChange }: Props) {
       })
       toast.success('Progetto creato')
       onOpenChange(false)
-    } catch {
-      toast.error('Errore durante la creazione')
+    } catch (err) {
+      toast.error((err as Error)?.message ?? 'Errore durante la creazione')
     }
   }
 
