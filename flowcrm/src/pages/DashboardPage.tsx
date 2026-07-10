@@ -4,8 +4,11 @@ import {
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
+import { Link } from 'react-router-dom'
+import { CheckSquare } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardKpi, usePipelinePesata } from '@/lib/queries/dashboard'
+import { useMieAttivita } from '@/lib/queries/attivita'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -30,6 +33,8 @@ export function DashboardPage() {
   const { userProfile } = useAuth()
   const { data: kpi } = useDashboardKpi()
   const { data: pipeline = [] } = usePipelinePesata()
+  const { data: mieAttivita = [] } = useMieAttivita(userProfile?.id)
+  const daFare = mieAttivita.filter((a) => a.stato !== 'completata' && a.stato !== 'annullata').slice(0, 6)
 
   const chartData = pipeline.map((s) => ({
     nome: s.nome,
@@ -81,6 +86,32 @@ export function DashboardPage() {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+        )}
+      </div>
+
+      <div className="mt-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckSquare className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold text-foreground">Le mie attività da fare</h2>
+          </div>
+          <Link to="/attivita" className="text-sm text-primary hover:underline">Vedi tutte</Link>
+        </div>
+        {daFare.length === 0 ? (
+          <p className="py-6 text-center text-sm text-muted-foreground">Nessuna attività in sospeso. Ottimo lavoro! 🎉</p>
+        ) : (
+          <ul className="divide-y divide-border">
+            {daFare.map((a) => (
+              <li key={a.id} className="flex items-center justify-between gap-3 py-2.5">
+                <span className="text-sm font-medium text-foreground">{a.titolo}</span>
+                {a.scadenza && (
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {new Date(a.scadenza).toLocaleDateString('it-IT')}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     </div>

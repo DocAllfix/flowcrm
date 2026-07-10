@@ -5,8 +5,10 @@ import { toast } from 'sonner'
 import {
   useOrganizzazione, useDeleteOrganizzazione, RUOLO_LABEL, type OrgRuolo,
 } from '@/lib/queries/organizzazioni'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { useContatti } from '@/lib/queries/contatti'
 import { useDealsByOrg } from '@/lib/queries/deals'
+import { useFatturatoOrganizzazione } from '@/lib/queries/dashboard'
 import { useAuth } from '@/hooks/useAuth'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,10 +36,11 @@ const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
 export function OrganizzazioneDettaglioPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { isAdmin } = useAuth()
+  const { isAdmin, isManager } = useAuth()
   const { data: org, isLoading } = useOrganizzazione(id)
   const { data: contatti } = useContatti(id)
   const { data: dealsOrg = [] } = useDealsByOrg(id)
+  const { data: fatturato = [] } = useFatturatoOrganizzazione(isManager ? id : undefined)
   const del = useDeleteOrganizzazione()
   const [editOpen, setEditOpen] = useState(false)
   const [contattoOpen, setContattoOpen] = useState(false)
@@ -143,6 +146,19 @@ export function OrganizzazioneDettaglioPage() {
             <div className="mt-4 rounded-xl border border-border bg-card p-5">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Note</p>
               <p className="whitespace-pre-wrap text-sm text-foreground">{org.note}</p>
+            </div>
+          )}
+          {isManager && org.ruoli.includes('cliente') && fatturato.length > 0 && (
+            <div className="mt-4 rounded-xl border border-border bg-card p-5">
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Fatturato annuale</p>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={fatturato.map((r) => ({ anno: String(r.anno), totale: Number(r.totale) }))}>
+                  <XAxis dataKey="anno" tick={{ fontSize: 12 }} stroke="currentColor" className="text-muted-foreground" />
+                  <YAxis tickFormatter={(v) => `€${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 12 }} stroke="currentColor" className="text-muted-foreground" />
+                  <Tooltip formatter={(v) => [new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(Number(v)), 'Fatturato']} />
+                  <Bar dataKey="totale" fill="var(--color-chart-1)" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           )}
         </TabsContent>

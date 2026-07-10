@@ -1393,6 +1393,40 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_fatturato_organizzazione: {
+        Row: {
+          anno: number | null
+          organizzazione_id: string | null
+          totale: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fatture_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vw_fatture_per_stato: {
+        Row: {
+          numero: number | null
+          stato: string | null
+          totale: number | null
+        }
+        Relationships: []
+      }
+      vw_kpi_economici: {
+        Row: {
+          da_incassare: number | null
+          fatturato_ytd: number | null
+          incassato_mese: number | null
+          scaduto: number | null
+          tasse_30gg: number | null
+        }
+        Relationships: []
+      }
       vw_ordinato_mensile: {
         Row: {
           mese: string | null
@@ -1411,6 +1445,22 @@ export type Database = {
           valore_pesato: number | null
         }
         Relationships: []
+      }
+      vw_top_clienti: {
+        Row: {
+          organizzazione_id: string | null
+          ragione_sociale: string | null
+          totale: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fatture_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Functions: {

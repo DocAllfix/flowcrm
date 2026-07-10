@@ -55,6 +55,59 @@ export function useFatturatoMensile() {
   })
 }
 
+/** KPI economici (una riga). Operatore riceve vuoto/zeri via RLS. */
+export function useKpiEconomici() {
+  return useQuery({
+    queryKey: ['dashboard', 'kpi-economici'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('vw_kpi_economici').select('*').maybeSingle()
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+/** Top clienti per fatturato (Dashboard economica). */
+export function useTopClienti(limit = 5) {
+  return useQuery({
+    queryKey: ['dashboard', 'top-clienti', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('vw_top_clienti').select('*').limit(limit)
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+/** Fatture per stato (grafico a torta). */
+export function useFatturePerStato() {
+  return useQuery({
+    queryKey: ['dashboard', 'fatture-stato'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('vw_fatture_per_stato').select('*')
+      if (error) throw error
+      return data
+    },
+  })
+}
+
+/** Fatturato annuale di una singola organizzazione (grafico nel 360°). */
+export function useFatturatoOrganizzazione(orgId: string | undefined) {
+  return useQuery({
+    queryKey: ['dashboard', 'fatturato-org', orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vw_fatturato_organizzazione')
+        .select('*')
+        .eq('organizzazione_id', orgId!)
+        .order('anno')
+      if (error) throw error
+      return data
+    },
+  })
+}
+
 /** Cash flow previsto (Dashboard 2 economica). */
 export function useCashFlow() {
   return useQuery({
