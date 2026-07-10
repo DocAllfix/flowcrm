@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Building2, Search, Upload } from 'lucide-react'
+import { Plus, Building2, Search, Upload, Download } from 'lucide-react'
 import {
   useOrganizzazioni, ORG_RUOLI, RUOLO_LABEL, type OrgRuolo,
 } from '@/lib/queries/organizzazioni'
+import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -39,6 +40,12 @@ export function OrganizzazioniPage() {
         description="Clienti, fornitori, partner e prospect in un'unica anagrafica."
         actions={
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => {
+              const rows = (data ?? []).map((o) => [o.ragione_sociale, o.piva, o.email, o.telefono, o.citta, o.settore, o.ruoli.map((r) => RUOLO_LABEL[r]).join(' · ')])
+              scaricaCsv('organizzazioni', toCsv(['Ragione sociale', 'P.IVA', 'Email', 'Telefono', 'Città', 'Settore', 'Ruoli'], rows))
+            }}>
+              <Download className="h-4 w-4" /> Esporta CSV
+            </Button>
             <Button variant="outline" onClick={() => navigate('/importa')}>
               <Upload className="h-4 w-4" /> Importa CSV
             </Button>

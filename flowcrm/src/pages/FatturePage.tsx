@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, FileText, Loader2 } from 'lucide-react'
+import { Plus, FileText, Loader2, Download } from 'lucide-react'
+import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,7 +28,17 @@ export function FatturePage() {
       <PageHeader
         title="Registro fatture"
         description="Fatture emesse ai clienti e ricevute dai fornitori."
-        actions={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova fattura</Button>}
+        actions={
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => {
+              const rows = fatture.map((f) => [f.numero, new Date(f.data).toLocaleDateString('it-IT'), f.organizzazione?.ragione_sociale, f.stato, f.imponibile, f.totale])
+              scaricaCsv(`fatture-${direzione}`, toCsv(['Numero', 'Data', direzione === 'attiva' ? 'Cliente' : 'Fornitore', 'Stato', 'Imponibile', 'Totale'], rows))
+            }}>
+              <Download className="h-4 w-4" /> Esporta CSV
+            </Button>
+            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova fattura</Button>
+          </div>
+        }
       />
 
       {/* Switch direzione attiva/passiva */}

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, BookUser, Search, Mail, Phone } from 'lucide-react'
+import { Plus, BookUser, Search, Mail, Phone, Download } from 'lucide-react'
 import { useContatti, useArchiveContatto, useDeleteContatto, type Contatto } from '@/lib/queries/contatti'
+import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,9 +32,17 @@ export function ContattiPage() {
         title="Contatti"
         description="Le persone con cui lavori, collegate alle loro organizzazioni."
         actions={
-          <Button onClick={() => setDialogOpen(true)}>
-            <Plus className="h-4 w-4" /> Nuovo
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => {
+              const rows = (data ?? []).map((c) => [c.nome, c.cognome, c.email, c.telefono, c.ruolo_aziendale, c.organizzazione?.ragione_sociale])
+              scaricaCsv('contatti', toCsv(['Nome', 'Cognome', 'Email', 'Telefono', 'Ruolo', 'Organizzazione'], rows))
+            }}>
+              <Download className="h-4 w-4" /> Esporta CSV
+            </Button>
+            <Button onClick={() => setDialogOpen(true)}>
+              <Plus className="h-4 w-4" /> Nuovo
+            </Button>
+          </div>
         }
       />
 
