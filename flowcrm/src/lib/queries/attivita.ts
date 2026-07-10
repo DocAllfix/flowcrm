@@ -55,6 +55,23 @@ export function useMieAttivita(userId: string | undefined) {
   })
 }
 
+/** Tutte le riunioni del team (attività di tipo riunione), per la pagina Riunioni. */
+export function useRiunioni() {
+  return useQuery({
+    queryKey: ['attivita', 'riunioni'],
+    queryFn: async (): Promise<Attivita[]> => {
+      const { data, error } = await supabase
+        .from('attivita')
+        .select('*')
+        .eq('tipo', 'riunione')
+        .eq('attivo', true)
+        .order('inizio', { ascending: true, nullsFirst: false })
+      if (error) throw error
+      return data
+    },
+  })
+}
+
 export function useCreateAttivita() {
   const qc = useQueryClient()
   return useMutation({

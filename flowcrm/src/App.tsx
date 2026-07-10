@@ -15,6 +15,7 @@ import { KanbanPage } from '@/pages/KanbanPage'
 import { DealListPage } from '@/pages/DealListPage'
 import { DealDettaglioPage } from '@/pages/DealDettaglioPage'
 import { AttivitaPage } from '@/pages/AttivitaPage'
+import { RiunioniPage } from '@/pages/RiunioniPage'
 import { TeamPage } from '@/pages/TeamPage'
 import { ProgettiPage } from '@/pages/ProgettiPage'
 import { ProgettoDettaglioPage } from '@/pages/ProgettoDettaglioPage'
@@ -44,6 +45,7 @@ export default function App() {
           <Route path="/deal/:id" element={<DealDettaglioPage />} />
           <Route path="/kanban" element={<KanbanPage />} />
           <Route path="/attivita" element={<AttivitaPage />} />
+          <Route path="/riunioni" element={<RiunioniPage />} />
           <Route path="/team" element={<TeamPage />} />
           <Route path="/progetti" element={<ProgettiPage />} />
           <Route path="/progetti/:id" element={<ProgettoDettaglioPage />} />
