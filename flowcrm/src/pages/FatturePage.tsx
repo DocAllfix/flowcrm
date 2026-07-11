@@ -77,7 +77,7 @@ export function FatturePage() {
             <tbody>
               {fatture.map((f) => (
                 <tr key={f.id} onClick={() => navigate(`/fatture/${f.id}`)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
+                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-semibold text-foreground">{f.numero}</td>
                   <td className="px-4 py-3 text-muted-foreground">{new Date(f.data).toLocaleDateString('it-IT')}</td>
                   <td className="px-4 py-3 text-muted-foreground">{f.organizzazione?.ragione_sociale ?? '—'}</td>

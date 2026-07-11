@@ -76,7 +76,7 @@ export function ContattiPage() {
             <tbody>
               {filtered.map((c) => (
                 <tr key={c.id} onClick={() => navigate(`/contatti/${c.id}`)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
+                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">

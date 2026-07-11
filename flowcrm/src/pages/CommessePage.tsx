@@ -59,7 +59,7 @@ export function CommessePage() {
             <tbody>
               {commesse.map((c) => (
                 <tr key={c.id} onClick={() => navigate(`/commesse/${c.id}`)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
+                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{c.codice}</td>
                   <td className="px-4 py-3 text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</td>
                   <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{c.descrizione}</td>

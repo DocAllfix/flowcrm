@@ -43,11 +43,11 @@ export function useEventiCalendario() {
       }
       for (const i of incassi.data ?? []) {
         const d = new Date(i.data_prevista)
-        eventi.push({ id: `inc-${i.id}`, refId: i.id, title: `💰 ${i.descrizione}`, start: d, end: d, allDay: true, tipo: 'incasso' })
+        eventi.push({ id: `inc-${i.id}`, refId: i.id, title: `Incasso: ${i.descrizione}`, start: d, end: d, allDay: true, tipo: 'incasso' })
       }
       for (const t of tasse.data ?? []) {
         const d = new Date(t.scadenza)
-        eventi.push({ id: `tax-${t.id}`, refId: t.id, title: `🏛️ ${t.tipo_tassa}`, start: d, end: d, allDay: true, tipo: 'tassa' })
+        eventi.push({ id: `tax-${t.id}`, refId: t.id, title: `Tassa: ${t.tipo_tassa}`, start: d, end: d, allDay: true, tipo: 'tassa' })
       }
       return eventi
     },

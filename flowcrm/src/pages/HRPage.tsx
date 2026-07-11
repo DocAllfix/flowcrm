@@ -53,7 +53,7 @@ export function HRPage() {
             <tbody>
               {dipendenti.map((d) => (
                 <tr key={d.id} onClick={() => navigate(`/personale/${d.id}`)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
+                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3 font-medium text-foreground">{d.nome} {d.cognome ?? ''}</td>
                   <td className="px-4 py-3 text-muted-foreground">{d.qualifica ?? '—'}</td>
                   <td className="px-4 py-3">{d.tipo_contratto ? <Badge tone="info">{CONTRATTO_LABEL[d.tipo_contratto]}</Badge> : '—'}</td>

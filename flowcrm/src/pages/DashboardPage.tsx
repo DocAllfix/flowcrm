@@ -98,7 +98,7 @@ export function DashboardPage() {
           <Link to="/attivita" className="text-sm text-primary hover:underline">Vedi tutte</Link>
         </div>
         {daFare.length === 0 ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Nessuna attività in sospeso. Ottimo lavoro! 🎉</p>
+          <p className="py-6 text-center text-sm text-muted-foreground">Nessuna attività in sospeso. Ottimo lavoro!</p>
         ) : (
           <ul className="divide-y divide-border">
             {daFare.map((a) => (
