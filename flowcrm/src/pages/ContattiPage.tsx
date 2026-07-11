@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, BookUser, Search, Mail, Phone, Download } from 'lucide-react'
+import { Plus, BookUser, Search, Mail, Phone, Download, Upload } from 'lucide-react'
 import { useContatti, useArchiveContatto, useDeleteContatto, type Contatto } from '@/lib/queries/contatti'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
@@ -38,6 +38,9 @@ export function ContattiPage() {
               scaricaCsv('contatti', toCsv(['Nome', 'Cognome', 'Email', 'Telefono', 'Ruolo', 'Organizzazione'], rows))
             }}>
               <Download className="h-4 w-4" /> Esporta CSV
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/importa?tipo=contatti')}>
+              <Upload className="h-4 w-4" /> Importa CSV
             </Button>
             <Button onClick={() => setDialogOpen(true)}>
               <Plus className="h-4 w-4" /> Nuovo

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Upload, CheckCircle2, AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
 import { PageHeader } from '@/components/ui/page-header'
@@ -11,15 +12,42 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { parseCsv, type ParsedCsv } from '@/lib/csv'
 
-/** Campi importabili delle organizzazioni (ragione_sociale obbligatoria). */
-const CAMPI = [
-  { key: 'ragione_sociale', label: 'Ragione sociale *', required: true },
-  { key: 'piva', label: 'P.IVA', required: false },
-  { key: 'email', label: 'Email', required: false },
-  { key: 'telefono', label: 'Telefono', required: false },
-  { key: 'citta', label: 'Città', required: false },
-  { key: 'settore', label: 'Settore', required: false },
-] as const
+interface Campo { key: string; label: string; required?: boolean }
+interface EntitaConfig {
+  tabella: 'organizzazioni' | 'contatti'
+  titolo: string
+  descrizione: string
+  campi: Campo[]
+}
+
+/** Configurazione per entità: un solo importer, guidato dall'entità. */
+const ENTITA: Record<string, EntitaConfig> = {
+  organizzazioni: {
+    tabella: 'organizzazioni',
+    titolo: 'Importa organizzazioni',
+    descrizione: 'Carica un CSV, mappa le colonne e importa. Le righe senza ragione sociale finiscono negli scarti.',
+    campi: [
+      { key: 'ragione_sociale', label: 'Ragione sociale *', required: true },
+      { key: 'piva', label: 'P.IVA' },
+      { key: 'email', label: 'Email' },
+      { key: 'telefono', label: 'Telefono' },
+      { key: 'citta', label: 'Città' },
+      { key: 'settore', label: 'Settore' },
+    ],
+  },
+  contatti: {
+    tabella: 'contatti',
+    titolo: 'Importa contatti',
+    descrizione: "Carica un CSV, mappa le colonne e importa. Le righe senza nome finiscono negli scarti. L'organizzazione si assegna poi dalla scheda del contatto.",
+    campi: [
+      { key: 'nome', label: 'Nome *', required: true },
+      { key: 'cognome', label: 'Cognome' },
+      { key: 'email', label: 'Email' },
+      { key: 'telefono', label: 'Telefono' },
+      { key: 'ruolo_aziendale', label: 'Ruolo aziendale' },
+    ],
+  },
+}
 
 const NESSUNA = '__nessuna__'
 
@@ -30,6 +58,10 @@ interface Esito {
 
 export function ImportaPage() {
   const { userProfile } = useAuth()
+  const [params] = useSearchParams()
+  const config = ENTITA[params.get('tipo') ?? 'organizzazioni'] ?? ENTITA.organizzazioni
+  const requiredKey = config.campi.find((c) => c.required)!.key
+
   const [csv, setCsv] = useState<ParsedCsv | null>(null)
   const [mapping, setMapping] = useState<Record<string, string>>({})
   const [importing, setImporting] = useState(false)
@@ -44,9 +76,8 @@ export function ImportaPage() {
       if (parsed.rows.length === 0) { toast.error('CSV vuoto o non valido'); return }
       setCsv(parsed)
       setEsito(null)
-      // auto-mapping: se un header combacia col nome campo
       const auto: Record<string, string> = {}
-      CAMPI.forEach((c) => {
+      config.campi.forEach((c) => {
         const h = parsed.headers.find((x) => x.toLowerCase().replace(/[^a-z]/g, '') === c.key.replace(/[^a-z]/g, ''))
         if (h) auto[c.key] = h
       })
@@ -58,35 +89,34 @@ export function ImportaPage() {
 
   async function importa() {
     if (!csv) return
-    const colRagione = mapping['ragione_sociale']
-    if (!colRagione) { toast.error('Mappa almeno la Ragione sociale'); return }
+    const colReq = mapping[requiredKey]
+    if (!colReq) { toast.error(`Mappa almeno «${config.campi[0].label.replace(' *', '')}»`); return }
 
     setImporting(true)
     const scarti: Esito['scarti'] = []
     const validi: Record<string, string | null>[] = []
 
     csv.rows.forEach((row, i) => {
-      const ragione = row[colRagione]?.trim()
-      if (!ragione) {
-        scarti.push({ riga: i + 2, motivo: 'Ragione sociale mancante' })
+      const val = row[colReq]?.trim()
+      if (!val) {
+        scarti.push({ riga: i + 2, motivo: `${config.campi[0].label.replace(' *', '')} mancante` })
         return
       }
       const record: Record<string, string | null> = {
-        ragione_sociale: ragione,
+        [requiredKey]: val,
         created_by: userProfile?.id ?? null,
       }
-      CAMPI.filter((c) => !c.required).forEach((c) => {
+      config.campi.filter((c) => !c.required).forEach((c) => {
         const col = mapping[c.key]
         if (col && row[col]?.trim()) record[c.key] = row[col].trim()
       })
       validi.push(record)
     })
 
-    // Inserimento a blocchi
     let importate = 0
     for (let i = 0; i < validi.length; i += 100) {
       const blocco = validi.slice(i, i + 100)
-      const { error } = await supabase.from('organizzazioni').insert(blocco as never)
+      const { error } = await supabase.from(config.tabella).insert(blocco as never)
       if (error) {
         blocco.forEach((_, j) => scarti.push({ riga: i + j + 2, motivo: error.message }))
       } else {
@@ -96,16 +126,15 @@ export function ImportaPage() {
 
     setEsito({ importate, scarti })
     setImporting(false)
-    if (importate > 0) toast.success(`${importate} organizzazioni importate`)
+    if (importate > 0) toast.success(`${importate} ${config.tabella} importate`)
   }
 
   return (
     <div className="mx-auto max-w-2xl">
-      <PageHeader title="Importa organizzazioni"
-        description="Carica un CSV, mappa le colonne e importa. Le righe senza ragione sociale finiscono negli scarti." />
+      <PageHeader title={config.titolo} description={config.descrizione} />
 
       {!csv ? (
-        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-card py-12 text-center hover:border-primary/40 hover:bg-muted/20">
+        <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-card py-12 text-center transition-colors hover:border-primary/40 hover:bg-muted/20">
           <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
           <span className="text-sm font-medium text-foreground">Scegli un file CSV</span>
           <span className="mt-1 text-xs text-muted-foreground">La prima riga deve contenere le intestazioni</span>
@@ -118,7 +147,7 @@ export function ImportaPage() {
               Mappa le colonne ({csv.rows.length} righe rilevate)
             </h2>
             <div className="space-y-3">
-              {CAMPI.map((c) => (
+              {config.campi.map((c) => (
                 <div key={c.key} className="flex items-center gap-3">
                   <Label className="w-40 shrink-0">{c.label}</Label>
                   <Select
