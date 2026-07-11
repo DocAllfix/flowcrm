@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Sparkles, X, Send, Check, CheckCircle2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { askCopilot, type CopilotMessage, type AzioneProposta } from '@/lib/queries/copilot'
@@ -11,13 +12,15 @@ import { useAuth } from '@/hooks/useAuth'
  * Edge Function). Bolla in basso a destra.
  */
 const SUGGERIMENTI = [
-  'Quante organizzazioni ho?',
-  'Quanto devo ancora incassare?',
+  'Dammi un riepilogo della situazione',
+  'Cosa devo fare oggi?',
   'Mostrami i deal per fase',
+  'Portami al calendario',
 ]
 
 export function CopilotWidget() {
   const { userProfile } = useAuth()
+  const navigate = useNavigate()
   const createAttivita = useCreateAttivita()
   const [open, setOpen] = useState(false)
   const [messaggi, setMessaggi] = useState<CopilotMessage[]>([])
@@ -58,6 +61,10 @@ export function CopilotWidget() {
         // rimuovo la bolla vuota e mostro la card di conferma
         setMessaggi(nuovi)
         setProposta(esito.azione)
+      } else if (esito.kind === 'navigazione') {
+        setMessaggi([...nuovi, { role: 'assistant', content: `Ti porto alla pagina ${esito.pagina}.` }])
+        setOpen(false)
+        navigate(esito.percorso)
       }
     } catch (e) {
       setMessaggi([...nuovi, { role: 'assistant', content: `⚠️ ${(e as Error).message}` }])

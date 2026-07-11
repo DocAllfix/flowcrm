@@ -18,6 +18,7 @@ export interface AzioneProposta {
 export type CopilotResult =
   | { kind: 'text' }
   | { kind: 'proposta'; azione: AzioneProposta }
+  | { kind: 'navigazione'; percorso: string; pagina: string }
 
 /**
  * Invia la conversazione alla Edge Function `copilot`.
@@ -49,6 +50,7 @@ export async function askCopilot(
     const j = await res.json()
     if (!res.ok || j.error) throw new Error(j.error ?? `Errore assistente (${res.status})`)
     if (j.tipo === 'proposta') return { kind: 'proposta', azione: j.azione as AzioneProposta }
+    if (j.tipo === 'navigazione') return { kind: 'navigazione', percorso: j.percorso as string, pagina: j.pagina as string }
     // fallback: json inatteso
     return { kind: 'text' }
   }

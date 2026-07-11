@@ -27,17 +27,62 @@ function corsHeaders(origin: string | null): Record<string, string> {
   }
 }
 
+// Tabelle leggibili e le colonne sicure che il modello può ottenere.
+// La RLS del JWT utente resta la barriera (operatore: economici/HR vuoti).
+const TABELLE_LEGGIBILI: Record<string, string> = {
+  organizzazioni: 'id, ragione_sociale, citta, settore, telefono, email',
+  contatti: 'id, nome, cognome, email, telefono, ruolo_aziendale',
+  deals: 'id, nome, importo, stage:pipeline_stages(nome)',
+  commesse: 'codice, descrizione, importo, stato',
+  progetti: 'nome, tipo, stato, budget',
+  attivita: 'titolo, tipo, stato, scadenza',
+  fatture: 'numero, totale, stato, data, direzione',
+  scadenze_pagamento: 'descrizione, importo, data_prevista, stato',
+  scadenze_tasse: 'tipo_tassa, importo, scadenza, stato',
+  dipendenti: 'nome, cognome, qualifica, tipo_contratto',
+}
+const TABELLE_TESTO: Record<string, string> = {
+  organizzazioni: 'ragione_sociale', contatti: 'nome', deals: 'nome',
+  commesse: 'descrizione', progetti: 'nome', attivita: 'titolo',
+  fatture: 'numero', scadenze_pagamento: 'descrizione', scadenze_tasse: 'tipo_tassa',
+  dipendenti: 'nome',
+}
+const TABELLE = Object.keys(TABELLE_LEGGIBILI)
+
+// Pagine navigabili (percorso → il widget fa il redirect).
+const PAGINE: Record<string, string> = {
+  dashboard: '/', 'dashboard economica': '/dashboard-economica', organizzazioni: '/organizzazioni',
+  contatti: '/contatti', deal: '/deal', kanban: '/kanban', attivita: '/attivita',
+  calendario: '/calendario', riunioni: '/riunioni', progetti: '/progetti', commesse: '/commesse',
+  team: '/team', fatture: '/fatture', incassi: '/incassi', tasse: '/tasse', personale: '/personale',
+  profilo: '/profilo', utenti: '/utenti',
+}
+
 // ── Tool disponibili al modello (set chiuso, parametrico) ─────────
 const TOOLS = [
   {
     type: 'function',
     function: {
       name: 'conta_entita',
-      description: 'Conta i record di una tabella CRM. Usa per "quanti/quante".',
+      description: 'Conta i record di una tabella. Usa per "quanti/quante".',
+      parameters: {
+        type: 'object',
+        properties: { tabella: { type: 'string', enum: TABELLE } },
+        required: ['tabella'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'elenca_record',
+      description: 'Elenca/cerca record di una tabella (per "quali/mostrami/elenca/trova"). Filtro testo opzionale (ricerca sul campo principale). Restituisce fino a 15 righe.',
       parameters: {
         type: 'object',
         properties: {
-          tabella: { type: 'string', enum: ['organizzazioni', 'contatti', 'deals', 'commesse', 'fatture', 'scadenze_pagamento', 'scadenze_tasse'] },
+          tabella: { type: 'string', enum: TABELLE },
+          cerca: { type: 'string', description: 'Testo da cercare (opzionale)' },
+          limite: { type: 'number', description: 'Max righe (default 15, max 25)' },
         },
         required: ['tabella'],
       },
@@ -46,8 +91,8 @@ const TOOLS = [
   {
     type: 'function',
     function: {
-      name: 'somma_incassi_da_incassare',
-      description: 'Somma degli incassi ancora da incassare (importo totale atteso). Solo dati amministrativi.',
+      name: 'panoramica',
+      description: 'Numeri chiave del CRM: conteggi (organizzazioni, contatti, deal aperti, commesse, progetti) e, per admin/manager, i dati economici (fatturato anno, da incassare, scaduto, incassato nel mese, tasse in arrivo). Usa per "come vanno le cose", "quanto ho fatturato", "quanto devo incassare", "riepilogo".',
       parameters: { type: 'object', properties: {} },
     },
   },
@@ -55,7 +100,23 @@ const TOOLS = [
     type: 'function',
     function: {
       name: 'deal_per_stage',
-      description: 'Elenca i deal aperti raggruppati per fase con importo totale.',
+      description: 'Deal aperti raggruppati per fase, con conteggio e importo.',
+      parameters: { type: 'object', properties: {} },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'mie_attivita',
+      description: "Le attività/task ancora da fare dell'utente corrente.",
+      parameters: { type: 'object', properties: {} },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'prossime_riunioni',
+      description: 'Le prossime riunioni in programma (con data e ora).',
       parameters: { type: 'object', properties: {} },
     },
   },
@@ -63,7 +124,7 @@ const TOOLS = [
     type: 'function',
     function: {
       name: 'scadenze_prossime',
-      description: 'Scadenze fiscali e incassi in arrivo entro N giorni (default 30).',
+      description: 'Scadenze fiscali e incassi in arrivo entro N giorni (default 30). Solo admin/manager.',
       parameters: {
         type: 'object',
         properties: { giorni: { type: 'number', description: 'Finestra in giorni' } },
@@ -74,10 +135,10 @@ const TOOLS = [
     type: 'function',
     function: {
       name: 'cerca_guida',
-      description: 'Cerca nel manuale di FlowCRM. USA SEMPRE questo per domande su COME si fa qualcosa (es. "come creo una fattura", "come funziona il kanban", "come importo i dati").',
+      description: 'Cerca nel manuale di FlowCRM per domande su COME si fa qualcosa.',
       parameters: {
         type: 'object',
-        properties: { domanda: { type: 'string', description: "La domanda dell'utente su come usare FlowCRM" } },
+        properties: { domanda: { type: 'string', description: "La domanda su come usare FlowCRM" } },
         required: ['domanda'],
       },
     },
@@ -85,12 +146,24 @@ const TOOLS = [
   {
     type: 'function',
     function: {
+      name: 'vai_a_pagina',
+      description: "Apri/porta l'utente a una pagina dell'app quando lo chiede (es. 'portami ai deal', 'apri il calendario', 'vai alle fatture').",
+      parameters: {
+        type: 'object',
+        properties: { pagina: { type: 'string', enum: Object.keys(PAGINE) } },
+        required: ['pagina'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
       name: 'proponi_attivita',
-      description: "Quando l'utente CHIEDE DI CREARE un task, una nota o un promemoria (es. 'creami un task', 'ricordami di chiamare X', 'aggiungi una nota'), NON crearlo: proponi i dettagli con questo tool. L'utente confermerà prima della creazione.",
+      description: "Quando l'utente CHIEDE DI CREARE un task/nota/promemoria/chiamata/email, NON crearlo: proponi i dettagli con questo tool. L'utente confermerà.",
       parameters: {
         type: 'object',
         properties: {
-          tipo: { type: 'string', enum: ['task', 'chiamata', 'email', 'nota'], description: 'Tipo di attività' },
+          tipo: { type: 'string', enum: ['task', 'chiamata', 'email', 'nota'] },
           titolo: { type: 'string', description: 'Titolo conciso' },
           descrizione: { type: 'string', description: 'Dettagli opzionali' },
           scadenza: { type: 'string', description: 'Data ISO YYYY-MM-DD se indicata (opzionale)' },
@@ -121,22 +194,58 @@ async function embedQuery(text: string): Promise<number[] | null> {
   }
 }
 
-async function eseguiTool(name: string, args: Record<string, unknown>, sb: ReturnType<typeof createClient>): Promise<unknown> {
+async function eseguiTool(name: string, args: Record<string, unknown>, sb: ReturnType<typeof createClient>, uid: string): Promise<unknown> {
   switch (name) {
     case 'conta_entita': {
       const t = String(args.tabella)
+      if (!TABELLE.includes(t)) return { errore: 'tabella non valida' }
       const { count, error } = await sb.from(t).select('id', { count: 'exact', head: true })
-      // Se la RLS nega (operatore su tabella economica) count è 0/null: risposta onesta
       return error ? { errore: 'non accessibile' } : { tabella: t, conteggio: count ?? 0 }
     }
-    case 'somma_incassi_da_incassare': {
-      const { data, error } = await sb
-        .from('scadenze_pagamento')
-        .select('importo')
-        .neq('stato', 'incassato')
+    case 'elenca_record': {
+      const t = String(args.tabella)
+      if (!TABELLE.includes(t)) return { errore: 'tabella non valida' }
+      const limite = Math.min(Number(args.limite ?? 15) || 15, 25)
+      let q = sb.from(t).select(TABELLE_LEGGIBILI[t]).limit(limite)
+      const cerca = args.cerca ? String(args.cerca).trim() : ''
+      if (cerca) q = q.ilike(TABELLE_TESTO[t], `%${cerca}%`)
+      const { data, error } = await q
       if (error) return { errore: 'non accessibile' }
-      const tot = (data ?? []).reduce((s: number, r: { importo: number }) => s + Number(r.importo), 0)
-      return { totale_da_incassare: tot, valuta: 'EUR' }
+      return { tabella: t, righe: data ?? [], nota: (data?.length ?? 0) === 0 ? 'Nessun risultato (o non accessibile con i tuoi permessi).' : undefined }
+    }
+    case 'panoramica': {
+      const [org, con, deal, comm, prog, eco] = await Promise.all([
+        sb.from('organizzazioni').select('id', { count: 'exact', head: true }).eq('attivo', true),
+        sb.from('contatti').select('id', { count: 'exact', head: true }).eq('attivo', true),
+        sb.from('deals').select('id', { count: 'exact', head: true }).eq('attivo', true),
+        sb.from('commesse').select('id', { count: 'exact', head: true }).eq('stato', 'attiva'),
+        sb.from('progetti').select('id', { count: 'exact', head: true }).eq('attivo', true).neq('stato', 'completato'),
+        sb.from('vw_kpi_economici').select('*').maybeSingle(),
+      ])
+      return {
+        conteggi: {
+          organizzazioni: org.count ?? 0, contatti: con.count ?? 0, deal_aperti: deal.count ?? 0,
+          commesse_attive: comm.count ?? 0, progetti_attivi: prog.count ?? 0,
+        },
+        economici: eco.data ?? 'non accessibile (servono permessi admin/manager)',
+      }
+    }
+    case 'mie_attivita': {
+      const { data, error } = await sb.from('attivita')
+        .select('titolo, tipo, stato, scadenza')
+        .eq('assegnato_a', uid).eq('attivo', true).in('stato', ['da_fare', 'in_corso'])
+        .order('scadenza', { nullsFirst: false }).limit(15)
+      if (error) return { errore: 'non accessibile' }
+      return { da_fare: data ?? [] }
+    }
+    case 'prossime_riunioni': {
+      const oggi = new Date().toISOString()
+      const { data, error } = await sb.from('attivita')
+        .select('titolo, inizio, durata_minuti, luogo')
+        .eq('tipo', 'riunione').eq('attivo', true).gte('inizio', oggi)
+        .order('inizio').limit(8)
+      if (error) return { errore: 'non accessibile' }
+      return { riunioni: data ?? [] }
     }
     case 'deal_per_stage': {
       const { data, error } = await sb
@@ -181,13 +290,33 @@ async function eseguiTool(name: string, args: Record<string, unknown>, sb: Retur
 }
 
 const OGGI = new Date().toISOString().slice(0, 10)
-const SYSTEM = `Sei l'assistente di FlowCRM, un gestionale per PMI italiane. Oggi è ${OGGI}.
-Rispondi in italiano, conciso e concreto.
-- Per domande sui DATI (quanti, quanto, quali) usa SEMPRE i tool di query: non inventare numeri.
-- Per domande su COME si fa qualcosa, usa il tool cerca_guida e rispondi basandoti sulle sezioni trovate.
-- Quando l'utente CHIEDE DI CREARE un task/nota/promemoria/chiamata/email, DEVI SEMPRE chiamare il tool proponi_attivita con i dettagli (converti date relative come "domani"/"venerdì" in formato ISO YYYY-MM-DD usando la data di oggi). NON descrivere il task a parole: chiama il tool. Sarà l'utente a confermare.
-- Se un tool restituisce {"errore":"non accessibile"}, conteggio 0 o nessuna sezione, dillo onestamente: non stimare né inventare.
-Formatta gli importi in euro.`
+const SYSTEM = `Sei l'assistente di FlowCRM, un gestionale + controllo di gestione per PMI italiane. Oggi è ${OGGI}.
+Rispondi in italiano, conciso e concreto. Usa SEMPRE i tool: non inventare numeri, nomi o procedure.
+
+REGOLE:
+- Dati (quanti/quali/mostrami): usa conta_entita, elenca_record, panoramica, deal_per_stage, mie_attivita, prossime_riunioni, scadenze_prossime.
+- "Come vanno le cose", riepilogo, fatturato, quanto devo incassare/scaduto/tasse: usa panoramica.
+- Come si fa qualcosa: usa cerca_guida; se il manuale non copre il tema, rispondi con la MAPPA FUNZIONI qui sotto.
+- L'utente vuole aprire/andare a una pagina: usa vai_a_pagina.
+- L'utente vuole creare un task/nota/promemoria: usa proponi_attivita (converti date relative in ISO YYYY-MM-DD). Sarà lui a confermare, non descriverlo a parole.
+- Rispetta i PERMESSI: se un tool torna "non accessibile"/vuoto, dillo onestamente (probabile che l'utente sia operatore e non veda fatture/incassi/tasse/HR). Non stimare.
+- Formatta gli importi in euro.
+
+MAPPA FUNZIONI (dove si fa cosa):
+- Organizzazioni: anagrafica clienti/fornitori/partner; scheda 360° con contatti, deal, attività, allegati, storico, fatturato annuale.
+- Contatti: persone; import/export CSV; scheda dettaglio.
+- Deal + Kanban: offerte per fase (drag&drop); da un deal vinto si crea la commessa.
+- Attività: task/chiamate/email/riunioni/note; "Le mie attività".
+- Calendario: vista mese/settimana con riunioni, attività con scadenza e scadenze economiche; si crea un evento cliccando un giorno, si sposta trascinandolo.
+- Riunioni: elenco riunioni prossime/passate con luogo/orario ed export nel calendario (.ics).
+- Progetti: cliente/interno; nella scheda le Milestone con barra di avanzamento.
+- Commesse: codice automatico COMM-AAAA-NNNN; scheda con allegati/storico.
+- Amministrazione (solo admin/manager): Registro fatture (attive/passive), Incassi previsti (anche manuali), Scadenze tasse (segna pagata).
+- Dashboard: operativa (KPI + pipeline + le mie attività + prossime riunioni) e economica (fatturato, cash flow, top clienti).
+- HR / Personale (solo admin/manager): anagrafica dipendenti, ferie/permessi (richiesta→approva/rifiuta), formazione.
+- Ogni lista ha il menu Azioni per Modificare/Archiviare/Eliminare (elimina solo admin). Import/Export CSV su varie liste.
+- Profilo: dati e cambio password. Gestione utenti (solo admin): ruoli, stato, creazione nuovi utenti.
+- Ruoli: admin (tutto), manager (tutto tranne utenti/eliminazioni definitive), operatore (CRM/vendite/attività, NIENTE amministrazione né HR).`
 
 Deno.serve(async (req) => {
   const cors = corsHeaders(req.headers.get('Origin'))
@@ -278,10 +407,26 @@ Deno.serve(async (req) => {
     )
   }
 
+  // ── NAVIGAZIONE: apri una pagina dell'app ────────────────────────
+  const navCall = msg1.tool_calls.find(
+    (tc: { function: { name: string } }) => tc.function.name === 'vai_a_pagina',
+  )
+  if (navCall) {
+    const { pagina } = JSON.parse(navCall.function.arguments || '{}')
+    const percorso = PAGINE[String(pagina)]
+    if (percorso) {
+      return new Response(
+        JSON.stringify({ tipo: 'navigazione', percorso, pagina }),
+        { headers: { ...cors, 'Content-Type': 'application/json' } },
+      )
+    }
+  }
+
   // Esegui i tool (in parallelo) e aggiungi i risultati
+  const uid = userData.user.id
   await Promise.all(msg1.tool_calls.map(async (tc: { id: string; function: { name: string; arguments: string } }) => {
     const args = JSON.parse(tc.function.arguments || '{}')
-    const risultato = await eseguiTool(tc.function.name, args, sb)
+    const risultato = await eseguiTool(tc.function.name, args, sb, uid)
     convo.push({ role: 'tool', tool_call_id: tc.id, content: JSON.stringify(risultato) })
   }))
 
