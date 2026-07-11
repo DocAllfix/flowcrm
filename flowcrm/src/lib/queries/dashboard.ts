@@ -6,11 +6,12 @@ export function useDashboardKpi() {
   return useQuery({
     queryKey: ['dashboard', 'kpi'],
     queryFn: async () => {
-      const [org, contatti, deal, commesse, pipeline] = await Promise.all([
+      const [org, contatti, deal, commesse, progetti, pipeline] = await Promise.all([
         supabase.from('organizzazioni').select('id', { count: 'exact', head: true }).eq('attivo', true),
         supabase.from('contatti').select('id', { count: 'exact', head: true }).eq('attivo', true),
         supabase.from('deals').select('id', { count: 'exact', head: true }).eq('attivo', true),
-        supabase.from('commesse').select('id', { count: 'exact', head: true }).eq('stato', 'attiva'),
+        supabase.from('commesse').select('id', { count: 'exact', head: true }).eq('stato', 'attiva').eq('attivo', true),
+        supabase.from('progetti').select('id', { count: 'exact', head: true }).eq('attivo', true).neq('stato', 'completato'),
         supabase.from('vw_pipeline_valore_pesato').select('valore_pesato'),
       ])
       const valorePesato = (pipeline.data ?? []).reduce((s, r) => s + Number(r.valore_pesato), 0)
@@ -19,6 +20,7 @@ export function useDashboardKpi() {
         contatti: contatti.count ?? 0,
         deal: deal.count ?? 0,
         commesse: commesse.count ?? 0,
+        progetti: progetti.count ?? 0,
         pipelinePesata: valorePesato,
       }
     },
