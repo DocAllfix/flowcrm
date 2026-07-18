@@ -20,6 +20,14 @@ export const APP_CONFIG = {
   // Demo mode: mostra badge "DEMO" nell'header. Default false in prod.
   demoMode: import.meta.env.VITE_DEMO_MODE === 'true',
 
+  // Moduli verticali attivi in questa istanza (CSV di slug, es. "gare,cantiere").
+  // La UI mostra solo questi; la barriera vera è la licenza nel DB
+  // (moduli_licenze + RLS modulo_licenziato). Vuoto = solo CRM base.
+  moduli: (import.meta.env.VITE_MODULES ?? '')
+    .split(',')
+    .map((s: string) => s.trim())
+    .filter(Boolean) as string[],
+
   // Tour interattivo (driver.js). Se assente, HelpButton/OnboardingBanner
   // ritornano null e il codice tour è escluso dal bundle.
   tourEnabled: import.meta.env.VITE_TOUR_ENABLED === 'true',

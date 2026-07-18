@@ -42,6 +42,7 @@ export type Database = {
       allegati: {
         Row: {
           caricato_da: string | null
+          categoria: string | null
           created_at: string
           dimensione_bytes: number | null
           entita: string
@@ -50,10 +51,12 @@ export type Database = {
           mime_type: string | null
           nome_file: string
           nome_originale: string
+          sottocategoria: string | null
           storage_path: string
         }
         Insert: {
           caricato_da?: string | null
+          categoria?: string | null
           created_at?: string
           dimensione_bytes?: number | null
           entita: string
@@ -62,10 +65,12 @@ export type Database = {
           mime_type?: string | null
           nome_file: string
           nome_originale: string
+          sottocategoria?: string | null
           storage_path: string
         }
         Update: {
           caricato_da?: string | null
+          categoria?: string | null
           created_at?: string
           dimensione_bytes?: number | null
           entita?: string
@@ -74,12 +79,82 @@ export type Database = {
           mime_type?: string | null
           nome_file?: string
           nome_originale?: string
+          sottocategoria?: string | null
           storage_path?: string
         }
         Relationships: [
           {
             foreignKeyName: "allegati_caricato_da_fkey"
             columns: ["caricato_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approvazioni: {
+        Row: {
+          approvatore_id: string | null
+          azione_url: string | null
+          created_at: string
+          dati: Json
+          decisa_at: string | null
+          descrizione: string
+          entita: string
+          entita_id: string
+          id: string
+          modulo: string
+          motivazione: string | null
+          richiedente_id: string
+          stato: Database["public"]["Enums"]["approvazione_stato"]
+          tipo_richiesta: string
+          updated_at: string
+        }
+        Insert: {
+          approvatore_id?: string | null
+          azione_url?: string | null
+          created_at?: string
+          dati?: Json
+          decisa_at?: string | null
+          descrizione: string
+          entita: string
+          entita_id: string
+          id?: string
+          modulo: string
+          motivazione?: string | null
+          richiedente_id: string
+          stato?: Database["public"]["Enums"]["approvazione_stato"]
+          tipo_richiesta: string
+          updated_at?: string
+        }
+        Update: {
+          approvatore_id?: string | null
+          azione_url?: string | null
+          created_at?: string
+          dati?: Json
+          decisa_at?: string | null
+          descrizione?: string
+          entita?: string
+          entita_id?: string
+          id?: string
+          modulo?: string
+          motivazione?: string | null
+          richiedente_id?: string
+          stato?: Database["public"]["Enums"]["approvazione_stato"]
+          tipo_richiesta?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approvazioni_approvatore_id_fkey"
+            columns: ["approvatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvazioni_richiedente_id_fkey"
+            columns: ["richiedente_id"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -319,6 +394,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      codici_progressivi: {
+        Row: {
+          anno: number
+          prefisso: string
+          ultimo: number
+        }
+        Insert: {
+          anno: number
+          prefisso: string
+          ultimo?: number
+        }
+        Update: {
+          anno?: number
+          prefisso?: string
+          ultimo?: number
+        }
+        Relationships: []
       }
       commesse: {
         Row: {
@@ -1052,6 +1145,24 @@ export type Database = {
           },
         ]
       }
+      moduli_licenze: {
+        Row: {
+          attivato_at: string
+          attivo: boolean
+          slug: string
+        }
+        Insert: {
+          attivato_at?: string
+          attivo?: boolean
+          slug: string
+        }
+        Update: {
+          attivato_at?: string
+          attivo?: boolean
+          slug?: string
+        }
+        Relationships: []
+      }
       notifiche: {
         Row: {
           azione_url: string | null
@@ -1459,6 +1570,75 @@ export type Database = {
           },
         ]
       }
+      scadenze_moduli: {
+        Row: {
+          azione_url: string | null
+          completata_at: string | null
+          created_at: string
+          created_by: string | null
+          data_scadenza: string
+          descrizione: string
+          entita: string
+          entita_id: string
+          id: string
+          modulo: string
+          solo_manager: boolean
+          stato: Database["public"]["Enums"]["scadenza_modulo_stato"]
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          azione_url?: string | null
+          completata_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_scadenza: string
+          descrizione: string
+          entita: string
+          entita_id: string
+          id?: string
+          modulo: string
+          solo_manager?: boolean
+          stato?: Database["public"]["Enums"]["scadenza_modulo_stato"]
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          azione_url?: string | null
+          completata_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_scadenza?: string
+          descrizione?: string
+          entita?: string
+          entita_id?: string
+          id?: string
+          modulo?: string
+          solo_manager?: boolean
+          stato?: Database["public"]["Enums"]["scadenza_modulo_stato"]
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scadenze_moduli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scadenze_moduli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       scadenze_pagamento: {
         Row: {
           commessa_id: string | null
@@ -1738,6 +1918,7 @@ export type Database = {
         }
         Returns: string
       }
+      genera_codice: { Args: { p_prefisso: string }; Returns: string }
       get_user_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
@@ -1750,8 +1931,10 @@ export type Database = {
           titolo: string
         }[]
       }
+      modulo_licenziato: { Args: { p_slug: string }; Returns: boolean }
       notifica_deal_a_rischio: { Args: { giorni?: number }; Returns: number }
       processa_scadenze: { Args: never; Returns: number }
+      processa_scadenze_moduli: { Args: never; Returns: number }
       puo_amministrazione: { Args: never; Returns: boolean }
       ricerca_globale: {
         Args: { q: string }
@@ -1764,6 +1947,7 @@ export type Database = {
       }
     }
     Enums: {
+      approvazione_stato: "richiesta" | "approvata" | "rifiutata" | "annullata"
       assenza_stato: "richiesta" | "approvata" | "rifiutata"
       assenza_tipo: "ferie" | "permesso" | "malattia"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
@@ -1789,6 +1973,7 @@ export type Database = {
         | "completato"
         | "sospeso"
       progetto_tipo: "cliente" | "interno"
+      scadenza_modulo_stato: "aperta" | "completata" | "annullata"
       sdi_stato:
         | "non_applicabile"
         | "da_inviare"
@@ -2385,6 +2570,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      approvazione_stato: ["richiesta", "approvata", "rifiutata", "annullata"],
       assenza_stato: ["richiesta", "approvata", "rifiutata"],
       assenza_tipo: ["ferie", "permesso", "malattia"],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
@@ -2412,6 +2598,7 @@ export const Constants = {
         "sospeso",
       ],
       progetto_tipo: ["cliente", "interno"],
+      scadenza_modulo_stato: ["aperta", "completata", "annullata"],
       sdi_stato: [
         "non_applicabile",
         "da_inviare",

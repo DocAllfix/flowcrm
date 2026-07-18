@@ -27,6 +27,9 @@ export interface NavItem {
 }
 
 export interface NavSection {
+  /** Identificatore stabile della sezione (usato dalla vista-modulo per
+   *  scegliere quali sezioni core mostrare accanto a un modulo). */
+  id?: string
   title: string | null
   items: NavItem[]
 }
@@ -39,6 +42,7 @@ export interface NavSection {
  */
 export const NAV_SECTIONS: NavSection[] = [
   {
+    id: 'dashboard',
     title: null,
     items: [
       { label: 'Dashboard', path: '/', icon: LayoutDashboard },
@@ -46,6 +50,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: 'crm',
     title: 'CRM',
     items: [
       { label: 'Organizzazioni', path: '/organizzazioni', icon: Building2 },
@@ -53,6 +58,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: 'vendite',
     title: 'Vendite',
     items: [
       { label: 'Deal', path: '/deal', icon: CircleDollarSign },
@@ -60,6 +66,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: 'operazioni',
     title: 'Operazioni',
     items: [
       { label: 'Attività', path: '/attivita', icon: ListChecks },
@@ -71,6 +78,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: 'amministrazione',
     title: 'Amministrazione',
     items: [
       { label: 'Registro fatture', path: '/fatture', icon: FileText, managerOnly: true },
@@ -79,6 +87,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
+    id: 'hr',
     title: 'HR',
     items: [
       { label: 'Personale', path: '/personale', icon: UsersRound, managerOnly: true },
@@ -86,11 +95,18 @@ export const NAV_SECTIONS: NavSection[] = [
   },
 ]
 
-/** Filtra le sezioni in base al ruolo: le voci managerOnly spariscono
- *  per l'operatore, e le sezioni rimaste vuote non vengono renderizzate. */
+/** Filtra un elenco di sezioni in base al ruolo: le voci managerOnly
+ *  spariscono per l'operatore, le sezioni rimaste vuote non si renderizzano. */
+export function filterSectionsForRole(sections: NavSection[], isManager: boolean): NavSection[] {
+  return sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => !item.managerOnly || isManager),
+    }))
+    .filter((section) => section.items.length > 0)
+}
+
+/** Sezioni core filtrate per ruolo (senza i moduli verticali). */
 export function navForRole(isManager: boolean): NavSection[] {
-  return NAV_SECTIONS.map((section) => ({
-    ...section,
-    items: section.items.filter((item) => !item.managerOnly || isManager),
-  })).filter((section) => section.items.length > 0)
+  return filterSectionsForRole(NAV_SECTIONS, isManager)
 }

@@ -6,6 +6,7 @@ import { ConnectionIndicator } from '@/components/layout/ConnectionIndicator'
 import { NotificheBadge } from '@/components/notifiche/NotificheBadge'
 import { NotifichePanel } from '@/components/notifiche/NotifichePanel'
 import { HelpButton } from '@/lib/onboarding/HelpButton'
+import { ModuleSwitcher } from '@/components/ModuleSwitcher'
 import { Button } from '@/components/ui/button'
 
 interface HeaderProps {
@@ -32,6 +33,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
               Demo
             </span>
           )}
+          <ModuleSwitcher />
           <button
             data-tour="global-search"
             onClick={() =>

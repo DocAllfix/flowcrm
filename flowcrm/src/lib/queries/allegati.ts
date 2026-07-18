@@ -39,7 +39,10 @@ export function useAllegati(entita: string, entitaId: string) {
 export function useUploadAllegati(entita: string, entitaId: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (files: File[]) => {
+    mutationFn: async (input: File[] | { files: File[]; categoria?: string; sottocategoria?: string }) => {
+      const files = Array.isArray(input) ? input : input.files
+      const categoria = Array.isArray(input) ? null : (input.categoria ?? null)
+      const sottocategoria = Array.isArray(input) ? null : (input.sottocategoria ?? null)
       const { data: auth } = await supabase.auth.getUser()
       const userId = auth.user?.id
       if (!userId) throw new Error('Utente non autenticato')
@@ -60,6 +63,8 @@ export function useUploadAllegati(entita: string, entitaId: string) {
           mime_type: file.type || null,
           dimensione_bytes: file.size,
           caricato_da: userId,
+          categoria,
+          sottocategoria,
         })
         if (metaErr) {
           // rollback del file orfano se il metadato fallisce

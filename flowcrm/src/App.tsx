@@ -1,5 +1,7 @@
+import { Fragment } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from '@/components/layout/AuthProvider'
+import { moduliAttivi } from '@/config/moduli.config'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -63,6 +65,11 @@ export default function App() {
           <Route path="/personale/:id" element={<ManagerOnly><DipendenteDettaglioPage /></ManagerOnly>} />
           <Route path="/profilo" element={<ProfiloPage />} />
           <Route path="/utenti" element={<UtentiPage />} />
+          {/* Route dei moduli verticali attivi (VITE_MODULES); un modulo
+              spento non monta nulla → i suoi percorsi cadono nel 404. */}
+          {moduliAttivi().map((m) => (
+            <Fragment key={m.slug}>{m.routes()}</Fragment>
+          ))}
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

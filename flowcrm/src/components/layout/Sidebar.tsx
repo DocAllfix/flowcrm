@@ -1,7 +1,10 @@
+import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { Zap, X, User, Users } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
-import { navForRole } from '@/config/nav.config'
+import { navForRole, filterSectionsForRole } from '@/config/nav.config'
+import { moduliAttivi, moduloBySlug } from '@/config/moduli.config'
+import { useVistaModulo } from '@/components/layout/VistaModuloContext'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
 
@@ -18,7 +21,21 @@ interface SidebarProps {
  */
 export function Sidebar({ open, onClose }: SidebarProps) {
   const { isManager, isAdmin, userProfile } = useAuth()
-  const sections = navForRole(isManager)
+  const { vista } = useVistaModulo()
+
+  // Navigazione per vista: 'tutti' = core + tutti i moduli attivi;
+  // vista modulo = sezioni del modulo sopra la base (Dashboard + CRM).
+  const sections = useMemo(() => {
+    const core = navForRole(isManager)
+    if (vista === 'tutti') {
+      const mods = moduliAttivi().flatMap((m) => filterSectionsForRole(m.nav, isManager))
+      return [...core, ...mods]
+    }
+    const mod = moduloBySlug(vista)
+    if (!mod) return core
+    const basi = core.filter((s) => s.id === 'dashboard' || s.id === 'crm')
+    return [...filterSectionsForRole(mod.nav, isManager), ...basi]
+  }, [vista, isManager])
 
   const initials = userProfile
     ? `${userProfile.nome[0] ?? ''}${userProfile.cognome?.[0] ?? ''}`.toUpperCase()
