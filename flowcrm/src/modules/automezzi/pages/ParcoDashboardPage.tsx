@@ -10,7 +10,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import {
-  Truck, Wrench, CalendarClock, IdCard, Trash2, Plus, Euro,
+  Truck, Wrench, CalendarClock, IdCard, Trash2, Plus, Euro, Package,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -24,7 +24,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { supabase } from '@/lib/supabase'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   AUTOMEZZO_STATI, PATENTE_LABEL, fmtImporto, fmtData,
 } from '@/modules/automezzi/stati'
@@ -48,6 +48,90 @@ function Kpi({ icon: Icon, label, value, tint }: {
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
       <p className="text-xl font-bold text-foreground">{value}</p>
+    </div>
+  )
+}
+
+/** Magazzino ricambi (§16): elenco generale con quantità e mezzo di
+ *  installazione opzionale. */
+function SezioneRicambi() {
+  const qc = useQueryClient()
+  const { data: ricambi = [] } = useQuery({
+    queryKey: ['automezzi', 'ricambi'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('automezzi_ricambi')
+        .select('*, automezzo:automezzi(targa, marca, modello)')
+        .order('descrizione')
+      if (error) throw error
+      return data
+    },
+  })
+  const [descrizione, setDescrizione] = useState('')
+  const [codice, setCodice] = useState('')
+  const [quantita, setQuantita] = useState('')
+
+  async function aggiungi(e: FormEvent) {
+    e.preventDefault()
+    if (!descrizione.trim()) { toast.error('Descrivi il ricambio'); return }
+    const { data: auth } = await supabase.auth.getUser()
+    const { error } = await supabase.from('automezzi_ricambi').insert({
+      descrizione: descrizione.trim(), codice: codice.trim() || null,
+      quantita: quantita === '' ? 0 : Number(quantita),
+      created_by: auth.user!.id,
+    })
+    if (error) { toast.error(error.message); return }
+    setDescrizione(''); setCodice(''); setQuantita('')
+    qc.invalidateQueries({ queryKey: ['automezzi', 'ricambi'] })
+  }
+
+  async function elimina(id: string) {
+    const { error } = await supabase.from('automezzi_ricambi').delete().eq('id', id)
+    if (error) { toast.error(error.message); return }
+    qc.invalidateQueries({ queryKey: ['automezzi', 'ricambi'] })
+  }
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="mb-3 flex items-center gap-2">
+        <Package className="h-5 w-5 text-primary" />
+        <h2 className="text-lg font-semibold text-foreground">Magazzino ricambi</h2>
+      </div>
+      {ricambi.map((r) => (
+        <div key={r.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
+          <span className="min-w-0 flex-1 truncate font-medium text-foreground">
+            {r.descrizione}
+            {r.codice && <span className="ml-2 font-mono text-xs font-normal text-muted-foreground">{r.codice}</span>}
+          </span>
+          {r.automezzo && (
+            <Badge tone="info">
+              su {(r.automezzo as { targa: string | null; marca: string }).targa
+                ?? (r.automezzo as { marca: string }).marca}
+            </Badge>
+          )}
+          <span className="font-semibold text-foreground">{Number(r.quantita)}</span>
+          <button onClick={() => void elimina(r.id)} aria-label="Rimuovi"
+            className="rounded-md p-1 text-muted-foreground hover:text-destructive">
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      ))}
+      <form onSubmit={aggiungi} className="mt-3 flex flex-wrap items-end gap-2">
+        <div className="min-w-40 flex-1 space-y-1">
+          <Label>Ricambio</Label>
+          <Input value={descrizione} onChange={(e) => setDescrizione(e.target.value)}
+            placeholder="Es. Filtro olio Daily" />
+        </div>
+        <div className="w-32 space-y-1">
+          <Label>Codice</Label>
+          <Input value={codice} onChange={(e) => setCodice(e.target.value)} />
+        </div>
+        <div className="w-20 space-y-1">
+          <Label>Q.tà</Label>
+          <Input type="number" step="1" value={quantita} onChange={(e) => setQuantita(e.target.value)} />
+        </div>
+        <Button type="submit"><Plus className="h-4 w-4" /></Button>
+      </form>
     </div>
   )
 }
@@ -239,11 +323,10 @@ export function ParcoDashboardPage() {
         </div>
       </div>
 
-      {isManager && (
-        <div className="mt-6">
-          <SezionePatenti />
-        </div>
-      )}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <SezioneRicambi />
+        {isManager && <SezionePatenti />}
+      </div>
     </div>
   )
 }

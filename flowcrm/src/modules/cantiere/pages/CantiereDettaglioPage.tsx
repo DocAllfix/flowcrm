@@ -29,8 +29,10 @@ import { ApprovalSection } from '@/components/ApprovalSection'
 import { ScadenzeModuliSection } from '@/components/ScadenzeModuliSection'
 import { useAuth } from '@/hooks/useAuth'
 import { useOrganizzazioni } from '@/lib/queries/organizzazioni'
+import { useAllegati } from '@/lib/queries/allegati'
 import { supabase } from '@/lib/supabase'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient, useQuery } from '@tanstack/react-query'
+import { moduloBySlug } from '@/config/moduli.config'
 import { CantiereDialog } from '@/modules/cantiere/dialogs/CantiereDialog'
 import { RapportinoDialog } from '@/modules/cantiere/dialogs/RapportinoDialog'
 import {
@@ -49,6 +51,25 @@ import {
   type CantiereRapportino, type CantiereEventoSicurezza,
   type CantiereControlloQualita, type CantiereRegistroAmbiente,
 } from '@/modules/cantiere/queries/cantieri'
+
+type CantiereMisura = {
+  id: string; descrizione: string; quantita: number; unita: string | null
+  prezzo_unitario: number; data: string
+}
+
+/** Dipendenti HR (RLS: solo manager li vede; per gli altri lista vuota). */
+function useDipendentiHr(abilitato: boolean) {
+  return useQuery({
+    queryKey: ['cantiere', 'dipendenti-hr'],
+    enabled: abilitato,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('dipendenti').select('id, nome, cognome').eq('attivo', true).order('cognome')
+      if (error) throw error
+      return data
+    },
+  })
+}
 
 const card = 'rounded-xl border border-border bg-card p-5 shadow-sm'
 
@@ -155,12 +176,36 @@ function TabPanoramica({ cantiere }: { cantiere: Cantiere }) {
         </div>
       )}
 
+      <DocumentazioneMancante cantiere={cantiere} />
+
       {cantiere.note && (
         <div className={card + ' lg:col-span-2'}>
           <h3 className="mb-2 text-sm font-semibold text-foreground">Note</h3>
           <p className="whitespace-pre-wrap text-sm text-muted-foreground">{cantiere.note}</p>
         </div>
       )}
+    </div>
+  )
+}
+
+// Indicatore "documentazione mancante" (§17): archivi senza nemmeno un file
+function DocumentazioneMancante({ cantiere }: { cantiere: Cantiere }) {
+  const { data: allegati = [] } = useAllegati('cantieri', cantiere.id)
+  const presenti = new Set(allegati.map((a) => a.categoria).filter(Boolean))
+  const mancanti = CANTIERE_CATEGORIE_DOC.filter((c) => !presenti.has(c))
+  if (mancanti.length === 0) return null
+  return (
+    <div className={card + ' lg:col-span-2 border-warning/50'}>
+      <h3 className="mb-2 text-sm font-semibold text-foreground">Documentazione mancante</h3>
+      <p className="text-sm text-muted-foreground">
+        Archivi ancora vuoti:{' '}
+        {mancanti.map((m, i) => (
+          <span key={m}>
+            <Badge tone="warning">{m}</Badge>{i < mancanti.length - 1 ? ' ' : ''}
+          </span>
+        ))}
+        {' '}— carica i documenti nella tab Documenti.
+      </p>
     </div>
   )
 }
@@ -174,6 +219,7 @@ function TabCronoprogramma({ cantiere }: { cantiere: Cantiere }) {
   const [nome, setNome] = useState('')
   const [inizio, setInizio] = useState('')
   const [fine, setFine] = useState('')
+  const [dipendeDa, setDipendeDa] = useState('')
 
   async function handleAggiungi(e: FormEvent) {
     e.preventDefault()
@@ -183,12 +229,15 @@ function TabCronoprogramma({ cantiere }: { cantiere: Cantiere }) {
         cantiereId: cantiere.id, tabella: 'cantiere_fasi',
         values: {
           nome: nome.trim(), data_inizio: inizio || null, data_fine: fine || null,
+          dipende_da: dipendeDa || null,
           ordine: fasi.length + 1,
         },
       })
-      setNome(''); setInizio(''); setFine('')
+      setNome(''); setInizio(''); setFine(''); setDipendeDa('')
     } catch (err) { toast.error((err as Error).message) }
   }
+
+  const nomeFase = (id: string | null) => fasi.find((x) => x.id === id)?.nome
 
   return (
     <div className={card}>
@@ -202,7 +251,14 @@ function TabCronoprogramma({ cantiere }: { cantiere: Cantiere }) {
         {fasi.map((f) => (
           <div key={f.id} className="rounded-lg border border-border p-3">
             <div className="flex items-center gap-3">
-              <span className="flex-1 text-sm font-medium text-foreground">{f.nome}</span>
+              <span className="flex-1 text-sm font-medium text-foreground">
+                {f.nome}
+                {f.dipende_da && nomeFase(f.dipende_da) && (
+                  <span className="ml-2 text-xs font-normal text-muted-foreground">
+                    dopo «{nomeFase(f.dipende_da)}»
+                  </span>
+                )}
+              </span>
               <span className="text-xs text-muted-foreground">
                 {fmtData(f.data_inizio)} → {fmtData(f.data_fine)}
               </span>
@@ -238,6 +294,16 @@ function TabCronoprogramma({ cantiere }: { cantiere: Cantiere }) {
         <div className="w-40 space-y-1">
           <Label>Fine</Label>
           <Input type="date" value={fine} onChange={(e) => setFine(e.target.value)} />
+        </div>
+        <div className="w-48 space-y-1">
+          <Label>Dipende da</Label>
+          <Select value={dipendeDa || 'nessuna'} onValueChange={(v) => setDipendeDa(v === 'nessuna' ? '' : v)}>
+            <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="nessuna">— Nessuna —</SelectItem>
+              {fasi.map((f) => <SelectItem key={f.id} value={f.id}>{f.nome}</SelectItem>)}
+            </SelectContent>
+          </Select>
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Aggiungi fase</Button>
       </form>
@@ -303,39 +369,50 @@ function TabRapportini({ cantiere }: { cantiere: Cantiere }) {
 
 // ── Personale + presenze ─────────────────────────────────────────
 function TabPersonale({ cantiere }: { cantiere: Cantiere }) {
+  const { isManager } = useAuth()
   const { data: personale = [] } = useFigliCantiere<CantierePersonale>(cantiere.id, 'cantiere_personale')
   const { data: presenze = [] } = useFigliCantiere<CantierePresenza>(cantiere.id, 'cantiere_presenze')
   const { data: organizzazioni = [] } = useOrganizzazioni()
+  const { data: dipendentiHr = [] } = useDipendentiHr(isManager)
   const crea = useCreaFiglioCantiere()
   const elimina = useEliminaFiglioCantiere()
   const [nominativo, setNominativo] = useState('')
+  const [dipendenteId, setDipendenteId] = useState('')
   const [ruolo, setRuolo] = useState('')
   const [impresaId, setImpresaId] = useState('')
+  const [dpi, setDpi] = useState('')
+  const [oreDefault, setOreDefault] = useState('8')
 
   const oggi = new Date().toISOString().slice(0, 10)
   const presentiOggi = new Set(presenze.filter((p) => p.data === oggi).map((p) => p.personale_id))
 
   async function handleAggiungi(e: FormEvent) {
     e.preventDefault()
-    if (!nominativo.trim()) { toast.error('Inserisci il nominativo'); return }
+    if (!nominativo.trim() && !dipendenteId) {
+      toast.error('Inserisci il nominativo o scegli un dipendente'); return
+    }
     try {
       await crea.mutateAsync({
         cantiereId: cantiere.id, tabella: 'cantiere_personale',
         values: {
-          nominativo: nominativo.trim(), ruolo: ruolo.trim() || null,
+          nominativo: nominativo.trim() || null,
+          dipendente_id: dipendenteId || null,
+          ruolo: ruolo.trim() || null,
           impresa_id: impresaId || null,
+          dpi_assegnati: dpi.trim() || null,
         },
       })
-      setNominativo(''); setRuolo(''); setImpresaId('')
+      setNominativo(''); setDipendenteId(''); setRuolo(''); setImpresaId(''); setDpi('')
     } catch (err) { toast.error((err as Error).message) }
   }
 
   function segnaPresenza(p: CantierePersonale) {
+    const ore = Number(oreDefault) || 8
     crea.mutate({
       cantiereId: cantiere.id, tabella: 'cantiere_presenze',
-      values: { personale_id: p.id, data: oggi, ore: 8 },
+      values: { personale_id: p.id, data: oggi, ore },
     }, {
-      onSuccess: () => toast.success('Presenza registrata (8 ore)'),
+      onSuccess: () => toast.success(`Presenza registrata (${ore} ore)`),
       onError: (err) => toast.error((err as Error).message),
     })
   }
@@ -346,7 +423,15 @@ function TabPersonale({ cantiere }: { cantiere: Cantiere }) {
     <div className={card}>
       <div className="mb-3 flex items-center justify-between">
         <h3 className="text-sm font-semibold text-foreground">Personale di cantiere</h3>
-        <span className="text-xs text-muted-foreground">{oreTotali} ore registrate</span>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span>{oreTotali} ore registrate</span>
+          <span>·</span>
+          <label className="flex items-center gap-1">
+            Ore presenza
+            <Input type="number" min="1" max="24" step="0.5" value={oreDefault}
+              onChange={(e) => setOreDefault(e.target.value)} className="h-7 w-16 text-xs" />
+          </label>
+        </div>
       </div>
       {personale.map((p) => (
         <div key={p.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
@@ -356,7 +441,8 @@ function TabPersonale({ cantiere }: { cantiere: Cantiere }) {
               {p.dipendente ? `${p.dipendente.nome} ${p.dipendente.cognome ?? ''}` : p.nominativo}
             </p>
             <p className="text-xs text-muted-foreground">
-              {[p.ruolo, p.impresa?.ragione_sociale].filter(Boolean).join(' · ') || '—'}
+              {[p.ruolo, p.impresa?.ragione_sociale, p.dpi_assegnati && `DPI: ${p.dpi_assegnati}`]
+                .filter(Boolean).join(' · ') || '—'}
             </p>
           </div>
           {presentiOggi.has(p.id) ? (
@@ -370,15 +456,30 @@ function TabPersonale({ cantiere }: { cantiere: Cantiere }) {
         </div>
       ))}
       <form onSubmit={handleAggiungi} className="mt-3 flex flex-wrap items-end gap-2">
-        <div className="min-w-44 flex-1 space-y-1">
+        {isManager && dipendentiHr.length > 0 && (
+          <div className="w-48 space-y-1">
+            <Label>Dipendente (HR)</Label>
+            <Select value={dipendenteId || 'esterno'}
+              onValueChange={(v) => setDipendenteId(v === 'esterno' ? '' : v)}>
+              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="esterno">— Esterno —</SelectItem>
+                {dipendentiHr.map((d) => (
+                  <SelectItem key={d.id} value={d.id}>{d.nome} {d.cognome ?? ''}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        <div className="min-w-40 flex-1 space-y-1">
           <Label>Nominativo</Label>
           <Input value={nominativo} onChange={(e) => setNominativo(e.target.value)} placeholder="Nome e cognome" />
         </div>
-        <div className="w-36 space-y-1">
+        <div className="w-32 space-y-1">
           <Label>Ruolo</Label>
           <Input value={ruolo} onChange={(e) => setRuolo(e.target.value)} placeholder="Es. Operaio" />
         </div>
-        <div className="w-52 space-y-1">
+        <div className="w-44 space-y-1">
           <Label>Impresa</Label>
           <Select value={impresaId || 'interna'} onValueChange={(v) => setImpresaId(v === 'interna' ? '' : v)}>
             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -387,6 +488,10 @@ function TabPersonale({ cantiere }: { cantiere: Cantiere }) {
               {organizzazioni.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}
             </SelectContent>
           </Select>
+        </div>
+        <div className="w-40 space-y-1">
+          <Label>DPI assegnati</Label>
+          <Input value={dpi} onChange={(e) => setDpi(e.target.value)} placeholder="Casco, imbrago…" />
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Aggiungi</Button>
       </form>
@@ -403,6 +508,7 @@ function TabImprese({ cantiere }: { cantiere: Cantiere }) {
   const [orgId, setOrgId] = useState('')
   const [lavorazioni, setLavorazioni] = useState('')
   const [importo, setImporto] = useState('')
+  const [referente, setReferente] = useState('')
 
   return (
     <div className="space-y-4">
@@ -416,7 +522,9 @@ function TabImprese({ cantiere }: { cantiere: Cantiere }) {
             <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
               <p className="font-medium text-foreground">{i.organizzazione?.ragione_sociale ?? '—'}</p>
-              <p className="text-xs text-muted-foreground">{i.lavorazioni ?? '—'}</p>
+              <p className="text-xs text-muted-foreground">
+                {[i.lavorazioni, i.referente && `ref. ${i.referente}`].filter(Boolean).join(' · ') || '—'}
+              </p>
             </div>
             {i.importo_affidato != null && (
               <span className="text-sm font-medium text-foreground">{fmtImporto(Number(i.importo_affidato))}</span>
@@ -433,9 +541,10 @@ function TabImprese({ cantiere }: { cantiere: Cantiere }) {
               values: {
                 organizzazione_id: orgId, lavorazioni: lavorazioni.trim() || null,
                 importo_affidato: importo === '' ? null : Number(importo),
+                referente: referente.trim() || null,
               },
             }, {
-              onSuccess: () => { setOrgId(''); setLavorazioni(''); setImporto('') },
+              onSuccess: () => { setOrgId(''); setLavorazioni(''); setImporto(''); setReferente('') },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
@@ -458,6 +567,10 @@ function TabImprese({ cantiere }: { cantiere: Cantiere }) {
           <div className="w-36 space-y-1">
             <Label>Importo (€)</Label>
             <Input type="number" step="0.01" value={importo} onChange={(e) => setImporto(e.target.value)} />
+          </div>
+          <div className="w-40 space-y-1">
+            <Label>Referente</Label>
+            <Input value={referente} onChange={(e) => setReferente(e.target.value)} />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Aggiungi</Button>
         </form>
@@ -482,14 +595,34 @@ function TabImprese({ cantiere }: { cantiere: Cantiere }) {
 function TabMezziMateriali({ cantiere }: { cantiere: Cantiere }) {
   const { data: mezzi = [] } = useFigliCantiere<CantiereMezzo>(cantiere.id, 'cantiere_mezzi')
   const { data: materiali = [] } = useFigliCantiere<CantiereMateriale>(cantiere.id, 'cantiere_materiali')
+  const { data: organizzazioni = [] } = useOrganizzazioni()
   const crea = useCreaFiglioCantiere()
   const elimina = useEliminaFiglioCantiere()
   const [tipoMezzo, setTipoMezzo] = useState('automezzo')
   const [descMezzo, setDescMezzo] = useState('')
+  const [automezzoId, setAutomezzoId] = useState('')
   const [movimento, setMovimento] = useState('consegna')
   const [descMat, setDescMat] = useState('')
   const [quantita, setQuantita] = useState('')
   const [unita, setUnita] = useState('')
+  const [fornitoreId, setFornitoreId] = useState('')
+
+  // Cross-modulo: se il modulo Automezzi è attivo si può agganciare un
+  // mezzo del parco (descrizione compilata in automatico dalla targa).
+  const moduloAutomezziAttivo = !!moduloBySlug('automezzi')
+  const { data: parco = [] } = useQuery({
+    queryKey: ['cantiere', 'parco-automezzi'],
+    enabled: moduloAutomezziAttivo,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('automezzi')
+        .select('id, targa, marca, modello')
+        .eq('attivo', true)
+        .neq('stato', 'dismesso')
+      if (error) throw error
+      return data
+    },
+  })
 
   // Giacenze per materiale: consegne − consumi − resi (§7)
   const giacenze = useMemo(() => {
@@ -522,15 +655,22 @@ function TabMezziMateriali({ cantiere }: { cantiere: Cantiere }) {
         <form
           onSubmit={(e) => {
             e.preventDefault()
-            if (!descMezzo.trim()) { toast.error('Descrivi il mezzo'); return }
+            const dalParco = parco.find((p) => p.id === automezzoId)
+            const descrizione = dalParco
+              ? `${dalParco.marca} ${dalParco.modello}${dalParco.targa ? ` (${dalParco.targa})` : ''}`
+              : descMezzo.trim()
+            if (!descrizione) { toast.error('Descrivi il mezzo o scegline uno dal parco'); return }
             crea.mutate({
               cantiereId: cantiere.id, tabella: 'cantiere_mezzi',
-              values: { tipo: tipoMezzo, descrizione: descMezzo.trim() },
-            }, { onSuccess: () => setDescMezzo(''), onError: (err) => toast.error((err as Error).message) })
+              values: { tipo: tipoMezzo, descrizione, automezzo_id: automezzoId || null },
+            }, {
+              onSuccess: () => { setDescMezzo(''); setAutomezzoId('') },
+              onError: (err) => toast.error((err as Error).message),
+            })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="w-44 space-y-1">
+          <div className="w-40 space-y-1">
             <Label>Tipo</Label>
             <Select value={tipoMezzo} onValueChange={setTipoMezzo}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -541,10 +681,27 @@ function TabMezziMateriali({ cantiere }: { cantiere: Cantiere }) {
               </SelectContent>
             </Select>
           </div>
+          {moduloAutomezziAttivo && (
+            <div className="w-48 space-y-1">
+              <Label>Dal parco automezzi</Label>
+              <Select value={automezzoId || 'nessuno'}
+                onValueChange={(v) => setAutomezzoId(v === 'nessuno' ? '' : v)}>
+                <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nessuno">— Manuale —</SelectItem>
+                  {parco.map((p) => (
+                    <SelectItem key={p.id} value={p.id}>
+                      {p.targa ?? ''} {p.marca} {p.modello}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="min-w-40 flex-1 space-y-1">
             <Label>Descrizione</Label>
             <Input value={descMezzo} onChange={(e) => setDescMezzo(e.target.value)}
-              placeholder="Es. Escavatore CAT 320" />
+              placeholder="Es. Escavatore CAT 320" disabled={!!automezzoId} />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
@@ -580,7 +737,10 @@ function TabMezziMateriali({ cantiere }: { cantiere: Cantiere }) {
             if (!descMat.trim() || !quantita || Number.isNaN(q)) { toast.error('Materiale e quantità obbligatori'); return }
             crea.mutate({
               cantiereId: cantiere.id, tabella: 'cantiere_materiali',
-              values: { descrizione: descMat.trim(), movimento, quantita: q, unita: unita.trim() || null },
+              values: {
+                descrizione: descMat.trim(), movimento, quantita: q,
+                unita: unita.trim() || null, fornitore_id: fornitoreId || null,
+              },
             }, {
               onSuccess: () => { setDescMat(''); setQuantita(''); setUnita('') },
               onError: (err) => toast.error((err as Error).message),
@@ -611,6 +771,17 @@ function TabMezziMateriali({ cantiere }: { cantiere: Cantiere }) {
             <Label>Unità</Label>
             <Input value={unita} onChange={(e) => setUnita(e.target.value)} placeholder="mc" />
           </div>
+          <div className="w-40 space-y-1">
+            <Label>Fornitore</Label>
+            <Select value={fornitoreId || 'nessuno'}
+              onValueChange={(v) => setFornitoreId(v === 'nessuno' ? '' : v)}>
+              <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nessuno">—</SelectItem>
+                {organizzazioni.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
       </div>
@@ -624,6 +795,7 @@ function TabContabilita({ cantiere }: { cantiere: Cantiere }) {
   const qc = useQueryClient()
   const { data: sal = [] } = useFigliCantiere<CantiereSal>(cantiere.id, 'cantiere_sal')
   const { data: costi = [] } = useFigliCantiere<CantiereCosto>(cantiere.id, 'cantiere_costi')
+  const { data: misure = [] } = useFigliCantiere<CantiereMisura>(cantiere.id, 'cantiere_misure')
   const crea = useCreaFiglioCantiere()
   const aggiorna = useAggiornaFiglioCantiere()
   const elimina = useEliminaFiglioCantiere()
@@ -633,6 +805,12 @@ function TabContabilita({ cantiere }: { cantiere: Cantiere }) {
   const [descCosto, setDescCosto] = useState('')
   const [importoCosto, setImportoCosto] = useState('')
   const [fatturando, setFatturando] = useState<string | null>(null)
+  const [descMisura, setDescMisura] = useState('')
+  const [qtaMisura, setQtaMisura] = useState('')
+  const [unitaMisura, setUnitaMisura] = useState('')
+  const [prezzoMisura, setPrezzoMisura] = useState('')
+
+  const totaleMisure = misure.reduce((s, m) => s + Number(m.quantita) * Number(m.prezzo_unitario), 0)
 
   if (!isManager) {
     return (
@@ -791,6 +969,69 @@ function TabContabilita({ cantiere }: { cantiere: Cantiere }) {
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
       </div>
+
+      <div className={card + ' lg:col-span-2'}>
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-foreground">Libretto delle misure</h3>
+          {misure.length > 0 && (
+            <span className="text-xs text-muted-foreground">
+              Contabilizzato: <span className="font-semibold text-foreground">{fmtImporto(totaleMisure)}</span>
+            </span>
+          )}
+        </div>
+        {misure.map((m) => (
+          <div key={m.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
+            <span className="min-w-0 flex-1 truncate text-foreground">{m.descrizione}</span>
+            <span className="text-muted-foreground">
+              {Number(m.quantita)}{m.unita ? ` ${m.unita}` : ''} × {fmtImporto(Number(m.prezzo_unitario))}
+            </span>
+            <span className="font-medium text-foreground">
+              {fmtImporto(Number(m.quantita) * Number(m.prezzo_unitario))}
+            </span>
+            <span className="text-xs text-muted-foreground">{fmtData(m.data)}</span>
+            <BtnElimina onClick={() => elimina.mutate({ cantiereId: cantiere.id, tabella: 'cantiere_misure', id: m.id })} />
+          </div>
+        ))}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            const q = Number(qtaMisura); const p = Number(prezzoMisura)
+            if (!descMisura.trim() || Number.isNaN(q) || Number.isNaN(p) || !qtaMisura || !prezzoMisura) {
+              toast.error('Descrizione, quantità e prezzo obbligatori'); return
+            }
+            crea.mutate({
+              cantiereId: cantiere.id, tabella: 'cantiere_misure',
+              values: {
+                descrizione: descMisura.trim(), quantita: q,
+                unita: unitaMisura.trim() || null, prezzo_unitario: p,
+              },
+            }, {
+              onSuccess: () => { setDescMisura(''); setQtaMisura(''); setUnitaMisura(''); setPrezzoMisura('') },
+              onError: (err) => toast.error((err as Error).message),
+            })
+          }}
+          className="mt-3 flex flex-wrap items-end gap-2"
+        >
+          <div className="min-w-44 flex-1 space-y-1">
+            <Label>Voce di misura</Label>
+            <Input value={descMisura} onChange={(e) => setDescMisura(e.target.value)}
+              placeholder="Es. Muratura in blocchi sp. 25cm" />
+          </div>
+          <div className="w-24 space-y-1">
+            <Label>Quantità</Label>
+            <Input type="number" step="0.001" value={qtaMisura} onChange={(e) => setQtaMisura(e.target.value)} />
+          </div>
+          <div className="w-20 space-y-1">
+            <Label>Unità</Label>
+            <Input value={unitaMisura} onChange={(e) => setUnitaMisura(e.target.value)} placeholder="mq" />
+          </div>
+          <div className="w-32 space-y-1">
+            <Label>Prezzo unit. (€)</Label>
+            <Input type="number" step="0.01" value={prezzoMisura} onChange={(e) => setPrezzoMisura(e.target.value)} />
+          </div>
+          <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Registra misura</Button>
+        </form>
+      </div>
     </div>
   )
 }
@@ -896,6 +1137,9 @@ function TabQualitaAmbiente({ cantiere }: { cantiere: Cantiere }) {
   const [descQ, setDescQ] = useState('')
   const [tipoA, setTipoA] = useState('rifiuti')
   const [descA, setDescA] = useState('')
+  const [quantA, setQuantA] = useState('')
+  const [unitaA, setUnitaA] = useState('')
+  const [formularioA, setFormularioA] = useState('')
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -965,7 +1209,10 @@ function TabQualitaAmbiente({ cantiere }: { cantiere: Cantiere }) {
         {registri.map((r) => (
           <div key={r.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
             <Badge tone="neutral">{AMBIENTE_LABEL[r.tipo]}</Badge>
-            <span className="min-w-0 flex-1 truncate text-foreground">{r.descrizione}</span>
+            <span className="min-w-0 flex-1 truncate text-foreground">
+              {r.descrizione}
+              {r.formulario && <span className="text-muted-foreground"> · FIR {r.formulario}</span>}
+            </span>
             {r.quantita != null && (
               <span className="text-muted-foreground">{Number(r.quantita)}{r.unita ? ` ${r.unita}` : ''}</span>
             )}
@@ -979,12 +1226,20 @@ function TabQualitaAmbiente({ cantiere }: { cantiere: Cantiere }) {
             if (!descA.trim()) { toast.error('Descrivi la registrazione'); return }
             crea.mutate({
               cantiereId: cantiere.id, tabella: 'cantiere_registri_ambiente',
-              values: { tipo: tipoA, descrizione: descA.trim() },
-            }, { onSuccess: () => setDescA(''), onError: (err) => toast.error((err as Error).message) })
+              values: {
+                tipo: tipoA, descrizione: descA.trim(),
+                quantita: quantA === '' ? null : Number(quantA),
+                unita: unitaA.trim() || null,
+                formulario: formularioA.trim() || null,
+              },
+            }, {
+              onSuccess: () => { setDescA(''); setQuantA(''); setUnitaA(''); setFormularioA('') },
+              onError: (err) => toast.error((err as Error).message),
+            })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="w-40 space-y-1">
+          <div className="w-36 space-y-1">
             <Label>Tipo</Label>
             <Select value={tipoA} onValueChange={setTipoA}>
               <SelectTrigger><SelectValue /></SelectTrigger>
@@ -995,10 +1250,23 @@ function TabQualitaAmbiente({ cantiere }: { cantiere: Cantiere }) {
               </SelectContent>
             </Select>
           </div>
-          <div className="min-w-36 flex-1 space-y-1">
+          <div className="min-w-32 flex-1 space-y-1">
             <Label>Descrizione</Label>
             <Input value={descA} onChange={(e) => setDescA(e.target.value)}
-              placeholder="Es. Formulario FIR n. 123" />
+              placeholder="Es. Conferimento macerie" />
+          </div>
+          <div className="w-20 space-y-1">
+            <Label>Q.tà</Label>
+            <Input type="number" step="0.01" value={quantA} onChange={(e) => setQuantA(e.target.value)} />
+          </div>
+          <div className="w-20 space-y-1">
+            <Label>Unità</Label>
+            <Input value={unitaA} onChange={(e) => setUnitaA(e.target.value)} placeholder="t" />
+          </div>
+          <div className="w-32 space-y-1">
+            <Label>Formulario</Label>
+            <Input value={formularioA} onChange={(e) => setFormularioA(e.target.value)}
+              placeholder="FIR n." />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>

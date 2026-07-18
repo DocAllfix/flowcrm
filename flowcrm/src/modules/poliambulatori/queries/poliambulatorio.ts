@@ -310,7 +310,11 @@ export function useSaveAppuntamento() {
         if (error) throw error
       }
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: poliKeys.lista('appuntamenti') }),
+    onSuccess: (_d, v) => {
+      qc.invalidateQueries({ queryKey: poliKeys.lista('appuntamenti') })
+      const pid = (v.values as { paziente_id?: string }).paziente_id
+      if (pid) qc.invalidateQueries({ queryKey: poliKeys.figliPaziente(pid, 'appuntamenti') })
+    },
   })
 }
 

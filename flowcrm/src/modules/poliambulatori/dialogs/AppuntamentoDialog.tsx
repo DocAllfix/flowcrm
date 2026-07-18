@@ -19,6 +19,7 @@ import { APPUNTAMENTO_STATO, nomePaziente } from '@/modules/poliambulatori/stati
 import {
   useSaveAppuntamento, useDeleteAppuntamento, usePazienti, usePoliLista,
   type Appuntamento, type Professionista, type Ambulatorio, type Prestazione,
+  type Apparecchiatura,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
 
 interface Props {
@@ -27,21 +28,25 @@ interface Props {
   appuntamento?: Appuntamento
   /** Slot precompilato dal click sul calendario. */
   slotIniziale?: Date
+  /** Paziente precompilato (dialog aperto dal fascicolo). */
+  pazienteIniziale?: string
 }
 
-export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotIniziale }: Props) {
+export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotIniziale, pazienteIniziale }: Props) {
   const save = useSaveAppuntamento()
   const del = useDeleteAppuntamento()
   const { data: pazienti = [] } = usePazienti()
   const { data: professionisti = [] } = usePoliLista<Professionista>('professionisti')
   const { data: ambulatori = [] } = usePoliLista<Ambulatorio>('ambulatori')
   const { data: prestazioni = [] } = usePoliLista<Prestazione>('prestazioni')
+  const { data: apparecchiature = [] } = usePoliLista<Apparecchiatura>('apparecchiature')
   const isEdit = !!appuntamento
 
   const [pazienteId, setPazienteId] = useState('')
   const [professionistaId, setProfessionistaId] = useState('')
   const [ambulatorioId, setAmbulatorioId] = useState('')
   const [prestazioneId, setPrestazioneId] = useState('')
+  const [apparecchiaturaId, setApparecchiaturaId] = useState('')
   const [inizio, setInizio] = useState('')
   const [durata, setDurata] = useState('30')
   const [stato, setStato] = useState('prenotato')
@@ -56,6 +61,7 @@ export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotInizi
       setProfessionistaId(appuntamento.professionista_id)
       setAmbulatorioId(appuntamento.ambulatorio_id ?? '')
       setPrestazioneId(appuntamento.prestazione_id ?? '')
+      setApparecchiaturaId(appuntamento.apparecchiatura_id ?? '')
       setInizio(new Date(appuntamento.inizio).toISOString().slice(0, 16))
       setDurata(String(appuntamento.durata_minuti))
       setStato(appuntamento.stato)
@@ -63,13 +69,15 @@ export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotInizi
       setListaAttesa(appuntamento.lista_attesa)
       setNote(appuntamento.note ?? '')
     } else {
-      setPazienteId(''); setProfessionistaId(''); setAmbulatorioId(''); setPrestazioneId('')
+      setPazienteId(pazienteIniziale ?? '')
+      setProfessionistaId(''); setAmbulatorioId(''); setPrestazioneId('')
+      setApparecchiaturaId('')
       setInizio(slotIniziale
         ? new Date(slotIniziale.getTime() - slotIniziale.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
         : '')
       setDurata('30'); setStato('prenotato'); setUrgente(false); setListaAttesa(false); setNote('')
     }
-  }, [open, appuntamento, slotIniziale])
+  }, [open, appuntamento, slotIniziale, pazienteIniziale])
 
   // La prestazione precompila la durata
   useEffect(() => {
@@ -92,6 +100,7 @@ export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotInizi
           professionista_id: professionistaId,
           ambulatorio_id: ambulatorioId || null,
           prestazione_id: prestazioneId || null,
+          apparecchiatura_id: apparecchiaturaId || null,
           inizio: new Date(inizio).toISOString(),
           durata_minuti: Number(durata) || 30,
           stato: stato as 'prenotato',
@@ -170,6 +179,19 @@ export function AppuntamentoDialog({ open, onOpenChange, appuntamento, slotInizi
                 <SelectContent>
                   <SelectItem value="nessuno">—</SelectItem>
                   {ambulatori.map((a) => <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>)}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Apparecchiatura</Label>
+              <Select value={apparecchiaturaId || 'nessuna'}
+                onValueChange={(v) => setApparecchiaturaId(v === 'nessuna' ? '' : v)}>
+                <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nessuna">—</SelectItem>
+                  {apparecchiature.filter((a) => a.stato_operativo === 'operativa').map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.nome}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

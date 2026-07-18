@@ -31,7 +31,7 @@ export interface ParsedCsv {
   rows: Record<string, string>[]
 }
 
-export function parseCsv(text: string): ParsedCsv {
+export function parseCsv(text: string, separatore: ',' | ';' = ','): ParsedCsv {
   const records: string[][] = []
   let field = ''
   let row: string[] = []
@@ -49,7 +49,7 @@ export function parseCsv(text: string): ParsedCsv {
       } else field += ch
     } else {
       if (ch === '"') inQuotes = true
-      else if (ch === ',') pushField()
+      else if (ch === separatore) pushField()
       else if (ch === '\r') { /* ignora */ }
       else if (ch === '\n') { pushField(); pushRow() }
       else field += ch

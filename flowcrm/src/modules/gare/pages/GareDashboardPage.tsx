@@ -19,6 +19,19 @@ import { GARA_STATI, fmtImporto } from '@/modules/gare/stati'
 import {
   useGareKpi, useGarePerStato, useGareSuccessoEnte, useGareSuccessoTerritorio,
 } from '@/modules/gare/queries/gare'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+
+function useGareSuccessoCategoria(limit = 6) {
+  return useQuery({
+    queryKey: ['gare', 'successo-categoria', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('vw_gare_successo_categoria').select('*').limit(limit)
+      if (error) throw error
+      return data
+    },
+  })
+}
 
 function Kpi({ icon: Icon, label, value, tint }: {
   icon: React.ElementType; label: string; value: string; tint: string
@@ -48,6 +61,7 @@ export function GareDashboardPage() {
   const { data: perStato = [] } = useGarePerStato()
   const { data: perEnte = [] } = useGareSuccessoEnte(6)
   const { data: perTerritorio = [] } = useGareSuccessoTerritorio(6)
+  const { data: perCategoria = [] } = useGareSuccessoCategoria(6)
   const { data: scadenze = [] } = useScadenzeAperteModulo('gare', 8)
 
   const statoData = GARA_STATI.map((s) => {
@@ -149,6 +163,34 @@ export function GareDashboardPage() {
                 <Bar dataKey="aggiudicate" name="Aggiudicate" fill="var(--color-chart-3)" radius={[0, 6, 6, 0]} />
               </BarChart>
             </ResponsiveContainer>
+          )}
+        </div>
+
+        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <div className="mb-4 flex items-center gap-2">
+            <Trophy className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-semibold text-foreground">Successo per categoria SOA</h2>
+          </div>
+          {perCategoria.length === 0 ? (
+            <EmptyState icon={Trophy} title="Nessun dato"
+              description="Classifica le gare per categoria SOA per vedere dove vinci di più." />
+          ) : (
+            <div className="space-y-2">
+              {perCategoria.map((c) => (
+                <div key={c.categoria as string} className="flex items-center gap-3 text-sm">
+                  <span className="w-24 shrink-0 font-mono text-xs font-semibold text-foreground">
+                    {c.categoria as string}
+                  </span>
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
+                    <div className="h-full rounded-full bg-primary"
+                      style={{ width: `${(c.presentate ?? 0) > 0 ? Math.round(((c.aggiudicate ?? 0) / (c.presentate ?? 1)) * 100) : 0}%` }} />
+                  </div>
+                  <span className="w-24 shrink-0 text-right text-xs text-muted-foreground">
+                    {c.aggiudicate}/{c.presentate} vinte
+                  </span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
 

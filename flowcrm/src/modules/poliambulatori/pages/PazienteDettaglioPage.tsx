@@ -174,6 +174,9 @@ function TabVisiteReferti({ paziente }: { paziente: Paziente }) {
   const aggiorna = useAggiornaFiglioPaziente()
   const [motivo, setMotivo] = useState('')
   const [diagnosi, setDiagnosi] = useState('')
+  const [anamnesi, setAnamnesi] = useState('')
+  const [esameObiettivo, setEsameObiettivo] = useState('')
+  const [prescrizioni, setPrescrizioni] = useState('')
   const [profId, setProfId] = useState('')
   const [titoloRef, setTitoloRef] = useState('')
   const [contenutoRef, setContenutoRef] = useState('')
@@ -191,6 +194,8 @@ function TabVisiteReferti({ paziente }: { paziente: Paziente }) {
               <span className="font-medium text-foreground">{v.motivo ?? 'Visita'}</span>
               <span className="ml-auto text-xs text-muted-foreground">{fmtData(v.data)}</span>
             </div>
+            {v.anamnesi && <p className="mt-0.5 text-xs text-muted-foreground">Anamnesi: {v.anamnesi}</p>}
+            {v.esame_obiettivo && <p className="mt-0.5 text-xs text-muted-foreground">E.O.: {v.esame_obiettivo}</p>}
             {v.diagnosi && <p className="mt-0.5 text-xs text-muted-foreground">Diagnosi: {v.diagnosi}</p>}
             {v.prescrizioni && <p className="mt-0.5 text-xs text-muted-foreground">Prescrizioni: {v.prescrizioni}</p>}
           </div>
@@ -203,10 +208,16 @@ function TabVisiteReferti({ paziente }: { paziente: Paziente }) {
               pazienteId: paziente.id, tabella: 'visite',
               values: {
                 motivo: motivo.trim(), diagnosi: diagnosi.trim() || null,
+                anamnesi: anamnesi.trim() || null,
+                esame_obiettivo: esameObiettivo.trim() || null,
+                prescrizioni: prescrizioni.trim() || null,
                 professionista_id: profId || null,
               },
             }, {
-              onSuccess: () => { setMotivo(''); setDiagnosi('') },
+              onSuccess: () => {
+                setMotivo(''); setDiagnosi(''); setAnamnesi('')
+                setEsameObiettivo(''); setPrescrizioni('')
+              },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
@@ -230,10 +241,24 @@ function TabVisiteReferti({ paziente }: { paziente: Paziente }) {
               </Select>
             </div>
           </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1">
+              <Label>Anamnesi</Label>
+              <Input value={anamnesi} onChange={(e) => setAnamnesi(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label>Esame obiettivo</Label>
+              <Input value={esameObiettivo} onChange={(e) => setEsameObiettivo(e.target.value)} />
+            </div>
+          </div>
           <div className="flex items-end gap-2">
             <div className="flex-1 space-y-1">
               <Label>Diagnosi</Label>
               <Input value={diagnosi} onChange={(e) => setDiagnosi(e.target.value)} />
+            </div>
+            <div className="flex-1 space-y-1">
+              <Label>Prescrizioni / terapia</Label>
+              <Input value={prescrizioni} onChange={(e) => setPrescrizioni(e.target.value)} />
             </div>
             <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Registra visita</Button>
           </div>
@@ -331,7 +356,7 @@ function TabAppuntamenti({ paziente }: { paziente: Paziente }) {
           </div>
         )
       })}
-      <AppuntamentoDialog open={nuovoOpen} onOpenChange={setNuovoOpen} />
+      <AppuntamentoDialog open={nuovoOpen} onOpenChange={setNuovoOpen} pazienteIniziale={paziente.id} />
     </div>
   )
 }

@@ -23,7 +23,7 @@ test('organizzazione con doppio ruolo: crea, filtra, scheda 360°, cmd+K', async
 
   const nome = `E2E Rossi ${Date.now()}`
 
-  await page.getByRole('link', { name: 'Organizzazioni' }).click()
+  await page.getByRole('link', { name: 'Organizzazioni', exact: true }).click()
   await page.getByRole('button', { name: 'Nuova' }).click()
 
   await page.getByLabel('Ragione sociale *').fill(nome)
@@ -52,6 +52,6 @@ test('organizzazione con doppio ruolo: crea, filtra, scheda 360°, cmd+K', async
 
   // cmd+K trova l'organizzazione
   await page.keyboard.press('Control+k')
-  await page.getByPlaceholder('Cerca organizzazioni e contatti…').fill('Bologna')
+  await page.getByPlaceholder('Cerca organizzazioni').fill('Bologna')
   await expect(page.getByText(nome)).toBeVisible({ timeout: 10_000 })
 })

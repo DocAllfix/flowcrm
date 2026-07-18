@@ -23,6 +23,13 @@ test('tour: parte al primo accesso, non ripete, replay dal ?', async ({ page }) 
   await page.getByTestId('login-submit').click()
   await expect(page.getByTestId('notifiche-badge')).toBeVisible({ timeout: 15_000 })
 
+  // Il bottone "?" esiste solo con VITE_TOUR_ENABLED=true: se l'istanza ha
+  // il tour spento (default della demo) il test si dichiara skipped invece
+  // di fallire per un motivo ambientale.
+  await page.waitForTimeout(1000)
+  const tourAttivo = (await page.getByTestId('help-button').count()) > 0
+  test.skip(!tourAttivo, 'VITE_TOUR_ENABLED=false su questa istanza: tour disattivato')
+
   // Il popover del tour appare da solo
   const popover = page.locator('.flowcrm-popover')
   await expect(popover).toBeVisible({ timeout: 10_000 })

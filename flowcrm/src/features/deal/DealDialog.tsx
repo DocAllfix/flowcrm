@@ -2,6 +2,9 @@ import { useState, useEffect, type FormEvent } from 'react'
 import { toast } from 'sonner'
 import { useCreateDeal, useUpdateDeal, usePipelineStages, type Deal } from '@/lib/queries/deals'
 import { useOrganizzazioni } from '@/lib/queries/organizzazioni'
+import { moduloBySlug } from '@/config/moduli.config'
+import { supabase } from '@/lib/supabase'
+import { useQuery } from '@tanstack/react-query'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog'
@@ -21,7 +24,7 @@ interface Props {
   deal?: Deal
 }
 
-const EMPTY = { nome: '', importo: '', data_chiusura_prevista: '', organizzazione_id: '' }
+const EMPTY = { nome: '', importo: '', data_chiusura_prevista: '', organizzazione_id: '', agente_id: '' }
 
 export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props) {
   const create = useCreateDeal()
@@ -31,6 +34,19 @@ export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props
   const [form, setForm] = useState(EMPTY)
   const isEdit = !!deal
 
+  // Modulo Agenti: se attivo, il deal si può attribuire a un agente (§6)
+  const moduloAgentiAttivo = !!moduloBySlug('agenti')
+  const { data: agenti = [] } = useQuery({
+    queryKey: ['deal-dialog', 'agenti'],
+    enabled: moduloAgentiAttivo && open,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('agenti').select('id, nome, cognome').eq('attivo', true).eq('stato', 'attivo')
+      if (error) throw error
+      return data
+    },
+  })
+
   useEffect(() => {
     if (!open) return
     if (deal) {
@@ -39,6 +55,7 @@ export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props
         importo: deal.importo != null ? String(deal.importo) : '',
         data_chiusura_prevista: deal.data_chiusura_prevista ?? '',
         organizzazione_id: deal.organizzazione_id ?? '',
+        agente_id: (deal as Deal & { agente_id?: string | null }).agente_id ?? '',
       })
     } else {
       setForm({ ...EMPTY, organizzazione_id: organizzazioneId ?? '' })
@@ -62,6 +79,7 @@ export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props
           importo,
           organizzazione_id: form.organizzazione_id || null,
           data_chiusura_prevista: form.data_chiusura_prevista || null,
+          agente_id: form.agente_id || null,
         } })
         toast.success('Deal aggiornato')
       } else {
@@ -74,6 +92,7 @@ export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props
           importo,
           organizzazione_id: form.organizzazione_id || null,
           data_chiusura_prevista: form.data_chiusura_prevista || null,
+          agente_id: form.agente_id || null,
         })
         toast.success('Deal creato')
       }
@@ -122,6 +141,24 @@ export function DealDialog({ open, onOpenChange, organizzazioneId, deal }: Props
                 <SelectContent>
                   {organizzazioni.map((o) => (
                     <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {moduloAgentiAttivo && agenti.length > 0 && (
+            <div className="space-y-1.5">
+              <Label>Agente di riferimento</Label>
+              <Select
+                value={form.agente_id || 'nessuno'}
+                onValueChange={(v) => setForm({ ...form, agente_id: v === 'nessuno' ? '' : v })}
+              >
+                <SelectTrigger><SelectValue placeholder="Nessuno" /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nessuno">— Nessuno —</SelectItem>
+                  {agenti.map((a) => (
+                    <SelectItem key={a.id} value={a.id}>{a.nome} {a.cognome ?? ''}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

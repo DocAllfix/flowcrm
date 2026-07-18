@@ -51,6 +51,9 @@ export function AutomezzoDialog({ open, onOpenChange, automezzo }: Props) {
   const [stato, setStato] = useState('disponibile')
   const [km, setKm] = useState('')
   const [note, setNote] = useState('')
+  const [dismissioneTipo, setDismissioneTipo] = useState('')
+  const [dismissioneValore, setDismissioneValore] = useState('')
+  const [dismissioneNote, setDismissioneNote] = useState('')
 
   useEffect(() => {
     if (!open) return
@@ -64,11 +67,15 @@ export function AutomezzoDialog({ open, onOpenChange, automezzo }: Props) {
       setProprietario(automezzo.proprietario ?? ''); setCentroCosto(automezzo.centro_costo ?? '')
       setSede(automezzo.sede ?? ''); setStato(automezzo.stato)
       setKm(String(automezzo.km_attuali ?? 0)); setNote(automezzo.note ?? '')
+      setDismissioneTipo(automezzo.dismissione_tipo ?? '')
+      setDismissioneValore(automezzo.dismissione_valore != null ? String(automezzo.dismissione_valore) : '')
+      setDismissioneNote(automezzo.dismissione_note ?? '')
     } else {
       setTarga(''); setTelaio(''); setMarca(''); setModello(''); setVersione('')
       setCategoria('autovettura'); setAlimentazione(''); setClasseEuro(''); setAnno('')
       setDataAcquisto(''); setAcquisizione('acquisto'); setProprietario('')
       setCentroCosto(''); setSede(''); setStato('disponibile'); setKm(''); setNote('')
+      setDismissioneTipo(''); setDismissioneValore(''); setDismissioneNote('')
     }
   }, [open, automezzo])
 
@@ -92,6 +99,9 @@ export function AutomezzoDialog({ open, onOpenChange, automezzo }: Props) {
       stato: stato as 'disponibile',
       km_attuali: km === '' ? 0 : Number(km),
       note: oNull(note),
+      dismissione_tipo: (stato === 'dismesso' && dismissioneTipo ? dismissioneTipo : null) as 'vendita' | null,
+      dismissione_valore: stato === 'dismesso' && dismissioneValore !== '' ? Number(dismissioneValore) : null,
+      dismissione_note: stato === 'dismesso' ? oNull(dismissioneNote) : null,
     }
     try {
       if (automezzo) {
@@ -226,6 +236,39 @@ export function AutomezzoDialog({ open, onOpenChange, automezzo }: Props) {
               <Textarea id="a-note" value={note} onChange={(e) => setNote(e.target.value)} rows={1} />
             </div>
           </div>
+
+          {stato === 'dismesso' && (
+            <div className="rounded-lg border border-border bg-muted/30 p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Dismissione (fine ciclo di vita)
+              </p>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <Label>Modalità</Label>
+                  <Select value={dismissioneTipo || 'nd'}
+                    onValueChange={(v) => setDismissioneTipo(v === 'nd' ? '' : v)}>
+                    <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="nd">—</SelectItem>
+                      <SelectItem value="vendita">Vendita</SelectItem>
+                      <SelectItem value="rottamazione">Rottamazione</SelectItem>
+                      <SelectItem value="trasferimento">Trasferimento</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="a-disval">Valore realizzato (€)</Label>
+                  <Input id="a-disval" type="number" step="0.01" value={dismissioneValore}
+                    onChange={(e) => setDismissioneValore(e.target.value)} />
+                </div>
+                <div className="space-y-1.5">
+                  <Label htmlFor="a-disnote">Note dismissione</Label>
+                  <Input id="a-disnote" value={dismissioneNote}
+                    onChange={(e) => setDismissioneNote(e.target.value)} />
+                </div>
+              </div>
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Annulla</Button>

@@ -32,6 +32,10 @@ import { useAuth } from '@/hooks/useAuth'
 import { useUsers } from '@/lib/queries/users'
 import { useOrganizzazioni } from '@/lib/queries/organizzazioni'
 import { useCreateCommessa } from '@/lib/queries/commesse'
+import { moduloBySlug } from '@/config/moduli.config'
+import { useCreateCantiere } from '@/modules/cantiere/queries/cantieri'
+import { supabase } from '@/lib/supabase'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { GaraDialog } from '@/modules/gare/dialogs/GaraDialog'
 import { GARA_STATI, statoGara, fmtImporto, fmtData } from '@/modules/gare/stati'
 import {
@@ -86,12 +90,131 @@ function Riga({ label, children }: { label: string; children: React.ReactNode })
   )
 }
 
+// ── Esito (§13): graduatoria, aggiudicatario, ricorsi ────────────
+function SezioneEsito({ gara }: { gara: Gara }) {
+  const update = useUpdateGara()
+  const [editing, setEditing] = useState(false)
+  const [posizione, setPosizione] = useState(
+    gara.posizione_graduatoria != null ? String(gara.posizione_graduatoria) : '')
+  const [aggiudicatario, setAggiudicatario] = useState(gara.aggiudicatario ?? '')
+  const [ricorso, setRicorso] = useState(gara.ricorso)
+  const [noteEsito, setNoteEsito] = useState(gara.note_esito ?? '')
+  const [protocollo, setProtocollo] = useState(gara.protocollo_invio ?? '')
+
+  async function salva() {
+    try {
+      await update.mutateAsync({
+        id: gara.id,
+        values: {
+          posizione_graduatoria: posizione === '' ? null : Number(posizione),
+          aggiudicatario: aggiudicatario.trim() || null,
+          ricorso,
+          note_esito: noteEsito.trim() || null,
+          protocollo_invio: protocollo.trim() || null,
+        },
+      })
+      toast.success('Esito aggiornato')
+      setEditing(false)
+    } catch (e) { toast.error((e as Error).message) }
+  }
+
+  return (
+    <div className={card}>
+      <div className="mb-2 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-foreground">Presentazione ed esito</h3>
+        {!editing && (
+          <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
+            <Pencil className="h-3.5 w-3.5" /> Registra esito
+          </Button>
+        )}
+      </div>
+      {!editing ? (
+        <>
+          <Riga label="Presentata il">{gara.presentata_at ? fmtData(gara.presentata_at) : '—'}</Riga>
+          <Riga label="Protocollo invio">{gara.protocollo_invio ?? '—'}</Riga>
+          {gara.esito_at && <Riga label="Esito il">{fmtData(gara.esito_at)}</Riga>}
+          <Riga label="Posizione in graduatoria">
+            {gara.posizione_graduatoria != null ? `${gara.posizione_graduatoria}°` : '—'}
+          </Riga>
+          <Riga label="Aggiudicatario">{gara.aggiudicatario ?? '—'}</Riga>
+          <Riga label="Ricorso">{gara.ricorso ? 'In corso' : 'No'}</Riga>
+          {gara.note_esito && <p className="mt-2 text-sm text-muted-foreground">{gara.note_esito}</p>}
+        </>
+      ) : (
+        <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <Label htmlFor="esito-pos">Posizione in graduatoria</Label>
+              <Input id="esito-pos" type="number" min="1" value={posizione} onChange={(e) => setPosizione(e.target.value)} />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="esito-agg">Aggiudicatario</Label>
+              <Input id="esito-agg" value={aggiudicatario} onChange={(e) => setAggiudicatario(e.target.value)}
+                placeholder="Chi si è aggiudicato la gara" />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="esito-prot">Protocollo invio</Label>
+              <Input id="esito-prot" value={protocollo} onChange={(e) => setProtocollo(e.target.value)} />
+            </div>
+            <label className="flex items-end gap-2 pb-2 text-sm text-muted-foreground">
+              <Checkbox checked={ricorso} onCheckedChange={(v) => setRicorso(v === true)} />
+              Ricorso in corso
+            </label>
+          </div>
+          <div className="space-y-1">
+            <Label>Note esito (soccorso istruttorio, integrazioni…)</Label>
+            <Textarea value={noteEsito} onChange={(e) => setNoteEsito(e.target.value)} rows={2} />
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => void salva()} disabled={update.isPending}>Salva esito</Button>
+            <Button size="sm" variant="ghost" onClick={() => setEditing(false)}>Annulla</Button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ── Panoramica ───────────────────────────────────────────────────
 function TabPanoramica({ gara }: { gara: Gara }) {
   const navigate = useNavigate()
   const update = useUpdateGara()
   const creaCommessa = useCreateCommessa()
+  const creaCantiere = useCreateCantiere()
+  const qc = useQueryClient()
+  const moduloCantiereAttivo = !!moduloBySlug('cantiere')
   const { data: offerta } = useGaraOfferta(gara.id)
+  // Il cantiere nato da questa gara (cantieri.gara_id), se esiste
+  const { data: cantiereCollegato } = useQuery({
+    queryKey: ['gare', gara.id, 'cantiere-collegato'],
+    enabled: moduloCantiereAttivo,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('cantieri').select('id, codice').eq('gara_id', gara.id).maybeSingle()
+      if (error) throw error
+      return data
+    },
+  })
+
+  async function handleCreaCantiere() {
+    try {
+      const cantiere = await creaCantiere.mutateAsync({
+        denominazione: gara.titolo,
+        cliente_id: gara.ente_appaltante_id,
+        stazione_appaltante_id: gara.ente_appaltante_id,
+        cig: gara.cig, cup: gara.cup,
+        importo_contrattuale: Number(offerta?.importo_offerto ?? gara.importo_base),
+        gara_id: gara.id,
+        commessa_id: gara.commessa_id,
+        stato: 'pianificato',
+      })
+      toast.success(`Cantiere ${cantiere.codice} creato dalla gara`)
+      qc.invalidateQueries({ queryKey: ['gare', gara.id, 'cantiere-collegato'] })
+      navigate(`/cantieri/${cantiere.id}`)
+    } catch (e) {
+      toast.error((e as Error).message)
+    }
+  }
 
   async function handleCreaCommessa() {
     if (!gara.ente_appaltante_id) {
@@ -156,42 +279,45 @@ function TabPanoramica({ gara }: { gara: Gara }) {
         <Riga label="Fonte">{gara.fonte ?? '—'}</Riga>
       </div>
 
-      {['presentata', 'aggiudicata', 'non_aggiudicata'].includes(gara.stato) && (
-        <div className={card}>
-          <h3 className="mb-2 text-sm font-semibold text-foreground">Presentazione ed esito</h3>
-          <Riga label="Presentata il">{gara.presentata_at ? fmtData(gara.presentata_at) : '—'}</Riga>
-          <Riga label="Protocollo invio">{gara.protocollo_invio ?? '—'}</Riga>
-          {gara.esito_at && <Riga label="Esito il">{fmtData(gara.esito_at)}</Riga>}
-          {gara.posizione_graduatoria != null && <Riga label="Posizione in graduatoria">{gara.posizione_graduatoria}°</Riga>}
-          {gara.aggiudicatario && <Riga label="Aggiudicatario">{gara.aggiudicatario}</Riga>}
-          {gara.ricorso && <Riga label="Ricorso">In corso</Riga>}
-          {gara.note_esito && <p className="mt-2 text-sm text-muted-foreground">{gara.note_esito}</p>}
-        </div>
+      {['presentata', 'aggiudicata', 'non_aggiudicata', 'annullata'].includes(gara.stato) && (
+        <SezioneEsito gara={gara} />
       )}
 
       {gara.stato === 'aggiudicata' && (
         <div className={card}>
           <h3 className="mb-2 text-sm font-semibold text-foreground">Avvio commessa</h3>
-          {gara.commessa_id ? (
-            <div className="flex items-center gap-2 text-sm">
-              <CheckCircle2 className="h-4 w-4 text-success" />
-              <span className="text-muted-foreground">Commessa creata:</span>
-              <Link to={`/commesse/${gara.commessa_id}`} className="font-medium text-primary hover:underline">
-                apri la commessa
-              </Link>
-            </div>
-          ) : (
-            <>
-              <p className="mb-3 text-sm text-muted-foreground">
-                La gara è aggiudicata: crea la commessa per avviare l'esecuzione
-                (codice automatico, importo dall'offerta).
-              </p>
+          <p className="mb-3 text-sm text-muted-foreground">
+            La gara è aggiudicata: avvia l'esecuzione con la commessa
+            (e, se serve, il cantiere collegato).
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            {gara.commessa_id ? (
+              <span className="inline-flex items-center gap-1.5 text-sm">
+                <CheckCircle2 className="h-4 w-4 text-success" />
+                <Link to={`/commesse/${gara.commessa_id}`} className="font-medium text-primary hover:underline">
+                  Apri la commessa
+                </Link>
+              </span>
+            ) : (
               <Button onClick={() => void handleCreaCommessa()} disabled={creaCommessa.isPending}>
                 <Briefcase className="h-4 w-4" />
                 {creaCommessa.isPending ? 'Creazione…' : 'Crea commessa'}
               </Button>
-            </>
-          )}
+            )}
+            {moduloCantiereAttivo && (cantiereCollegato ? (
+              <span className="inline-flex items-center gap-1.5 text-sm">
+                <CheckCircle2 className="h-4 w-4 text-success" />
+                <Link to={`/cantieri/${cantiereCollegato.id}`} className="font-medium text-primary hover:underline">
+                  Apri il cantiere {cantiereCollegato.codice}
+                </Link>
+              </span>
+            ) : (
+              <Button variant="outline" onClick={() => void handleCreaCantiere()}
+                disabled={creaCantiere.isPending}>
+                {creaCantiere.isPending ? 'Creazione…' : 'Crea cantiere'}
+              </Button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -462,6 +588,7 @@ function TabChiarimenti({ gara }: { gara: Gara }) {
   const elimina = useEliminaFiglioGara()
   const [domanda, setDomanda] = useState('')
   const [rispostaDraft, setRispostaDraft] = useState<Record<string, string>>({})
+  const [impattoDraft, setImpattoDraft] = useState<Record<string, string>>({})
 
   async function handleAggiungi(e: FormEvent) {
     e.preventDefault()
@@ -496,19 +623,33 @@ function TabChiarimenti({ gara }: { gara: Gara }) {
           {c.risposta ? (
             <p className="mt-2 rounded-lg bg-muted/50 p-3 text-sm text-foreground">
               {c.risposta}
-              <span className="mt-1 block text-xs text-muted-foreground">Risposta del {fmtData(c.data_risposta)}</span>
+              <span className="mt-1 block text-xs text-muted-foreground">
+                Risposta del {fmtData(c.data_risposta)}
+                {c.impatto_offerta && <> · Impatto: {c.impatto_offerta}</>}
+              </span>
             </p>
           ) : (
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               <Input
+                className="min-w-56 flex-1"
                 value={rispostaDraft[c.id] ?? ''}
                 onChange={(e) => setRispostaDraft((p) => ({ ...p, [c.id]: e.target.value }))}
                 placeholder="Registra la risposta ricevuta…"
               />
+              <Input
+                className="w-56"
+                value={impattoDraft[c.id] ?? ''}
+                onChange={(e) => setImpattoDraft((p) => ({ ...p, [c.id]: e.target.value }))}
+                placeholder="Impatto sull'offerta (opz.)"
+              />
               <Button size="sm" variant="outline" disabled={!rispostaDraft[c.id]?.trim() || aggiorna.isPending}
                 onClick={() => aggiorna.mutate({
                   garaId: gara.id, tabella: 'gare_chiarimenti', id: c.id,
-                  values: { risposta: rispostaDraft[c.id].trim(), data_risposta: new Date().toISOString().slice(0, 10) },
+                  values: {
+                    risposta: rispostaDraft[c.id].trim(),
+                    impatto_offerta: impattoDraft[c.id]?.trim() || null,
+                    data_risposta: new Date().toISOString().slice(0, 10),
+                  },
                 })}>
                 Salva
               </Button>
@@ -545,6 +686,8 @@ function TabOfferta({ gara }: { gara: Gara }) {
   const [importoOfferto, setImportoOfferto] = useState<string | null>(null)
   const [manodopera, setManodopera] = useState<string | null>(null)
   const [marginalita, setMarginalita] = useState<string | null>(null)
+  const [computo, setComputo] = useState<string | null>(null)
+  const [oneriOfferta, setOneriOfferta] = useState<string | null>(null)
   const [noteTecnica, setNoteTecnica] = useState<string | null>(null)
   const [protocollo, setProtocollo] = useState<string | null>(null)
   // ATI
@@ -562,6 +705,8 @@ function TabOfferta({ gara }: { gara: Gara }) {
     importoOfferto: importoOfferto ?? (offerta?.importo_offerto != null ? String(offerta.importo_offerto) : ''),
     manodopera: manodopera ?? (offerta?.costi_manodopera != null ? String(offerta.costi_manodopera) : ''),
     marginalita: marginalita ?? (offerta?.marginalita_percentuale != null ? String(offerta.marginalita_percentuale) : ''),
+    computo: computo ?? (offerta?.computo_importo != null ? String(offerta.computo_importo) : ''),
+    oneriOfferta: oneriOfferta ?? (offerta?.oneri_sicurezza != null ? String(offerta.oneri_sicurezza) : ''),
     noteTecnica: noteTecnica ?? (gara.offerta_tecnica_note ?? ''),
     protocollo: protocollo ?? (gara.protocollo_invio ?? ''),
   }
@@ -576,6 +721,8 @@ function TabOfferta({ gara }: { gara: Gara }) {
           importo_offerto: num(v.importoOfferto),
           costi_manodopera: num(v.manodopera),
           marginalita_percentuale: num(v.marginalita),
+          computo_importo: num(v.computo),
+          oneri_sicurezza: num(v.oneriOfferta),
         },
       })
       await update.mutateAsync({
@@ -591,22 +738,30 @@ function TabOfferta({ gara }: { gara: Gara }) {
       {isManager ? (
         <div className={card}>
           <h3 className="mb-3 text-sm font-semibold text-foreground">Offerta economica (riservata)</h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="space-y-1.5">
-              <Label>Ribasso (%)</Label>
-              <Input type="number" step="0.001" value={v.ribasso} onChange={(e) => setRibasso(e.target.value)} />
+              <Label htmlFor="off-computo">Computo metrico (€)</Label>
+              <Input id="off-computo" type="number" step="0.01" value={v.computo} onChange={(e) => setComputo(e.target.value)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Importo offerto (€)</Label>
-              <Input type="number" step="0.01" value={v.importoOfferto} onChange={(e) => setImportoOfferto(e.target.value)} />
+              <Label htmlFor="off-ribasso">Ribasso (%)</Label>
+              <Input id="off-ribasso" type="number" step="0.001" value={v.ribasso} onChange={(e) => setRibasso(e.target.value)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Costi manodopera (€)</Label>
-              <Input type="number" step="0.01" value={v.manodopera} onChange={(e) => setManodopera(e.target.value)} />
+              <Label htmlFor="off-importo">Importo offerto (€)</Label>
+              <Input id="off-importo" type="number" step="0.01" value={v.importoOfferto} onChange={(e) => setImportoOfferto(e.target.value)} />
             </div>
             <div className="space-y-1.5">
-              <Label>Marginalità prevista (%)</Label>
-              <Input type="number" step="0.01" value={v.marginalita} onChange={(e) => setMarginalita(e.target.value)} />
+              <Label htmlFor="off-manodopera">Costi manodopera (€)</Label>
+              <Input id="off-manodopera" type="number" step="0.01" value={v.manodopera} onChange={(e) => setManodopera(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="off-oneri">Oneri sicurezza offerta (€)</Label>
+              <Input id="off-oneri" type="number" step="0.01" value={v.oneriOfferta} onChange={(e) => setOneriOfferta(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="off-marg">Marginalità prevista (%)</Label>
+              <Input id="off-marg" type="number" step="0.01" value={v.marginalita} onChange={(e) => setMarginalita(e.target.value)} />
             </div>
           </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-2">

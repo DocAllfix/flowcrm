@@ -39,6 +39,7 @@ export function PazienteDialog({ open, onOpenChange, paziente }: Props) {
   const [luogoNascita, setLuogoNascita] = useState('')
   const [sesso, setSesso] = useState('')
   const [residenza, setResidenza] = useState('')
+  const [domicilio, setDomicilio] = useState('')
   const [telefono, setTelefono] = useState('')
   const [email, setEmail] = useState('')
   const [medicoCurante, setMedicoCurante] = useState('')
@@ -53,12 +54,13 @@ export function PazienteDialog({ open, onOpenChange, paziente }: Props) {
       setCf(paziente.codice_fiscale ?? ''); setDocumento(paziente.documento ?? '')
       setDataNascita(paziente.data_nascita ?? ''); setLuogoNascita(paziente.luogo_nascita ?? '')
       setSesso(paziente.sesso ?? ''); setResidenza(paziente.residenza ?? '')
+      setDomicilio(paziente.domicilio ?? '')
       setTelefono(paziente.telefono ?? ''); setEmail(paziente.email ?? '')
       setMedicoCurante(paziente.medico_curante ?? ''); setEmergenza(paziente.contatto_emergenza ?? '')
       setConvenzioneId(paziente.convenzione_id ?? ''); setNote(paziente.note_amministrative ?? '')
     } else {
       setNome(''); setCognome(''); setCf(''); setDocumento(''); setDataNascita('')
-      setLuogoNascita(''); setSesso(''); setResidenza(''); setTelefono(''); setEmail('')
+      setLuogoNascita(''); setSesso(''); setResidenza(''); setDomicilio(''); setTelefono(''); setEmail('')
       setMedicoCurante(''); setEmergenza(''); setConvenzioneId(''); setNote('')
     }
   }, [open, paziente])
@@ -72,6 +74,7 @@ export function PazienteDialog({ open, onOpenChange, paziente }: Props) {
       data_nascita: oNull(dataNascita), luogo_nascita: oNull(luogoNascita),
       sesso: (sesso || null) as 'm' | null,
       residenza: oNull(residenza),
+      domicilio: oNull(domicilio),
       telefono: oNull(telefono), email: oNull(email),
       medico_curante: oNull(medicoCurante), contatto_emergenza: oNull(emergenza),
       convenzione_id: oNull(convenzioneId),
@@ -137,10 +140,15 @@ export function PazienteDialog({ open, onOpenChange, paziente }: Props) {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="p-res">Residenza</Label>
               <Input id="p-res" value={residenza} onChange={(e) => setResidenza(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="p-dom">Domicilio</Label>
+              <Input id="p-dom" value={domicilio} onChange={(e) => setDomicilio(e.target.value)}
+                placeholder="Se diverso" />
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="p-tel">Telefono</Label>

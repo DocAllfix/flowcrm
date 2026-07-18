@@ -65,6 +65,8 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
   const [cup, setCup] = useState('')
   const [indirizzo, setIndirizzo] = useState('')
   const [citta, setCitta] = useState('')
+  const [lat, setLat] = useState('')
+  const [lng, setLng] = useState('')
   const [dataApertura, setDataApertura] = useState('')
   const [dataFine, setDataFine] = useState('')
   const [dl, setDl] = useState('')
@@ -88,6 +90,8 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
       setCategoria(cantiere.categoria_lavori ?? '')
       setCig(cantiere.cig ?? ''); setCup(cantiere.cup ?? '')
       setIndirizzo(cantiere.indirizzo ?? ''); setCitta(cantiere.citta ?? '')
+      setLat(cantiere.lat != null ? String(cantiere.lat) : '')
+      setLng(cantiere.lng != null ? String(cantiere.lng) : '')
       setDataApertura(cantiere.data_apertura ?? ''); setDataFine(cantiere.data_fine_prevista ?? '')
       setDl(cantiere.direttore_lavori ?? ''); setRup(cantiere.rup ?? '')
       setDirTecnico(cantiere.direttore_tecnico ?? ''); setRespSicurezza(cantiere.responsabile_sicurezza ?? '')
@@ -97,7 +101,7 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
     } else {
       setDenominazione(''); setClienteId(''); setCommittenteId(''); setStazioneId('')
       setStato('pianificato'); setImportoContr(''); setImportoLavori(''); setCategoria('')
-      setCig(''); setCup(''); setIndirizzo(''); setCitta('')
+      setCig(''); setCup(''); setIndirizzo(''); setCitta(''); setLat(''); setLng('')
       setDataApertura(''); setDataFine(''); setDl(''); setRup('')
       setDirTecnico(''); setRespSicurezza(''); setRespInternoId(''); setCapocantiereId('')
       setNote('')
@@ -121,6 +125,8 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
       categoria_lavori: oNull(categoria),
       cig: oNull(cig), cup: oNull(cup),
       indirizzo: oNull(indirizzo), citta: oNull(citta),
+      lat: lat === '' ? null : Number(lat),
+      lng: lng === '' ? null : Number(lng),
       data_apertura: oNull(dataApertura),
       data_fine_prevista: oNull(dataFine),
       direttore_lavori: oNull(dl), rup: oNull(rup),
@@ -223,7 +229,7 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="c-ind">Indirizzo</Label>
               <Input id="c-ind" value={indirizzo} onChange={(e) => setIndirizzo(e.target.value)} />
@@ -231,6 +237,16 @@ export function CantiereDialog({ open, onOpenChange, cantiere }: Props) {
             <div className="space-y-1.5">
               <Label htmlFor="c-citta">Città</Label>
               <Input id="c-citta" value={citta} onChange={(e) => setCitta(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="c-lat">Latitudine</Label>
+              <Input id="c-lat" type="number" step="0.000001" value={lat}
+                onChange={(e) => setLat(e.target.value)} placeholder="45.4642" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="c-lng">Longitudine</Label>
+              <Input id="c-lng" type="number" step="0.000001" value={lng}
+                onChange={(e) => setLng(e.target.value)} placeholder="9.1900" />
             </div>
           </div>
 

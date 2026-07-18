@@ -35,7 +35,7 @@ test('cantiere: crea → fase → rapportino', async ({ page }) => {
   await page.getByRole('tab', { name: 'Cronoprogramma' }).click()
   await page.getByPlaceholder('Es. Scavi e fondazioni').fill('Fase E2E scavi')
   await page.getByRole('button', { name: 'Aggiungi fase' }).click()
-  await expect(page.getByText('Fase E2E scavi')).toBeVisible({ timeout: 10_000 })
+  await expect(page.getByText('Fase E2E scavi').first()).toBeVisible({ timeout: 10_000 })
 
   // Rapportino giornaliero
   await page.getByRole('tab', { name: 'Rapportini' }).click()

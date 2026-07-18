@@ -19,6 +19,7 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import { useUsers } from '@/lib/queries/users'
 import { ScadenzeModuliSection } from '@/components/ScadenzeModuliSection'
+import { ApprovalSection } from '@/components/ApprovalSection'
 import {
   PRESTAZIONE_TIPO_LABEL, ARTICOLO_TIPO_LABEL, QUALITA_TIPO_LABEL,
   APPARECCHIATURA_STATO, fmtImporto, fmtData,
@@ -49,6 +50,7 @@ function TabProfessionisti() {
   const [nome, setNome] = useState('')
   const [cognome, setCognome] = useState('')
   const [specializzazione, setSpecializzazione] = useState('')
+  const [albo, setAlbo] = useState('')
   const [userId, setUserId] = useState('')
 
   return (
@@ -63,6 +65,7 @@ function TabProfessionisti() {
           <span className="flex-1 font-medium text-foreground">
             {p.nome} {p.cognome ?? ''}
             {p.specializzazione && <span className="ml-2 text-xs font-normal text-muted-foreground">{p.specializzazione}</span>}
+            {p.albo && <span className="ml-2 text-xs font-normal text-muted-foreground">Albo {p.albo}</span>}
           </span>
           {p.user_id ? <Badge tone="success">Accesso clinico</Badge> : <Badge tone="neutral">Senza accesso</Badge>}
           <BtnElimina onClick={() => elimina.mutate({ tabella: 'professionisti', id: p.id })} />
@@ -78,11 +81,12 @@ function TabProfessionisti() {
             values: {
               nome: nome.trim(), cognome: cognome.trim() || null,
               specializzazione: specializzazione.trim() || null,
+              albo: albo.trim() || null,
               user_id: userId || null,
               colore: colori[professionisti.length % colori.length],
             },
           }, {
-            onSuccess: () => { setNome(''); setCognome(''); setSpecializzazione(''); setUserId('') },
+            onSuccess: () => { setNome(''); setCognome(''); setSpecializzazione(''); setAlbo(''); setUserId('') },
             onError: (err) => toast.error((err as Error).message),
           })
         }}
@@ -96,10 +100,14 @@ function TabProfessionisti() {
           <Label>Cognome</Label>
           <Input value={cognome} onChange={(e) => setCognome(e.target.value)} />
         </div>
-        <div className="min-w-36 flex-1 space-y-1">
+        <div className="min-w-32 flex-1 space-y-1">
           <Label>Specializzazione</Label>
           <Input value={specializzazione} onChange={(e) => setSpecializzazione(e.target.value)}
             placeholder="Es. Cardiologia" />
+        </div>
+        <div className="w-32 space-y-1">
+          <Label>Iscrizione Albo</Label>
+          <Input value={albo} onChange={(e) => setAlbo(e.target.value)} placeholder="N. iscrizione" />
         </div>
         {isAdmin && (
           <div className="w-48 space-y-1">
@@ -129,6 +137,7 @@ function TabPrestazioni() {
   const [tipo, setTipo] = useState('visita')
   const [durata, setDurata] = useState('30')
   const [tariffa, setTariffa] = useState('')
+  const [tariffaConv, setTariffaConv] = useState('')
 
   return (
     <div className={card}>
@@ -140,6 +149,11 @@ function TabPrestazioni() {
           <span className="text-xs text-muted-foreground">{p.durata_minuti}'</span>
           {p.tariffa_privata != null && (
             <span className="font-medium text-foreground">{fmtImporto(Number(p.tariffa_privata))}</span>
+          )}
+          {p.tariffa_convenzione != null && (
+            <span className="text-xs text-muted-foreground">
+              conv. {fmtImporto(Number(p.tariffa_convenzione))}
+            </span>
           )}
           <BtnElimina onClick={() => elimina.mutate({ tabella: 'prestazioni', id: p.id })} />
         </div>
@@ -153,9 +167,10 @@ function TabPrestazioni() {
             values: {
               nome: nome.trim(), tipo, durata_minuti: Number(durata) || 30,
               tariffa_privata: tariffa === '' ? null : Number(tariffa),
+              tariffa_convenzione: tariffaConv === '' ? null : Number(tariffaConv),
             },
           }, {
-            onSuccess: () => { setNome(''); setTariffa('') },
+            onSuccess: () => { setNome(''); setTariffa(''); setTariffaConv('') },
             onError: (err) => toast.error((err as Error).message),
           })
         }}
@@ -182,8 +197,12 @@ function TabPrestazioni() {
           <Input type="number" min="5" step="5" value={durata} onChange={(e) => setDurata(e.target.value)} />
         </div>
         <div className="w-28 space-y-1">
-          <Label>Tariffa (€)</Label>
+          <Label>Tariffa priv. (€)</Label>
           <Input type="number" step="0.01" value={tariffa} onChange={(e) => setTariffa(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Tariffa conv. (€)</Label>
+          <Input type="number" step="0.01" value={tariffaConv} onChange={(e) => setTariffaConv(e.target.value)} />
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
       </form>
@@ -452,6 +471,7 @@ function TabQualita() {
   const [descrizione, setDescrizione] = useState('')
 
   return (
+    <div className="space-y-4">
     <div className={card}>
       <h3 className="mb-3 text-sm font-semibold text-foreground">Qualità e rischio clinico</h3>
       {eventi.map((ev) => (
@@ -499,6 +519,22 @@ function TabQualita() {
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Registra</Button>
       </form>
+    </div>
+
+    {/* Workflow autorizzativi della struttura (§18): la voce vale per
+        tutta la struttura (entità singleton). */}
+    <ApprovalSection
+      modulo="poliambulatori" entita="poliambulatorio"
+      entitaId="00000000-0000-0000-0000-000000000000"
+      tipiRichiesta={[
+        { value: 'nuova_prestazione', label: 'Inserimento nuova prestazione' },
+        { value: 'convenzione', label: 'Approvazione convenzione' },
+        { value: 'rimborso', label: 'Rimborso / nota di credito' },
+        { value: 'reclamo', label: 'Gestione reclamo / non conformità' },
+        { value: 'pubblicazione_documentazione', label: 'Pubblicazione documentazione clinica' },
+      ]}
+      azioneUrl="/poliambulatorio-struttura"
+    />
     </div>
   )
 }

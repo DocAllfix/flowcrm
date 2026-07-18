@@ -5,12 +5,13 @@
  * multe, pneumatici e attrezzature, costi (manager), documenti,
  * scadenze (revisione/bollo/assicurazione…), commenti, storico.
  */
-import { useState, type FormEvent } from 'react'
+import { useState, useRef, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Trash2, Plus, Fuel, Wrench, User,
+  ArrowLeft, Loader2, Pencil, Trash2, Plus, Fuel, Wrench, User, Upload,
 } from 'lucide-react'
+import { parseCsv } from '@/lib/csv'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -98,6 +99,16 @@ function TabPanoramica({ mezzo }: { mezzo: Automezzo }) {
         <Riga label="Ore di fermo">{Number(consumi?.ore_fermo ?? 0)} h</Riga>
         <Riga label="Guasti (straordinarie)">{consumi?.n_guasti ?? 0}</Riga>
         <Riga label="Spesa manutenzione">{fmtImporto(Number(consumi?.costo_manutenzione ?? 0))}</Riga>
+        <Riga label="MTBF (km tra guasti)">
+          {(consumi?.n_guasti ?? 0) > 0 && consumi?.km_max != null && consumi?.km_min != null
+            ? fmtKm(Math.round((Number(consumi.km_max) - Number(consumi.km_min)) / Number(consumi.n_guasti)))
+            : '—'}
+        </Riga>
+        <Riga label="MTTR (ore medie riparazione)">
+          {(consumi?.n_guasti ?? 0) > 0
+            ? `${(Number(consumi?.ore_fermo ?? 0) / Number(consumi?.n_guasti)).toFixed(1)} h`
+            : '—'}
+        </Riga>
       </div>
 
       {isManager && costoKm && (
@@ -138,6 +149,7 @@ function TabAssegnazioni({ mezzo }: { mezzo: Automezzo }) {
   const elimina = useEliminaFiglioAutomezzo()
   const [assegnatario, setAssegnatario] = useState('')
   const [motivo, setMotivo] = useState('')
+  const [reparto, setReparto] = useState('')
 
   return (
     <div className="space-y-4">
@@ -152,7 +164,7 @@ function TabAssegnazioni({ mezzo }: { mezzo: Automezzo }) {
               </p>
               <p className="text-xs text-muted-foreground">
                 dal {fmtData(a.data_inizio)}{a.data_fine ? ` al ${fmtData(a.data_fine)}` : ' (in corso)'}
-                {a.motivo ? ` · ${a.motivo}` : ''}
+                {a.reparto ? ` · ${a.reparto}` : ''}{a.motivo ? ` · ${a.motivo}` : ''}
               </p>
             </div>
             {!a.data_fine && (
@@ -175,21 +187,27 @@ function TabAssegnazioni({ mezzo }: { mezzo: Automezzo }) {
               automezzoId: mezzo.id, tabella: 'automezzi_assegnazioni',
               values: {
                 assegnatario: assegnatario.trim(), motivo: motivo.trim() || null,
+                reparto: reparto.trim() || null,
                 km_iniziali: mezzo.km_attuali,
               },
             }, {
-              onSuccess: () => { setAssegnatario(''); setMotivo('') },
+              onSuccess: () => { setAssegnatario(''); setMotivo(''); setReparto('') },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="min-w-44 flex-1 space-y-1">
+          <div className="min-w-40 flex-1 space-y-1">
             <Label>Assegnatario</Label>
             <Input value={assegnatario} onChange={(e) => setAssegnatario(e.target.value)}
-              placeholder="Nome del conducente/reparto" />
+              placeholder="Nome del conducente" />
           </div>
-          <div className="min-w-36 flex-1 space-y-1">
+          <div className="w-36 space-y-1">
+            <Label>Reparto</Label>
+            <Input value={reparto} onChange={(e) => setReparto(e.target.value)}
+              placeholder="Es. Cantieri Nord" />
+          </div>
+          <div className="min-w-32 flex-1 space-y-1">
             <Label>Motivo</Label>
             <Input value={motivo} onChange={(e) => setMotivo(e.target.value)} />
           </div>
@@ -221,6 +239,9 @@ function TabManutenzioni({ mezzo }: { mezzo: Automezzo }) {
   const [descrizione, setDescrizione] = useState('')
   const [officina, setOfficina] = useState('')
   const [costoMan, setCostoMan] = useState('')
+  const [costoMat, setCostoMat] = useState('')
+  const [kmMan, setKmMan] = useState('')
+  const [oreFermo, setOreFermo] = useState('')
 
   return (
     <div className={card}>
@@ -252,9 +273,12 @@ function TabManutenzioni({ mezzo }: { mezzo: Automezzo }) {
             values: {
               tipo, descrizione: descrizione.trim(), officina: officina.trim() || null,
               costo_manodopera: costoMan === '' ? null : Number(costoMan),
+              costo_materiali: costoMat === '' ? null : Number(costoMat),
+              km: kmMan === '' ? null : Number(kmMan),
+              ore_fermo: oreFermo === '' ? null : Number(oreFermo),
             },
           }, {
-            onSuccess: () => { setDescrizione(''); setOfficina(''); setCostoMan('') },
+            onSuccess: () => { setDescrizione(''); setOfficina(''); setCostoMan(''); setCostoMat(''); setKmMan(''); setOreFermo('') },
             onError: (err) => toast.error((err as Error).message),
           })
         }}
@@ -275,13 +299,25 @@ function TabManutenzioni({ mezzo }: { mezzo: Automezzo }) {
           <Input value={descrizione} onChange={(e) => setDescrizione(e.target.value)}
             placeholder="Es. Tagliando 60.000 km" />
         </div>
-        <div className="w-36 space-y-1">
+        <div className="w-32 space-y-1">
           <Label>Officina</Label>
           <Input value={officina} onChange={(e) => setOfficina(e.target.value)} />
         </div>
         <div className="w-28 space-y-1">
-          <Label>Costo (€)</Label>
+          <Label>Km</Label>
+          <Input type="number" value={kmMan} onChange={(e) => setKmMan(e.target.value)} />
+        </div>
+        <div className="w-24 space-y-1">
+          <Label>Ore fermo</Label>
+          <Input type="number" step="0.5" value={oreFermo} onChange={(e) => setOreFermo(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Manodopera (€)</Label>
           <Input type="number" step="0.01" value={costoMan} onChange={(e) => setCostoMan(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Ricambi (€)</Label>
+          <Input type="number" step="0.01" value={costoMat} onChange={(e) => setCostoMat(e.target.value)} />
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
       </form>
@@ -297,10 +333,73 @@ function TabRifornimenti({ mezzo }: { mezzo: Automezzo }) {
   const [litri, setLitri] = useState('')
   const [costo, setCosto] = useState('')
   const [km, setKm] = useState('')
+  const [fornitore, setFornitore] = useState('')
+  const [carta, setCarta] = useState('')
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [importando, setImportando] = useState(false)
+
+  /** Import CSV fuel card: colonne riconosciute per nome (data, litri,
+   *  costo/importo, km, fornitore, carta) — separatore , o ; */
+  async function importaCsv(file: File) {
+    setImportando(true)
+    try {
+      const testo = await file.text()
+      const primaRiga = testo.split('\n')[0] ?? ''
+      const sep = (primaRiga.match(/;/g)?.length ?? 0) > (primaRiga.match(/,/g)?.length ?? 0) ? ';' : ','
+      const { headers, rows } = parseCsv(testo, sep)
+      const trova = (nomi: string[]) =>
+        headers.find((h) => nomi.some((n) => h.toLowerCase().includes(n)))
+      const hData = trova(['data']); const hLitri = trova(['litri', 'liter'])
+      const hCosto = trova(['costo', 'importo', 'amount'])
+      const hKm = trova(['km', 'chilometr']); const hForn = trova(['fornitore', 'gestore'])
+      const hCarta = trova(['carta', 'card'])
+      if (!hLitri || !hCosto) {
+        toast.error('CSV non riconosciuto: servono almeno le colonne litri e costo')
+        return
+      }
+      let ok = 0; let scartate = 0
+      for (const r of rows) {
+        const litriN = Number(String(r[hLitri] ?? '').replace(',', '.'))
+        const costoN = Number(String(r[hCosto] ?? '').replace(',', '.'))
+        if (Number.isNaN(litriN) || Number.isNaN(costoN)) { scartate++; continue }
+        const dataRaw = hData ? String(r[hData] ?? '').trim() : ''
+        const dataIso = /^\d{2}\/\d{2}\/\d{4}$/.test(dataRaw)
+          ? dataRaw.split('/').reverse().join('-')
+          : /^\d{4}-\d{2}-\d{2}/.test(dataRaw) ? dataRaw.slice(0, 10) : null
+        await crea.mutateAsync({
+          automezzoId: mezzo.id, tabella: 'automezzi_rifornimenti',
+          values: {
+            litri: litriN, costo: costoN,
+            data: dataIso ?? new Date().toISOString().slice(0, 10),
+            km: hKm && r[hKm] !== '' ? Number(String(r[hKm] ?? '').replace('.', '')) || null : null,
+            fornitore: hForn ? String(r[hForn] ?? '').trim() || null : null,
+            carta: hCarta ? String(r[hCarta] ?? '').trim() || null : null,
+          },
+        })
+        ok++
+      }
+      toast.success(`Import fuel card: ${ok} rifornimenti importati${scartate ? `, ${scartate} righe scartate` : ''}`)
+    } catch (e) {
+      toast.error((e as Error).message)
+    } finally {
+      setImportando(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
 
   return (
     <div className={card}>
-      <h3 className="mb-1 text-sm font-semibold text-foreground">Rifornimenti</h3>
+      <div className="mb-1 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-foreground">Rifornimenti</h3>
+        <div>
+          <input ref={fileRef} type="file" accept=".csv" className="hidden"
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) void importaCsv(f) }} />
+          <Button size="sm" variant="outline" disabled={importando}
+            onClick={() => fileRef.current?.click()}>
+            <Upload className="h-3.5 w-3.5" /> {importando ? 'Import…' : 'Importa CSV fuel card'}
+          </Button>
+        </div>
+      </div>
       <p className="mb-3 text-xs text-muted-foreground">
         I km inseriti aggiornano automaticamente il contachilometri del mezzo.
       </p>
@@ -308,7 +407,14 @@ function TabRifornimenti({ mezzo }: { mezzo: Automezzo }) {
         <div key={r.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
           <Fuel className="h-4 w-4 shrink-0 text-muted-foreground" />
           <span className="text-xs text-muted-foreground">{fmtData(r.data)}</span>
-          <span className="flex-1 text-foreground">{Number(r.litri)} l</span>
+          <span className="flex-1 text-foreground">
+            {Number(r.litri)} l
+            {(r.fornitore || r.carta) && (
+              <span className="ml-2 text-xs text-muted-foreground">
+                {[r.fornitore, r.carta && `carta ${r.carta}`].filter(Boolean).join(' · ')}
+              </span>
+            )}
+          </span>
           <span className="font-medium text-foreground">{fmtImporto(Number(r.costo))}</span>
           {r.km != null && <span className="text-xs text-muted-foreground">{fmtKm(r.km)}</span>}
           <BtnElimina onClick={() => elimina.mutate({ automezzoId: mezzo.id, tabella: 'automezzi_rifornimenti', id: r.id })} />
@@ -323,7 +429,10 @@ function TabRifornimenti({ mezzo }: { mezzo: Automezzo }) {
           }
           crea.mutate({
             automezzoId: mezzo.id, tabella: 'automezzi_rifornimenti',
-            values: { litri: l, costo: c, km: km === '' ? null : Number(km) },
+            values: {
+              litri: l, costo: c, km: km === '' ? null : Number(km),
+              fornitore: fornitore.trim() || null, carta: carta.trim() || null,
+            },
           }, {
             onSuccess: () => { setLitri(''); setCosto(''); setKm('') },
             onError: (err) => toast.error((err as Error).message),
@@ -339,10 +448,18 @@ function TabRifornimenti({ mezzo }: { mezzo: Automezzo }) {
           <Label>Costo (€)</Label>
           <Input type="number" step="0.01" value={costo} onChange={(e) => setCosto(e.target.value)} />
         </div>
-        <div className="w-32 space-y-1">
+        <div className="w-28 space-y-1">
           <Label>Km attuali</Label>
           <Input type="number" value={km} onChange={(e) => setKm(e.target.value)}
             placeholder={String(mezzo.km_attuali)} />
+        </div>
+        <div className="w-32 space-y-1">
+          <Label>Fornitore</Label>
+          <Input value={fornitore} onChange={(e) => setFornitore(e.target.value)} placeholder="Es. Q8" />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Carta</Label>
+          <Input value={carta} onChange={(e) => setCarta(e.target.value)} />
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Registra</Button>
       </form>
@@ -357,6 +474,9 @@ function TabUtilizzi({ mezzo }: { mezzo: Automezzo }) {
   const elimina = useEliminaFiglioAutomezzo()
   const [conducente, setConducente] = useState('')
   const [destinazione, setDestinazione] = useState('')
+  const [kmIni, setKmIni] = useState('')
+  const [kmFin, setKmFin] = useState('')
+  const [anomalie, setAnomalie] = useState('')
 
   return (
     <div className={card}>
@@ -380,21 +500,38 @@ function TabUtilizzi({ mezzo }: { mezzo: Automezzo }) {
           if (!conducente.trim()) { toast.error('Indica il conducente'); return }
           crea.mutate({
             automezzoId: mezzo.id, tabella: 'automezzi_utilizzi',
-            values: { conducente: conducente.trim(), destinazione: destinazione.trim() || null },
+            values: {
+              conducente: conducente.trim(), destinazione: destinazione.trim() || null,
+              km_iniziali: kmIni === '' ? null : Number(kmIni),
+              km_finali: kmFin === '' ? null : Number(kmFin),
+              anomalie: anomalie.trim() || null,
+            },
           }, {
-            onSuccess: () => { setConducente(''); setDestinazione('') },
+            onSuccess: () => { setConducente(''); setDestinazione(''); setKmIni(''); setKmFin(''); setAnomalie('') },
             onError: (err) => toast.error((err as Error).message),
           })
         }}
         className="mt-3 flex flex-wrap items-end gap-2"
       >
-        <div className="min-w-40 flex-1 space-y-1">
+        <div className="min-w-36 flex-1 space-y-1">
           <Label>Conducente</Label>
           <Input value={conducente} onChange={(e) => setConducente(e.target.value)} />
         </div>
-        <div className="min-w-40 flex-1 space-y-1">
+        <div className="min-w-36 flex-1 space-y-1">
           <Label>Destinazione</Label>
           <Input value={destinazione} onChange={(e) => setDestinazione(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Km iniziali</Label>
+          <Input type="number" value={kmIni} onChange={(e) => setKmIni(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label>Km finali</Label>
+          <Input type="number" value={kmFin} onChange={(e) => setKmFin(e.target.value)} />
+        </div>
+        <div className="min-w-32 flex-1 space-y-1">
+          <Label>Anomalie</Label>
+          <Input value={anomalie} onChange={(e) => setAnomalie(e.target.value)} placeholder="Vuoto = nessuna" />
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
       </form>
@@ -410,8 +547,12 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
   const aggiorna = useAggiornaFiglioAutomezzo()
   const elimina = useEliminaFiglioAutomezzo()
   const [descSinistro, setDescSinistro] = useState('')
+  const [luogoSinistro, setLuogoSinistro] = useState('')
+  const [controparte, setControparte] = useState('')
   const [importoMulta, setImportoMulta] = useState('')
   const [enteMulta, setEnteMulta] = useState('')
+  const [puntiMulta, setPuntiMulta] = useState('')
+  const [liquidazioneDraft, setLiquidazioneDraft] = useState<Record<string, string>>({})
 
   return (
     <div className="grid gap-4 lg:grid-cols-2">
@@ -420,26 +561,47 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
         {sinistri.map((s) => {
           const st = SINISTRO_STATO_LABEL[s.stato]
           return (
-            <div key={s.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
-              <div className="min-w-0 flex-1">
-                <p className="font-medium text-foreground">{s.descrizione}</p>
-                <p className="text-xs text-muted-foreground">
-                  {fmtData(s.data)}{s.luogo ? ` · ${s.luogo}` : ''}{s.pratica ? ` · pratica ${s.pratica}` : ''}
-                </p>
+            <div key={s.id} className="border-b border-border py-2 text-sm last:border-0">
+              <div className="flex items-center gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-foreground">{s.descrizione}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {fmtData(s.data)}{s.luogo ? ` · ${s.luogo}` : ''}
+                    {s.controparte ? ` · controparte ${s.controparte}` : ''}
+                    {s.pratica ? ` · pratica ${s.pratica}` : ''}
+                    {s.importo_liquidato != null ? ` · liquidati ${fmtImporto(Number(s.importo_liquidato))}` : ''}
+                  </p>
+                </div>
+                <Select value={s.stato}
+                  onValueChange={(v) => aggiorna.mutate({
+                    automezzoId: mezzo.id, tabella: 'automezzi_sinistri', id: s.id, values: { stato: v },
+                  })}>
+                  <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(SINISTRO_STATO_LABEL).map(([v, l]) => (
+                      <SelectItem key={v} value={v}>{l.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Badge tone={st.tone}>{st.label}</Badge>
+                <BtnElimina onClick={() => elimina.mutate({ automezzoId: mezzo.id, tabella: 'automezzi_sinistri', id: s.id })} />
               </div>
-              <Select value={s.stato}
-                onValueChange={(v) => aggiorna.mutate({
-                  automezzoId: mezzo.id, tabella: 'automezzi_sinistri', id: s.id, values: { stato: v },
-                })}>
-                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(SINISTRO_STATO_LABEL).map(([v, l]) => (
-                    <SelectItem key={v} value={v}>{l.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Badge tone={st.tone}>{st.label}</Badge>
-              <BtnElimina onClick={() => elimina.mutate({ automezzoId: mezzo.id, tabella: 'automezzi_sinistri', id: s.id })} />
+              {s.stato === 'liquidato' && s.importo_liquidato == null && (
+                <div className="mt-2 flex items-center gap-2">
+                  <Input type="number" step="0.01" className="h-8 w-40 text-xs"
+                    placeholder="Importo liquidato (€)"
+                    value={liquidazioneDraft[s.id] ?? ''}
+                    onChange={(e) => setLiquidazioneDraft((p) => ({ ...p, [s.id]: e.target.value }))} />
+                  <Button size="sm" variant="outline" className="text-xs"
+                    disabled={!liquidazioneDraft[s.id]}
+                    onClick={() => aggiorna.mutate({
+                      automezzoId: mezzo.id, tabella: 'automezzi_sinistri', id: s.id,
+                      values: { importo_liquidato: Number(liquidazioneDraft[s.id]) },
+                    })}>
+                    Registra liquidazione
+                  </Button>
+                </div>
+              )}
             </div>
           )
         })}
@@ -449,15 +611,30 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
             if (!descSinistro.trim()) { toast.error('Descrivi il sinistro'); return }
             crea.mutate({
               automezzoId: mezzo.id, tabella: 'automezzi_sinistri',
-              values: { descrizione: descSinistro.trim() },
-            }, { onSuccess: () => setDescSinistro(''), onError: (err) => toast.error((err as Error).message) })
+              values: {
+                descrizione: descSinistro.trim(),
+                luogo: luogoSinistro.trim() || null,
+                controparte: controparte.trim() || null,
+              },
+            }, {
+              onSuccess: () => { setDescSinistro(''); setLuogoSinistro(''); setControparte('') },
+              onError: (err) => toast.error((err as Error).message),
+            })
           }}
-          className="mt-3 flex items-end gap-2"
+          className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="flex-1 space-y-1">
+          <div className="min-w-40 flex-1 space-y-1">
             <Label>Nuovo sinistro</Label>
             <Input value={descSinistro} onChange={(e) => setDescSinistro(e.target.value)}
               placeholder="Es. Tamponamento in via Roma" />
+          </div>
+          <div className="w-32 space-y-1">
+            <Label>Luogo</Label>
+            <Input value={luogoSinistro} onChange={(e) => setLuogoSinistro(e.target.value)} />
+          </div>
+          <div className="w-36 space-y-1">
+            <Label>Controparte</Label>
+            <Input value={controparte} onChange={(e) => setControparte(e.target.value)} />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
@@ -472,6 +649,16 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
             <span className="font-medium text-foreground">{fmtImporto(Number(m.importo))}</span>
             {m.punti_decurtati != null && m.punti_decurtati > 0 && (
               <Badge tone="warning">-{m.punti_decurtati} punti</Badge>
+            )}
+            {m.ricorso ? (
+              <Badge tone="info">Ricorso</Badge>
+            ) : !m.pagata && (
+              <Button size="sm" variant="ghost" className="text-xs"
+                onClick={() => aggiorna.mutate({
+                  automezzoId: mezzo.id, tabella: 'automezzi_multe', id: m.id, values: { ricorso: true },
+                })}>
+                Fai ricorso
+              </Button>
             )}
             {m.pagata ? (
               <Badge tone="success">Pagata</Badge>
@@ -493,15 +680,18 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
             if (!importoMulta || Number.isNaN(imp)) { toast.error('Importo obbligatorio'); return }
             crea.mutate({
               automezzoId: mezzo.id, tabella: 'automezzi_multe',
-              values: { importo: imp, ente: enteMulta.trim() || null },
+              values: {
+                importo: imp, ente: enteMulta.trim() || null,
+                punti_decurtati: puntiMulta === '' ? null : Number(puntiMulta),
+              },
             }, {
-              onSuccess: () => { setImportoMulta(''); setEnteMulta('') },
+              onSuccess: () => { setImportoMulta(''); setEnteMulta(''); setPuntiMulta('') },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="min-w-36 flex-1 space-y-1">
+          <div className="min-w-32 flex-1 space-y-1">
             <Label>Ente accertatore</Label>
             <Input value={enteMulta} onChange={(e) => setEnteMulta(e.target.value)} />
           </div>
@@ -509,6 +699,11 @@ function TabSinistriMulte({ mezzo }: { mezzo: Automezzo }) {
             <Label>Importo (€)</Label>
             <Input type="number" step="0.01" value={importoMulta}
               onChange={(e) => setImportoMulta(e.target.value)} />
+          </div>
+          <div className="w-20 space-y-1">
+            <Label>Punti</Label>
+            <Input type="number" min="0" value={puntiMulta}
+              onChange={(e) => setPuntiMulta(e.target.value)} />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>

@@ -1,13 +1,13 @@
 import { test, expect } from '@playwright/test'
 
 /**
- * F3 — notifica realtime: l'admin è loggato; una notifica creata via RPC
- * (crea_notifica) deve comparire nel badge/pannello SENZA reload, grazie
- * al canale Supabase Realtime.
+ * F3 — notifica realtime: l'admin è loggato; una notifica generata dal
+ * trigger delle approvazioni (richiesta → approvata notifica il richiedente)
+ * deve comparire nel badge/pannello SENZA reload, via Supabase Realtime.
  *
- * Non servono due browser: la seconda "sessione" è la RPC lato server che
- * inserisce la notifica per l'utente loggato (via anon key + service? no:
- * usiamo la sessione dell'utente stesso chiamando la RPC dal client).
+ * Non si chiama crea_notifica() direttamente: l'hardening la revoca ai
+ * client (le notifiche nascono solo dai trigger SECURITY DEFINER). Il
+ * percorso legittimo più corto è il workflow approvazioni dei moduli.
  */
 const EMAIL = process.env.E2E_ADMIN_EMAIL
 const PASSWORD = process.env.E2E_ADMIN_PASSWORD
@@ -47,25 +47,37 @@ test('notifica realtime: appare nel badge senza reload', async ({ page }) => {
     )
     .toBe(true)
 
-  // Crea una notifica per SE STESSO via RPC, usando il client supabase della pagina.
-  const titolo = `Realtime ${Date.now()}`
-  await page.evaluate(async (t) => {
+  // Workflow approvazioni: richiesta creata e approvata da se stesso.
+  // Il trigger notifica il richiedente ("Richiesta approvata") → realtime.
+  const descrizione = `Verifica realtime ${Date.now()}`
+  const approvazioneId = await page.evaluate(async (desc) => {
     // @ts-expect-error client esposto per test
     const sb = window.__supabase
     const { data: u } = await sb.auth.getUser()
-    await sb.rpc('crea_notifica', {
-      p_destinatario_id: u.user.id,
-      p_tipo: 'success',
-      p_titolo: t,
-      p_messaggio: 'Consegnata in tempo reale',
-    })
-  }, titolo)
+    const { data: riga, error: e1 } = await sb.from('approvazioni').insert({
+      modulo: 'gare', entita: 'gare',
+      entita_id: crypto.randomUUID(),
+      tipo_richiesta: 'verifica_e2e', descrizione: desc,
+      richiedente_id: u.user.id,
+    }).select('id').single()
+    if (e1) throw new Error(e1.message)
+    const { error: e2 } = await sb.from('approvazioni')
+      .update({ stato: 'approvata' }).eq('id', riga.id)
+    if (e2) throw new Error(e2.message)
+    return riga.id
+  }, descrizione)
 
   // Il badge contatore deve comparire senza reload (entro pochi secondi).
   const badge = page.getByTestId('notifiche-badge').locator('span')
   await expect(badge).toBeVisible({ timeout: 10_000 })
 
-  // Aprendo il pannello si vede la notifica.
+  // Aprendo il pannello si vede la notifica di approvazione.
   await page.getByTestId('notifiche-badge').click()
-  await expect(page.getByText(titolo)).toBeVisible({ timeout: 10_000 })
+  await expect(page.getByText(descrizione).first()).toBeVisible({ timeout: 10_000 })
+
+  // Pulizia: la richiesta di verifica non resta nel DB demo.
+  await page.evaluate(async (id) => {
+    // @ts-expect-error client esposto per test
+    await window.__supabase.from('approvazioni').delete().eq('id', id)
+  }, approvazioneId)
 })

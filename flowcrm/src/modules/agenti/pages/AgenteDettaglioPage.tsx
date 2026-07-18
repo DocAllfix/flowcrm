@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
@@ -29,6 +30,8 @@ import { ApprovalSection } from '@/components/ApprovalSection'
 import { ScadenzeModuliSection } from '@/components/ScadenzeModuliSection'
 import { useAuth } from '@/hooks/useAuth'
 import { useOrganizzazioni } from '@/lib/queries/organizzazioni'
+import { supabase } from '@/lib/supabase'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AgenteDialog } from '@/modules/agenti/dialogs/AgenteDialog'
 import {
   TIPOLOGIA_LABEL, AGENTE_STATO, VISITA_ESITO, OFFERTA_STATO, ORDINE_STATO,
@@ -120,6 +123,9 @@ function TabMandati({ agente }: { agente: Agente }) {
   const [descrizione, setDescrizione] = useState('')
   const [zone, setZone] = useState('')
   const [fine, setFine] = useState('')
+  const [esclusiva, setEsclusiva] = useState(false)
+  const [prodotti, setProdotti] = useState('')
+  const [obiettivoAnnuo, setObiettivoAnnuo] = useState('')
 
   return (
     <div className={card}>
@@ -155,27 +161,47 @@ function TabMandati({ agente }: { agente: Agente }) {
             if (!descrizione.trim()) { toast.error('Descrivi il mandato'); return }
             crea.mutate({
               agenteId: agente.id, tabella: 'agenti_mandati',
-              values: { descrizione: descrizione.trim(), zone: zone.trim() || null, data_fine: fine || null },
+              values: {
+                descrizione: descrizione.trim(), zone: zone.trim() || null, data_fine: fine || null,
+                esclusiva, prodotti: prodotti.trim() || null,
+                obiettivo_annuo: obiettivoAnnuo === '' ? null : Number(obiettivoAnnuo),
+              },
             }, {
-              onSuccess: () => { setDescrizione(''); setZone(''); setFine('') },
+              onSuccess: () => {
+                setDescrizione(''); setZone(''); setFine(''); setEsclusiva(false)
+                setProdotti(''); setObiettivoAnnuo('')
+              },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="min-w-44 flex-1 space-y-1">
+          <div className="min-w-40 flex-1 space-y-1">
             <Label>Mandato</Label>
             <Input value={descrizione} onChange={(e) => setDescrizione(e.target.value)}
               placeholder="Es. Mandato linea industriale" />
           </div>
-          <div className="w-40 space-y-1">
+          <div className="w-32 space-y-1">
             <Label>Zone</Label>
             <Input value={zone} onChange={(e) => setZone(e.target.value)} />
           </div>
           <div className="w-40 space-y-1">
+            <Label>Prodotti assegnati</Label>
+            <Input value={prodotti} onChange={(e) => setProdotti(e.target.value)} />
+          </div>
+          <div className="w-32 space-y-1">
+            <Label>Obiettivo annuo (€)</Label>
+            <Input type="number" step="0.01" value={obiettivoAnnuo}
+              onChange={(e) => setObiettivoAnnuo(e.target.value)} />
+          </div>
+          <div className="w-36 space-y-1">
             <Label>Fine</Label>
             <Input type="date" value={fine} onChange={(e) => setFine(e.target.value)} />
           </div>
+          <label className="flex items-center gap-2 pb-2 text-sm text-muted-foreground">
+            <Checkbox checked={esclusiva} onCheckedChange={(v) => setEsclusiva(v === true)} />
+            Esclusiva
+          </label>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
       )}
@@ -271,6 +297,9 @@ function TabVisite({ agente }: { agente: Agente }) {
   const [orgId, setOrgId] = useState('')
   const [esito, setEsito] = useState('positivo')
   const [argomenti, setArgomenti] = useState('')
+  const [referenti, setReferenti] = useState('')
+  const [opportunita, setOpportunita] = useState('')
+  const [criticita, setCriticita] = useState('')
 
   return (
     <div className={card}>
@@ -291,7 +320,9 @@ function TabVisite({ agente }: { agente: Agente }) {
               <BtnElimina onClick={() => elimina.mutate({ agenteId: agente.id, tabella: 'agenti_visite', id: v.id })} />
             </div>
             {v.argomenti && <p className="mt-0.5 text-xs text-muted-foreground">{v.argomenti}</p>}
+            {v.referenti && <p className="mt-0.5 text-xs text-muted-foreground">Referenti: {v.referenti}</p>}
             {v.opportunita && <p className="mt-0.5 text-xs text-success">Opportunità: {v.opportunita}</p>}
+            {v.criticita && <p className="mt-0.5 text-xs text-warning-foreground">Criticità: {v.criticita}</p>}
           </div>
         )
       })}
@@ -301,15 +332,20 @@ function TabVisite({ agente }: { agente: Agente }) {
           if (!orgId) { toast.error('Scegli il cliente visitato'); return }
           crea.mutate({
             agenteId: agente.id, tabella: 'agenti_visite',
-            values: { organizzazione_id: orgId, esito, argomenti: argomenti.trim() || null },
+            values: {
+              organizzazione_id: orgId, esito, argomenti: argomenti.trim() || null,
+              referenti: referenti.trim() || null,
+              opportunita: opportunita.trim() || null,
+              criticita: criticita.trim() || null,
+            },
           }, {
-            onSuccess: () => { setArgomenti('') },
+            onSuccess: () => { setArgomenti(''); setReferenti(''); setOpportunita(''); setCriticita('') },
             onError: (err) => toast.error((err as Error).message),
           })
         }}
         className="mt-3 flex flex-wrap items-end gap-2"
       >
-        <div className="min-w-44 flex-1 space-y-1">
+        <div className="min-w-40 flex-1 space-y-1">
           <Label>Cliente</Label>
           <Select value={orgId} onValueChange={setOrgId}>
             <SelectTrigger><SelectValue placeholder="Organizzazione…" /></SelectTrigger>
@@ -318,7 +354,7 @@ function TabVisite({ agente }: { agente: Agente }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="w-40 space-y-1">
+        <div className="w-36 space-y-1">
           <Label>Esito</Label>
           <Select value={esito} onValueChange={setEsito}>
             <SelectTrigger><SelectValue /></SelectTrigger>
@@ -329,11 +365,108 @@ function TabVisite({ agente }: { agente: Agente }) {
             </SelectContent>
           </Select>
         </div>
-        <div className="min-w-40 flex-1 space-y-1">
+        <div className="min-w-36 flex-1 space-y-1">
           <Label>Argomenti</Label>
           <Input value={argomenti} onChange={(e) => setArgomenti(e.target.value)} />
         </div>
+        <div className="w-40 space-y-1">
+          <Label>Referenti incontrati</Label>
+          <Input value={referenti} onChange={(e) => setReferenti(e.target.value)} />
+        </div>
+        <div className="w-40 space-y-1">
+          <Label>Opportunità</Label>
+          <Input value={opportunita} onChange={(e) => setOpportunita(e.target.value)} />
+        </div>
+        <div className="w-40 space-y-1">
+          <Label>Criticità</Label>
+          <Input value={criticita} onChange={(e) => setCriticita(e.target.value)} />
+        </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Registra</Button>
+      </form>
+    </div>
+  )
+}
+
+// Righe di un ordine (§8): prodotti, quantità, prezzi — il valore
+// dell'ordine si ricalcola dal trigger sul DB.
+function RigheOrdine({ agenteId, ordineId }: { agenteId: string; ordineId: string }) {
+  const qc = useQueryClient()
+  const { data: righe = [] } = useQuery({
+    queryKey: ['agenti', agenteId, 'righe', ordineId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('agenti_ordini_righe')
+        .select('*')
+        .eq('ordine_id', ordineId)
+        .order('created_at')
+      if (error) throw error
+      return data
+    },
+  })
+  const [prodotto, setProdotto] = useState('')
+  const [quantita, setQuantita] = useState('1')
+  const [prezzo, setPrezzo] = useState('')
+
+  async function invalida() {
+    await qc.invalidateQueries({ queryKey: ['agenti', agenteId, 'righe', ordineId] })
+    await qc.invalidateQueries({ queryKey: ['agenti', agenteId, 'agenti_ordini'] })
+  }
+
+  async function aggiungi(e: FormEvent) {
+    e.preventDefault()
+    const q = Number(quantita); const p = Number(prezzo)
+    if (!prodotto.trim() || Number.isNaN(q) || Number.isNaN(p) || !prezzo) {
+      toast.error('Prodotto, quantità e prezzo obbligatori'); return
+    }
+    const { data: auth } = await supabase.auth.getUser()
+    const { error } = await supabase.from('agenti_ordini_righe').insert({
+      ordine_id: ordineId, prodotto: prodotto.trim(), quantita: q,
+      prezzo_unitario: p, created_by: auth.user!.id,
+    })
+    if (error) { toast.error(error.message); return }
+    setProdotto(''); setQuantita('1'); setPrezzo('')
+    await invalida()
+  }
+
+  async function rimuovi(id: string) {
+    const { error } = await supabase.from('agenti_ordini_righe').delete().eq('id', id)
+    if (error) { toast.error(error.message); return }
+    await invalida()
+  }
+
+  return (
+    <div className="mt-2 rounded-lg bg-muted/40 p-3">
+      {righe.map((r) => (
+        <div key={r.id} className="flex items-center gap-3 border-b border-border/60 py-1.5 text-sm last:border-0">
+          <span className="min-w-0 flex-1 truncate text-foreground">{r.prodotto}</span>
+          <span className="text-muted-foreground">
+            {Number(r.quantita)} × {fmtImporto(Number(r.prezzo_unitario))}
+          </span>
+          <span className="font-medium text-foreground">
+            {fmtImporto(Number(r.quantita) * Number(r.prezzo_unitario))}
+          </span>
+          <button onClick={() => void rimuovi(r.id)} aria-label="Rimuovi riga"
+            className="rounded-md p-1 text-muted-foreground hover:text-destructive">
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      ))}
+      <form onSubmit={aggiungi} className="mt-2 flex flex-wrap items-end gap-2">
+        <div className="min-w-36 flex-1 space-y-1">
+          <Label className="text-xs">Prodotto</Label>
+          <Input className="h-8 text-sm" value={prodotto} onChange={(e) => setProdotto(e.target.value)} />
+        </div>
+        <div className="w-20 space-y-1">
+          <Label className="text-xs">Q.tà</Label>
+          <Input className="h-8 text-sm" type="number" step="0.01" value={quantita}
+            onChange={(e) => setQuantita(e.target.value)} />
+        </div>
+        <div className="w-28 space-y-1">
+          <Label className="text-xs">Prezzo (€)</Label>
+          <Input className="h-8 text-sm" type="number" step="0.01" value={prezzo}
+            onChange={(e) => setPrezzo(e.target.value)} />
+        </div>
+        <Button type="submit" size="sm"><Plus className="h-3.5 w-3.5" /> Riga</Button>
       </form>
     </div>
   )
@@ -350,6 +483,9 @@ function TabOfferteOrdini({ agente }: { agente: Agente }) {
   const [orgOff, setOrgOff] = useState('')
   const [descOff, setDescOff] = useState('')
   const [impOff, setImpOff] = useState('')
+  const [scontoOff, setScontoOff] = useState('')
+  const [validitaOff, setValiditaOff] = useState('')
+  const [righeAperte, setRigheAperte] = useState<Record<string, boolean>>({})
 
   async function convertiInOrdine(off: AgenteOfferta) {
     try {
@@ -410,17 +546,26 @@ function TabOfferteOrdini({ agente }: { agente: Agente }) {
             if (!orgOff || !descOff.trim() || !impOff || Number.isNaN(imp)) {
               toast.error('Cliente, descrizione e importo obbligatori'); return
             }
+            const sconto = scontoOff === '' ? null : Number(scontoOff)
             crea.mutate({
               agenteId: agente.id, tabella: 'agenti_offerte',
-              values: { organizzazione_id: orgOff, descrizione: descOff.trim(), importo: imp },
+              values: {
+                organizzazione_id: orgOff, descrizione: descOff.trim(), importo: imp,
+                sconto_percentuale: sconto, validita: validitaOff || null,
+              },
             }, {
-              onSuccess: () => { setDescOff(''); setImpOff('') },
+              onSuccess: () => {
+                setDescOff(''); setImpOff(''); setScontoOff(''); setValiditaOff('')
+                if (sconto != null && sconto > 10) {
+                  toast.warning('Sconto oltre il 10%: richiedi l\'approvazione dal tab Portafoglio')
+                }
+              },
               onError: (err) => toast.error((err as Error).message),
             })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="min-w-40 flex-1 space-y-1">
+          <div className="min-w-36 flex-1 space-y-1">
             <Label>Cliente</Label>
             <Select value={orgOff} onValueChange={setOrgOff}>
               <SelectTrigger><SelectValue placeholder="Organizzazione…" /></SelectTrigger>
@@ -429,13 +574,21 @@ function TabOfferteOrdini({ agente }: { agente: Agente }) {
               </SelectContent>
             </Select>
           </div>
-          <div className="min-w-36 flex-1 space-y-1">
+          <div className="min-w-32 flex-1 space-y-1">
             <Label>Descrizione</Label>
             <Input value={descOff} onChange={(e) => setDescOff(e.target.value)} />
           </div>
           <div className="w-28 space-y-1">
             <Label>Importo (€)</Label>
             <Input type="number" step="0.01" value={impOff} onChange={(e) => setImpOff(e.target.value)} />
+          </div>
+          <div className="w-24 space-y-1">
+            <Label>Sconto %</Label>
+            <Input type="number" step="0.01" value={scontoOff} onChange={(e) => setScontoOff(e.target.value)} />
+          </div>
+          <div className="w-36 space-y-1">
+            <Label>Validità</Label>
+            <Input type="date" value={validitaOff} onChange={(e) => setValiditaOff(e.target.value)} />
           </div>
           <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /></Button>
         </form>
@@ -451,25 +604,32 @@ function TabOfferteOrdini({ agente }: { agente: Agente }) {
         {ordini.map((o) => {
           const st = ORDINE_STATO[o.stato] ?? ORDINE_STATO.bozza
           return (
-            <div key={o.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
-              <div className="min-w-0 flex-1">
-                <p className="font-medium text-foreground">{o.organizzazione?.ragione_sociale ?? '—'}</p>
-                <p className="text-xs text-muted-foreground">{fmtData(o.data)}{o.note ? ` · ${o.note}` : ''}</p>
+            <div key={o.id} className="border-b border-border py-2 text-sm last:border-0">
+              <div className="flex items-center gap-3">
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium text-foreground">{o.organizzazione?.ragione_sociale ?? '—'}</p>
+                  <p className="text-xs text-muted-foreground">{fmtData(o.data)}{o.note ? ` · ${o.note}` : ''}</p>
+                </div>
+                <span className="font-semibold text-foreground">{fmtImporto(Number(o.valore))}</span>
+                <Select value={o.stato}
+                  onValueChange={(v) => aggiorna.mutate({
+                    agenteId: agente.id, tabella: 'agenti_ordini', id: o.id, values: { stato: v },
+                  })}>
+                  <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(ORDINE_STATO).map(([v, l]) => (
+                      <SelectItem key={v} value={v}>{l.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Badge tone={st.tone}>{st.label}</Badge>
+                <Button size="sm" variant="ghost" className="text-xs"
+                  onClick={() => setRigheAperte((p) => ({ ...p, [o.id]: !p[o.id] }))}>
+                  {righeAperte[o.id] ? 'Chiudi righe' : 'Righe'}
+                </Button>
+                <BtnElimina onClick={() => elimina.mutate({ agenteId: agente.id, tabella: 'agenti_ordini', id: o.id })} />
               </div>
-              <span className="font-semibold text-foreground">{fmtImporto(Number(o.valore))}</span>
-              <Select value={o.stato}
-                onValueChange={(v) => aggiorna.mutate({
-                  agenteId: agente.id, tabella: 'agenti_ordini', id: o.id, values: { stato: v },
-                })}>
-                <SelectTrigger className="h-8 w-36 text-xs"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {Object.entries(ORDINE_STATO).map(([v, l]) => (
-                    <SelectItem key={v} value={v}>{l.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Badge tone={st.tone}>{st.label}</Badge>
-              <BtnElimina onClick={() => elimina.mutate({ agenteId: agente.id, tabella: 'agenti_ordini', id: o.id })} />
+              {righeAperte[o.id] && <RigheOrdine agenteId={agente.id} ordineId={o.id} />}
             </div>
           )
         })}
@@ -639,6 +799,7 @@ function TabObiettivi({ agente }: { agente: Agente }) {
   const crea = useCreaFiglioAgente()
   const elimina = useEliminaFiglioAgente()
   const [anno, setAnno] = useState(String(new Date().getFullYear()))
+  const [mese, setMese] = useState('')
   const [importo, setImporto] = useState('')
 
   const venduto = Number(kpi.find((k) => k.agente_id === agente.id)?.valore_ordini ?? 0)
@@ -679,14 +840,29 @@ function TabObiettivi({ agente }: { agente: Agente }) {
             if (!importo || Number.isNaN(imp)) { toast.error('Importo obiettivo non valido'); return }
             crea.mutate({
               agenteId: agente.id, tabella: 'agenti_obiettivi',
-              values: { anno: Number(anno), importo_obiettivo: imp },
+              values: {
+                anno: Number(anno), importo_obiettivo: imp,
+                mese: mese === '' ? null : Number(mese),
+              },
             }, { onSuccess: () => setImporto(''), onError: (err) => toast.error((err as Error).message) })
           }}
           className="mt-3 flex flex-wrap items-end gap-2"
         >
-          <div className="w-28 space-y-1">
+          <div className="w-24 space-y-1">
             <Label>Anno</Label>
             <Input type="number" value={anno} onChange={(e) => setAnno(e.target.value)} />
+          </div>
+          <div className="w-36 space-y-1">
+            <Label>Mese (opz.)</Label>
+            <Select value={mese || 'annuale'} onValueChange={(v) => setMese(v === 'annuale' ? '' : v)}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="annuale">Annuale</SelectItem>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <SelectItem key={i + 1} value={String(i + 1)}>{String(i + 1).padStart(2, '0')}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="w-40 space-y-1">
             <Label>Obiettivo (€)</Label>
