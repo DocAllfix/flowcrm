@@ -12,6 +12,7 @@ export interface AttivitaScope {
   deal_id?: string
   gara_id?: string
   cantiere_id?: string
+  agente_id?: string
 }
 
 export const attivitaKeys = {

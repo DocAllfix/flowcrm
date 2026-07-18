@@ -39,6 +39,973 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenti: {
+        Row: {
+          area_geografica: string | null
+          attivo: boolean
+          cciaa: string | null
+          codice: string | null
+          codice_fiscale: string | null
+          cognome: string | null
+          created_at: string
+          created_by: string | null
+          data_cessazione: string | null
+          data_inizio: string | null
+          email: string | null
+          enasarco: string | null
+          iban: string | null
+          id: string
+          nome: string
+          note: string | null
+          piva: string | null
+          ragione_sociale: string | null
+          referente_id: string | null
+          ricerca: unknown
+          settori: string | null
+          stato: Database["public"]["Enums"]["agente_stato"]
+          telefono: string | null
+          tipologia: Database["public"]["Enums"]["agente_tipologia"]
+          updated_at: string
+          updated_by: string | null
+          user_id: string | null
+          zone: string | null
+        }
+        Insert: {
+          area_geografica?: string | null
+          attivo?: boolean
+          cciaa?: string | null
+          codice?: string | null
+          codice_fiscale?: string | null
+          cognome?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_cessazione?: string | null
+          data_inizio?: string | null
+          email?: string | null
+          enasarco?: string | null
+          iban?: string | null
+          id?: string
+          nome: string
+          note?: string | null
+          piva?: string | null
+          ragione_sociale?: string | null
+          referente_id?: string | null
+          ricerca?: unknown
+          settori?: string | null
+          stato?: Database["public"]["Enums"]["agente_stato"]
+          telefono?: string | null
+          tipologia?: Database["public"]["Enums"]["agente_tipologia"]
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+          zone?: string | null
+        }
+        Update: {
+          area_geografica?: string | null
+          attivo?: boolean
+          cciaa?: string | null
+          codice?: string | null
+          codice_fiscale?: string | null
+          cognome?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_cessazione?: string | null
+          data_inizio?: string | null
+          email?: string | null
+          enasarco?: string | null
+          iban?: string | null
+          id?: string
+          nome?: string
+          note?: string | null
+          piva?: string | null
+          ragione_sociale?: string | null
+          referente_id?: string | null
+          ricerca?: unknown
+          settori?: string | null
+          stato?: Database["public"]["Enums"]["agente_stato"]
+          telefono?: string | null
+          tipologia?: Database["public"]["Enums"]["agente_tipologia"]
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+          zone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_clienti: {
+        Row: {
+          agente_id: string
+          al: string | null
+          classificazione: string | null
+          created_at: string
+          created_by: string | null
+          dal: string
+          id: string
+          note: string | null
+          organizzazione_id: string
+          potenziale: string | null
+          priorita: Database["public"]["Enums"]["priorita_type"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          al?: string | null
+          classificazione?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          note?: string | null
+          organizzazione_id: string
+          potenziale?: string | null
+          priorita?: Database["public"]["Enums"]["priorita_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          al?: string | null
+          classificazione?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          note?: string | null
+          organizzazione_id?: string
+          potenziale?: string | null
+          priorita?: Database["public"]["Enums"]["priorita_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_clienti_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_clienti_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_clienti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_clienti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_clienti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_mandati: {
+        Row: {
+          agente_id: string
+          clausole: string | null
+          created_at: string
+          created_by: string | null
+          data_fine: string | null
+          data_inizio: string
+          descrizione: string
+          esclusiva: boolean
+          id: string
+          listino: string | null
+          obiettivo_annuo: number | null
+          prodotti: string | null
+          updated_at: string
+          updated_by: string | null
+          zone: string | null
+        }
+        Insert: {
+          agente_id: string
+          clausole?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string
+          descrizione: string
+          esclusiva?: boolean
+          id?: string
+          listino?: string | null
+          obiettivo_annuo?: number | null
+          prodotti?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zone?: string | null
+        }
+        Update: {
+          agente_id?: string
+          clausole?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string
+          descrizione?: string
+          esclusiva?: boolean
+          id?: string
+          listino?: string | null
+          obiettivo_annuo?: number | null
+          prodotti?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_mandati_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_mandati_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_mandati_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_mandati_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_note_spese: {
+        Row: {
+          agente_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          decisa_at: string | null
+          descrizione: string
+          id: string
+          importo: number
+          motivazione: string | null
+          stato: Database["public"]["Enums"]["nota_spese_stato"]
+          tipo: Database["public"]["Enums"]["nota_spese_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          decisa_at?: string | null
+          descrizione: string
+          id?: string
+          importo: number
+          motivazione?: string | null
+          stato?: Database["public"]["Enums"]["nota_spese_stato"]
+          tipo?: Database["public"]["Enums"]["nota_spese_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          decisa_at?: string | null
+          descrizione?: string
+          id?: string
+          importo?: number
+          motivazione?: string | null
+          stato?: Database["public"]["Enums"]["nota_spese_stato"]
+          tipo?: Database["public"]["Enums"]["nota_spese_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_note_spese_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_note_spese_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_note_spese_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_note_spese_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_obiettivi: {
+        Row: {
+          agente_id: string
+          ambito: string | null
+          anno: number
+          created_at: string
+          created_by: string | null
+          id: string
+          importo_obiettivo: number
+          mese: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          ambito?: string | null
+          anno: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_obiettivo: number
+          mese?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          ambito?: string | null
+          anno?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_obiettivo?: number
+          mese?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_obiettivi_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_obiettivi_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_obiettivi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_obiettivi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_offerte: {
+        Row: {
+          agente_id: string
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          importo: number
+          note: string | null
+          ordine_id: string | null
+          organizzazione_id: string
+          revisione: number
+          sconto_percentuale: number | null
+          stato: Database["public"]["Enums"]["offerta_stato"]
+          updated_at: string
+          updated_by: string | null
+          validita: string | null
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          importo?: number
+          note?: string | null
+          ordine_id?: string | null
+          organizzazione_id: string
+          revisione?: number
+          sconto_percentuale?: number | null
+          stato?: Database["public"]["Enums"]["offerta_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          validita?: string | null
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          importo?: number
+          note?: string | null
+          ordine_id?: string | null
+          organizzazione_id?: string
+          revisione?: number
+          sconto_percentuale?: number | null
+          stato?: Database["public"]["Enums"]["offerta_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          validita?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_offerte_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_offerte_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_offerte_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_offerte_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "agenti_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_offerte_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_offerte_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_ordini: {
+        Row: {
+          agente_id: string
+          consegna_prevista: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          fattura_id: string | null
+          id: string
+          note: string | null
+          organizzazione_id: string
+          stato: Database["public"]["Enums"]["ordine_stato"]
+          updated_at: string
+          updated_by: string | null
+          valore: number
+        }
+        Insert: {
+          agente_id: string
+          consegna_prevista?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fattura_id?: string | null
+          id?: string
+          note?: string | null
+          organizzazione_id: string
+          stato?: Database["public"]["Enums"]["ordine_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          valore?: number
+        }
+        Update: {
+          agente_id?: string
+          consegna_prevista?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fattura_id?: string | null
+          id?: string
+          note?: string | null
+          organizzazione_id?: string
+          stato?: Database["public"]["Enums"]["ordine_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          valore?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_ordini_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_ordini_righe: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          ordine_id: string
+          prezzo_unitario: number
+          prodotto: string
+          quantita: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ordine_id: string
+          prezzo_unitario?: number
+          prodotto: string
+          quantita?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ordine_id?: string
+          prezzo_unitario?: number
+          prodotto?: string
+          quantita?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_ordini_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_ordini_righe_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "agenti_ordini"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_piani_provvigionali: {
+        Row: {
+          agente_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          percentuale_base: number
+          premi_note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          percentuale_base?: number
+          premi_note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          percentuale_base?: number
+          premi_note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_piani_provvigionali_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: true
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_piani_provvigionali_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: true
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_piani_provvigionali_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_piani_provvigionali_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_provvigioni: {
+        Row: {
+          agente_id: string
+          anticipi: number
+          conguagli: number
+          created_at: string
+          created_by: string | null
+          id: string
+          importo_liquidato: number
+          importo_maturato: number
+          liquidata_at: string | null
+          note: string | null
+          periodo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          anticipi?: number
+          conguagli?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_liquidato?: number
+          importo_maturato?: number
+          liquidata_at?: string | null
+          note?: string | null
+          periodo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          anticipi?: number
+          conguagli?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_liquidato?: number
+          importo_maturato?: number
+          liquidata_at?: string | null
+          note?: string | null
+          periodo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_provvigioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_provvigioni_regole: {
+        Row: {
+          agente_id: string
+          ambito: Database["public"]["Enums"]["provvigione_ambito"]
+          created_at: string
+          created_by: string | null
+          id: string
+          percentuale: number
+          riferimento: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          ambito: Database["public"]["Enums"]["provvigione_ambito"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          percentuale: number
+          riferimento: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          ambito?: Database["public"]["Enums"]["provvigione_ambito"]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          percentuale?: number
+          riferimento?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_provvigioni_regole_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_regole_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_regole_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_provvigioni_regole_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agenti_visite: {
+        Row: {
+          agente_id: string
+          argomenti: string | null
+          azioni: string | null
+          created_at: string
+          created_by: string | null
+          criticita: string | null
+          data: string
+          durata_minuti: number | null
+          esito: Database["public"]["Enums"]["visita_esito"]
+          id: string
+          lat: number | null
+          lng: number | null
+          opportunita: string | null
+          organizzazione_id: string | null
+          referenti: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id: string
+          argomenti?: string | null
+          azioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          criticita?: string | null
+          data?: string
+          durata_minuti?: number | null
+          esito?: Database["public"]["Enums"]["visita_esito"]
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          opportunita?: string | null
+          organizzazione_id?: string | null
+          referenti?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string
+          argomenti?: string | null
+          azioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          criticita?: string | null
+          data?: string
+          durata_minuti?: number | null
+          esito?: Database["public"]["Enums"]["visita_esito"]
+          id?: string
+          lat?: number | null
+          lng?: number | null
+          opportunita?: string | null
+          organizzazione_id?: string | null
+          referenti?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenti_visite_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_visite_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "agenti_visite_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_visite_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenti_visite_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       allegati: {
         Row: {
           caricato_da: string | null
@@ -227,6 +1194,7 @@ export type Database = {
       }
       attivita: {
         Row: {
+          agente_id: string | null
           assegnato_a: string | null
           attivo: boolean
           automezzo_id: string | null
@@ -254,6 +1222,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          agente_id?: string | null
           assegnato_a?: string | null
           attivo?: boolean
           automezzo_id?: string | null
@@ -281,6 +1250,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          agente_id?: string | null
           assegnato_a?: string | null
           attivo?: boolean
           automezzo_id?: string | null
@@ -308,6 +1278,20 @@ export type Database = {
           updated_by?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "attivita_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
           {
             foreignKeyName: "attivita_assegnato_a_fkey"
             columns: ["assegnato_a"]
@@ -3102,6 +4086,7 @@ export type Database = {
       }
       deals: {
         Row: {
+          agente_id: string | null
           attivo: boolean
           chiuso_at: string | null
           contatto_id: string | null
@@ -3123,6 +4108,7 @@ export type Database = {
           valuta: string
         }
         Insert: {
+          agente_id?: string | null
           attivo?: boolean
           chiuso_at?: string | null
           contatto_id?: string | null
@@ -3144,6 +4130,7 @@ export type Database = {
           valuta?: string
         }
         Update: {
+          agente_id?: string | null
           attivo?: boolean
           chiuso_at?: string | null
           contatto_id?: string | null
@@ -3165,6 +4152,20 @@ export type Database = {
           valuta?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "deals_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "vw_agenti_kpi"
+            referencedColumns: ["agente_id"]
+          },
           {
             foreignKeyName: "deals_contatto_id_fkey"
             columns: ["contatto_id"]
@@ -4939,6 +5940,22 @@ export type Database = {
       }
     }
     Views: {
+      vw_agenti_kpi: {
+        Row: {
+          agente: string | null
+          agente_id: string | null
+          clienti: number | null
+          fatturato_per_visita: number | null
+          offerte_accettate: number | null
+          offerte_inviate: number | null
+          ordini: number | null
+          provvigioni_anno: number | null
+          tasso_conversione: number | null
+          valore_ordini: number | null
+          visite: number | null
+        }
+        Relationships: []
+      }
       vw_automezzo_consumi: {
         Row: {
           automezzo_id: string | null
@@ -5132,7 +6149,12 @@ export type Database = {
       }
     }
     Functions: {
+      agente_corrente: { Args: never; Returns: string }
       allegato_riservato: { Args: { p_path: string }; Returns: boolean }
+      calcola_provvigioni: {
+        Args: { p_agente: string; p_periodo: string }
+        Returns: number
+      }
       copilot_rate_check: {
         Args: { per_giorno?: number; per_minuto?: number }
         Returns: Json
@@ -5177,6 +6199,12 @@ export type Database = {
       }
     }
     Enums: {
+      agente_stato: "attivo" | "sospeso" | "cessato"
+      agente_tipologia:
+        | "monomandatario"
+        | "plurimandatario"
+        | "procacciatore"
+        | "dipendente"
       approvazione_stato: "richiesta" | "approvata" | "rifiutata" | "annullata"
       assenza_stato: "richiesta" | "approvata" | "rifiutata"
       assenza_tipo: "ferie" | "permesso" | "malattia"
@@ -5300,7 +6328,24 @@ export type Database = {
       gara_tipologia: "lavori" | "servizi" | "forniture"
       lead_fonte: "fiera" | "referral" | "linkedin" | "web" | "evento" | "altro"
       manutenzione_tipo: "ordinaria" | "straordinaria"
+      nota_spese_stato: "presentata" | "approvata" | "rifiutata" | "rimborsata"
+      nota_spese_tipo:
+        | "carburante"
+        | "pedaggi"
+        | "vitto"
+        | "alloggio"
+        | "trasferta"
+        | "parcheggi"
+        | "altro"
       notifica_tipo: "info" | "warning" | "critical" | "success" | "sistema"
+      offerta_stato: "bozza" | "inviata" | "accettata" | "rifiutata" | "scaduta"
+      ordine_stato:
+        | "bozza"
+        | "confermato"
+        | "in_consegna"
+        | "consegnato"
+        | "fatturato"
+        | "annullato"
       org_ruolo:
         | "cliente"
         | "fornitore"
@@ -5327,6 +6372,7 @@ export type Database = {
         | "completato"
         | "sospeso"
       progetto_tipo: "cliente" | "interno"
+      provvigione_ambito: "cliente" | "zona" | "prodotto" | "fascia_fatturato"
       scadenza_modulo_stato: "aperta" | "completata" | "annullata"
       sdi_stato:
         | "non_applicabile"
@@ -5345,6 +6391,7 @@ export type Database = {
         | "stage"
         | "partita_iva"
       user_role: "admin" | "manager" | "operatore"
+      visita_esito: "positivo" | "neutro" | "negativo" | "da_ricontattare"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -5925,6 +6972,13 @@ export const Constants = {
   },
   public: {
     Enums: {
+      agente_stato: ["attivo", "sospeso", "cessato"],
+      agente_tipologia: [
+        "monomandatario",
+        "plurimandatario",
+        "procacciatore",
+        "dipendente",
+      ],
       approvazione_stato: ["richiesta", "approvata", "rifiutata", "annullata"],
       assenza_stato: ["richiesta", "approvata", "rifiutata"],
       assenza_tipo: ["ferie", "permesso", "malattia"],
@@ -6062,7 +7116,26 @@ export const Constants = {
       gara_tipologia: ["lavori", "servizi", "forniture"],
       lead_fonte: ["fiera", "referral", "linkedin", "web", "evento", "altro"],
       manutenzione_tipo: ["ordinaria", "straordinaria"],
+      nota_spese_stato: ["presentata", "approvata", "rifiutata", "rimborsata"],
+      nota_spese_tipo: [
+        "carburante",
+        "pedaggi",
+        "vitto",
+        "alloggio",
+        "trasferta",
+        "parcheggi",
+        "altro",
+      ],
       notifica_tipo: ["info", "warning", "critical", "success", "sistema"],
+      offerta_stato: ["bozza", "inviata", "accettata", "rifiutata", "scaduta"],
+      ordine_stato: [
+        "bozza",
+        "confermato",
+        "in_consegna",
+        "consegnato",
+        "fatturato",
+        "annullato",
+      ],
       org_ruolo: [
         "cliente",
         "fornitore",
@@ -6092,6 +7165,7 @@ export const Constants = {
         "sospeso",
       ],
       progetto_tipo: ["cliente", "interno"],
+      provvigione_ambito: ["cliente", "zona", "prodotto", "fascia_fatturato"],
       scadenza_modulo_stato: ["aperta", "completata", "annullata"],
       sdi_stato: [
         "non_applicabile",
@@ -6112,6 +7186,7 @@ export const Constants = {
         "partita_iva",
       ],
       user_role: ["admin", "manager", "operatore"],
+      visita_esito: ["positivo", "neutro", "negativo", "da_ricontattare"],
     },
   },
   storage: {

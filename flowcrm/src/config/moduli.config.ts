@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -21,6 +21,8 @@ import { CANTIERE_NAV } from '@/modules/cantiere/nav'
 import { cantiereRoutes } from '@/modules/cantiere/routes'
 import { AUTOMEZZI_NAV } from '@/modules/automezzi/nav'
 import { automezziRoutes } from '@/modules/automezzi/routes'
+import { AGENTI_NAV } from '@/modules/agenti/nav'
+import { agentiRoutes } from '@/modules/agenti/routes'
 
 export interface ModuloDef {
   slug: string
@@ -61,7 +63,15 @@ export const MODULI: ModuloDef[] = [
     nav: AUTOMEZZI_NAV,
     routes: automezziRoutes,
   },
-  // FASE 4: agenti · FASE 5: poliambulatori
+  {
+    slug: 'agenti',
+    label: 'Agenti di commercio',
+    icon: BriefcaseBusiness,
+    descrizione: 'Per reti vendita: mandati, visite, ordini, provvigioni, portale agente',
+    nav: AGENTI_NAV,
+    routes: agentiRoutes,
+  },
+  // FASE 5: poliambulatori
 ]
 
 /** Moduli attivi in QUESTA istanza (intersezione registro × VITE_MODULES). */
