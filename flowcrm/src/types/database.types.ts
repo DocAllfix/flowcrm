@@ -229,6 +229,7 @@ export type Database = {
         Row: {
           assegnato_a: string | null
           attivo: boolean
+          automezzo_id: string | null
           cantiere_id: string | null
           commessa_id: string | null
           completata_at: string | null
@@ -255,6 +256,7 @@ export type Database = {
         Insert: {
           assegnato_a?: string | null
           attivo?: boolean
+          automezzo_id?: string | null
           cantiere_id?: string | null
           commessa_id?: string | null
           completata_at?: string | null
@@ -281,6 +283,7 @@ export type Database = {
         Update: {
           assegnato_a?: string | null
           attivo?: boolean
+          automezzo_id?: string | null
           cantiere_id?: string | null
           commessa_id?: string | null
           completata_at?: string | null
@@ -311,6 +314,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "attivita_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
           },
           {
             foreignKeyName: "attivita_cantiere_id_fkey"
@@ -423,6 +447,1064 @@ export type Database = {
           {
             foreignKeyName: "audit_log_eseguito_da_fkey"
             columns: ["eseguito_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi: {
+        Row: {
+          acquisizione: Database["public"]["Enums"]["automezzo_acquisizione"]
+          alimentazione:
+            | Database["public"]["Enums"]["automezzo_alimentazione"]
+            | null
+          anno_immatricolazione: number | null
+          attivo: boolean
+          cantiere_id: string | null
+          categoria: Database["public"]["Enums"]["automezzo_categoria"]
+          centro_costo: string | null
+          classe_euro: string | null
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          data_acquisto: string | null
+          dismesso_il: string | null
+          dismissione_note: string | null
+          dismissione_tipo:
+            | Database["public"]["Enums"]["automezzo_dismissione"]
+            | null
+          dismissione_valore: number | null
+          id: string
+          km_attuali: number
+          marca: string
+          modello: string
+          note: string | null
+          proprietario: string | null
+          ricerca: unknown
+          sede: string | null
+          stato: Database["public"]["Enums"]["automezzo_stato"]
+          targa: string | null
+          telaio: string | null
+          updated_at: string
+          updated_by: string | null
+          versione: string | null
+        }
+        Insert: {
+          acquisizione?: Database["public"]["Enums"]["automezzo_acquisizione"]
+          alimentazione?:
+            | Database["public"]["Enums"]["automezzo_alimentazione"]
+            | null
+          anno_immatricolazione?: number | null
+          attivo?: boolean
+          cantiere_id?: string | null
+          categoria?: Database["public"]["Enums"]["automezzo_categoria"]
+          centro_costo?: string | null
+          classe_euro?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_acquisto?: string | null
+          dismesso_il?: string | null
+          dismissione_note?: string | null
+          dismissione_tipo?:
+            | Database["public"]["Enums"]["automezzo_dismissione"]
+            | null
+          dismissione_valore?: number | null
+          id?: string
+          km_attuali?: number
+          marca: string
+          modello: string
+          note?: string | null
+          proprietario?: string | null
+          ricerca?: unknown
+          sede?: string | null
+          stato?: Database["public"]["Enums"]["automezzo_stato"]
+          targa?: string | null
+          telaio?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          versione?: string | null
+        }
+        Update: {
+          acquisizione?: Database["public"]["Enums"]["automezzo_acquisizione"]
+          alimentazione?:
+            | Database["public"]["Enums"]["automezzo_alimentazione"]
+            | null
+          anno_immatricolazione?: number | null
+          attivo?: boolean
+          cantiere_id?: string | null
+          categoria?: Database["public"]["Enums"]["automezzo_categoria"]
+          centro_costo?: string | null
+          classe_euro?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_acquisto?: string | null
+          dismesso_il?: string | null
+          dismissione_note?: string | null
+          dismissione_tipo?:
+            | Database["public"]["Enums"]["automezzo_dismissione"]
+            | null
+          dismissione_valore?: number | null
+          id?: string
+          km_attuali?: number
+          marca?: string
+          modello?: string
+          note?: string | null
+          proprietario?: string | null
+          ricerca?: unknown
+          sede?: string | null
+          stato?: Database["public"]["Enums"]["automezzo_stato"]
+          targa?: string | null
+          telaio?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          versione?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_assegnazioni: {
+        Row: {
+          assegnatario: string | null
+          automezzo_id: string
+          cantiere_id: string | null
+          created_at: string
+          created_by: string | null
+          data_fine: string | null
+          data_inizio: string
+          dipendente_id: string | null
+          id: string
+          km_finali: number | null
+          km_iniziali: number | null
+          motivo: string | null
+          note: string | null
+          reparto: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          assegnatario?: string | null
+          automezzo_id: string
+          cantiere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string
+          dipendente_id?: string | null
+          id?: string
+          km_finali?: number | null
+          km_iniziali?: number | null
+          motivo?: string | null
+          note?: string | null
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          assegnatario?: string | null
+          automezzo_id?: string
+          cantiere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string
+          dipendente_id?: string | null
+          id?: string
+          km_finali?: number | null
+          km_iniziali?: number | null
+          motivo?: string | null
+          note?: string | null
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_assegnazioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_assegnazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_attrezzature: {
+        Row: {
+          automezzo_id: string
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          matricola: string | null
+          note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id: string
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          matricola?: string | null
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          matricola?: string | null
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_attrezzature_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_attrezzature_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_attrezzature_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_attrezzature_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_attrezzature_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_costi: {
+        Row: {
+          automezzo_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          id: string
+          importo: number
+          note: string | null
+          updated_at: string
+          updated_by: string | null
+          voce: Database["public"]["Enums"]["automezzo_costo_voce"]
+        }
+        Insert: {
+          automezzo_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          id?: string
+          importo?: number
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          voce?: Database["public"]["Enums"]["automezzo_costo_voce"]
+        }
+        Update: {
+          automezzo_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          id?: string
+          importo?: number
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          voce?: Database["public"]["Enums"]["automezzo_costo_voce"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_costi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_costi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_costi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_costi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_costi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_manutenzioni: {
+        Row: {
+          automezzo_id: string
+          categoria: string | null
+          costo_manodopera: number | null
+          costo_materiali: number | null
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          id: string
+          km: number | null
+          note: string | null
+          officina: string | null
+          ore_fermo: number | null
+          tipo: Database["public"]["Enums"]["manutenzione_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id: string
+          categoria?: string | null
+          costo_manodopera?: number | null
+          costo_materiali?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          id?: string
+          km?: number | null
+          note?: string | null
+          officina?: string | null
+          ore_fermo?: number | null
+          tipo?: Database["public"]["Enums"]["manutenzione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string
+          categoria?: string | null
+          costo_manodopera?: number | null
+          costo_materiali?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          id?: string
+          km?: number | null
+          note?: string | null
+          officina?: string | null
+          ore_fermo?: number | null
+          tipo?: Database["public"]["Enums"]["manutenzione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_manutenzioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_manutenzioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_manutenzioni_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_manutenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_manutenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_multe: {
+        Row: {
+          automezzo_id: string
+          conducente: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          ente: string | null
+          id: string
+          importo: number
+          note: string | null
+          pagata: boolean
+          punti_decurtati: number | null
+          ricorso: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id: string
+          conducente?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          ente?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          pagata?: boolean
+          punti_decurtati?: number | null
+          ricorso?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string
+          conducente?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          ente?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          pagata?: boolean
+          punti_decurtati?: number | null
+          ricorso?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_multe_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_multe_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_multe_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_multe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_multe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_pneumatici: {
+        Row: {
+          automezzo_id: string
+          created_at: string
+          created_by: string | null
+          data_installazione: string
+          id: string
+          km_installazione: number | null
+          marca: string | null
+          misura: string | null
+          montati: boolean
+          note: string | null
+          tipologia: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id: string
+          created_at?: string
+          created_by?: string | null
+          data_installazione?: string
+          id?: string
+          km_installazione?: number | null
+          marca?: string | null
+          misura?: string | null
+          montati?: boolean
+          note?: string | null
+          tipologia: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string
+          created_at?: string
+          created_by?: string | null
+          data_installazione?: string
+          id?: string
+          km_installazione?: number | null
+          marca?: string | null
+          misura?: string | null
+          montati?: boolean
+          note?: string | null
+          tipologia?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_pneumatici_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_pneumatici_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_pneumatici_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_pneumatici_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_pneumatici_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_ricambi: {
+        Row: {
+          automezzo_id: string | null
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          fornitore_id: string | null
+          id: string
+          note: string | null
+          quantita: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          fornitore_id?: string | null
+          id?: string
+          note?: string | null
+          quantita?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          fornitore_id?: string | null
+          id?: string
+          note?: string | null
+          quantita?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_ricambi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_ricambi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_ricambi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_ricambi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_ricambi_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_ricambi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_rifornimenti: {
+        Row: {
+          automezzo_id: string
+          carta: string | null
+          conducente: string | null
+          costo: number
+          created_at: string
+          created_by: string | null
+          data: string
+          fornitore: string | null
+          id: string
+          km: number | null
+          litri: number
+          note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          automezzo_id: string
+          carta?: string | null
+          conducente?: string | null
+          costo: number
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fornitore?: string | null
+          id?: string
+          km?: number | null
+          litri: number
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          automezzo_id?: string
+          carta?: string | null
+          conducente?: string | null
+          costo?: number
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fornitore?: string | null
+          id?: string
+          km?: number | null
+          litri?: number
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_rifornimenti_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_rifornimenti_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_rifornimenti_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_rifornimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_rifornimenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_sinistri: {
+        Row: {
+          assicurazione: string | null
+          automezzo_id: string
+          conducente: string | null
+          controparte: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          id: string
+          importo_liquidato: number | null
+          luogo: string | null
+          note: string | null
+          pratica: string | null
+          stato: Database["public"]["Enums"]["sinistro_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          assicurazione?: string | null
+          automezzo_id: string
+          conducente?: string | null
+          controparte?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          id?: string
+          importo_liquidato?: number | null
+          luogo?: string | null
+          note?: string | null
+          pratica?: string | null
+          stato?: Database["public"]["Enums"]["sinistro_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          assicurazione?: string | null
+          automezzo_id?: string
+          conducente?: string | null
+          controparte?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          id?: string
+          importo_liquidato?: number | null
+          luogo?: string | null
+          note?: string | null
+          pratica?: string | null
+          stato?: Database["public"]["Enums"]["sinistro_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_sinistri_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_sinistri_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_sinistri_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_sinistri_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_sinistri_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      automezzi_utilizzi: {
+        Row: {
+          anomalie: string | null
+          automezzo_id: string
+          cantiere_id: string | null
+          conducente: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          destinazione: string | null
+          id: string
+          km_finali: number | null
+          km_iniziali: number | null
+          motivo: string | null
+          ore_motore: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          anomalie?: string | null
+          automezzo_id: string
+          cantiere_id?: string | null
+          conducente?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          destinazione?: string | null
+          id?: string
+          km_finali?: number | null
+          km_iniziali?: number | null
+          motivo?: string | null
+          ore_motore?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          anomalie?: string | null
+          automezzo_id?: string
+          cantiere_id?: string | null
+          conducente?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          destinazione?: string | null
+          id?: string
+          km_finali?: number | null
+          km_iniziali?: number | null
+          motivo?: string | null
+          ore_motore?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automezzi_utilizzi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_automezzo_id_fkey"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automezzi_utilizzi_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -1020,6 +2102,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_cantiere_mezzi_automezzo"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "automezzi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_cantiere_mezzi_automezzo"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_consumi"
+            referencedColumns: ["automezzo_id"]
+          },
+          {
+            foreignKeyName: "fk_cantiere_mezzi_automezzo"
+            columns: ["automezzo_id"]
+            isOneToOne: false
+            referencedRelation: "vw_automezzo_costo_km"
+            referencedColumns: ["automezzo_id"]
           },
         ]
       }
@@ -2182,6 +3285,70 @@ export type Database = {
           },
           {
             foreignKeyName: "dipendenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dipendenti_patenti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dipendente_id: string
+          id: string
+          note: string | null
+          numero: string | null
+          punti: number | null
+          scadenza: string | null
+          tipo: Database["public"]["Enums"]["patente_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id: string
+          id?: string
+          note?: string | null
+          numero?: string | null
+          punti?: number | null
+          scadenza?: string | null
+          tipo?: Database["public"]["Enums"]["patente_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string
+          id?: string
+          note?: string | null
+          numero?: string | null
+          punti?: number | null
+          scadenza?: string | null
+          tipo?: Database["public"]["Enums"]["patente_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dipendenti_patenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dipendenti_patenti_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dipendenti_patenti_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -3772,6 +4939,33 @@ export type Database = {
       }
     }
     Views: {
+      vw_automezzo_consumi: {
+        Row: {
+          automezzo_id: string | null
+          consumo_medio_100km: number | null
+          costo_carburante: number | null
+          costo_manutenzione: number | null
+          km_attuali: number | null
+          km_max: number | null
+          km_min: number | null
+          litri_totali: number | null
+          n_guasti: number | null
+          ore_fermo: number | null
+        }
+        Relationships: []
+      }
+      vw_automezzo_costo_km: {
+        Row: {
+          automezzo_id: string | null
+          carburante: number | null
+          costi_fissi: number | null
+          costo_km: number | null
+          costo_totale: number | null
+          manutenzione: number | null
+          multe: number | null
+        }
+        Relationships: []
+      }
       vw_cantiere_economia: {
         Row: {
           cantiere_id: string | null
@@ -3988,6 +5182,40 @@ export type Database = {
       assenza_tipo: "ferie" | "permesso" | "malattia"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
       attivita_tipo: "task" | "chiamata" | "email" | "riunione" | "nota"
+      automezzo_acquisizione: "acquisto" | "leasing" | "noleggio"
+      automezzo_alimentazione:
+        | "benzina"
+        | "diesel"
+        | "gpl"
+        | "metano"
+        | "ibrida"
+        | "elettrica"
+      automezzo_categoria:
+        | "autovettura"
+        | "furgone"
+        | "camion"
+        | "escavatore"
+        | "pala"
+        | "piattaforma"
+        | "rimorchio"
+        | "altro"
+      automezzo_costo_voce:
+        | "assicurazione"
+        | "bollo"
+        | "leasing"
+        | "noleggio"
+        | "pedaggi"
+        | "parcheggi"
+        | "lavaggi"
+        | "accessori"
+        | "altro"
+      automezzo_dismissione: "vendita" | "rottamazione" | "trasferimento"
+      automezzo_stato:
+        | "disponibile"
+        | "assegnato"
+        | "in_manutenzione"
+        | "fuori_servizio"
+        | "dismesso"
       cantiere_ambiente_tipo:
         | "rifiuti"
         | "emissioni"
@@ -4071,6 +5299,7 @@ export type Database = {
         | "annullata"
       gara_tipologia: "lavori" | "servizi" | "forniture"
       lead_fonte: "fiera" | "referral" | "linkedin" | "web" | "evento" | "altro"
+      manutenzione_tipo: "ordinaria" | "straordinaria"
       notifica_tipo: "info" | "warning" | "critical" | "success" | "sistema"
       org_ruolo:
         | "cliente"
@@ -4080,6 +5309,16 @@ export type Database = {
         | "prospect"
       pagamento_stato: "da_incassare" | "incassato" | "in_ritardo" | "parziale"
       partner_tipo: "rivenditore" | "tecnologico" | "strategico" | "commerciale"
+      patente_tipo:
+        | "patente_b"
+        | "patente_c"
+        | "patente_ce"
+        | "patente_d"
+        | "cqc"
+        | "adr"
+        | "carta_conducente"
+        | "abilitazione"
+        | "altro"
       priorita_type: "bassa" | "media" | "alta" | "critica"
       progetto_stato:
         | "pianificazione"
@@ -4096,6 +5335,7 @@ export type Database = {
         | "consegnata"
         | "scartata"
         | "mancata_consegna"
+      sinistro_stato: "aperto" | "in_lavorazione" | "liquidato" | "chiuso"
       tassa_stato: "da_pagare" | "pagata" | "scaduta"
       tipo_contratto:
         | "indeterminato"
@@ -4690,6 +5930,44 @@ export const Constants = {
       assenza_tipo: ["ferie", "permesso", "malattia"],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
       attivita_tipo: ["task", "chiamata", "email", "riunione", "nota"],
+      automezzo_acquisizione: ["acquisto", "leasing", "noleggio"],
+      automezzo_alimentazione: [
+        "benzina",
+        "diesel",
+        "gpl",
+        "metano",
+        "ibrida",
+        "elettrica",
+      ],
+      automezzo_categoria: [
+        "autovettura",
+        "furgone",
+        "camion",
+        "escavatore",
+        "pala",
+        "piattaforma",
+        "rimorchio",
+        "altro",
+      ],
+      automezzo_costo_voce: [
+        "assicurazione",
+        "bollo",
+        "leasing",
+        "noleggio",
+        "pedaggi",
+        "parcheggi",
+        "lavaggi",
+        "accessori",
+        "altro",
+      ],
+      automezzo_dismissione: ["vendita", "rottamazione", "trasferimento"],
+      automezzo_stato: [
+        "disponibile",
+        "assegnato",
+        "in_manutenzione",
+        "fuori_servizio",
+        "dismesso",
+      ],
       cantiere_ambiente_tipo: [
         "rifiuti",
         "emissioni",
@@ -4783,6 +6061,7 @@ export const Constants = {
       ],
       gara_tipologia: ["lavori", "servizi", "forniture"],
       lead_fonte: ["fiera", "referral", "linkedin", "web", "evento", "altro"],
+      manutenzione_tipo: ["ordinaria", "straordinaria"],
       notifica_tipo: ["info", "warning", "critical", "success", "sistema"],
       org_ruolo: [
         "cliente",
@@ -4793,6 +6072,17 @@ export const Constants = {
       ],
       pagamento_stato: ["da_incassare", "incassato", "in_ritardo", "parziale"],
       partner_tipo: ["rivenditore", "tecnologico", "strategico", "commerciale"],
+      patente_tipo: [
+        "patente_b",
+        "patente_c",
+        "patente_ce",
+        "patente_d",
+        "cqc",
+        "adr",
+        "carta_conducente",
+        "abilitazione",
+        "altro",
+      ],
       priorita_type: ["bassa", "media", "alta", "critica"],
       progetto_stato: [
         "pianificazione",
@@ -4811,6 +6101,7 @@ export const Constants = {
         "scartata",
         "mancata_consegna",
       ],
+      sinistro_stato: ["aperto", "in_lavorazione", "liquidato", "chiuso"],
       tassa_stato: ["da_pagare", "pagata", "scaduta"],
       tipo_contratto: [
         "indeterminato",

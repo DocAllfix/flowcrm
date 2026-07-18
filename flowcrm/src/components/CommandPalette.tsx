@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Building2, User, Gavel, HardHat } from 'lucide-react'
+import { Search, Building2, User, Gavel, HardHat, Truck } from 'lucide-react'
 import { useRicercaGlobale } from '@/lib/queries/ricerca'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -45,6 +45,7 @@ export function CommandPalette() {
     if (r.tipo === 'organizzazione') navigate(`/organizzazioni/${r.id}`)
     else if (r.tipo === 'gara') navigate(`/gare/${r.id}`)
     else if (r.tipo === 'cantiere') navigate(`/cantieri/${r.id}`)
+    else if (r.tipo === 'automezzo') navigate(`/automezzi/${r.id}`)
     else navigate(`/contatti/${r.id}`)
   }
 
@@ -83,6 +84,7 @@ export function CommandPalette() {
                 r.tipo === 'organizzazione' ? Building2
                 : r.tipo === 'gara' ? Gavel
                 : r.tipo === 'cantiere' ? HardHat
+                : r.tipo === 'automezzo' ? Truck
                 : User
               return (
                 <button
@@ -103,6 +105,7 @@ export function CommandPalette() {
                     {r.tipo === 'organizzazione' ? 'Org'
                       : r.tipo === 'gara' ? 'Gara'
                       : r.tipo === 'cantiere' ? 'Cantiere'
+                      : r.tipo === 'automezzo' ? 'Mezzo'
                       : 'Contatto'}
                   </span>
                 </button>

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
 export interface RisultatoRicerca {
-  tipo: 'organizzazione' | 'contatto' | 'gara' | 'cantiere'
+  tipo: 'organizzazione' | 'contatto' | 'gara' | 'cantiere' | 'automezzo'
   id: string
   titolo: string
   sottotitolo: string
