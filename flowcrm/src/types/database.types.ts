@@ -1059,6 +1059,111 @@ export type Database = {
           },
         ]
       }
+      ambulatori: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          id: string
+          nome: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          nome: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          nome?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ambulatori_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ambulatori_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      apparecchiature: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          matricola: string | null
+          nome: string
+          note: string | null
+          stato_operativo: Database["public"]["Enums"]["apparecchiatura_stato"]
+          ubicazione: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          matricola?: string | null
+          nome: string
+          note?: string | null
+          stato_operativo?: Database["public"]["Enums"]["apparecchiatura_stato"]
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          matricola?: string | null
+          nome?: string
+          note?: string | null
+          stato_operativo?: Database["public"]["Enums"]["apparecchiatura_stato"]
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "apparecchiature_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "apparecchiature_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       approvazioni: {
         Row: {
           approvatore_id: string | null
@@ -1122,6 +1227,113 @@ export type Database = {
           {
             foreignKeyName: "approvazioni_richiedente_id_fkey"
             columns: ["richiedente_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      appuntamenti: {
+        Row: {
+          ambulatorio_id: string | null
+          apparecchiatura_id: string | null
+          created_at: string
+          created_by: string | null
+          durata_minuti: number
+          id: string
+          inizio: string
+          lista_attesa: boolean
+          note: string | null
+          paziente_id: string
+          prestazione_id: string | null
+          professionista_id: string
+          stato: Database["public"]["Enums"]["appuntamento_stato"]
+          updated_at: string
+          updated_by: string | null
+          urgente: boolean
+        }
+        Insert: {
+          ambulatorio_id?: string | null
+          apparecchiatura_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_minuti?: number
+          id?: string
+          inizio: string
+          lista_attesa?: boolean
+          note?: string | null
+          paziente_id: string
+          prestazione_id?: string | null
+          professionista_id: string
+          stato?: Database["public"]["Enums"]["appuntamento_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          urgente?: boolean
+        }
+        Update: {
+          ambulatorio_id?: string | null
+          apparecchiatura_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_minuti?: number
+          id?: string
+          inizio?: string
+          lista_attesa?: boolean
+          note?: string | null
+          paziente_id?: string
+          prestazione_id?: string | null
+          professionista_id?: string
+          stato?: Database["public"]["Enums"]["appuntamento_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          urgente?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appuntamenti_ambulatorio_id_fkey"
+            columns: ["ambulatorio_id"]
+            isOneToOne: false
+            referencedRelation: "ambulatori"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_apparecchiatura_id_fkey"
+            columns: ["apparecchiatura_id"]
+            isOneToOne: false
+            referencedRelation: "apparecchiature"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_prestazione_id_fkey"
+            columns: ["prestazione_id"]
+            isOneToOne: false
+            referencedRelation: "prestazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_professionista_id_fkey"
+            columns: ["professionista_id"]
+            isOneToOne: false
+            referencedRelation: "professionisti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appuntamenti_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -3996,6 +4208,60 @@ export type Database = {
           },
         ]
       }
+      convenzioni: {
+        Row: {
+          attivo: boolean
+          contatto: string | null
+          created_at: string
+          created_by: string | null
+          ente_tipo: string | null
+          id: string
+          nome: string
+          note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          contatto?: string | null
+          created_at?: string
+          created_by?: string | null
+          ente_tipo?: string | null
+          id?: string
+          nome: string
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          contatto?: string | null
+          created_at?: string
+          created_by?: string | null
+          ente_tipo?: string | null
+          id?: string
+          nome?: string
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "convenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "convenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       copilot_usage: {
         Row: {
           creato_at: string
@@ -4350,6 +4616,66 @@ export type Database = {
           },
           {
             foreignKeyName: "dipendenti_patenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_qualita: {
+        Row: {
+          azioni: string | null
+          chiuso: boolean
+          chiuso_at: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          gravita: Database["public"]["Enums"]["priorita_type"]
+          id: string
+          tipo: Database["public"]["Enums"]["evento_qualita_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          azioni?: string | null
+          chiuso?: boolean
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          gravita?: Database["public"]["Enums"]["priorita_type"]
+          id?: string
+          tipo: Database["public"]["Enums"]["evento_qualita_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          azioni?: string | null
+          chiuso?: boolean
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          gravita?: Database["public"]["Enums"]["priorita_type"]
+          id?: string
+          tipo?: Database["public"]["Enums"]["evento_qualita_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_qualita_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_qualita_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -5161,6 +5487,69 @@ export type Database = {
         }
         Relationships: []
       }
+      magazzino_sanitario: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          lotto: string | null
+          note: string | null
+          quantita: number
+          scadenza: string | null
+          soglia_riordino: number | null
+          tipo: Database["public"]["Enums"]["articolo_sanitario_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          lotto?: string | null
+          note?: string | null
+          quantita?: number
+          scadenza?: string | null
+          soglia_riordino?: number | null
+          tipo?: Database["public"]["Enums"]["articolo_sanitario_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          lotto?: string | null
+          note?: string | null
+          quantita?: number
+          scadenza?: string | null
+          soglia_riordino?: number | null
+          tipo?: Database["public"]["Enums"]["articolo_sanitario_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "magazzino_sanitario_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "magazzino_sanitario_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messaggi: {
         Row: {
           allegato_id: string | null
@@ -5507,6 +5896,295 @@ export type Database = {
           },
         ]
       }
+      pazienti: {
+        Row: {
+          attivo: boolean
+          codice: string | null
+          codice_fiscale: string | null
+          cognome: string | null
+          contatto_emergenza: string | null
+          convenzione_id: string | null
+          created_at: string
+          created_by: string | null
+          data_nascita: string | null
+          documento: string | null
+          domicilio: string | null
+          email: string | null
+          id: string
+          luogo_nascita: string | null
+          medico_curante: string | null
+          nome: string
+          note_amministrative: string | null
+          residenza: string | null
+          ricerca: unknown
+          sesso: Database["public"]["Enums"]["paziente_sesso"] | null
+          telefono: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          codice?: string | null
+          codice_fiscale?: string | null
+          cognome?: string | null
+          contatto_emergenza?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_nascita?: string | null
+          documento?: string | null
+          domicilio?: string | null
+          email?: string | null
+          id?: string
+          luogo_nascita?: string | null
+          medico_curante?: string | null
+          nome: string
+          note_amministrative?: string | null
+          residenza?: string | null
+          ricerca?: unknown
+          sesso?: Database["public"]["Enums"]["paziente_sesso"] | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          codice?: string | null
+          codice_fiscale?: string | null
+          cognome?: string | null
+          contatto_emergenza?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_nascita?: string | null
+          documento?: string | null
+          domicilio?: string | null
+          email?: string | null
+          id?: string
+          luogo_nascita?: string | null
+          medico_curante?: string | null
+          nome?: string
+          note_amministrative?: string | null
+          residenza?: string | null
+          ricerca?: unknown
+          sesso?: Database["public"]["Enums"]["paziente_sesso"] | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pazienti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pazienti_comunicazioni: {
+        Row: {
+          canale: Database["public"]["Enums"]["comunicazione_canale"]
+          created_at: string
+          created_by: string | null
+          data: string
+          esito: string | null
+          id: string
+          oggetto: string
+          paziente_id: string
+          testo: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          canale?: Database["public"]["Enums"]["comunicazione_canale"]
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          esito?: string | null
+          id?: string
+          oggetto: string
+          paziente_id: string
+          testo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          canale?: Database["public"]["Enums"]["comunicazione_canale"]
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          esito?: string | null
+          id?: string
+          oggetto?: string
+          paziente_id?: string
+          testo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pazienti_comunicazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_comunicazioni_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_comunicazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pazienti_condizioni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data: string | null
+          descrizione: string
+          id: string
+          note: string | null
+          paziente_id: string
+          tipo: Database["public"]["Enums"]["condizione_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          descrizione: string
+          id?: string
+          note?: string | null
+          paziente_id: string
+          tipo: Database["public"]["Enums"]["condizione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data?: string | null
+          descrizione?: string
+          id?: string
+          note?: string | null
+          paziente_id?: string
+          tipo?: Database["public"]["Enums"]["condizione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pazienti_condizioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_condizioni_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_condizioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pazienti_consensi: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          firmato_il: string
+          id: string
+          note: string | null
+          paziente_id: string
+          revocato_il: string | null
+          tipo: Database["public"]["Enums"]["consenso_tipo"]
+          updated_at: string
+          updated_by: string | null
+          versione: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          firmato_il?: string
+          id?: string
+          note?: string | null
+          paziente_id: string
+          revocato_il?: string | null
+          tipo: Database["public"]["Enums"]["consenso_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          versione?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          firmato_il?: string
+          id?: string
+          note?: string | null
+          paziente_id?: string
+          revocato_il?: string | null
+          tipo?: Database["public"]["Enums"]["consenso_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          versione?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pazienti_consensi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_consensi_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pazienti_consensi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pipeline_stages: {
         Row: {
           attivo: boolean
@@ -5571,6 +6249,145 @@ export type Database = {
           nome?: string
         }
         Relationships: []
+      }
+      prestazioni: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          durata_minuti: number
+          id: string
+          nome: string
+          note: string | null
+          tariffa_convenzione: number | null
+          tariffa_privata: number | null
+          tipo: Database["public"]["Enums"]["prestazione_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          durata_minuti?: number
+          id?: string
+          nome: string
+          note?: string | null
+          tariffa_convenzione?: number | null
+          tariffa_privata?: number | null
+          tipo?: Database["public"]["Enums"]["prestazione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          durata_minuti?: number
+          id?: string
+          nome?: string
+          note?: string | null
+          tariffa_convenzione?: number | null
+          tariffa_privata?: number | null
+          tipo?: Database["public"]["Enums"]["prestazione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prestazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "prestazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      professionisti: {
+        Row: {
+          albo: string | null
+          attivo: boolean
+          cognome: string | null
+          colore: string | null
+          contratto: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          nome: string
+          note: string | null
+          specializzazione: string | null
+          telefono: string | null
+          updated_at: string
+          updated_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          albo?: string | null
+          attivo?: boolean
+          cognome?: string | null
+          colore?: string | null
+          contratto?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          nome: string
+          note?: string | null
+          specializzazione?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          albo?: string | null
+          attivo?: boolean
+          cognome?: string | null
+          colore?: string | null
+          contratto?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          nome?: string
+          note?: string | null
+          specializzazione?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professionisti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professionisti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professionisti_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       progetti: {
         Row: {
@@ -5651,6 +6468,90 @@ export type Database = {
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referti: {
+        Row: {
+          contenuto: string
+          created_at: string
+          created_by: string | null
+          id: string
+          inviato_at: string | null
+          paziente_id: string
+          professionista_id: string | null
+          stato: Database["public"]["Enums"]["referto_stato"]
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+          validato_at: string | null
+          visita_id: string | null
+        }
+        Insert: {
+          contenuto: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inviato_at?: string | null
+          paziente_id: string
+          professionista_id?: string | null
+          stato?: Database["public"]["Enums"]["referto_stato"]
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+          validato_at?: string | null
+          visita_id?: string | null
+        }
+        Update: {
+          contenuto?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inviato_at?: string | null
+          paziente_id?: string
+          professionista_id?: string | null
+          stato?: Database["public"]["Enums"]["referto_stato"]
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+          validato_at?: string | null
+          visita_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referti_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referti_professionista_id_fkey"
+            columns: ["professionista_id"]
+            isOneToOne: false
+            referencedRelation: "professionisti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referti_visita_id_fkey"
+            columns: ["visita_id"]
+            isOneToOne: false
+            referencedRelation: "visite"
             referencedColumns: ["id"]
           },
         ]
@@ -5938,6 +6839,99 @@ export type Database = {
         }
         Relationships: []
       }
+      visite: {
+        Row: {
+          anamnesi: string | null
+          appuntamento_id: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          diagnosi: string | null
+          esame_obiettivo: string | null
+          id: string
+          motivo: string | null
+          note: string | null
+          paziente_id: string
+          prescrizioni: string | null
+          professionista_id: string | null
+          terapia: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          anamnesi?: string | null
+          appuntamento_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          diagnosi?: string | null
+          esame_obiettivo?: string | null
+          id?: string
+          motivo?: string | null
+          note?: string | null
+          paziente_id: string
+          prescrizioni?: string | null
+          professionista_id?: string | null
+          terapia?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          anamnesi?: string | null
+          appuntamento_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          diagnosi?: string | null
+          esame_obiettivo?: string | null
+          id?: string
+          motivo?: string | null
+          note?: string | null
+          paziente_id?: string
+          prescrizioni?: string | null
+          professionista_id?: string | null
+          terapia?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visite_appuntamento_id_fkey"
+            columns: ["appuntamento_id"]
+            isOneToOne: false
+            referencedRelation: "appuntamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visite_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visite_paziente_id_fkey"
+            columns: ["paziente_id"]
+            isOneToOne: false
+            referencedRelation: "pazienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visite_professionista_id_fkey"
+            columns: ["professionista_id"]
+            isOneToOne: false
+            referencedRelation: "professionisti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visite_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       vw_agenti_kpi: {
@@ -6131,6 +7125,19 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_poliambulatorio_kpi: {
+        Row: {
+          appuntamenti_7gg: number | null
+          appuntamenti_oggi: number | null
+          eventi_qualita_aperti: number | null
+          lista_attesa: number | null
+          nuovi_pazienti_mese: number | null
+          pazienti_totali: number | null
+          referti_da_validare: number | null
+          tasso_no_show_30gg: number | null
+        }
+        Relationships: []
+      }
       vw_top_clienti: {
         Row: {
           organizzazione_id: string | null
@@ -6188,6 +7195,7 @@ export type Database = {
       processa_scadenze: { Args: never; Returns: number }
       processa_scadenze_moduli: { Args: never; Returns: number }
       puo_amministrazione: { Args: never; Returns: boolean }
+      puo_clinica: { Args: never; Returns: boolean }
       ricerca_globale: {
         Args: { q: string }
         Returns: {
@@ -6205,7 +7213,16 @@ export type Database = {
         | "plurimandatario"
         | "procacciatore"
         | "dipendente"
+      apparecchiatura_stato: "operativa" | "in_manutenzione" | "fuori_servizio"
       approvazione_stato: "richiesta" | "approvata" | "rifiutata" | "annullata"
+      appuntamento_stato:
+        | "prenotato"
+        | "confermato"
+        | "in_sala"
+        | "eseguito"
+        | "annullato"
+        | "no_show"
+      articolo_sanitario_tipo: "farmaco" | "dispositivo" | "consumo"
       assenza_stato: "richiesta" | "approvata" | "rifiutata"
       assenza_tipo: "ferie" | "permesso" | "malattia"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
@@ -6292,6 +7309,26 @@ export type Database = {
         | "sospeso"
         | "chiuso"
       commessa_stato: "attiva" | "in_pausa" | "completata" | "annullata"
+      comunicazione_canale:
+        | "email"
+        | "sms"
+        | "pec"
+        | "telefono"
+        | "whatsapp"
+        | "notifica"
+      condizione_tipo:
+        | "patologia"
+        | "allergia"
+        | "terapia"
+        | "intervento"
+        | "farmaco"
+        | "vaccinazione"
+      consenso_tipo: "privacy" | "informato" | "marketing"
+      evento_qualita_tipo:
+        | "reclamo"
+        | "non_conformita"
+        | "evento_avverso"
+        | "audit"
       fattura_direzione: "attiva" | "passiva"
       fattura_stato: "da_pagare" | "pagata" | "scaduta" | "parziale"
       gara_ati_ruolo: "mandataria" | "mandante" | "consorziata"
@@ -6364,6 +7401,13 @@ export type Database = {
         | "carta_conducente"
         | "abilitazione"
         | "altro"
+      paziente_sesso: "m" | "f" | "altro"
+      prestazione_tipo:
+        | "visita"
+        | "esame"
+        | "infermieristica"
+        | "terapia"
+        | "pacchetto"
       priorita_type: "bassa" | "media" | "alta" | "critica"
       progetto_stato:
         | "pianificazione"
@@ -6373,6 +7417,7 @@ export type Database = {
         | "sospeso"
       progetto_tipo: "cliente" | "interno"
       provvigione_ambito: "cliente" | "zona" | "prodotto" | "fascia_fatturato"
+      referto_stato: "bozza" | "da_validare" | "validato" | "inviato"
       scadenza_modulo_stato: "aperta" | "completata" | "annullata"
       sdi_stato:
         | "non_applicabile"
@@ -6979,7 +8024,17 @@ export const Constants = {
         "procacciatore",
         "dipendente",
       ],
+      apparecchiatura_stato: ["operativa", "in_manutenzione", "fuori_servizio"],
       approvazione_stato: ["richiesta", "approvata", "rifiutata", "annullata"],
+      appuntamento_stato: [
+        "prenotato",
+        "confermato",
+        "in_sala",
+        "eseguito",
+        "annullato",
+        "no_show",
+      ],
+      articolo_sanitario_tipo: ["farmaco", "dispositivo", "consumo"],
       assenza_stato: ["richiesta", "approvata", "rifiutata"],
       assenza_tipo: ["ferie", "permesso", "malattia"],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
@@ -7076,6 +8131,29 @@ export const Constants = {
         "chiuso",
       ],
       commessa_stato: ["attiva", "in_pausa", "completata", "annullata"],
+      comunicazione_canale: [
+        "email",
+        "sms",
+        "pec",
+        "telefono",
+        "whatsapp",
+        "notifica",
+      ],
+      condizione_tipo: [
+        "patologia",
+        "allergia",
+        "terapia",
+        "intervento",
+        "farmaco",
+        "vaccinazione",
+      ],
+      consenso_tipo: ["privacy", "informato", "marketing"],
+      evento_qualita_tipo: [
+        "reclamo",
+        "non_conformita",
+        "evento_avverso",
+        "audit",
+      ],
       fattura_direzione: ["attiva", "passiva"],
       fattura_stato: ["da_pagare", "pagata", "scaduta", "parziale"],
       gara_ati_ruolo: ["mandataria", "mandante", "consorziata"],
@@ -7156,6 +8234,14 @@ export const Constants = {
         "abilitazione",
         "altro",
       ],
+      paziente_sesso: ["m", "f", "altro"],
+      prestazione_tipo: [
+        "visita",
+        "esame",
+        "infermieristica",
+        "terapia",
+        "pacchetto",
+      ],
       priorita_type: ["bassa", "media", "alta", "critica"],
       progetto_stato: [
         "pianificazione",
@@ -7166,6 +8252,7 @@ export const Constants = {
       ],
       progetto_tipo: ["cliente", "interno"],
       provvigione_ambito: ["cliente", "zona", "prodotto", "fascia_fatturato"],
+      referto_stato: ["bozza", "da_validare", "validato", "inviato"],
       scadenza_modulo_stato: ["aperta", "completata", "annullata"],
       sdi_stato: [
         "non_applicabile",

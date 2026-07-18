@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -23,6 +23,8 @@ import { AUTOMEZZI_NAV } from '@/modules/automezzi/nav'
 import { automezziRoutes } from '@/modules/automezzi/routes'
 import { AGENTI_NAV } from '@/modules/agenti/nav'
 import { agentiRoutes } from '@/modules/agenti/routes'
+import { POLIAMBULATORI_NAV } from '@/modules/poliambulatori/nav'
+import { poliambulatoriRoutes } from '@/modules/poliambulatori/routes'
 
 export interface ModuloDef {
   slug: string
@@ -71,7 +73,14 @@ export const MODULI: ModuloDef[] = [
     nav: AGENTI_NAV,
     routes: agentiRoutes,
   },
-  // FASE 5: poliambulatori
+  {
+    slug: 'poliambulatori',
+    label: 'Poliambulatori',
+    icon: HeartPulse,
+    descrizione: 'Per centri medici: pazienti, agenda, referti, con dati clinici solo ai medici',
+    nav: POLIAMBULATORI_NAV,
+    routes: poliambulatoriRoutes,
+  },
 ]
 
 /** Moduli attivi in QUESTA istanza (intersezione registro × VITE_MODULES). */

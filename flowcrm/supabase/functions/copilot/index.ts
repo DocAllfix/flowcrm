@@ -45,6 +45,8 @@ const TABELLE_LEGGIBILI: Record<string, string> = {
   cantieri: 'codice, denominazione, stato, citta, importo_contrattuale, data_fine_prevista',
   automezzi: 'codice, targa, marca, modello, categoria, stato, km_attuali',
   agenti: 'codice, nome, cognome, tipologia, stato, zone',
+  pazienti: 'codice, nome, cognome, telefono',
+  appuntamenti: 'inizio, durata_minuti, stato, urgente',
   scadenze_moduli: 'modulo, tipo, descrizione, data_scadenza, stato',
 }
 const TABELLE_TESTO: Record<string, string> = {
@@ -53,7 +55,7 @@ const TABELLE_TESTO: Record<string, string> = {
   fatture: 'numero', scadenze_pagamento: 'descrizione', scadenze_tasse: 'tipo_tassa',
   dipendenti: 'nome',
   gare: 'titolo', cantieri: 'denominazione', automezzi: 'targa', agenti: 'nome',
-  scadenze_moduli: 'descrizione',
+  pazienti: 'cognome', appuntamenti: 'stato', scadenze_moduli: 'descrizione',
 }
 const TABELLE = Object.keys(TABELLE_LEGGIBILI)
 
@@ -68,6 +70,8 @@ const PAGINE: Record<string, string> = {
   cantieri: '/cantieri',
   automezzi: '/automezzi', 'dashboard parco': '/automezzi-dashboard',
   agenti: '/agenti', 'direzione commerciale': '/direzione-commerciale',
+  pazienti: '/pazienti', 'agenda poliambulatorio': '/agenda-poliambulatorio',
+  'dashboard sanitaria': '/poliambulatorio-dashboard',
 }
 
 // ── Tool disponibili al modello (set chiuso, parametrico) ─────────
@@ -330,6 +334,7 @@ MAPPA FUNZIONI (dove si fa cosa):
 - MODULO Cantieri (se attivo): elenco cantieri con codice CANT-AAAA-NNNN e avanzamento; scheda con cronoprogramma a fasi, rapportini giornalieri del capocantiere, personale con presenze, imprese/subappaltatori, mezzi e materiali con giacenze, contabilità (SAL con "Genera fattura", costi e utile — solo admin/manager), registro sicurezza (incidenti e infortuni notificano subito i manager), qualità e ambiente, documenti in 5 archivi (Contrattuale/Tecnica/Sicurezza/Qualità/Ambiente), scadenze (DURC, SOA, visite mediche…) con notifiche automatiche.
 - MODULO Parco automezzi (se attivo): elenco mezzi con codice AUTO-AAAA-NNNN e targa; scheda con assegnazioni, manutenzioni, rifornimenti (i km inseriti aggiornano il contachilometri), utilizzi, sinistri e multe, pneumatici e attrezzature, costi analitici e costo/km (solo admin/manager), documenti e scadenze (revisione, bollo, assicurazione…) con notifiche automatiche a 30/7/1/0 giorni; Dashboard parco con mezzi per stato e patenti/CQC/ADR dei conducenti (scadenze monitorate, solo admin/manager).
 - MODULO Agenti di commercio (se attivo): rete vendita con codice AGEN-AAAA-NNNN; fascicolo con mandati (rinnovo monitorato), portafoglio clienti, rapporti visita, offerte→ordini con righe, PROVVIGIONI (piano base + regole per cliente/zona/prodotto, "Calcola dal venduto" sui consegnati/fatturati, liquidazione — solo admin/manager), obiettivi con avanzamento, note spese con approvazione; Direzione commerciale = confronto agenti (manager). Portale Agente: l'utente collegato a un agente vede SOLO i propri dati (lo impone il database).
+- MODULO Poliambulatori (se attivo): pazienti con codice PAZ-AAAA-NNNN e Fascicolo Digitale; agenda per professionista con anti doppia-prenotazione (click per prenotare, drag per spostare); i CONTENUTI CLINICI (fascicolo sanitario, cartelle, referti) sono visibili SOLO ai medici collegati e all'admin — la segreteria gestisce anagrafica, consensi, agenda e comunicazioni; referti con validazione (contenuto congelato dopo la firma) e invio; Struttura = professionisti, prestazioni con tariffe, sale, convenzioni, apparecchiature (tarature nello scadenzario), magazzino con lotti in scadenza, registro qualità; Dashboard sanitaria con agenda di oggi, no-show e referti da validare.
 - Ogni lista ha il menu Azioni per Modificare/Archiviare/Eliminare (elimina solo admin). Import/Export CSV su varie liste.
 - Profilo: dati e cambio password. Gestione utenti (solo admin): ruoli, stato, creazione nuovi utenti.
 - Ruoli: admin (tutto), manager (tutto tranne utenti/eliminazioni definitive), operatore (CRM/vendite/attività, NIENTE amministrazione né HR).`
