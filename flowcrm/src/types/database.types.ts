@@ -237,6 +237,7 @@ export type Database = {
           deal_id: string | null
           descrizione: string | null
           durata_minuti: number | null
+          gara_id: string | null
           id: string
           inizio: string | null
           luogo: string | null
@@ -261,6 +262,7 @@ export type Database = {
           deal_id?: string | null
           descrizione?: string | null
           durata_minuti?: number | null
+          gara_id?: string | null
           id?: string
           inizio?: string | null
           luogo?: string | null
@@ -285,6 +287,7 @@ export type Database = {
           deal_id?: string | null
           descrizione?: string | null
           durata_minuti?: number | null
+          gara_id?: string | null
           id?: string
           inizio?: string | null
           luogo?: string | null
@@ -325,6 +328,13 @@ export type Database = {
             columns: ["deal_id"]
             isOneToOne: false
             referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
             referencedColumns: ["id"]
           },
           {
@@ -1005,6 +1015,630 @@ export type Database = {
           },
           {
             foreignKeyName: "formazione_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare: {
+        Row: {
+          aggiudicatario: string | null
+          attivo: boolean
+          categoria_soa: string | null
+          cig: string | null
+          codice: string | null
+          commessa_id: string | null
+          cpv: string | null
+          created_at: string
+          created_by: string | null
+          cup: string | null
+          data_apertura_offerte: string | null
+          data_pubblicazione: string | null
+          durata_mesi: number | null
+          ente_appaltante: string | null
+          ente_appaltante_id: string | null
+          esito_at: string | null
+          fonte: string | null
+          id: string
+          importo_base: number
+          luogo_esecuzione: string | null
+          note: string | null
+          note_esito: string | null
+          offerta_tecnica_note: string | null
+          oneri_sicurezza: number | null
+          piattaforma: string | null
+          piattaforma_url: string | null
+          posizione_graduatoria: number | null
+          presentata_at: string | null
+          priorita: Database["public"]["Enums"]["priorita_type"]
+          procedura: Database["public"]["Enums"]["gara_procedura"]
+          protocollo_invio: string | null
+          responsabile_id: string | null
+          ricerca: unknown
+          ricorso: boolean
+          rup: string | null
+          settore: string | null
+          stato: Database["public"]["Enums"]["gara_stato"]
+          termine_chiarimenti: string | null
+          termine_presentazione: string | null
+          territorio: string | null
+          tipologia: Database["public"]["Enums"]["gara_tipologia"]
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aggiudicatario?: string | null
+          attivo?: boolean
+          categoria_soa?: string | null
+          cig?: string | null
+          codice?: string | null
+          commessa_id?: string | null
+          cpv?: string | null
+          created_at?: string
+          created_by?: string | null
+          cup?: string | null
+          data_apertura_offerte?: string | null
+          data_pubblicazione?: string | null
+          durata_mesi?: number | null
+          ente_appaltante?: string | null
+          ente_appaltante_id?: string | null
+          esito_at?: string | null
+          fonte?: string | null
+          id?: string
+          importo_base?: number
+          luogo_esecuzione?: string | null
+          note?: string | null
+          note_esito?: string | null
+          offerta_tecnica_note?: string | null
+          oneri_sicurezza?: number | null
+          piattaforma?: string | null
+          piattaforma_url?: string | null
+          posizione_graduatoria?: number | null
+          presentata_at?: string | null
+          priorita?: Database["public"]["Enums"]["priorita_type"]
+          procedura?: Database["public"]["Enums"]["gara_procedura"]
+          protocollo_invio?: string | null
+          responsabile_id?: string | null
+          ricerca?: unknown
+          ricorso?: boolean
+          rup?: string | null
+          settore?: string | null
+          stato?: Database["public"]["Enums"]["gara_stato"]
+          termine_chiarimenti?: string | null
+          termine_presentazione?: string | null
+          territorio?: string | null
+          tipologia?: Database["public"]["Enums"]["gara_tipologia"]
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aggiudicatario?: string | null
+          attivo?: boolean
+          categoria_soa?: string | null
+          cig?: string | null
+          codice?: string | null
+          commessa_id?: string | null
+          cpv?: string | null
+          created_at?: string
+          created_by?: string | null
+          cup?: string | null
+          data_apertura_offerte?: string | null
+          data_pubblicazione?: string | null
+          durata_mesi?: number | null
+          ente_appaltante?: string | null
+          ente_appaltante_id?: string | null
+          esito_at?: string | null
+          fonte?: string | null
+          id?: string
+          importo_base?: number
+          luogo_esecuzione?: string | null
+          note?: string | null
+          note_esito?: string | null
+          offerta_tecnica_note?: string | null
+          oneri_sicurezza?: number | null
+          piattaforma?: string | null
+          piattaforma_url?: string | null
+          posizione_graduatoria?: number | null
+          presentata_at?: string | null
+          priorita?: Database["public"]["Enums"]["priorita_type"]
+          procedura?: Database["public"]["Enums"]["gara_procedura"]
+          protocollo_invio?: string | null
+          responsabile_id?: string | null
+          ricerca?: unknown
+          ricorso?: boolean
+          rup?: string | null
+          settore?: string | null
+          stato?: Database["public"]["Enums"]["gara_stato"]
+          termine_chiarimenti?: string | null
+          termine_presentazione?: string | null
+          territorio?: string | null
+          tipologia?: Database["public"]["Enums"]["gara_tipologia"]
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_commessa_id_fkey"
+            columns: ["commessa_id"]
+            isOneToOne: false
+            referencedRelation: "commesse"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_ente_appaltante_id_fkey"
+            columns: ["ente_appaltante_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_responsabile_id_fkey"
+            columns: ["responsabile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_cauzioni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data_emissione: string | null
+          data_scadenza: string | null
+          gara_id: string
+          garante: string | null
+          id: string
+          importo: number
+          note: string | null
+          restituita: boolean
+          tipo: Database["public"]["Enums"]["gara_cauzione_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data_emissione?: string | null
+          data_scadenza?: string | null
+          gara_id: string
+          garante?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          restituita?: boolean
+          tipo?: Database["public"]["Enums"]["gara_cauzione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data_emissione?: string | null
+          data_scadenza?: string | null
+          gara_id?: string
+          garante?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          restituita?: boolean
+          tipo?: Database["public"]["Enums"]["gara_cauzione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_cauzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_cauzioni_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_cauzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_chiarimenti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data_invio: string
+          data_risposta: string | null
+          domanda: string
+          gara_id: string
+          id: string
+          impatto_offerta: string | null
+          responsabile_id: string | null
+          risposta: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data_invio?: string
+          data_risposta?: string | null
+          domanda: string
+          gara_id: string
+          id?: string
+          impatto_offerta?: string | null
+          responsabile_id?: string | null
+          risposta?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data_invio?: string
+          data_risposta?: string | null
+          domanda?: string
+          gara_id?: string
+          id?: string
+          impatto_offerta?: string | null
+          responsabile_id?: string | null
+          risposta?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_chiarimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_chiarimenti_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_chiarimenti_responsabile_id_fkey"
+            columns: ["responsabile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_chiarimenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_offerte_economiche: {
+        Row: {
+          computo_importo: number | null
+          costi_manodopera: number | null
+          created_at: string
+          created_by: string | null
+          gara_id: string
+          id: string
+          importo_offerto: number | null
+          marginalita_percentuale: number | null
+          note: string | null
+          oneri_sicurezza: number | null
+          ribasso_percentuale: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          computo_importo?: number | null
+          costi_manodopera?: number | null
+          created_at?: string
+          created_by?: string | null
+          gara_id: string
+          id?: string
+          importo_offerto?: number | null
+          marginalita_percentuale?: number | null
+          note?: string | null
+          oneri_sicurezza?: number | null
+          ribasso_percentuale?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          computo_importo?: number | null
+          costi_manodopera?: number | null
+          created_at?: string
+          created_by?: string | null
+          gara_id?: string
+          id?: string
+          importo_offerto?: number | null
+          marginalita_percentuale?: number | null
+          note?: string | null
+          oneri_sicurezza?: number | null
+          ribasso_percentuale?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_offerte_economiche_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_offerte_economiche_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: true
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_offerte_economiche_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_partecipanti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          gara_id: string
+          id: string
+          note: string | null
+          organizzazione_id: string
+          quota_percentuale: number | null
+          ruolo: Database["public"]["Enums"]["gara_ati_ruolo"]
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          gara_id: string
+          id?: string
+          note?: string | null
+          organizzazione_id: string
+          quota_percentuale?: number | null
+          ruolo?: Database["public"]["Enums"]["gara_ati_ruolo"]
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          gara_id?: string
+          id?: string
+          note?: string | null
+          organizzazione_id?: string
+          quota_percentuale?: number | null
+          ruolo?: Database["public"]["Enums"]["gara_ati_ruolo"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_partecipanti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_partecipanti_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_partecipanti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_requisiti: {
+        Row: {
+          allegato_id: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          gara_id: string
+          id: string
+          note: string | null
+          soddisfatto: boolean
+          tipo: Database["public"]["Enums"]["gara_requisito_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allegato_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          gara_id: string
+          id?: string
+          note?: string | null
+          soddisfatto?: boolean
+          tipo?: Database["public"]["Enums"]["gara_requisito_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allegato_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          gara_id?: string
+          id?: string
+          note?: string | null
+          soddisfatto?: boolean
+          tipo?: Database["public"]["Enums"]["gara_requisito_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_requisiti_allegato_id_fkey"
+            columns: ["allegato_id"]
+            isOneToOne: false
+            referencedRelation: "allegati"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_requisiti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_requisiti_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_requisiti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_team: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          gara_id: string
+          id: string
+          ruolo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          gara_id: string
+          id?: string
+          ruolo: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          gara_id?: string
+          id?: string
+          ruolo?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_team_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_team_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_team_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gare_valutazioni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          criterio: string
+          gara_id: string
+          id: string
+          note: string | null
+          punteggio: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          criterio: string
+          gara_id: string
+          id?: string
+          note?: string | null
+          punteggio: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          criterio?: string
+          gara_id?: string
+          id?: string
+          note?: string | null
+          punteggio?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gare_valutazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_valutazioni_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gare_valutazioni_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -1855,6 +2489,57 @@ export type Database = {
         }
         Relationships: []
       }
+      vw_gare_kpi: {
+        Row: {
+          aggiudicate: number | null
+          giorni_medi_preparazione: number | null
+          in_analisi: number | null
+          in_preparazione: number | null
+          non_aggiudicate: number | null
+          presentate: number | null
+          tasso_aggiudicazione: number | null
+          totali: number | null
+          valore_in_corso: number | null
+          valore_perse: number | null
+          valore_vinte: number | null
+        }
+        Relationships: []
+      }
+      vw_gare_per_stato: {
+        Row: {
+          numero: number | null
+          stato: string | null
+          valore: number | null
+        }
+        Relationships: []
+      }
+      vw_gare_successo_categoria: {
+        Row: {
+          aggiudicate: number | null
+          categoria: string | null
+          presentate: number | null
+          valore_vinto: number | null
+        }
+        Relationships: []
+      }
+      vw_gare_successo_ente: {
+        Row: {
+          aggiudicate: number | null
+          ente: string | null
+          presentate: number | null
+          valore_vinto: number | null
+        }
+        Relationships: []
+      }
+      vw_gare_successo_territorio: {
+        Row: {
+          aggiudicate: number | null
+          presentate: number | null
+          territorio: string | null
+          valore_vinto: number | null
+        }
+        Relationships: []
+      }
       vw_kpi_economici: {
         Row: {
           da_incassare: number | null
@@ -1955,6 +2640,38 @@ export type Database = {
       commessa_stato: "attiva" | "in_pausa" | "completata" | "annullata"
       fattura_direzione: "attiva" | "passiva"
       fattura_stato: "da_pagare" | "pagata" | "scaduta" | "parziale"
+      gara_ati_ruolo: "mandataria" | "mandante" | "consorziata"
+      gara_cauzione_tipo:
+        | "provvisoria"
+        | "definitiva"
+        | "fideiussione"
+        | "polizza_assicurativa"
+      gara_procedura:
+        | "aperta"
+        | "ristretta"
+        | "negoziata"
+        | "affidamento_diretto"
+        | "accordo_quadro"
+        | "manifestazione_interesse"
+        | "altro"
+      gara_requisito_tipo:
+        | "generale"
+        | "economico_finanziario"
+        | "tecnico_professionale"
+        | "certificazione"
+        | "soa"
+        | "referenze"
+        | "personale"
+        | "attrezzature"
+        | "altro"
+      gara_stato:
+        | "in_analisi"
+        | "in_preparazione"
+        | "presentata"
+        | "aggiudicata"
+        | "non_aggiudicata"
+        | "annullata"
+      gara_tipologia: "lavori" | "servizi" | "forniture"
       lead_fonte: "fiera" | "referral" | "linkedin" | "web" | "evento" | "altro"
       notifica_tipo: "info" | "warning" | "critical" | "success" | "sistema"
       org_ruolo:
@@ -2578,6 +3295,42 @@ export const Constants = {
       commessa_stato: ["attiva", "in_pausa", "completata", "annullata"],
       fattura_direzione: ["attiva", "passiva"],
       fattura_stato: ["da_pagare", "pagata", "scaduta", "parziale"],
+      gara_ati_ruolo: ["mandataria", "mandante", "consorziata"],
+      gara_cauzione_tipo: [
+        "provvisoria",
+        "definitiva",
+        "fideiussione",
+        "polizza_assicurativa",
+      ],
+      gara_procedura: [
+        "aperta",
+        "ristretta",
+        "negoziata",
+        "affidamento_diretto",
+        "accordo_quadro",
+        "manifestazione_interesse",
+        "altro",
+      ],
+      gara_requisito_tipo: [
+        "generale",
+        "economico_finanziario",
+        "tecnico_professionale",
+        "certificazione",
+        "soa",
+        "referenze",
+        "personale",
+        "attrezzature",
+        "altro",
+      ],
+      gara_stato: [
+        "in_analisi",
+        "in_preparazione",
+        "presentata",
+        "aggiudicata",
+        "non_aggiudicata",
+        "annullata",
+      ],
+      gara_tipologia: ["lavori", "servizi", "forniture"],
       lead_fonte: ["fiera", "referral", "linkedin", "web", "evento", "altro"],
       notifica_tipo: ["info", "warning", "critical", "success", "sistema"],
       org_ruolo: [

@@ -2,13 +2,13 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 
 export interface RisultatoRicerca {
-  tipo: 'organizzazione' | 'contatto'
+  tipo: 'organizzazione' | 'contatto' | 'gara'
   id: string
   titolo: string
   sottotitolo: string
 }
 
-/** Ricerca globale full-text (cmd+K) su organizzazioni e contatti. */
+/** Ricerca globale full-text (cmd+K): organizzazioni, contatti e gare. */
 export function useRicercaGlobale(query: string) {
   const q = query.trim()
   return useQuery({

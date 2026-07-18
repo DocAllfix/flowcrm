@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Building2, User } from 'lucide-react'
+import { Search, Building2, User, Gavel } from 'lucide-react'
 import { useRicercaGlobale } from '@/lib/queries/ricerca'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -43,6 +43,7 @@ export function CommandPalette() {
   function go(r: (typeof results)[number]) {
     setOpen(false)
     if (r.tipo === 'organizzazione') navigate(`/organizzazioni/${r.id}`)
+    else if (r.tipo === 'gara') navigate(`/gare/${r.id}`)
     else navigate(`/contatti/${r.id}`)
   }
 
@@ -62,7 +63,7 @@ export function CommandPalette() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Cerca organizzazioni e contatti…"
+            placeholder="Cerca organizzazioni, contatti, gare…"
             className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
           />
           <kbd className="hidden rounded border border-border px-1.5 py-0.5 text-[10px] text-muted-foreground sm:inline">ESC</kbd>
@@ -77,7 +78,7 @@ export function CommandPalette() {
             <p className="px-3 py-8 text-center text-sm text-muted-foreground">Nessun risultato.</p>
           ) : (
             results.map((r, i) => {
-              const Icon = r.tipo === 'organizzazione' ? Building2 : User
+              const Icon = r.tipo === 'organizzazione' ? Building2 : r.tipo === 'gara' ? Gavel : User
               return (
                 <button
                   key={`${r.tipo}-${r.id}`}
@@ -94,7 +95,7 @@ export function CommandPalette() {
                     {r.sottotitolo && <p className="truncate text-xs text-muted-foreground">{r.sottotitolo}</p>}
                   </div>
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    {r.tipo === 'organizzazione' ? 'Org' : 'Contatto'}
+                    {r.tipo === 'organizzazione' ? 'Org' : r.tipo === 'gara' ? 'Gara' : 'Contatto'}
                   </span>
                 </button>
               )

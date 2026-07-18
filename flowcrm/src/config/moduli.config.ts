@@ -12,9 +12,11 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import type { LucideIcon } from 'lucide-react'
+import { Gavel, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
+import { GARE_NAV } from '@/modules/gare/nav'
+import { gareRoutes } from '@/modules/gare/routes'
 
 export interface ModuloDef {
   slug: string
@@ -31,8 +33,15 @@ export interface ModuloDef {
 
 /** Registro completo: i moduli si aggiungono qui, fase per fase. */
 export const MODULI: ModuloDef[] = [
-  // FASE 1: gare · FASE 2: cantiere · FASE 3: automezzi ·
-  // FASE 4: agenti · FASE 5: poliambulatori
+  {
+    slug: 'gare',
+    label: "Gare d'appalto",
+    icon: Gavel,
+    descrizione: 'Per chi partecipa ad appalti: dal bando all\'aggiudicazione',
+    nav: GARE_NAV,
+    routes: gareRoutes,
+  },
+  // FASE 2: cantiere · FASE 3: automezzi · FASE 4: agenti · FASE 5: poliambulatori
 ]
 
 /** Moduli attivi in QUESTA istanza (intersezione registro × VITE_MODULES). */

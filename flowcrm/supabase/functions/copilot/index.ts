@@ -40,12 +40,16 @@ const TABELLE_LEGGIBILI: Record<string, string> = {
   scadenze_pagamento: 'descrizione, importo, data_prevista, stato',
   scadenze_tasse: 'tipo_tassa, importo, scadenza, stato',
   dipendenti: 'nome, cognome, qualifica, tipo_contratto',
+  // Moduli verticali (RLS: senza licenza → zero righe)
+  gare: 'codice, titolo, stato, importo_base, termine_presentazione, ente_appaltante',
+  scadenze_moduli: 'modulo, tipo, descrizione, data_scadenza, stato',
 }
 const TABELLE_TESTO: Record<string, string> = {
   organizzazioni: 'ragione_sociale', contatti: 'nome', deals: 'nome',
   commesse: 'descrizione', progetti: 'nome', attivita: 'titolo',
   fatture: 'numero', scadenze_pagamento: 'descrizione', scadenze_tasse: 'tipo_tassa',
   dipendenti: 'nome',
+  gare: 'titolo', scadenze_moduli: 'descrizione',
 }
 const TABELLE = Object.keys(TABELLE_LEGGIBILI)
 
@@ -56,6 +60,7 @@ const PAGINE: Record<string, string> = {
   calendario: '/calendario', riunioni: '/riunioni', progetti: '/progetti', commesse: '/commesse',
   team: '/team', fatture: '/fatture', incassi: '/incassi', tasse: '/tasse', personale: '/personale',
   profilo: '/profilo', utenti: '/utenti',
+  gare: '/gare', 'kanban gare': '/gare-kanban', 'dashboard gare': '/gare-dashboard',
 }
 
 // ── Tool disponibili al modello (set chiuso, parametrico) ─────────
@@ -314,6 +319,7 @@ MAPPA FUNZIONI (dove si fa cosa):
 - Amministrazione (solo admin/manager): Registro fatture (attive/passive), Incassi previsti (anche manuali), Scadenze tasse (segna pagata).
 - Dashboard: operativa (KPI + pipeline + le mie attività + prossime riunioni) e economica (fatturato, cash flow, top clienti).
 - HR / Personale (solo admin/manager): anagrafica dipendenti, ferie/permessi (richiesta→approva/rifiuta), formazione.
+- MODULO Gare d'appalto (se attivo): elenco gare con codice GARA-AAAA-NNNN, Kanban per stato (in analisi → in preparazione → presentata → aggiudicata/non aggiudicata), scheda gara con valutazione Go/No-Go, requisiti, team, chiarimenti, offerta (economica solo admin/manager), documenti in 3 archivi, cauzioni con scadenze automatiche; da una gara aggiudicata si crea la commessa; Dashboard gare con tasso di aggiudicazione e successo per ente/territorio. I termini di presentazione generano notifiche automatiche a 30/7/1/0 giorni.
 - Ogni lista ha il menu Azioni per Modificare/Archiviare/Eliminare (elimina solo admin). Import/Export CSV su varie liste.
 - Profilo: dati e cambio password. Gestione utenti (solo admin): ruoli, stato, creazione nuovi utenti.
 - Ruoli: admin (tutto), manager (tutto tranne utenti/eliminazioni definitive), operatore (CRM/vendite/attività, NIENTE amministrazione né HR).`
