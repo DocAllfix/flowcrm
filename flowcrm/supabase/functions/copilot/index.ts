@@ -42,6 +42,7 @@ const TABELLE_LEGGIBILI: Record<string, string> = {
   dipendenti: 'nome, cognome, qualifica, tipo_contratto',
   // Moduli verticali (RLS: senza licenza → zero righe)
   gare: 'codice, titolo, stato, importo_base, termine_presentazione, ente_appaltante',
+  cantieri: 'codice, denominazione, stato, citta, importo_contrattuale, data_fine_prevista',
   scadenze_moduli: 'modulo, tipo, descrizione, data_scadenza, stato',
 }
 const TABELLE_TESTO: Record<string, string> = {
@@ -49,7 +50,7 @@ const TABELLE_TESTO: Record<string, string> = {
   commesse: 'descrizione', progetti: 'nome', attivita: 'titolo',
   fatture: 'numero', scadenze_pagamento: 'descrizione', scadenze_tasse: 'tipo_tassa',
   dipendenti: 'nome',
-  gare: 'titolo', scadenze_moduli: 'descrizione',
+  gare: 'titolo', cantieri: 'denominazione', scadenze_moduli: 'descrizione',
 }
 const TABELLE = Object.keys(TABELLE_LEGGIBILI)
 
@@ -61,6 +62,7 @@ const PAGINE: Record<string, string> = {
   team: '/team', fatture: '/fatture', incassi: '/incassi', tasse: '/tasse', personale: '/personale',
   profilo: '/profilo', utenti: '/utenti',
   gare: '/gare', 'kanban gare': '/gare-kanban', 'dashboard gare': '/gare-dashboard',
+  cantieri: '/cantieri',
 }
 
 // ── Tool disponibili al modello (set chiuso, parametrico) ─────────
@@ -320,6 +322,7 @@ MAPPA FUNZIONI (dove si fa cosa):
 - Dashboard: operativa (KPI + pipeline + le mie attività + prossime riunioni) e economica (fatturato, cash flow, top clienti).
 - HR / Personale (solo admin/manager): anagrafica dipendenti, ferie/permessi (richiesta→approva/rifiuta), formazione.
 - MODULO Gare d'appalto (se attivo): elenco gare con codice GARA-AAAA-NNNN, Kanban per stato (in analisi → in preparazione → presentata → aggiudicata/non aggiudicata), scheda gara con valutazione Go/No-Go, requisiti, team, chiarimenti, offerta (economica solo admin/manager), documenti in 3 archivi, cauzioni con scadenze automatiche; da una gara aggiudicata si crea la commessa; Dashboard gare con tasso di aggiudicazione e successo per ente/territorio. I termini di presentazione generano notifiche automatiche a 30/7/1/0 giorni.
+- MODULO Cantieri (se attivo): elenco cantieri con codice CANT-AAAA-NNNN e avanzamento; scheda con cronoprogramma a fasi, rapportini giornalieri del capocantiere, personale con presenze, imprese/subappaltatori, mezzi e materiali con giacenze, contabilità (SAL con "Genera fattura", costi e utile — solo admin/manager), registro sicurezza (incidenti e infortuni notificano subito i manager), qualità e ambiente, documenti in 5 archivi (Contrattuale/Tecnica/Sicurezza/Qualità/Ambiente), scadenze (DURC, SOA, visite mediche…) con notifiche automatiche.
 - Ogni lista ha il menu Azioni per Modificare/Archiviare/Eliminare (elimina solo admin). Import/Export CSV su varie liste.
 - Profilo: dati e cambio password. Gestione utenti (solo admin): ruoli, stato, creazione nuovi utenti.
 - Ruoli: admin (tutto), manager (tutto tranne utenti/eliminazioni definitive), operatore (CRM/vendite/attività, NIENTE amministrazione né HR).`

@@ -12,11 +12,13 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
 import { gareRoutes } from '@/modules/gare/routes'
+import { CANTIERE_NAV } from '@/modules/cantiere/nav'
+import { cantiereRoutes } from '@/modules/cantiere/routes'
 
 export interface ModuloDef {
   slug: string
@@ -41,7 +43,15 @@ export const MODULI: ModuloDef[] = [
     nav: GARE_NAV,
     routes: gareRoutes,
   },
-  // FASE 2: cantiere · FASE 3: automezzi · FASE 4: agenti · FASE 5: poliambulatori
+  {
+    slug: 'cantiere',
+    label: 'Cantieri',
+    icon: HardHat,
+    descrizione: 'Per imprese edili: avanzamento, sicurezza, SAL e contabilità lavori',
+    nav: CANTIERE_NAV,
+    routes: cantiereRoutes,
+  },
+  // FASE 3: automezzi · FASE 4: agenti · FASE 5: poliambulatori
 ]
 
 /** Moduli attivi in QUESTA istanza (intersezione registro × VITE_MODULES). */

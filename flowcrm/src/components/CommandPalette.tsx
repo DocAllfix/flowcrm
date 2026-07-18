@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Building2, User, Gavel } from 'lucide-react'
+import { Search, Building2, User, Gavel, HardHat } from 'lucide-react'
 import { useRicercaGlobale } from '@/lib/queries/ricerca'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
@@ -44,6 +44,7 @@ export function CommandPalette() {
     setOpen(false)
     if (r.tipo === 'organizzazione') navigate(`/organizzazioni/${r.id}`)
     else if (r.tipo === 'gara') navigate(`/gare/${r.id}`)
+    else if (r.tipo === 'cantiere') navigate(`/cantieri/${r.id}`)
     else navigate(`/contatti/${r.id}`)
   }
 
@@ -78,7 +79,11 @@ export function CommandPalette() {
             <p className="px-3 py-8 text-center text-sm text-muted-foreground">Nessun risultato.</p>
           ) : (
             results.map((r, i) => {
-              const Icon = r.tipo === 'organizzazione' ? Building2 : r.tipo === 'gara' ? Gavel : User
+              const Icon =
+                r.tipo === 'organizzazione' ? Building2
+                : r.tipo === 'gara' ? Gavel
+                : r.tipo === 'cantiere' ? HardHat
+                : User
               return (
                 <button
                   key={`${r.tipo}-${r.id}`}
@@ -95,7 +100,10 @@ export function CommandPalette() {
                     {r.sottotitolo && <p className="truncate text-xs text-muted-foreground">{r.sottotitolo}</p>}
                   </div>
                   <span className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                    {r.tipo === 'organizzazione' ? 'Org' : r.tipo === 'gara' ? 'Gara' : 'Contatto'}
+                    {r.tipo === 'organizzazione' ? 'Org'
+                      : r.tipo === 'gara' ? 'Gara'
+                      : r.tipo === 'cantiere' ? 'Cantiere'
+                      : 'Contatto'}
                   </span>
                 </button>
               )

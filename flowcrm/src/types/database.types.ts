@@ -229,6 +229,7 @@ export type Database = {
         Row: {
           assegnato_a: string | null
           attivo: boolean
+          cantiere_id: string | null
           commessa_id: string | null
           completata_at: string | null
           contatto_id: string | null
@@ -254,6 +255,7 @@ export type Database = {
         Insert: {
           assegnato_a?: string | null
           attivo?: boolean
+          cantiere_id?: string | null
           commessa_id?: string | null
           completata_at?: string | null
           contatto_id?: string | null
@@ -279,6 +281,7 @@ export type Database = {
         Update: {
           assegnato_a?: string | null
           attivo?: boolean
+          cantiere_id?: string | null
           commessa_id?: string | null
           completata_at?: string | null
           contatto_id?: string | null
@@ -308,6 +311,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "attivita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
           },
           {
             foreignKeyName: "attivita_contatto_id_fkey"
@@ -399,6 +423,1305 @@ export type Database = {
           {
             foreignKeyName: "audit_log_eseguito_da_fkey"
             columns: ["eseguito_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_controlli_qualita: {
+        Row: {
+          approvato_dl: boolean
+          azione_correttiva: string | null
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          esito: Database["public"]["Enums"]["cantiere_qualita_esito"]
+          id: string
+          tipo: Database["public"]["Enums"]["cantiere_qualita_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          approvato_dl?: boolean
+          azione_correttiva?: string | null
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          esito?: Database["public"]["Enums"]["cantiere_qualita_esito"]
+          id?: string
+          tipo: Database["public"]["Enums"]["cantiere_qualita_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          approvato_dl?: boolean
+          azione_correttiva?: string | null
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          esito?: Database["public"]["Enums"]["cantiere_qualita_esito"]
+          id?: string
+          tipo?: Database["public"]["Enums"]["cantiere_qualita_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_controlli_qualita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_controlli_qualita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_controlli_qualita_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_controlli_qualita_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_controlli_qualita_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_costi: {
+        Row: {
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          id: string
+          importo: number
+          note: string | null
+          tipo: Database["public"]["Enums"]["cantiere_costo_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          id?: string
+          importo?: number
+          note?: string | null
+          tipo?: Database["public"]["Enums"]["cantiere_costo_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          id?: string
+          importo?: number
+          note?: string | null
+          tipo?: Database["public"]["Enums"]["cantiere_costo_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_costi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_costi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_costi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_costi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_costi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_eventi_sicurezza: {
+        Row: {
+          azioni: string | null
+          cantiere_id: string
+          chiuso: boolean
+          chiuso_at: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          gravita: Database["public"]["Enums"]["priorita_type"]
+          id: string
+          tipo: Database["public"]["Enums"]["cantiere_sicurezza_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          azioni?: string | null
+          cantiere_id: string
+          chiuso?: boolean
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          gravita?: Database["public"]["Enums"]["priorita_type"]
+          id?: string
+          tipo: Database["public"]["Enums"]["cantiere_sicurezza_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          azioni?: string | null
+          cantiere_id?: string
+          chiuso?: boolean
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          gravita?: Database["public"]["Enums"]["priorita_type"]
+          id?: string
+          tipo?: Database["public"]["Enums"]["cantiere_sicurezza_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_eventi_sicurezza_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_eventi_sicurezza_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_eventi_sicurezza_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_eventi_sicurezza_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_eventi_sicurezza_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_fasi: {
+        Row: {
+          avanzamento: number
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data_fine: string | null
+          data_inizio: string | null
+          dipende_da: string | null
+          id: string
+          nome: string
+          note: string | null
+          ordine: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          avanzamento?: number
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string | null
+          dipende_da?: string | null
+          id?: string
+          nome: string
+          note?: string | null
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          avanzamento?: number
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data_fine?: string | null
+          data_inizio?: string | null
+          dipende_da?: string | null
+          id?: string
+          nome?: string
+          note?: string | null
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_fasi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_fasi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_fasi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_fasi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_fasi_dipende_da_fkey"
+            columns: ["dipende_da"]
+            isOneToOne: false
+            referencedRelation: "cantiere_fasi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_fasi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_imprese: {
+        Row: {
+          attivo: boolean
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          importo_affidato: number | null
+          lavorazioni: string | null
+          note: string | null
+          organizzazione_id: string
+          referente: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_affidato?: number | null
+          lavorazioni?: string | null
+          note?: string | null
+          organizzazione_id: string
+          referente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_affidato?: number | null
+          lavorazioni?: string | null
+          note?: string | null
+          organizzazione_id?: string
+          referente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_imprese_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_imprese_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_imprese_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_imprese_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_imprese_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_imprese_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_materiali: {
+        Row: {
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          fornitore_id: string | null
+          id: string
+          movimento: Database["public"]["Enums"]["cantiere_movimento_tipo"]
+          note: string | null
+          quantita: number
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          fornitore_id?: string | null
+          id?: string
+          movimento?: Database["public"]["Enums"]["cantiere_movimento_tipo"]
+          note?: string | null
+          quantita?: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          fornitore_id?: string | null
+          id?: string
+          movimento?: Database["public"]["Enums"]["cantiere_movimento_tipo"]
+          note?: string | null
+          quantita?: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_materiali_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_materiali_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_materiali_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_materiali_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_materiali_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_materiali_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_mezzi: {
+        Row: {
+          al: string | null
+          automezzo_id: string | null
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          dal: string
+          descrizione: string
+          id: string
+          note: string | null
+          tipo: Database["public"]["Enums"]["cantiere_mezzo_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          automezzo_id?: string | null
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          descrizione: string
+          id?: string
+          note?: string | null
+          tipo?: Database["public"]["Enums"]["cantiere_mezzo_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          automezzo_id?: string | null
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          descrizione?: string
+          id?: string
+          note?: string | null
+          tipo?: Database["public"]["Enums"]["cantiere_mezzo_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_mezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_mezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_mezzi_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_mezzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_mezzi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_misure: {
+        Row: {
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          id: string
+          prezzo_unitario: number
+          quantita: number
+          sal_id: string | null
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          id?: string
+          prezzo_unitario?: number
+          quantita?: number
+          sal_id?: string | null
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          id?: string
+          prezzo_unitario?: number
+          quantita?: number
+          sal_id?: string | null
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_misure_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_misure_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_misure_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_misure_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_misure_sal_id_fkey"
+            columns: ["sal_id"]
+            isOneToOne: false
+            referencedRelation: "cantiere_sal"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_misure_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_personale: {
+        Row: {
+          attivo: boolean
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          dipendente_id: string | null
+          dpi_assegnati: string | null
+          id: string
+          impresa_id: string | null
+          nominativo: string | null
+          note: string | null
+          ruolo: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string | null
+          dpi_assegnati?: string | null
+          id?: string
+          impresa_id?: string | null
+          nominativo?: string | null
+          note?: string | null
+          ruolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string | null
+          dpi_assegnati?: string | null
+          id?: string
+          impresa_id?: string | null
+          nominativo?: string | null
+          note?: string | null
+          ruolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_personale_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_impresa_id_fkey"
+            columns: ["impresa_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_personale_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_presenze: {
+        Row: {
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          id: string
+          note: string | null
+          ore: number
+          personale_id: string
+        }
+        Insert: {
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          note?: string | null
+          ore?: number
+          personale_id: string
+        }
+        Update: {
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          note?: string | null
+          ore?: number
+          personale_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_presenze_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_presenze_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_presenze_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_presenze_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_presenze_personale_id_fkey"
+            columns: ["personale_id"]
+            isOneToOne: false
+            referencedRelation: "cantiere_personale"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_rapportini: {
+        Row: {
+          cantiere_id: string
+          capocantiere_id: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          id: string
+          lavorazioni: string
+          materiali: string | null
+          meteo: Database["public"]["Enums"]["cantiere_meteo"] | null
+          mezzi: string | null
+          note: string | null
+          personale: string | null
+          problemi: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cantiere_id: string
+          capocantiere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          lavorazioni: string
+          materiali?: string | null
+          meteo?: Database["public"]["Enums"]["cantiere_meteo"] | null
+          mezzi?: string | null
+          note?: string | null
+          personale?: string | null
+          problemi?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cantiere_id?: string
+          capocantiere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          lavorazioni?: string
+          materiali?: string | null
+          meteo?: Database["public"]["Enums"]["cantiere_meteo"] | null
+          mezzi?: string | null
+          note?: string | null
+          personale?: string | null
+          problemi?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_rapportini_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_rapportini_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_rapportini_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_rapportini_capocantiere_id_fkey"
+            columns: ["capocantiere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_rapportini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_rapportini_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_registri_ambiente: {
+        Row: {
+          autorizzazione: string | null
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          formulario: string | null
+          id: string
+          note: string | null
+          quantita: number | null
+          tipo: Database["public"]["Enums"]["cantiere_ambiente_tipo"]
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          autorizzazione?: string | null
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione: string
+          formulario?: string | null
+          id?: string
+          note?: string | null
+          quantita?: number | null
+          tipo: Database["public"]["Enums"]["cantiere_ambiente_tipo"]
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          autorizzazione?: string | null
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          formulario?: string | null
+          id?: string
+          note?: string | null
+          quantita?: number | null
+          tipo?: Database["public"]["Enums"]["cantiere_ambiente_tipo"]
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_registri_ambiente_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_registri_ambiente_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_registri_ambiente_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_registri_ambiente_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_registri_ambiente_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantiere_sal: {
+        Row: {
+          cantiere_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string | null
+          fattura_id: string | null
+          id: string
+          importo: number
+          note: string | null
+          numero: number
+          stato: Database["public"]["Enums"]["cantiere_sal_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cantiere_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string | null
+          fattura_id?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          numero: number
+          stato?: Database["public"]["Enums"]["cantiere_sal_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cantiere_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string | null
+          fattura_id?: string | null
+          id?: string
+          importo?: number
+          note?: string | null
+          numero?: number
+          stato?: Database["public"]["Enums"]["cantiere_sal_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantiere_sal_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "cantieri"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_sal_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_economia"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_sal_cantiere_id_fkey"
+            columns: ["cantiere_id"]
+            isOneToOne: false
+            referencedRelation: "vw_cantiere_kpi"
+            referencedColumns: ["cantiere_id"]
+          },
+          {
+            foreignKeyName: "cantiere_sal_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_sal_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantiere_sal_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cantieri: {
+        Row: {
+          attivo: boolean
+          capocantiere_id: string | null
+          categoria_lavori: string | null
+          cig: string | null
+          citta: string | null
+          cliente_id: string | null
+          codice: string | null
+          commessa_id: string | null
+          committente_id: string | null
+          created_at: string
+          created_by: string | null
+          cup: string | null
+          data_apertura: string | null
+          data_chiusura: string | null
+          data_fine_prevista: string | null
+          denominazione: string
+          direttore_lavori: string | null
+          direttore_tecnico: string | null
+          gara_id: string | null
+          id: string
+          importo_contrattuale: number
+          importo_lavori: number | null
+          indirizzo: string | null
+          lat: number | null
+          lng: number | null
+          note: string | null
+          responsabile_interno_id: string | null
+          responsabile_sicurezza: string | null
+          ricerca: unknown
+          rup: string | null
+          stato: Database["public"]["Enums"]["cantiere_stato"]
+          stazione_appaltante_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          capocantiere_id?: string | null
+          categoria_lavori?: string | null
+          cig?: string | null
+          citta?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          commessa_id?: string | null
+          committente_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          cup?: string | null
+          data_apertura?: string | null
+          data_chiusura?: string | null
+          data_fine_prevista?: string | null
+          denominazione: string
+          direttore_lavori?: string | null
+          direttore_tecnico?: string | null
+          gara_id?: string | null
+          id?: string
+          importo_contrattuale?: number
+          importo_lavori?: number | null
+          indirizzo?: string | null
+          lat?: number | null
+          lng?: number | null
+          note?: string | null
+          responsabile_interno_id?: string | null
+          responsabile_sicurezza?: string | null
+          ricerca?: unknown
+          rup?: string | null
+          stato?: Database["public"]["Enums"]["cantiere_stato"]
+          stazione_appaltante_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          capocantiere_id?: string | null
+          categoria_lavori?: string | null
+          cig?: string | null
+          citta?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          commessa_id?: string | null
+          committente_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          cup?: string | null
+          data_apertura?: string | null
+          data_chiusura?: string | null
+          data_fine_prevista?: string | null
+          denominazione?: string
+          direttore_lavori?: string | null
+          direttore_tecnico?: string | null
+          gara_id?: string | null
+          id?: string
+          importo_contrattuale?: number
+          importo_lavori?: number | null
+          indirizzo?: string | null
+          lat?: number | null
+          lng?: number | null
+          note?: string | null
+          responsabile_interno_id?: string | null
+          responsabile_sicurezza?: string | null
+          ricerca?: unknown
+          rup?: string | null
+          stato?: Database["public"]["Enums"]["cantiere_stato"]
+          stazione_appaltante_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cantieri_capocantiere_id_fkey"
+            columns: ["capocantiere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_commessa_id_fkey"
+            columns: ["commessa_id"]
+            isOneToOne: false
+            referencedRelation: "commesse"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_committente_id_fkey"
+            columns: ["committente_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_gara_id_fkey"
+            columns: ["gara_id"]
+            isOneToOne: false
+            referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_responsabile_interno_id_fkey"
+            columns: ["responsabile_interno_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_stazione_appaltante_id_fkey"
+            columns: ["stazione_appaltante_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cantieri_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -2449,6 +3772,34 @@ export type Database = {
       }
     }
     Views: {
+      vw_cantiere_economia: {
+        Row: {
+          cantiere_id: string | null
+          costi_altro: number | null
+          costi_materiali: number | null
+          costi_mezzi: number | null
+          costi_personale: number | null
+          costi_subappalti: number | null
+          costi_totali: number | null
+          importo_contrattuale: number | null
+          sal_emessi: number | null
+          sal_pagati: number | null
+          utile_maturato: number | null
+          utile_previsto: number | null
+        }
+        Relationships: []
+      }
+      vw_cantiere_kpi: {
+        Row: {
+          avanzamento_medio: number | null
+          cantiere_id: string | null
+          ore_totali: number | null
+          qualita_non_conformi: number | null
+          rapportini: number | null
+          sicurezza_aperti: number | null
+        }
+        Relationships: []
+      }
       vw_cash_flow_previsto: {
         Row: {
           entrate: number | null
@@ -2637,6 +3988,53 @@ export type Database = {
       assenza_tipo: "ferie" | "permesso" | "malattia"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
       attivita_tipo: "task" | "chiamata" | "email" | "riunione" | "nota"
+      cantiere_ambiente_tipo:
+        | "rifiuti"
+        | "emissioni"
+        | "scarichi"
+        | "terre_rocce"
+        | "rumore"
+      cantiere_costo_tipo:
+        | "personale"
+        | "materiali"
+        | "mezzi"
+        | "subappalti"
+        | "altro"
+      cantiere_meteo: "sereno" | "nuvoloso" | "pioggia" | "neve" | "vento_forte"
+      cantiere_mezzo_tipo:
+        | "macchina_operatrice"
+        | "automezzo"
+        | "ponteggio"
+        | "gru"
+        | "ple"
+        | "utensile"
+        | "altro"
+      cantiere_movimento_tipo: "ordine" | "consegna" | "consumo" | "reso"
+      cantiere_qualita_esito: "in_attesa" | "conforme" | "non_conforme"
+      cantiere_qualita_tipo:
+        | "accettazione"
+        | "corso_opera"
+        | "collaudo"
+        | "prova"
+      cantiere_sal_stato: "bozza" | "emesso" | "fatturato" | "pagato"
+      cantiere_sicurezza_tipo:
+        | "sopralluogo"
+        | "checklist"
+        | "non_conformita"
+        | "near_miss"
+        | "incidente"
+        | "infortunio"
+        | "prescrizione"
+        | "verbale"
+        | "consegna_dpi"
+        | "riunione_coordinamento"
+        | "controllo_giornaliero"
+      cantiere_stato:
+        | "pianificato"
+        | "in_apertura"
+        | "attivo"
+        | "sospeso"
+        | "chiuso"
       commessa_stato: "attiva" | "in_pausa" | "completata" | "annullata"
       fattura_direzione: "attiva" | "passiva"
       fattura_stato: "da_pagare" | "pagata" | "scaduta" | "parziale"
@@ -3292,6 +4690,59 @@ export const Constants = {
       assenza_tipo: ["ferie", "permesso", "malattia"],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
       attivita_tipo: ["task", "chiamata", "email", "riunione", "nota"],
+      cantiere_ambiente_tipo: [
+        "rifiuti",
+        "emissioni",
+        "scarichi",
+        "terre_rocce",
+        "rumore",
+      ],
+      cantiere_costo_tipo: [
+        "personale",
+        "materiali",
+        "mezzi",
+        "subappalti",
+        "altro",
+      ],
+      cantiere_meteo: ["sereno", "nuvoloso", "pioggia", "neve", "vento_forte"],
+      cantiere_mezzo_tipo: [
+        "macchina_operatrice",
+        "automezzo",
+        "ponteggio",
+        "gru",
+        "ple",
+        "utensile",
+        "altro",
+      ],
+      cantiere_movimento_tipo: ["ordine", "consegna", "consumo", "reso"],
+      cantiere_qualita_esito: ["in_attesa", "conforme", "non_conforme"],
+      cantiere_qualita_tipo: [
+        "accettazione",
+        "corso_opera",
+        "collaudo",
+        "prova",
+      ],
+      cantiere_sal_stato: ["bozza", "emesso", "fatturato", "pagato"],
+      cantiere_sicurezza_tipo: [
+        "sopralluogo",
+        "checklist",
+        "non_conformita",
+        "near_miss",
+        "incidente",
+        "infortunio",
+        "prescrizione",
+        "verbale",
+        "consegna_dpi",
+        "riunione_coordinamento",
+        "controllo_giornaliero",
+      ],
+      cantiere_stato: [
+        "pianificato",
+        "in_apertura",
+        "attivo",
+        "sospeso",
+        "chiuso",
+      ],
       commessa_stato: ["attiva", "in_pausa", "completata", "annullata"],
       fattura_direzione: ["attiva", "passiva"],
       fattura_stato: ["da_pagare", "pagata", "scaduta", "parziale"],

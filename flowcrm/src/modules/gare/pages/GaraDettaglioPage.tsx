@@ -841,7 +841,7 @@ export function GaraDettaglioPage() {
       </div>
 
       <Tabs defaultValue="panoramica">
-        <TabsList className="flex-wrap">
+        <TabsList className="h-auto flex-wrap">
           <TabsTrigger value="panoramica">Panoramica</TabsTrigger>
           <TabsTrigger value="valutazione">Go/No-Go</TabsTrigger>
           <TabsTrigger value="requisiti">Requisiti</TabsTrigger>
