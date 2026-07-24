@@ -15,6 +15,7 @@ import { RowActions } from '@/components/RowActions'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { AgenteDialog } from '@/modules/agenti/dialogs/AgenteDialog'
 import { TIPOLOGIA_LABEL, AGENTE_STATO } from '@/modules/agenti/stati'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useAgenti, useAgenteCorrente, useArchiveAgente, useDeleteAgente, type Agente,
 } from '@/modules/agenti/queries/agenti'
@@ -64,7 +65,7 @@ export function AgentiPage() {
             <Button variant="outline" onClick={esportaCsv} disabled={filtrati.length === 0}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo agente</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo agente</BottoneScrittura>
           </div>
         }
       />

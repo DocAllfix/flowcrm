@@ -16,6 +16,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 const RUOLI: UserRole[] = ['admin', 'manager', 'operatore']
 
@@ -53,9 +54,9 @@ export function UtentiPage() {
         title="Gestione utenti"
         description="Ruoli e stato degli account del team."
         actions={
-          <Button onClick={() => setNuovoOpen(true)}>
+          <BottoneScrittura onClick={() => setNuovoOpen(true)}>
             <Plus className="h-4 w-4" /> Nuovo utente
-          </Button>
+          </BottoneScrittura>
         }
       />
 

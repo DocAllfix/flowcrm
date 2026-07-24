@@ -18,6 +18,7 @@ import { RowActions } from '@/components/RowActions'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { CantiereDialog } from '@/modules/cantiere/dialogs/CantiereDialog'
 import { CANTIERE_STATI, statoCantiere, fmtImporto, fmtData } from '@/modules/cantiere/stati'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useCantieri, useCantieriKpiTutti, useArchiveCantiere, useDeleteCantiere, type Cantiere,
 } from '@/modules/cantiere/queries/cantieri'
@@ -73,7 +74,7 @@ export function CantieriPage() {
             <Button variant="outline" onClick={esportaCsv} disabled={filtrati.length === 0}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo cantiere</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo cantiere</BottoneScrittura>
           </div>
         }
       />

@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, Users, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { DipendenteDialog } from '@/features/hr/DipendenteDialog'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useDipendenti, useArchiveDipendente, useDeleteDipendente, type Dipendente,
 } from '@/lib/queries/hr'
@@ -30,14 +30,14 @@ export function HRPage() {
       <PageHeader
         title="Personale"
         description="Anagrafica del personale, contratti, ferie e formazione."
-        actions={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo dipendente</Button>}
+        actions={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo dipendente</BottoneScrittura>}
       />
 
       {isLoading ? (
         <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
       ) : dipendenti.length === 0 ? (
         <EmptyState icon={Users} title="Nessun dipendente" description="Aggiungi il personale dell'azienda."
-          action={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo dipendente</Button>} />
+          action={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo dipendente</BottoneScrittura>} />
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
           <table className="w-full text-sm">

@@ -19,6 +19,7 @@ import { toCsv, scaricaCsv } from '@/lib/csv'
 import { GaraDialog } from '@/modules/gare/dialogs/GaraDialog'
 import { GARA_STATI, statoGara, fmtImporto, fmtData, giorniAlTermine } from '@/modules/gare/stati'
 import { useGare, useArchiveGara, useDeleteGara, type Gara } from '@/modules/gare/queries/gare'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 function CountdownTermine({ gara }: { gara: Gara }) {
   if (!['in_analisi', 'in_preparazione'].includes(gara.stato)) return <span className="text-muted-foreground">—</span>
@@ -78,7 +79,7 @@ export function GarePage() {
             <Button variant="outline" onClick={esportaCsv} disabled={filtrate.length === 0}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova gara</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova gara</BottoneScrittura>
           </div>
         }
       />

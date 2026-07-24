@@ -18,6 +18,7 @@ import { RowActions } from '@/components/RowActions'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { AutomezzoDialog } from '@/modules/automezzi/dialogs/AutomezzoDialog'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   AUTOMEZZO_STATI, statoAutomezzo, CATEGORIA_LABEL, fmtData,
 } from '@/modules/automezzi/stati'
@@ -67,7 +68,7 @@ export function AutomezziPage() {
             <Button variant="outline" onClick={esportaCsv} disabled={filtrati.length === 0}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo mezzo</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo mezzo</BottoneScrittura>
           </div>
         }
       />

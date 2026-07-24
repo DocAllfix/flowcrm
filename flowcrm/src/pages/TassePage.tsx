@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useTasse, useCreateTassa, useUpdateTassa, useSetTassaPagata, useDeleteTassa,
   type ScadenzaTassa,
@@ -65,7 +66,7 @@ export function TassePage() {
       <PageHeader
         title="Scadenze tasse"
         description="Le scadenze fiscali da tenere sotto controllo."
-        actions={<Button onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> Nuova scadenza</Button>}
+        actions={<BottoneScrittura onClick={() => setOpen(true)}><Plus className="h-4 w-4" /> Nuova scadenza</BottoneScrittura>}
       />
 
       {isLoading ? (

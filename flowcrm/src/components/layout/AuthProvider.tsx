@@ -19,6 +19,12 @@ export interface AuthContextValue {
   isLoading: boolean
   isAdmin: boolean
   isManager: boolean
+  /**
+   * Istanza dimostrativa in sola lettura per l'utente corrente: la barriera
+   * vera è il trigger `blocca_scrittura_demo()` in Postgres; questo flag serve
+   * solo a UI (banner, bottoni disabilitati). Deriva da `puo_scrivere()`.
+   */
+  solaLettura: boolean
   errorAccount: string | null
   logout: () => Promise<void>
 }
@@ -59,6 +65,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [solaLettura, setSolaLettura] = useState(false)
   const [errorAccount, setErrorAccount] = useState<string | null>(null)
 
   // Carica il profilo utente dopo il login.
@@ -85,6 +92,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUserProfile(data)
     setErrorAccount(null)
 
+    // Sola lettura: chiediamo al DB se l'utente può scrivere (istanza demo +
+    // whitelist manutentori). È solo per la UI: la barriera è nel trigger.
+    try {
+      const { data: puoScrivere } = await supabase.rpc('puo_scrivere')
+      setSolaLettura(puoScrivere === false)
+    } catch {
+      setSolaLettura(false)
+    }
+
     // Sentry: identifica utente autenticato (solo id + email, minimizzazione dati)
     Sentry.setUser({ id: authUser.id, email: authUser.email })
   }, [])
@@ -110,6 +126,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (event === 'SIGNED_OUT') {
           setUserProfile(null)
+          setSolaLettura(false)
           setErrorAccount(null)
           setIsLoading(false)
           Sentry.setUser(null)
@@ -146,6 +163,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isLoading,
         isAdmin,
         isManager,
+        solaLettura,
         errorAccount,
         logout,
       }}

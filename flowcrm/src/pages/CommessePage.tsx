@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, Briefcase, Loader2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useCommesse, useArchiveCommessa, useDeleteCommessa, type CommessaStato, type Commessa,
 } from '@/lib/queries/commesse'
@@ -35,7 +35,7 @@ export function CommessePage() {
       <PageHeader
         title="Commesse"
         description="Le commesse acquisite, con codice progressivo automatico."
-        actions={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova commessa</Button>}
+        actions={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova commessa</BottoneScrittura>}
       />
 
       {isLoading ? (

@@ -9,6 +9,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { FatturaDialog } from '@/features/amministrazione/FatturaDialog'
 import { useFatture, type FatturaDirezione } from '@/lib/queries/amministrazione'
 import { cn } from '@/lib/utils'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(n)
@@ -36,7 +37,7 @@ export function FatturePage() {
             }}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova fattura</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova fattura</BottoneScrittura>
           </div>
         }
       />

@@ -11,6 +11,7 @@ import { CircleDollarSign } from 'lucide-react'
 import { DealDialog } from '@/features/deal/DealDialog'
 import { RowActions } from '@/components/RowActions'
 import { useDeals, usePipelineStages, useArchiveDeal, useDeleteDeal, type Deal } from '@/lib/queries/deals'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -39,9 +40,9 @@ export function DealListPage() {
             }}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4" /> Nuovo deal
-            </Button>
+            </BottoneScrittura>
           </div>
         }
       />

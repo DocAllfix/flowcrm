@@ -4,11 +4,11 @@ import {
   Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, Loader2,
 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { AttivitaDialog } from '@/features/attivita/AttivitaDialog'
 import { useAuth } from '@/hooks/useAuth'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useMieAttivita, useToggleAttivitaStato, useArchiveAttivita, useDeleteAttivita,
   type AttivitaTipo, type Attivita,
@@ -77,9 +77,9 @@ export function AttivitaPage() {
         title="Le mie attività"
         description="Task, chiamate, email e riunioni assegnate a te."
         actions={
-          <Button onClick={() => setDialogOpen(true)}>
+          <BottoneScrittura onClick={() => setDialogOpen(true)}>
             <Plus className="h-4 w-4" /> Nuova attività
-          </Button>
+          </BottoneScrittura>
         }
       />
 

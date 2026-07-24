@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, FolderKanban, Loader2, Building2, Cog } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   useProgetti, useArchiveProgetto, useDeleteProgetto, type ProgettoStato, type Progetto,
 } from '@/lib/queries/progetti'
@@ -37,7 +37,7 @@ export function ProgettiPage() {
       <PageHeader
         title="Progetti"
         description="Progetti cliente e interni."
-        actions={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo progetto</Button>}
+        actions={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo progetto</BottoneScrittura>}
       />
 
       {isLoading ? (

@@ -5463,6 +5463,27 @@ export type Database = {
           },
         ]
       }
+      impostazioni_istanza: {
+        Row: {
+          id: boolean
+          messaggio: string
+          sola_lettura: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: boolean
+          messaggio?: string
+          sola_lettura?: boolean
+          updated_at?: string
+        }
+        Update: {
+          id?: boolean
+          messaggio?: string
+          sola_lettura?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       kb_guida: {
         Row: {
           contenuto: string
@@ -6816,6 +6837,7 @@ export type Database = {
           cognome: string | null
           created_at: string
           id: string
+          manutentore: boolean
           nome: string
           ruolo: Database["public"]["Enums"]["user_role"]
         }
@@ -6825,6 +6847,7 @@ export type Database = {
           cognome?: string | null
           created_at?: string
           id: string
+          manutentore?: boolean
           nome: string
           ruolo?: Database["public"]["Enums"]["user_role"]
         }
@@ -6834,6 +6857,7 @@ export type Database = {
           cognome?: string | null
           created_at?: string
           id?: string
+          manutentore?: boolean
           nome?: string
           ruolo?: Database["public"]["Enums"]["user_role"]
         }
@@ -7196,6 +7220,7 @@ export type Database = {
       processa_scadenze_moduli: { Args: never; Returns: number }
       puo_amministrazione: { Args: never; Returns: boolean }
       puo_clinica: { Args: never; Returns: boolean }
+      puo_scrivere: { Args: never; Returns: boolean }
       ricerca_globale: {
         Args: { q: string }
         Returns: {

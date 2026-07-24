@@ -10,11 +10,11 @@ import { toast } from 'sonner'
 import { Plus, Loader2, Building2, CalendarClock } from 'lucide-react'
 import { StrictModeDroppable } from '@/components/kanban/StrictModeDroppable'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { GaraDialog } from '@/modules/gare/dialogs/GaraDialog'
 import { GARA_STATI, fmtImporto, giorniAlTermine } from '@/modules/gare/stati'
 import { useGare, useMoveGaraStato, type Gara, type GaraStato } from '@/modules/gare/queries/gare'
 import { cn } from '@/lib/utils'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 export function GareKanbanPage() {
   const navigate = useNavigate()
@@ -75,7 +75,7 @@ export function GareKanbanPage() {
       <PageHeader
         title="Kanban gare"
         description="Trascina una gara per cambiarne lo stato."
-        actions={<Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova gara</Button>}
+        actions={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuova gara</BottoneScrittura>}
       />
 
       <DragDropContext onDragEnd={onDragEnd}>

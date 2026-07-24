@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { OrganizzazioneDialog } from '@/features/organizzazioni/OrganizzazioneDialog'
 import { cn } from '@/lib/utils'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
   cliente: 'primary',
@@ -49,9 +50,9 @@ export function OrganizzazioniPage() {
             <Button variant="outline" onClick={() => navigate('/importa')}>
               <Upload className="h-4 w-4" /> Importa CSV
             </Button>
-            <Button onClick={() => setDialogOpen(true)} data-tour="nuova-org">
+            <BottoneScrittura onClick={() => setDialogOpen(true)} data-tour="nuova-org">
               <Plus className="h-4 w-4" /> Nuova
-            </Button>
+            </BottoneScrittura>
           </div>
         }
       />
@@ -79,7 +80,7 @@ export function OrganizzazioniPage() {
           icon={Building2}
           title="Nessuna organizzazione"
           description={ruolo ? 'Nessuna organizzazione con questo ruolo.' : 'Aggiungi la prima organizzazione per iniziare.'}
-          action={<Button onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuova organizzazione</Button>}
+          action={<BottoneScrittura onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuova organizzazione</BottoneScrittura>}
         />
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">

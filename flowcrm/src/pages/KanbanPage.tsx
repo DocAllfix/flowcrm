@@ -14,10 +14,10 @@ import { toast } from 'sonner'
 import { StrictModeDroppable } from '@/components/kanban/StrictModeDroppable'
 import { KanbanCard } from '@/components/kanban/KanbanCard'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { DealDialog } from '@/features/deal/DealDialog'
 import { usePipelineStages, useDeals, useMoveDeal, type DealWithOrg } from '@/lib/queries/deals'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -104,9 +104,9 @@ export function KanbanPage() {
         title="Kanban offerte"
         description="Trascina le card tra le colonne per avanzare i deal di fase."
         actions={
-          <Button onClick={() => setCreateOpen(true)}>
+          <BottoneScrittura onClick={() => setCreateOpen(true)}>
             <Plus className="h-4 w-4" /> Nuovo deal
-          </Button>
+          </BottoneScrittura>
         }
       />
 

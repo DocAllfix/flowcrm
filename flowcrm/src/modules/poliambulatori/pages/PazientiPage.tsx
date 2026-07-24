@@ -14,6 +14,7 @@ import { RowActions } from '@/components/RowActions'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PazienteDialog } from '@/modules/poliambulatori/dialogs/PazienteDialog'
 import { fmtData } from '@/modules/poliambulatori/stati'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 import {
   usePazienti, useArchivePaziente, useDeletePaziente, type Paziente,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
@@ -57,7 +58,7 @@ export function PazientiPage() {
             <Button variant="outline" onClick={esportaCsv} disabled={filtrati.length === 0}>
               <Download className="h-4 w-4" /> Esporta CSV
             </Button>
-            <Button onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo paziente</Button>
+            <BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo paziente</BottoneScrittura>
           </div>
         }
       />

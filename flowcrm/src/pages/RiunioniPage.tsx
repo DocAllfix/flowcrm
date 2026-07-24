@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Plus, Users, Loader2, MapPin, Clock, CalendarPlus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
-import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { AttivitaDialog } from '@/features/attivita/AttivitaDialog'
@@ -10,6 +9,7 @@ import {
 } from '@/lib/queries/attivita'
 import { scaricaIcs } from '@/lib/ics'
 import { toast } from 'sonner'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 function fmtQuando(iso: string | null) {
   if (!iso) return 'Data da definire'
@@ -65,9 +65,9 @@ export function RiunioniPage() {
         title="Riunioni"
         description="Gli appuntamenti del team, con luogo e orario."
         actions={
-          <Button onClick={() => setDialogOpen(true)}>
+          <BottoneScrittura onClick={() => setDialogOpen(true)}>
             <Plus className="h-4 w-4" /> Nuova riunione
-          </Button>
+          </BottoneScrittura>
         }
       />
 
@@ -76,7 +76,7 @@ export function RiunioniPage() {
       ) : riunioni.length === 0 ? (
         <EmptyState icon={Users} title="Nessuna riunione"
           description="Pianifica la prima riunione del team."
-          action={<Button onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuova riunione</Button>} />
+          action={<BottoneScrittura onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuova riunione</BottoneScrittura>} />
       ) : (
         <div className="space-y-6">
           <div>

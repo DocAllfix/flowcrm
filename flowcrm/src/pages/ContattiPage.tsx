@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
+import { BottoneScrittura } from '@/components/BottoneScrittura'
 
 export function ContattiPage() {
   const navigate = useNavigate()
@@ -42,9 +43,9 @@ export function ContattiPage() {
             <Button variant="outline" onClick={() => navigate('/importa?tipo=contatti')}>
               <Upload className="h-4 w-4" /> Importa CSV
             </Button>
-            <Button onClick={() => setDialogOpen(true)}>
+            <BottoneScrittura onClick={() => setDialogOpen(true)}>
               <Plus className="h-4 w-4" /> Nuovo
-            </Button>
+            </BottoneScrittura>
           </div>
         }
       />
@@ -62,7 +63,7 @@ export function ContattiPage() {
           icon={BookUser}
           title="Nessun contatto"
           description="Aggiungi le persone di riferimento delle tue organizzazioni."
-          action={<Button onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuovo contatto</Button>}
+          action={<BottoneScrittura onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuovo contatto</BottoneScrittura>}
         />
       ) : (
         <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
