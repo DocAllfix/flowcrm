@@ -12,6 +12,8 @@ import { DealDialog } from '@/features/deal/DealDialog'
 import { RowActions } from '@/components/RowActions'
 import { useDeals, usePipelineStages, useArchiveDeal, useDeleteDeal, type Deal } from '@/lib/queries/deals'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -55,37 +57,33 @@ export function DealListPage() {
         <EmptyState icon={CircleDollarSign} title="Nessun deal"
           description="Crea la tua prima offerta commerciale." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Deal</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Organizzazione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Fase</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Deal</TableHead>
+                <TableHead>Organizzazione</TableHead>
+                <TableHead>Fase</TableHead>
+                <TableHead numerica>Importo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {deals.map((d) => {
                 const stage = stageById.get(d.stage_id)
                 return (
-                  <tr
-                    key={d.id}
-                    onClick={() => navigate(`/deal/${d.id}`)}
-                    className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30"
-                  >
-                    <td className="px-4 py-3 font-medium text-foreground">{d.nome}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{d.organizzazione?.ragione_sociale ?? '—'}</td>
-                    <td className="px-4 py-3">
+                  <TableRow key={d.id} onActivate={() => navigate(`/deal/${d.id}`)}>
+                    <TableCell><CollegamentoRiga to={`/deal/${d.id}`}>{d.nome}</CollegamentoRiga></TableCell>
+                    <TableCell className="text-muted-foreground">{d.organizzazione?.ragione_sociale ?? '—'}</TableCell>
+                    <TableCell>
                       {stage && (
                         <Badge className="text-white" style={{ backgroundColor: stage.colore ?? undefined }}>
                           {stage.nome}
                         </Badge>
                       )}
-                    </td>
-                    <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(d.importo))}</td>
-                    <td className="px-4 py-3 text-right">
+                    </TableCell>
+                    <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(d.importo))}</TableCell>
+                    <TableCell numerica>
                       <RowActions
                         nome={d.nome}
                         onEdit={() => setEditDeal(d)}
@@ -98,13 +96,13 @@ export function DealListPage() {
                           onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                         })}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <DealDialog

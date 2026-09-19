@@ -21,6 +21,7 @@ import {
 } from '@/modules/gare/queries/gare'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { Card } from '@/components/ui/card'
 
 function useGareSuccessoCategoria(limit = 6) {
   return useQuery({
@@ -37,13 +38,13 @@ function Kpi({ icon: Icon, label, value, tint }: {
   icon: React.ElementType; label: string; value: string; tint: string
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+    <Card className="p-4">
       <div className="mb-2 flex items-center gap-2">
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl font-bold text-foreground">{value}</p>
-    </div>
+      <p className="text-title text-foreground">{value}</p>
+    </Card>
   )
 }
 
@@ -98,10 +99,10 @@ export function GareDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
             <Gavel className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Gare per stato</h2>
+            <h2 className="text-title text-foreground">Gare per stato</h2>
           </div>
           {statoData.every((s) => s.numero === 0) ? (
             <EmptyState icon={Gavel} title="Nessuna gara" description="Registra la prima procedura per vedere il funnel." />
@@ -115,12 +116,12 @@ export function GareDashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
             <CalendarClock className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Scadenze imminenti</h2>
+            <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (
             <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
@@ -141,12 +142,12 @@ export function GareDashboardPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
             <Trophy className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Successo per ente appaltante</h2>
+            <h2 className="text-title text-foreground">Successo per ente appaltante</h2>
           </div>
           {enteData.length === 0 ? (
             <EmptyState icon={Trophy} title="Nessun dato" description="Gli esiti per ente compariranno dopo le prime gare presentate." />
@@ -164,12 +165,12 @@ export function GareDashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
             <Trophy className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Successo per categoria SOA</h2>
+            <h2 className="text-title text-foreground">Successo per categoria SOA</h2>
           </div>
           {perCategoria.length === 0 ? (
             <EmptyState icon={Trophy} title="Nessun dato"
@@ -192,12 +193,12 @@ export function GareDashboardPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
             <MapPin className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Valore vinto per territorio</h2>
+            <h2 className="text-title text-foreground">Valore vinto per territorio</h2>
           </div>
           {territorioData.length === 0 ? (
             <EmptyState icon={MapPin} title="Nessun dato" description="Classifica i territori nelle gare per vedere la mappa del successo." />
@@ -211,7 +212,7 @@ export function GareDashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   )

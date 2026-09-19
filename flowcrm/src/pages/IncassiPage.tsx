@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { IncassoDialog } from '@/features/amministrazione/IncassoDialog'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 import {
   useIncassi, useSetIncassato, useDeleteIncasso, type ScadenzaPagamento,
 } from '@/lib/queries/amministrazione'
@@ -42,10 +44,10 @@ export function IncassiPage() {
       />
 
       {!isLoading && incassi.length > 0 && (
-        <div className="mb-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <Card className="mb-4 p-4">
           <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Ancora da incassare</p>
-          <p className="mt-1 text-2xl font-bold text-foreground">{fmtImporto(totaleAtteso)}</p>
-        </div>
+          <p className="mt-1 text-headline text-foreground">{fmtImporto(totaleAtteso)}</p>
+        </Card>
       )}
 
       {isLoading ? (
@@ -54,29 +56,29 @@ export function IncassiPage() {
         <EmptyState icon={Banknote} title="Nessun incasso previsto"
           description="Gli incassi compaiono qui quando registri una fattura attiva." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Descrizione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cliente</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Data prevista</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Descrizione</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Data prevista</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Importo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {incassi.map((i) => {
                 const done = i.stato === 'incassato'
                 return (
-                  <tr key={i.id} className="border-b border-border last:border-0 hover:bg-muted/30">
-                    <td className="px-4 py-3 font-medium text-foreground">{i.descrizione}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{i.organizzazione?.ragione_sociale ?? '—'}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{new Date(i.data_prevista).toLocaleDateString('it-IT')}</td>
-                    <td className="px-4 py-3"><Badge tone={STATO_TONE[i.stato]}>{i.stato.replace('_', ' ')}</Badge></td>
-                    <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(i.importo))}</td>
-                    <td className="px-4 py-3 text-right">
+                  <TableRow key={i.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                    <TableCell className="font-medium text-foreground">{i.descrizione}</TableCell>
+                    <TableCell className="text-muted-foreground">{i.organizzazione?.ragione_sociale ?? '—'}</TableCell>
+                    <TableCell className="text-muted-foreground">{new Date(i.data_prevista).toLocaleDateString('it-IT')}</TableCell>
+                    <TableCell><Badge tone={STATO_TONE[i.stato]}>{i.stato.replace('_', ' ')}</Badge></TableCell>
+                    <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(i.importo))}</TableCell>
+                    <TableCell numerica>
                       <div className="inline-flex items-center gap-1">
                         <button
                           onClick={() => setIncassato.mutate({ id: i.id, incassato: !done })}
@@ -95,13 +97,13 @@ export function IncassiPage() {
                           })}
                         />
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <IncassoDialog

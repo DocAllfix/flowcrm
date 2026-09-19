@@ -18,6 +18,7 @@ import { MarchioCliente } from '@/components/layout/MarchioCliente'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Card } from '@/components/ui/card'
 
 const LUNGHEZZA_MINIMA = 12
 
@@ -88,7 +89,7 @@ export function NuovaPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <MarchioCliente dimensione="lg" />
-          <h1 className="text-2xl font-bold text-foreground">{APP_CONFIG.appName}</h1>
+          <h1 className="text-headline text-foreground">{APP_CONFIG.appName}</h1>
         </div>
         {contenuto}
       </div>
@@ -103,14 +104,14 @@ export function NuovaPasswordPage() {
 
   if (pronta === false) {
     return cornice(
-      <div className="space-y-4 rounded-xl border border-border bg-card p-6 text-center shadow-sm">
+      <Card className="space-y-4 p-6 text-center">
         <p className="text-sm text-foreground">
           Collegamento non valido o scaduto.
         </p>
         <Link to="/recupero" className="inline-block text-sm font-medium text-primary hover:underline">
           Richiedine uno nuovo
         </Link>
-      </div>
+      </Card>
     )
   }
 

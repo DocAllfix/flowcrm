@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DipendenteDialog } from '@/features/hr/DipendenteDialog'
+import { Card } from '@/components/ui/card'
 
 const STATO_TONE = { richiesta: 'warning', approvata: 'success', rifiutata: 'danger' } as const
 const TIPO_LABEL: Record<string, string> = { ferie: 'Ferie', permesso: 'Permesso', malattia: 'Malattia' }
@@ -36,10 +37,10 @@ export function DipendenteDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Personale
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{d.nome} {d.cognome ?? ''}</h1>
+            <h1 className="text-headline text-foreground">{d.nome} {d.cognome ?? ''}</h1>
             {d.qualifica && <p className="text-sm text-muted-foreground">{d.qualifica}</p>}
             <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
               {d.email && <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{d.email}</span>}
@@ -50,7 +51,7 @@ export function DipendenteDettaglioPage() {
           </div>
           <Button variant="outline" onClick={() => setEditOpen(true)}><Pencil className="h-4 w-4" /> Modifica</Button>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="assenze">
         <TabsList>
@@ -88,7 +89,7 @@ function AssenzeSection({ dipId }: { dipId: string }) {
   return (
     <div className="space-y-4">
       {assenze.length > 0 && (
-        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+        <ul className="rounded-lg border border-border bg-card divide-y divide-border overflow-hidden">
           {assenze.map((a) => (
             <li key={a.id} className="flex items-center gap-3 p-3">
               <Plane className="h-4 w-4 shrink-0 text-muted-foreground" />
@@ -154,7 +155,7 @@ function FormazioneSection({ dipId }: { dipId: string }) {
   return (
     <div className="space-y-4">
       {corsi.length > 0 && (
-        <ul className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+        <ul className="rounded-lg border border-border bg-card divide-y divide-border overflow-hidden">
           {corsi.map((c) => (
             <li key={c.id} className="flex items-center gap-3 p-3">
               <button onClick={() => toggle.mutate({ id: c.id, completato: !c.completato, dipendente_id: dipId })}

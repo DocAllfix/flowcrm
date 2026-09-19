@@ -19,6 +19,8 @@ import { toCsv, scaricaCsv } from '@/lib/csv'
 import { CantiereDialog } from '@/modules/cantiere/dialogs/CantiereDialog'
 import { CANTIERE_STATI, statoCantiere, fmtImporto, fmtData } from '@/modules/cantiere/stati'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 import {
   useCantieri, useCantieriKpiTutti, useArchiveCantiere, useDeleteCantiere, type Cantiere,
 } from '@/modules/cantiere/queries/cantieri'
@@ -102,44 +104,44 @@ export function CantieriPage() {
         <EmptyState icon={HardHat} title="Nessun cantiere"
           description="Apri il primo cantiere per gestire avanzamento, personale e sicurezza." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Denominazione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Cliente</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Avanzamento</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Contratto</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Codice</TableHead>
+                <TableHead>Denominazione</TableHead>
+                <TableHead>Cliente</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead>Avanzamento</TableHead>
+                <TableHead numerica>Contratto</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtrati.map((c) => {
                 const st = statoCantiere(c.stato)
                 const av = avanzamenti[c.id] ?? 0
                 return (
-                  <tr key={c.id} onClick={() => navigate(`/cantieri/${c.id}`)}
-                    className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{c.codice}</td>
-                    <td className="max-w-sm truncate px-4 py-3 font-medium text-foreground">{c.denominazione}</td>
-                    <td className="max-w-[160px] truncate px-4 py-3 text-muted-foreground">
+                  <TableRow key={c.id} onActivate={() => navigate(`/cantieri/${c.id}`)}
+                    >
+                    <TableCell><CollegamentoRiga to={`/cantieri/${c.id}`} className="font-mono text-xs font-semibold">{c.codice}</CollegamentoRiga></TableCell>
+                    <TableCell className="max-w-sm truncate font-medium text-foreground">{c.denominazione}</TableCell>
+                    <TableCell className="max-w-[160px] truncate text-muted-foreground">
                       {c.cliente?.ragione_sociale ?? '—'}
-                    </td>
-                    <td className="px-4 py-3"><Badge tone={st.tone}>{st.label}</Badge></td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell><Badge tone={st.tone}>{st.label}</Badge></TableCell>
+                    <TableCell>
                       <div className="flex items-center gap-2">
                         <div className="h-2 w-24 overflow-hidden rounded-full bg-muted">
                           <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${av}%` }} />
                         </div>
                         <span className="text-xs text-muted-foreground">{av}%</span>
                       </div>
-                    </td>
-                    <td className="px-4 py-3 text-right font-bold text-foreground">
+                    </TableCell>
+                    <TableCell numerica className="font-bold text-foreground">
                       {fmtImporto(Number(c.importo_contrattuale))}
-                    </td>
-                    <td className="px-4 py-3 text-right">
+                    </TableCell>
+                    <TableCell numerica>
                       <RowActions
                         nome={c.codice ?? undefined}
                         onEdit={() => setEditCantiere(c)}
@@ -152,13 +154,13 @@ export function CantieriPage() {
                           onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                         })}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <CantiereDialog

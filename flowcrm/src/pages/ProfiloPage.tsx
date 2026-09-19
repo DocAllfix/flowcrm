@@ -70,7 +70,7 @@ export function ProfiloPage() {
         className="mt-6 space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
       >
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Sicurezza</h2>
+          <h2 className="text-title text-foreground">Sicurezza</h2>
           <p className="text-sm text-muted-foreground">Cambia la password del tuo account.</p>
         </div>
         <div className="space-y-1.5">

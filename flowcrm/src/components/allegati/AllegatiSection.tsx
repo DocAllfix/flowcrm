@@ -17,6 +17,8 @@ import {
   type Allegato,
 } from '@/lib/queries/allegati'
 import { useAuth } from '@/hooks/useAuth'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 interface Props {
   entita: string
@@ -70,7 +72,7 @@ export function AllegatiSection({ entita, entitaId, categorie }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-sm">
+    <Card>
       <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         <Paperclip className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold text-foreground">Allegati</h3>
@@ -97,7 +99,7 @@ export function AllegatiSection({ entita, entitaId, categorie }: Props) {
 
       <div className="p-2">
         {isLoading && (
-          <p className="px-3 py-4 text-center text-sm text-muted-foreground">Caricamento…</p>
+          <SkeletonElenco righe={2} altezza="h-12" />
         )}
         {!isLoading && allegati.length === 0 && (
           <EmptyState
@@ -162,6 +164,6 @@ export function AllegatiSection({ entita, entitaId, categorie }: Props) {
           </div>
         ))}
       </div>
-    </div>
+    </Card>
   )
 }

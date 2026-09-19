@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
+import { Card } from '@/components/ui/card'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -35,11 +36,11 @@ export function CommessaDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Commesse
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
             <span className="font-mono text-xs font-semibold text-muted-foreground">{c.codice}</span>
-            <h1 className="mt-1 text-2xl font-bold text-foreground">{c.descrizione}</h1>
+            <h1 className="mt-1 text-headline text-foreground">{c.descrizione}</h1>
             {c.organizzazione && (
               <p className="mt-0.5 text-sm text-muted-foreground">{c.organizzazione.ragione_sociale}</p>
             )}
@@ -54,7 +55,7 @@ export function CommessaDettaglioPage() {
             <Pencil className="h-4 w-4" /> Modifica
           </Button>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="allegati">
         <TabsList>

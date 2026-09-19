@@ -27,6 +27,7 @@ import { ApprovalSection } from '@/components/ApprovalSection'
 import { ScadenzeModuliSection } from '@/components/ScadenzeModuliSection'
 import { useAuth } from '@/hooks/useAuth'
 import { AutomezzoDialog } from '@/modules/automezzi/dialogs/AutomezzoDialog'
+import { Card } from '@/components/ui/card'
 import {
   AUTOMEZZO_STATI, statoAutomezzo, CATEGORIA_LABEL, ALIMENTAZIONE_LABEL,
   ACQUISIZIONE_LABEL, COSTO_VOCE_LABEL, SINISTRO_STATO_LABEL,
@@ -908,13 +909,13 @@ export function AutomezzoDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Parco automezzi
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="font-mono text-xs font-semibold text-muted-foreground">
               {mezzo.codice}{mezzo.targa ? ` · ${mezzo.targa}` : ''}
             </p>
-            <h1 className="mt-0.5 text-2xl font-bold text-foreground">
+            <h1 className="mt-0.5 text-headline text-foreground">
               {mezzo.marca} {mezzo.modello}{mezzo.versione ? ` ${mezzo.versione}` : ''}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -939,7 +940,7 @@ export function AutomezzoDettaglioPage() {
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="panoramica">
         <TabsList className="h-auto flex-wrap">

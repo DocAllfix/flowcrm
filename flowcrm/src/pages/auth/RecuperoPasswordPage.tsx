@@ -51,7 +51,7 @@ export function RecuperoPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
           <MarchioCliente dimensione="lg" />
-          <h1 className="text-2xl font-bold text-foreground">{APP_CONFIG.appName}</h1>
+          <h1 className="text-headline text-foreground">{APP_CONFIG.appName}</h1>
         </div>
 
         {inviata ? (

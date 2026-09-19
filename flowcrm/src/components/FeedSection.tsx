@@ -12,6 +12,8 @@ import { useUsers } from '@/lib/queries/users'
 import { useAuth } from '@/hooks/useAuth'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 interface Props {
   target: FeedTarget
@@ -54,7 +56,7 @@ export function FeedSection({ target }: Props) {
   }
 
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-card shadow-sm">
+    <Card className="flex flex-col">
       <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         <MessageSquare className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold text-foreground">
@@ -64,7 +66,7 @@ export function FeedSection({ target }: Props) {
 
       <div className="max-h-[420px] min-h-[160px] flex-1 space-y-3 overflow-y-auto p-4">
         {isLoading ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Caricamento…</p>
+          <SkeletonElenco righe={3} altezza="h-12" />
         ) : messaggi.length === 0 ? (
           <EmptyState icon={MessageSquare} title="Nessun messaggio"
             description="Scrivi il primo commento. Usa @nome per menzionare un collega." />
@@ -110,6 +112,6 @@ export function FeedSection({ target }: Props) {
           <Send className="h-4 w-4" />
         </button>
       </form>
-    </div>
+    </Card>
   )
 }

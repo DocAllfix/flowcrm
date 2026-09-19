@@ -13,6 +13,9 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { OrganizzazioneDialog } from '@/features/organizzazioni/OrganizzazioneDialog'
 import { cn } from '@/lib/utils'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { SkeletonTabella } from '@/components/ui/skeleton'
 
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
   cliente: 'primary',
@@ -74,7 +77,7 @@ export function OrganizzazioniPage() {
       </div>
 
       {isLoading ? (
-        <div className="py-12 text-center text-sm text-muted-foreground">Caricamento…</div>
+        <SkeletonTabella colonne={5} />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={Building2}
@@ -83,23 +86,23 @@ export function OrganizzazioniPage() {
           action={<BottoneScrittura onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuova organizzazione</BottoneScrittura>}
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ragione sociale</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ruoli</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Città</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Settore</th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Ragione sociale</TableHead>
+                <TableHead>Ruoli</TableHead>
+                <TableHead>Città</TableHead>
+                <TableHead>Settore</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map((o) => (
-                <tr key={o.id}
-                  onClick={() => navigate(`/organizzazioni/${o.id}`)}
-                  className="cursor-pointer border-b border-border last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-medium text-foreground">{o.ragione_sociale}</td>
-                  <td className="px-4 py-3">
+                <TableRow key={o.id}
+                  onActivate={() => navigate(`/organizzazioni/${o.id}`)}
+                  >
+                  <TableCell><CollegamentoRiga to={`/organizzazioni/${o.id}`}>{o.ragione_sociale}</CollegamentoRiga></TableCell>
+                  <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {o.ruoli.length === 0
                         ? <span className="text-xs text-muted-foreground">—</span>
@@ -107,14 +110,14 @@ export function OrganizzazioniPage() {
                             <Badge key={r} tone={RUOLO_TONE[r]}>{RUOLO_LABEL[r]}</Badge>
                           ))}
                     </div>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{o.citta ?? '—'}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{o.settore ?? '—'}</td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{o.citta ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{o.settore ?? '—'}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <OrganizzazioneDialog open={dialogOpen} onOpenChange={setDialogOpen} />

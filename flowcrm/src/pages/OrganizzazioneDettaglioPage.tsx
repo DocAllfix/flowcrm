@@ -28,6 +28,8 @@ import {
 import { OrganizzazioneDialog } from '@/features/organizzazioni/OrganizzazioneDialog'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
   cliente: 'primary', fornitore: 'info', partner: 'serie',
@@ -47,7 +49,7 @@ export function OrganizzazioneDettaglioPage() {
   const [contattoOpen, setContattoOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="py-12 text-center text-sm text-muted-foreground">Caricamento…</div>
+    return <SkeletonElenco righe={4} />
   }
   if (!org) {
     return (
@@ -74,13 +76,13 @@ export function OrganizzazioneDettaglioPage() {
       </button>
 
       {/* Header */}
-      <div className="mb-6 flex flex-col gap-4 rounded-xl border border-border bg-card p-6 shadow-sm sm:flex-row sm:items-start sm:justify-between">
+      <Card className="mb-6 flex flex-col gap-4 p-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10">
             <Building2 className="h-7 w-7 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{org.ragione_sociale}</h1>
+            <h1 className="text-headline text-foreground">{org.ragione_sociale}</h1>
             <div className="mt-1.5 flex flex-wrap gap-1">
               {org.ruoli.map((r) => (
                 <Badge key={r} tone={RUOLO_TONE[r]}>{RUOLO_LABEL[r]}</Badge>
@@ -122,7 +124,7 @@ export function OrganizzazioneDettaglioPage() {
             </AlertDialog>
           )}
         </div>
-      </div>
+      </Card>
 
       {/* Tab 360° — deal/attività/allegati si popolano nelle fasi successive */}
       <Tabs defaultValue="panoramica">
@@ -144,13 +146,13 @@ export function OrganizzazioneDettaglioPage() {
             <InfoCard label="PEC" value={org.pec} />
           </div>
           {org.note && (
-            <div className="mt-4 rounded-xl border border-border bg-card p-5">
+            <Card className="mt-4 p-5">
               <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Note</p>
               <p className="whitespace-pre-wrap text-sm text-foreground">{org.note}</p>
-            </div>
+            </Card>
           )}
           {isManager && org.ruoli.includes('cliente') && fatturato.length > 0 && (
-            <div className="mt-4 rounded-xl border border-border bg-card p-5">
+            <Card className="mt-4 p-5">
               <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Fatturato annuale</p>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={fatturato.map((r) => ({ anno: String(r.anno), totale: Number(r.totale) }))}>
@@ -160,7 +162,7 @@ export function OrganizzazioneDettaglioPage() {
                   <Bar dataKey="totale" fill="var(--color-chart-1)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
-            </div>
+            </Card>
           )}
         </TabsContent>
 
@@ -174,7 +176,7 @@ export function OrganizzazioneDettaglioPage() {
             <EmptyState icon={Building2} title="Nessun contatto"
               description="Aggiungi le persone di riferimento di questa organizzazione." />
           ) : (
-            <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+            <Card className="divide-y divide-border overflow-hidden">
               {contatti!.map((c) => (
                 <div key={c.id} className="flex items-center gap-3 p-4">
                   <Avatar className="size-9"><AvatarFallback className="text-xs">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
@@ -184,7 +186,7 @@ export function OrganizzazioneDettaglioPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </Card>
           )}
         </TabsContent>
 
@@ -193,7 +195,7 @@ export function OrganizzazioneDettaglioPage() {
             <EmptyState icon={Building2} title="Nessun deal"
               description="Le offerte commerciali di questa organizzazione compariranno qui." />
           ) : (
-            <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
+            <Card className="divide-y divide-border overflow-hidden">
               {dealsOrg.map((d) => (
                 <button key={d.id} onClick={() => navigate(`/deal/${d.id}`)}
                   className="flex w-full items-center justify-between gap-3 p-4 text-left hover:bg-muted/30">
@@ -210,7 +212,7 @@ export function OrganizzazioneDettaglioPage() {
                   </span>
                 </button>
               ))}
-            </div>
+            </Card>
           )}
         </TabsContent>
 
@@ -239,9 +241,9 @@ export function OrganizzazioneDettaglioPage() {
 
 function InfoCard({ label, value }: { label: string; value: string | null }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4">
+    <Card className="p-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm text-foreground">{value || '—'}</p>
-    </div>
+    </Card>
   )
 }

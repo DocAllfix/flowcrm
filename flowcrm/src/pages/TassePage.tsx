@@ -12,6 +12,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 import {
   useTasse, useCreateTassa, useUpdateTassa, useSetTassaPagata, useDeleteTassa,
   type ScadenzaTassa,
@@ -75,27 +77,27 @@ export function TassePage() {
         <EmptyState icon={Receipt} title="Nessuna scadenza fiscale"
           description="Aggiungi le scadenze di IVA, imposte e contributi." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipo</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Scadenza</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Tipo</TableHead>
+                <TableHead>Scadenza</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Importo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {tasse.map((t) => {
                 const pagata = t.stato === 'pagata'
                 return (
-                <tr key={t.id} className="border-b border-border last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-medium text-foreground">{t.tipo_tassa}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{new Date(t.scadenza).toLocaleDateString('it-IT')}</td>
-                  <td className="px-4 py-3"><Badge tone={STATO_TONE[t.stato]}>{t.stato.replace('_', ' ')}</Badge></td>
-                  <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(t.importo))}</td>
-                  <td className="px-4 py-3 text-right">
+                <TableRow key={t.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                  <TableCell className="font-medium text-foreground">{t.tipo_tassa}</TableCell>
+                  <TableCell className="text-muted-foreground">{new Date(t.scadenza).toLocaleDateString('it-IT')}</TableCell>
+                  <TableCell><Badge tone={STATO_TONE[t.stato]}>{t.stato.replace('_', ' ')}</Badge></TableCell>
+                  <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(t.importo))}</TableCell>
+                  <TableCell numerica>
                     <div className="inline-flex items-center gap-1">
                       <button
                         onClick={() => setPagata.mutate({ id: t.id, pagata: !pagata }, {
@@ -117,13 +119,13 @@ export function TassePage() {
                         })}
                       />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <Dialog open={open} onOpenChange={setOpen}>

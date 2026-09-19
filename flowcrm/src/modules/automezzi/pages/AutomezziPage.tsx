@@ -19,6 +19,8 @@ import { toCsv, scaricaCsv } from '@/lib/csv'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { AutomezzoDialog } from '@/modules/automezzi/dialogs/AutomezzoDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 import {
   AUTOMEZZO_STATI, statoAutomezzo, CATEGORIA_LABEL, fmtData,
 } from '@/modules/automezzi/stati'
@@ -74,7 +76,7 @@ export function AutomezziPage() {
       />
 
       {scadenze.length > 0 && (
-        <div className="mb-4 rounded-xl border border-border bg-card p-4 shadow-sm">
+        <Card className="mb-4 p-4">
           <div className="mb-2 flex items-center gap-2">
             <CalendarClock className="h-4 w-4 text-warning-foreground" />
             <h3 className="text-sm font-semibold text-foreground">Scadenze imminenti del parco</h3>
@@ -91,7 +93,7 @@ export function AutomezziPage() {
               </Link>
             ))}
           </div>
-        </div>
+        </Card>
       )}
 
       <div className="mb-4 flex flex-wrap items-center gap-3">
@@ -117,36 +119,37 @@ export function AutomezziPage() {
         <EmptyState icon={Truck} title="Nessun mezzo"
           description="Registra il primo veicolo per monitorare scadenze e costi." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Targa</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Mezzo</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Categoria</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Km</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Centro di costo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Targa</TableHead>
+                <TableHead>Mezzo</TableHead>
+                <TableHead>Categoria</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Km</TableHead>
+                <TableHead>Centro di costo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtrati.map((a) => {
                 const st = statoAutomezzo(a.stato)
                 return (
-                  <tr key={a.id} onClick={() => navigate(`/automezzi/${a.id}`)}
-                    className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">
-                      {a.targa ?? a.codice}
-                    </td>
-                    <td className="px-4 py-3 font-medium text-foreground">{a.marca} {a.modello}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{CATEGORIA_LABEL[a.categoria]}</td>
-                    <td className="px-4 py-3"><Badge tone={st.tone}>{st.label}</Badge></td>
-                    <td className="px-4 py-3 text-right text-foreground">
+                  <TableRow key={a.id} onActivate={() => navigate(`/automezzi/${a.id}`)}>
+                    <TableCell>
+                      <CollegamentoRiga to={`/automezzi/${a.id}`} className="font-mono text-xs font-semibold">
+                        {a.targa ?? a.codice}
+                      </CollegamentoRiga>
+                    </TableCell>
+                    <TableCell className="font-medium text-foreground">{a.marca} {a.modello}</TableCell>
+                    <TableCell className="text-muted-foreground">{CATEGORIA_LABEL[a.categoria]}</TableCell>
+                    <TableCell><Badge tone={st.tone}>{st.label}</Badge></TableCell>
+                    <TableCell numerica className="text-foreground">
                       {new Intl.NumberFormat('it-IT').format(a.km_attuali)}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{a.centro_costo ?? '—'}</td>
-                    <td className="px-4 py-3 text-right">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{a.centro_costo ?? '—'}</TableCell>
+                    <TableCell numerica>
                       <RowActions
                         nome={a.targa ?? a.codice ?? undefined}
                         onEdit={() => setEditMezzo(a)}
@@ -159,13 +162,13 @@ export function AutomezziPage() {
                           onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                         })}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <AutomezzoDialog

@@ -9,6 +9,7 @@ import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
 import { MilestoneSection } from '@/components/MilestoneSection'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
+import { Card } from '@/components/ui/card'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -37,14 +38,14 @@ export function ProgettoDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Progetti
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
             <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
               {p.tipo === 'cliente' ? <Building2 className="h-3.5 w-3.5" /> : <Cog className="h-3.5 w-3.5" />}
               {p.tipo === 'cliente' ? 'Cliente' : 'Interno'}
             </span>
-            <h1 className="mt-1 text-2xl font-bold text-foreground">{p.nome}</h1>
+            <h1 className="mt-1 text-headline text-foreground">{p.nome}</h1>
             {p.organizzazione && (
               <p className="mt-0.5 text-sm text-muted-foreground">{p.organizzazione.ragione_sociale}</p>
             )}
@@ -59,7 +60,7 @@ export function ProgettoDettaglioPage() {
           </Button>
         </div>
         {p.descrizione && <p className="mt-4 whitespace-pre-wrap border-t border-border pt-4 text-sm text-foreground">{p.descrizione}</p>}
-      </div>
+      </Card>
 
       <Tabs defaultValue="milestone">
         <TabsList>

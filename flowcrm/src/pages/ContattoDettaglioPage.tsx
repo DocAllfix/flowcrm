@@ -8,6 +8,7 @@ import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Card } from '@/components/ui/card'
 
 export function ContattoDettaglioPage() {
   const { id } = useParams<{ id: string }>()
@@ -25,12 +26,12 @@ export function ContattoDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Contatti
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div className="flex gap-4">
             <Avatar className="size-14 shrink-0"><AvatarFallback className="text-lg">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">{c.nome} {c.cognome ?? ''}</h1>
+              <h1 className="text-headline text-foreground">{c.nome} {c.cognome ?? ''}</h1>
               {c.ruolo_aziendale && <p className="text-sm text-muted-foreground">{c.ruolo_aziendale}</p>}
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{c.email}</span>}
@@ -47,7 +48,7 @@ export function ContattoDettaglioPage() {
             <Pencil className="h-4 w-4" /> Modifica
           </Button>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="allegati">
         <TabsList>

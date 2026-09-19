@@ -9,7 +9,7 @@ export function NotFoundPage() {
       <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10">
         <Compass className="h-7 w-7 text-primary" />
       </div>
-      <h1 className="text-2xl font-bold text-foreground">Pagina non trovata</h1>
+      <h1 className="text-headline text-foreground">Pagina non trovata</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         La pagina che cercavi non esiste o è stata spostata.
       </p>

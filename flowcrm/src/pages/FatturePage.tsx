@@ -10,6 +10,8 @@ import { FatturaDialog } from '@/features/amministrazione/FatturaDialog'
 import { useFatture, type FatturaDirezione } from '@/lib/queries/amministrazione'
 import { cn } from '@/lib/utils'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(n)
@@ -64,31 +66,31 @@ export function FatturePage() {
         <EmptyState icon={FileText} title="Nessuna fattura"
           description={`Registra la prima fattura ${direzione === 'attiva' ? 'verso un cliente' : 'da un fornitore'}.`} />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Numero</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Data</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">{direzione === 'attiva' ? 'Cliente' : 'Fornitore'}</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Totale</th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Numero</TableHead>
+                <TableHead>Data</TableHead>
+                <TableHead>{direzione === 'attiva' ? 'Cliente' : 'Fornitore'}</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Totale</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {fatture.map((f) => (
-                <tr key={f.id} onClick={() => navigate(`/fatture/${f.id}`)}
-                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-semibold text-foreground">{f.numero}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{new Date(f.data).toLocaleDateString('it-IT')}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{f.organizzazione?.ragione_sociale ?? '—'}</td>
-                  <td className="px-4 py-3"><Badge tone={STATO_TONE[f.stato]}>{f.stato.replace('_', ' ')}</Badge></td>
-                  <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(f.totale))}</td>
-                </tr>
+                <TableRow key={f.id} onActivate={() => navigate(`/fatture/${f.id}`)}
+                  >
+                  <TableCell><CollegamentoRiga to={`/fatture/${f.id}`} className="font-semibold">{f.numero}</CollegamentoRiga></TableCell>
+                  <TableCell className="text-muted-foreground">{new Date(f.data).toLocaleDateString('it-IT')}</TableCell>
+                  <TableCell className="text-muted-foreground">{f.organizzazione?.ragione_sociale ?? '—'}</TableCell>
+                  <TableCell><Badge tone={STATO_TONE[f.stato]}>{f.stato.replace('_', ' ')}</Badge></TableCell>
+                  <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(f.totale))}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <FatturaDialog open={createOpen} onOpenChange={setCreateOpen} direzione={direzione} />

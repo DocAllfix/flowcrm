@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 
 /**
@@ -12,16 +13,20 @@ import { cn } from '@/lib/utils'
  *
  * ── Le righe navigabili da tastiera ─────────────────────────────────
  * 28 file avevano righe che il mouse apriva e la tastiera no: nessun
- * `tabIndex`, nessun `onKeyDown`. Metà interfaccia. `TableRow` con
- * `onActivate` aggiunge Tab, Invio e Spazio, e pretende un'etichetta.
+ * `tabIndex`, nessun `onKeyDown`. Metà interfaccia.
  *
- * Nota onesta sul compromesso: la soluzione perfetta sarebbe un vero
- * `<a>` dentro la prima cella, esteso sulla riga. Su `<tr>` il
- * posizionamento assoluto non è affidabile in tutti i motori, quindi qui
- * si tiene la semantica di riga e si aggiunge l'attivazione da tastiera —
- * che è ciò che fanno quasi tutte le tabelle di prodotto, ed è comunque
- * una riga intera in più rispetto a oggi, dove non se ne raggiungeva
- * nessuna.
+ * ⚠️ La prima soluzione qui era `<tr tabIndex={0} aria-label="Apri X">`
+ * con Invio e Spazio. **È sbagliata**, e l'ho capito applicandola: su un
+ * elemento di riga `aria-label` SOSTITUISCE l'annuncio delle celle,
+ * quindi chi usa uno screen reader smetterebbe di sentire «Mario Rossi,
+ * Acme Srl, commerciale» per sentire «Apri scheda» su ogni riga uguale.
+ * Peggiorava ciò che doveva migliorare.
+ *
+ * La via da tastiera è invece `CollegamentoRiga`: un `<a>` vero nella
+ * prima cella, che è già il nome della riga. Si raggiunge con Tab, si
+ * apre con Invio, viene annunciato col nome dell'entità, e la riga
+ * continua ad annunciare le proprie celle. `onActivate` su `TableRow`
+ * resta, ma per quello che è: una comodità per il puntatore.
  */
 
 function Table({ className, ...props }: React.ComponentProps<'table'>) {
@@ -73,31 +78,21 @@ function TableFooter({ className, ...props }: React.ComponentProps<'tfoot'>) {
 }
 
 interface TableRowProps extends React.ComponentProps<'tr'> {
-  /** Rende la riga attivabile col puntatore E con la tastiera. */
-  onActivate?: () => void
   /**
-   * Cosa succede attivando la riga, per chi non vede la tabella.
-   * Obbligatoria con `onActivate`: «riga 4 di 30» non dice dove si va.
+   * Comodità per il puntatore: cliccando ovunque sulla riga si apre la
+   * scheda. NON è la via da tastiera — quella è `CollegamentoRiga` nella
+   * prima cella, che è anche l'unica che uno screen reader può annunciare
+   * con un nome sensato.
    */
-  etichettaAzione?: string
+  onActivate?: () => void
 }
 
-function TableRow({
-  className,
-  onActivate,
-  etichettaAzione,
-  onClick,
-  onKeyDown,
-  ...props
-}: TableRowProps) {
+function TableRow({ className, onActivate, onClick, ...props }: TableRowProps) {
   return (
     <tr
       data-slot="table-row"
-      // La semantica di riga NON si sostituisce con role="link": un `tr`
-      // con un altro ruolo smette di essere una riga e la tabella perde
-      // la struttura per chi la legge con uno screen reader.
-      tabIndex={onActivate ? 0 : undefined}
-      aria-label={onActivate ? etichettaAzione : undefined}
+      // Niente tabIndex e niente aria-label: la riga resta una riga, e chi
+      // la legge continua a sentire il contenuto delle celle.
       onClick={
         onActivate
           ? (e) => {
@@ -106,25 +101,13 @@ function TableRow({
             }
           : onClick
       }
-      onKeyDown={
-        onActivate
-          ? (e) => {
-              onKeyDown?.(e)
-              if (e.defaultPrevented) return
-              // Lo Spazio fa scorrere la pagina se non lo si ferma, e un
-              // elenco che scorre mentre si sta attivando una riga è il
-              // modo più rapido per far perdere il segno.
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                onActivate()
-              }
-            }
-          : onKeyDown
-      }
       className={cn(
         'border-b border-border transition-colors',
         onActivate &&
-          'cursor-pointer hover:bg-muted/50 focus-visible:bg-muted/50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring data-[state=selected]:bg-muted',
+          // `focus-within` e non `focus`: a prendere il focus è il
+          // collegamento dentro la prima cella, ma a illuminarsi deve
+          // essere la riga intera, altrimenti si perde il segno.
+          'cursor-pointer hover:bg-muted/50 focus-within:bg-muted/50 data-[state=selected]:bg-muted',
         className,
       )}
       {...props}
@@ -185,6 +168,33 @@ function TableCaption({ className, ...props }: React.ComponentProps<'caption'>) 
   )
 }
 
+/**
+ * Il collegamento principale di una riga: va nella cella che porta il
+ * nome dell'entità, ed è la via da tastiera all'apertura della scheda.
+ *
+ * Perché non un `<a>` steso sopra tutta la riga: su `<tr>` il
+ * posizionamento assoluto non è affidabile in tutti i motori, e un
+ * collegamento che copre la riga intercetterebbe anche i clic destinati
+ * al menu delle azioni nell'ultima cella.
+ */
+function CollegamentoRiga({
+  className,
+  ...props
+}: React.ComponentProps<typeof Link>) {
+  return (
+    <Link
+      data-slot="table-row-link"
+      className={cn(
+        'rounded-sm font-medium text-foreground transition-colors',
+        'hover:text-primary',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
+
 export {
   Table,
   TableHeader,
@@ -194,4 +204,5 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  CollegamentoRiga,
 }

@@ -11,6 +11,7 @@ import { StoricoSection } from '@/components/StoricoSection'
 import { TimelineSection } from '@/components/TimelineSection'
 import { FeedSection } from '@/components/FeedSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
+import { Card } from '@/components/ui/card'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -42,10 +43,10 @@ export function DealDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Indietro
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{deal.nome}</h1>
+            <h1 className="text-headline text-foreground">{deal.nome}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               {deal.organizzazione && (
                 <Link
@@ -65,7 +66,7 @@ export function DealDettaglioPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-foreground">{fmtImporto(Number(deal.importo))}</p>
+            <p className="text-headline text-foreground">{fmtImporto(Number(deal.importo))}</p>
             <Badge
               className="mt-1 text-white"
               style={{ backgroundColor: deal.stage.colore ?? undefined }}
@@ -96,7 +97,7 @@ export function DealDettaglioPage() {
             </Button>
           )}
         </div>
-      </div>
+      </Card>
 
       <CommessaDialog
         open={commessaOpen}

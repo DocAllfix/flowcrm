@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { askCopilot, type CopilotMessage, type AzioneProposta } from '@/lib/queries/copilot'
 import { useCreateAttivita } from '@/lib/queries/attivita'
 import { useAuth } from '@/hooks/useAuth'
+import { Card } from '@/components/ui/card'
 
 /**
  * CopilotWidget — assistente AI flottante. Fa domande sui dati del CRM;
@@ -111,7 +112,7 @@ export function CopilotWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 flex h-[520px] w-[380px] max-w-[calc(100vw-2rem)] flex-col rounded-2xl border border-border bg-card shadow-2xl">
+    <Card className="fixed bottom-6 right-6 z-40 flex h-[520px] w-[380px] max-w-[calc(100vw-2rem)] flex-col shadow-2xl">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
@@ -226,6 +227,6 @@ export function CopilotWidget() {
           <Send className="h-4 w-4" />
         </button>
       </form>
-    </div>
+    </Card>
   )
 }

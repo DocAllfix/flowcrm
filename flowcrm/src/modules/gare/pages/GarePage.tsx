@@ -20,6 +20,8 @@ import { GaraDialog } from '@/modules/gare/dialogs/GaraDialog'
 import { GARA_STATI, statoGara, fmtImporto, fmtData, giorniAlTermine } from '@/modules/gare/stati'
 import { useGare, useArchiveGara, useDeleteGara, type Gara } from '@/modules/gare/queries/gare'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 
 function CountdownTermine({ gara }: { gara: Gara }) {
   if (!['in_analisi', 'in_preparazione'].includes(gara.stato)) return <span className="text-muted-foreground">—</span>
@@ -107,34 +109,34 @@ export function GarePage() {
         <EmptyState icon={Gavel} title="Nessuna gara"
           description="Registra la prima procedura per iniziare a monitorare termini ed esiti." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Titolo</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ente</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Base d'asta</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Termine</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Codice</TableHead>
+                <TableHead>Titolo</TableHead>
+                <TableHead>Ente</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Base d'asta</TableHead>
+                <TableHead>Termine</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtrate.map((g) => {
                 const st = statoGara(g.stato)
                 return (
-                  <tr key={g.id} onClick={() => navigate(`/gare/${g.id}`)}
-                    className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{g.codice}</td>
-                    <td className="max-w-sm truncate px-4 py-3 font-medium text-foreground">{g.titolo}</td>
-                    <td className="max-w-[180px] truncate px-4 py-3 text-muted-foreground">
+                  <TableRow key={g.id} onActivate={() => navigate(`/gare/${g.id}`)}
+                    >
+                    <TableCell><CollegamentoRiga to={`/gare/${g.id}`} className="font-mono text-xs font-semibold">{g.codice}</CollegamentoRiga></TableCell>
+                    <TableCell className="max-w-sm truncate font-medium text-foreground">{g.titolo}</TableCell>
+                    <TableCell className="max-w-[180px] truncate text-muted-foreground">
                       {g.ente?.ragione_sociale ?? g.ente_appaltante ?? '—'}
-                    </td>
-                    <td className="px-4 py-3"><Badge tone={st.tone}>{st.label}</Badge></td>
-                    <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(g.importo_base))}</td>
-                    <td className="px-4 py-3"><CountdownTermine gara={g} /></td>
-                    <td className="px-4 py-3 text-right">
+                    </TableCell>
+                    <TableCell><Badge tone={st.tone}>{st.label}</Badge></TableCell>
+                    <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(g.importo_base))}</TableCell>
+                    <TableCell><CountdownTermine gara={g} /></TableCell>
+                    <TableCell numerica>
                       <RowActions
                         nome={g.codice ?? undefined}
                         onEdit={() => setEditGara(g)}
@@ -147,13 +149,13 @@ export function GarePage() {
                           onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                         })}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <GaraDialog

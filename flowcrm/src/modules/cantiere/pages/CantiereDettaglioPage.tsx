@@ -36,6 +36,7 @@ import { useQueryClient, useQuery } from '@tanstack/react-query'
 import { moduloBySlug } from '@/config/moduli.config'
 import { CantiereDialog } from '@/modules/cantiere/dialogs/CantiereDialog'
 import { RapportinoDialog } from '@/modules/cantiere/dialogs/RapportinoDialog'
+import { Card } from '@/components/ui/card'
 import {
   CANTIERE_STATI, statoCantiere, fmtImporto, fmtData,
   METEO_LABEL, SICUREZZA_LABEL, QUALITA_TIPO_LABEL, AMBIENTE_LABEL,
@@ -1303,11 +1304,11 @@ export function CantiereDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Cantieri
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="font-mono text-xs font-semibold text-muted-foreground">{cantiere.codice}</p>
-            <h1 className="mt-0.5 text-2xl font-bold text-foreground">{cantiere.denominazione}</h1>
+            <h1 className="mt-0.5 text-headline text-foreground">{cantiere.denominazione}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
               {(cantiere.indirizzo || cantiere.citta) && (
                 <span className="flex items-center gap-1.5">
@@ -1335,7 +1336,7 @@ export function CantiereDettaglioPage() {
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="panoramica">
         <TabsList className="h-auto flex-wrap">

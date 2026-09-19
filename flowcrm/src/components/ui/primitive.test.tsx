@@ -15,7 +15,9 @@ import { MemoryRouter } from 'react-router-dom'
 import { Inbox } from 'lucide-react'
 
 import { Card } from './card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './table'
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow, CollegamentoRiga,
+} from './table'
 import { Skeleton, SkeletonTabella } from './skeleton'
 import { Progress } from './progress'
 import { EmptyState } from './empty-state'
@@ -23,56 +25,58 @@ import { PageHeader } from './page-header'
 
 afterEach(cleanup)
 
-describe('TableRow — la riga cliccabile è raggiungibile anche da tastiera', () => {
+describe('TableRow — puntatore sulla riga, tastiera sul collegamento', () => {
   const RigaDiProva = ({ onActivate }: { onActivate: () => void }) => (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nome</TableHead>
-          <TableHead numerica>Importo</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow onActivate={onActivate} etichettaAzione="Apri Acme Srl">
-          <TableCell>Acme Srl</TableCell>
-          <TableCell numerica>1.240,00</TableCell>
-        </TableRow>
-      </TableBody>
-    </Table>
+    <MemoryRouter>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Nome</TableHead>
+            <TableHead numerica>Importo</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow onActivate={onActivate}>
+            <TableCell>
+              <CollegamentoRiga to="/contatti/1">Acme Srl</CollegamentoRiga>
+            </TableCell>
+            <TableCell numerica>1.240,00</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </MemoryRouter>
   )
 
-  it('entra nell\'ordine di tabulazione e porta un\'etichetta parlante', () => {
+  it('la riga NON prende il focus e NON porta un aria-label', () => {
     render(<RigaDiProva onActivate={() => {}} />)
-    const riga = screen.getByLabelText('Apri Acme Srl')
-    expect(riga.tagName).toBe('TR')
-    expect(riga.getAttribute('tabindex')).toBe('0')
-    // La semantica di riga NON viene sostituita: un `tr` con role="link"
-    // smette di essere una riga per chi legge con uno screen reader.
-    expect(riga.getAttribute('role')).toBeNull()
+    const riga = screen.getByText('1.240,00').closest('tr')!
+    // Su un elemento di riga `aria-label` sostituisce l'annuncio delle
+    // celle: chi usa uno screen reader sentirebbe la stessa frase su ogni
+    // riga invece del contenuto. La riga resta una riga.
+    expect(riga.getAttribute('tabindex')).toBeNull()
+    expect(riga.getAttribute('aria-label')).toBeNull()
   })
 
-  it('si attiva con Invio e con Spazio, e lo Spazio non fa scorrere la pagina', () => {
-    const attiva = vi.fn()
-    render(<RigaDiProva onActivate={attiva} />)
-    const riga = screen.getByLabelText('Apri Acme Srl')
-
-    fireEvent.keyDown(riga, { key: 'Enter' })
-    expect(attiva).toHaveBeenCalledTimes(1)
-
-    const evento = fireEvent.keyDown(riga, { key: ' ' })
-    expect(attiva).toHaveBeenCalledTimes(2)
-    // `fireEvent` restituisce false quando l'evento è stato annullato.
-    expect(evento).toBe(false)
+  it('la via da tastiera è un collegamento vero, annunciato col nome', () => {
+    render(<RigaDiProva onActivate={() => {}} />)
+    const collegamento = screen.getByRole('link', { name: 'Acme Srl' })
+    expect(collegamento.getAttribute('href')).toBe('/contatti/1')
   })
 
-  it('si attiva anche col puntatore', () => {
+  it('la riga intera si illumina quando il focus entra nel collegamento', () => {
+    render(<RigaDiProva onActivate={() => {}} />)
+    const riga = screen.getByText('1.240,00').closest('tr')!
+    expect(riga.className).toContain('focus-within:bg-muted/50')
+  })
+
+  it('il puntatore apre la scheda cliccando ovunque sulla riga', () => {
     const attiva = vi.fn()
     render(<RigaDiProva onActivate={attiva} />)
-    fireEvent.click(screen.getByLabelText('Apri Acme Srl'))
+    fireEvent.click(screen.getByText('1.240,00'))
     expect(attiva).toHaveBeenCalledTimes(1)
   })
 
-  it('una riga non attivabile resta fuori dall\'ordine di tabulazione', () => {
+  it('una riga non attivabile non diventa cliccabile', () => {
     render(
       <Table>
         <TableBody>
@@ -83,7 +87,7 @@ describe('TableRow — la riga cliccabile è raggiungibile anche da tastiera', (
       </Table>,
     )
     const riga = screen.getByText('Solo lettura').closest('tr')!
-    expect(riga.getAttribute('tabindex')).toBeNull()
+    expect(riga.className).not.toContain('cursor-pointer')
   })
 
   it('numeri e date vanno a destra, testata compresa', () => {

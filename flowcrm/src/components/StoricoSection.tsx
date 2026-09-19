@@ -7,6 +7,8 @@ import { formatDistanceToNow } from 'date-fns'
 import { it } from 'date-fns/locale'
 import { useAuditLog, type AuditEntry } from '@/lib/queries/audit'
 import { EmptyState } from '@/components/ui/empty-state'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 interface Props {
   entita: string
@@ -35,14 +37,14 @@ export function StoricoSection({ entita, entitaId }: Props) {
   const { data: entries = [], isLoading } = useAuditLog(entita, entitaId)
 
   if (isLoading) {
-    return <p className="py-6 text-center text-sm text-muted-foreground">Caricamento…</p>
+    return <SkeletonElenco righe={3} altezza="h-12" />
   }
   if (entries.length === 0) {
     return <EmptyState icon={History} title="Nessuna modifica registrata" />
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-sm">
+    <Card>
       <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         <History className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold text-foreground">Storico modifiche</h3>
@@ -70,6 +72,6 @@ export function StoricoSection({ entita, entitaId }: Props) {
           )
         })}
       </ol>
-    </div>
+    </Card>
   )
 }
