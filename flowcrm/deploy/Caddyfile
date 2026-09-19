@@ -1,0 +1,76 @@
+# ═══════════════════════════════════════════════════════════════════
+# Caddy — unico servizio esposto dell'istanza.
+#
+# Serve l'applicazione statica E fa da facciata a Supabase sullo STESSO
+# dominio. È la scelta che rende possibile l'immagine unica: se Supabase
+# stesse su un host suo, ogni cliente avrebbe un `connect-src` diverso, e
+# quindi una CSP diversa e un bundle diverso. Sulla stessa origine la CSP è
+# `'self'` per tutti.
+#
+# Conseguenza di sicurezza gradita: né Postgres né i servizi Supabase
+# pubblicano porte: si raggiungono solo attraverso questo blocco.
+# ═══════════════════════════════════════════════════════════════════
+
+{
+	# L'email serve a Let's Encrypt per gli avvisi di scadenza.
+	email {$ACME_EMAIL}
+	# Log di accesso disattivati di proposito (vedi sotto).
+}
+
+{$DOMAIN} {
+	encode gzip zstd
+
+	# ── Supabase, stessa origine ──────────────────────────────────────
+	# L'ordine conta: questi percorsi vanno intercettati PRIMA del
+	# file_server, altrimenti /auth/v1/token finirebbe nel fallback SPA e
+	# il login risponderebbe 200 con dell'HTML invece dell'errore vero.
+	@supabase path /rest/* /auth/* /storage/* /realtime/* /functions/* /graphql/*
+	handle @supabase {
+		reverse_proxy api-gw:8000 {
+			# Il Realtime è WebSocket: senza questo, le notifiche in tempo
+			# reale cadono e si riconnettono in continuazione.
+			header_up Host {upstream_hostport}
+			header_up X-Forwarded-For {remote_host}
+		}
+	}
+
+	# ── Applicazione ──────────────────────────────────────────────────
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	# La configurazione dell'istanza non va MAI messa in cache: un cambio di
+	# logo o di moduli deve valere al ricaricamento, non al prossimo sfratto
+	# della cache del browser.
+	header /config.json Cache-Control "no-store"
+
+	# index.html sempre rivalidato, asset con hash immutabili: è ciò che
+	# rende sicuro il deploy di una nuova versione senza svuotare cache.
+	@pagina not path /assets/*
+	header @pagina Cache-Control "no-cache"
+	header /assets/* Cache-Control "public, max-age=31536000, immutable"
+
+	# ── Intestazioni di sicurezza ─────────────────────────────────────
+	# Verificate come cancello BLOCCANTE da security-headers-check.sh a ogni
+	# aggiornamento di flotta: se regrediscono, l'aggiornamento si ferma.
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Cross-Origin-Opener-Policy "same-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' {$SENTRY_ORIGIN}; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+		-Server
+	}
+}
+
+# ── Perché nessun access log ────────────────────────────────────────
+# Un file con indirizzi IP e percorsi visitati è a sua volta un trattamento
+# di dati personali: andrebbe censito nel registro, protetto e cancellato a
+# scadenza. Su un'istanza che contiene l'anagrafica clienti di un'azienda
+# non registrarlo è più semplice che giustificarlo. Per diagnosticare un
+# guasto bastano i log di errore dei container, che non contengono percorsi
+# per-utente. Scelta coerente con WhistleVault.

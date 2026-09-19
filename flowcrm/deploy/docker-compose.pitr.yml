@@ -1,0 +1,71 @@
+# ═══════════════════════════════════════════════════════════════════
+# Ripristino a un istante preciso (PITR) — archiviazione continua dei WAL.
+#
+# Si applica come TERZO file, dopo l'upstream e la sovrapposizione FlowCRM:
+#   docker compose -f supabase-docker/docker-compose.yml \
+#                  -f deploy/docker-compose.flowcrm.yml \
+#                  -f deploy/docker-compose.pitr.yml \
+#                  --env-file deploy/.env.prod up -d
+#
+# ── Perché serve, e non è un lusso ─────────────────────────────────
+# Il backup notturno dà un RPO di 24 ore: un guasto alle 23:00 perde una
+# giornata intera di lavoro del cliente. Con i WAL archiviati in continuo
+# si torna a QUALUNQUE istante fra l'ultimo backup di base e adesso, con
+# uno scarto di minuti.
+# È metà dell'obiezione scritta a giugno («backup/PITR/patch/audit»)
+# contro il self-hosting: senza questo pezzo, quell'obiezione ha ragione.
+#
+# ── Perché `pg_receivewal` e non `archive_command` + WAL-G ─────────
+# `archive_command` va eseguito DENTRO il container Postgres, quindi
+# richiederebbe di costruirsi un'immagine Supabase modificata con WAL-G
+# dentro — e di rifarla a ogni aggiornamento upstream, che è il modo più
+# sicuro di restare indietro di versione sul componente più critico.
+# `pg_receivewal` invece **si collega da fuori** usando il protocollo di
+# replica: nessuna modifica all'immagine, nessun `archive_command`, e il
+# flusso è continuo invece che a segmenti completati.
+# ═══════════════════════════════════════════════════════════════════
+
+services:
+  # Riceve i WAL in streaming e li scrive su un volume. Il trasferimento
+  # fuori sede lo fa backup.sh con restic, che già cifra e deduplica: qui
+  # non si reinventa un secondo canale verso la Storage Box.
+  wal-archivista:
+    image: public.ecr.aws/supabase/postgres:17.6.1.141
+    container_name: flowcrm-wal-archivista
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD obbligatoria}
+    volumes:
+      - wal_archivio:/wal
+    # --slot + --create-slot: uno slot di replica FISSO. È il pezzo che
+    #   garantisce la continuità — Postgres conserva i WAL finché lo slot
+    #   non li ha consumati, quindi un riavvio dell'archivista non lascia
+    #   buchi nella storia.
+    # --synchronous: forza la scrittura su disco a ogni ricezione. Senza,
+    #   l'ultimo segmento resta in memoria e in un crash si perde proprio
+    #   la parte più recente, cioè quella che il PITR serve a recuperare.
+    #
+    # ⚠️ Lo slot ha un rovescio da conoscere: se questo container resta
+    # fermo a lungo, Postgres NON cancella i WAL in attesa e il disco del
+    # database si riempie fino a fermarlo. `sentinel.sh` sorveglia il
+    # ritardo dello slot proprio per questo.
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        until pg_isready -h db -U postgres -q; do sleep 2; done
+        exec pg_receivewal \
+          --host=db --port=5432 --username=postgres --no-password \
+          --directory=/wal --slot=flowcrm_pitr --create-slot --if-not-exists \
+          --compress=gzip:6 --synchronous --verbose
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  wal_archivio:

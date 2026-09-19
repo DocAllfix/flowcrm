@@ -1,0 +1,136 @@
+# ═══════════════════════════════════════════════════════════════════
+# FlowCRM — sovrapposizione allo stack Supabase ufficiale.
+#
+# NON è un compose autonomo: si applica INSIEME a quello upstream.
+#
+#   docker compose \
+#     -f supabase-docker/docker-compose.yml \
+#     -f deploy/docker-compose.flowcrm.yml \
+#     --env-file deploy/.env.prod up -d
+#
+# Perché una sovrapposizione e non un compose riscritto a mano: lo stack
+# Supabase sono tredici servizi che cambiano fra una versione e l'altra
+# (il gateway è passato da Kong a Envoy). Una copia riscritta diverge in
+# silenzio al primo aggiornamento e nessuno se ne accorge finché non si
+# rompe l'autenticazione. Così invece l'upstream si aggiorna con un fetch e
+# le NOSTRE differenze restano poche e leggibili, tutte in questo file.
+#
+# Le differenze sono quattro:
+#   1. si aggiunge `app`, l'unico servizio esposto verso l'esterno;
+#   2. si mette un tetto ai log di ogni servizio;
+#   3. `api-gw` si lega a loopback via .env (API_GW_HTTP_PORT, vedi lì);
+#   4. `supavisor` NON viene avviato (vedi sotto: è l'unico modo per non
+#      lasciare Postgres esposto).
+# ═══════════════════════════════════════════════════════════════════
+
+# Nome del progetto ESPLICITO, e non è un dettaglio estetico.
+# Senza, Compose lo ricava dalla CARTELLA che contiene il file: `deploy`.
+# Tutti e tre i prodotti tengono i compose in `deploy/`, quindi per Docker
+# sarebbero lo stesso progetto — e un `up` di un altro prodotto sulla stessa
+# macchina RICREEREBBE i container omonimi con la propria configurazione,
+# reinizializzando i volumi. Senza errori e senza avvisi.
+# Qui il rischio è massimo, perché i nomi dei servizi Supabase (`db`, `auth`,
+# `rest`, `storage`, `studio`, `meta`) sono i più generici che esistano.
+name: flowcrm
+
+services:
+  # ── L'applicazione, e l'unica porta aperta dell'istanza ───────────
+  app:
+    image: ghcr.io/docallfix/flowcrm:${FLOWCRM_TAG:?FLOWCRM_TAG obbligatorio (usare il GIT_SHA, mai "latest")}
+    container_name: flowcrm-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Dominio dell'istanza: Caddy lo usa anche per ottenere il certificato.
+      DOMAIN: ${DOMAIN:?DOMAIN obbligatorio}
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL obbligatorio}
+      # Questi diventano /srv/config.json (vedi deploy/docker-entrypoint.sh).
+      # SUPABASE_URL è l'URL PUBBLICO dell'istanza, non un indirizzo interno:
+      # è il browser a doverlo raggiungere, e passa da Caddy.
+      SUPABASE_URL: https://${DOMAIN}
+      SUPABASE_ANON_KEY: ${ANON_KEY:?ANON_KEY obbligatoria}
+      APP_NAME: ${APP_NAME:-FlowCRM}
+      CLIENTE_NAME: ${CLIENTE_NAME:-}
+      LOGO_URL: ${LOGO_URL:-/logo-default.svg}
+      FAVICON_URL: ${FAVICON_URL:-/favicon.svg}
+      PRIMARY_COLOR: ${PRIMARY_COLOR:-#ff5c35}
+      ACCENT_COLOR: ${ACCENT_COLOR:-#33475b}
+      DEMO_MODE: ${DEMO_MODE:-false}
+      TOUR_ENABLED: ${TOUR_ENABLED:-false}
+      MODULES: ${MODULES:-}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SENTRY_ORIGIN: ${SENTRY_ORIGIN:-}
+      RELEASE: ${FLOWCRM_TAG}
+    volumes:
+      # I certificati ACME devono sopravvivere ai riavvii, altrimenti a ogni
+      # `up` si richiede un certificato nuovo e si sbattono i limiti di
+      # emissione di Let's Encrypt (5 per dominio a settimana): l'istanza
+      # resterebbe senza HTTPS per giorni.
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      api-gw:
+        condition: service_healthy
+    logging: &log
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ── Tetto ai log su tutti i servizi upstream ──────────────────────
+  # Senza questo i file di log crescono senza limite: è la prima causa di
+  # disco pieno su una VPS che nessuno guarda da mesi, e quando il disco si
+  # riempie Postgres smette di scrivere e l'istanza si ferma.
+  # Elencati uno per uno perché un'ancora YAML non attraversa i file.
+  studio:     { logging: *log }
+  api-gw:     { logging: *log }
+
+  # ── GoTrue: accoda invece di spedire ──────────────────────────────
+  # Con questo hook GoTrue chiama una funzione Postgres al posto di aprire
+  # una connessione al relay. Se il relay è giù, la richiesta dell'utente
+  # riesce lo stesso e il messaggio parte quando torna: su un recupero
+  # password l'alternativa è lasciare la persona chiusa fuori proprio
+  # mentre tenta l'unica strada che ha per rientrare.
+  # ATTENZIONE: "true" fra virgolette — GoTrue legge una stringa, e un
+  # booleano YAML non attiverebbe l'hook (senza dare errore).
+  auth:
+    logging: *log
+    environment:
+      GOTRUE_HOOK_SEND_EMAIL_ENABLED: "true"
+      GOTRUE_HOOK_SEND_EMAIL_URI: "pg-functions://postgres/public/send_email_hook"
+  rest:       { logging: *log }
+  realtime:   { logging: *log }
+  storage:    { logging: *log }
+  imgproxy:   { logging: *log }
+  meta:       { logging: *log }
+  functions:  { logging: *log }
+  db:         { logging: *log }
+
+  # ── supavisor: NON avviato, e non è una svista ────────────────────
+  # Upstream pubblica `${POSTGRES_PORT}:5432` e `${POOLER_PROXY_PORT_TRANSACTION}:6543`
+  # su TUTTE le interfacce. Su una VPS con IP pubblico significa Postgres
+  # esposto a Internet — e le porte pubblicate da Docker **scavalcano UFW**,
+  # quindi il firewall dell'host non le ferma (è la stessa avvertenza che
+  # WhistleVault si è annotata in setup-vps.sh).
+  #
+  # Due strade sono state provate e scartate, per non rifarle:
+  #   - riscrivere `ports` in questa sovrapposizione NON funziona: Compose
+  #     ACCODA le porte invece di sostituirle, quindi il binding su 0.0.0.0
+  #     resta lì accanto a quello su loopback. Verificato con `compose config`.
+  #   - mettere `POSTGRES_PORT=127.0.0.1:5432` NON funziona: quella variabile
+  #     è usata in dieci punti come porta INTERNA (GOTRUE_DB_DATABASE_URL,
+  #     PGRST_DB_URI, PGPORT…) e produrrebbe stringhe di connessione corrotte.
+  #
+  # Il pooler non serve a questa applicazione: il frontend passa sempre da
+  # PostgREST (api-gw) e non apre mai una connessione Postgres diretta. La
+  # manutenzione usa `docker compose exec db psql`, che non ha bisogno di
+  # porte pubblicate. Se un giorno servisse, va riabilitato legandolo a
+  # loopback e raggiunto via tunnel SSH, mai esposto.
+  supavisor:
+    profiles: ["non-avviare"]
+
+volumes:
+  caddy_data:
+  caddy_config:

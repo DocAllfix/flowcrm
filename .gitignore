@@ -10,6 +10,12 @@ build/
 .env
 .env.*
 !.env.example
+# I template vanno invece tracciati: la procedura di installazione fa
+# `git clone` sulla VPS, quindi un .example non tracciato semplicemente non
+# esiste sulla macchina nuova e l'installazione si ferma al primo passo.
+# La negazione `!.env.example` sopra copre SOLO il nome esatto: senza la riga
+# seguente, `deploy/.env.prod.example` sarebbe ignorato in silenzio.
+!.env.*.example
 
 # Supabase local
 flowcrm/supabase/.temp/
