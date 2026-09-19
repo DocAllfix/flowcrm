@@ -67,7 +67,7 @@ export function CopilotWidget() {
         navigate(esito.percorso)
       }
     } catch (e) {
-      setMessaggi([...nuovi, { role: 'assistant', content: `⚠️ ${(e as Error).message}` }])
+      setMessaggi([...nuovi, { role: 'assistant', content: `Non ha funzionato: ${(e as Error).message}` }])
     } finally {
       setPending(false)
     }
@@ -85,7 +85,7 @@ export function CopilotWidget() {
       })
       toast.success('Attività creata')
       setPropostaFatta(true)
-      setMessaggi((prev) => [...prev, { role: 'assistant', content: `✅ Creata: "${proposta.titolo}".` }])
+      setMessaggi((prev) => [...prev, { role: 'assistant', content: `Creata: "${proposta.titolo}".` }])
       setProposta(null)
     } catch {
       toast.error('Creazione non riuscita')

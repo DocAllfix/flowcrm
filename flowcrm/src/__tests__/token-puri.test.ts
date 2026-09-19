@@ -131,6 +131,39 @@ describe('purezza dei token — il colore appartiene al cliente', () => {
     expect(colpevoli).toEqual([])
   })
 
+  it('nessuna striscia colorata come bordo laterale', () => {
+    // Divieto assoluto n.1 di DESIGN.md. Qui non è solo estetica: la voce
+    // di menu corrente lo usava, e un bordo che compare allarga la scatola
+    // — il testo si spostava di 3px a ogni cambio di pagina, e navigando
+    // l'intero menu tremava.
+    const strisce = /\bborder-[lr]-(?:\[\d+px\]|[2-9]|\d\d+)\b/g
+    const colpevoli: string[] = []
+    for (const { relativo, testo } of sorgenti) {
+      const trovate = testo.match(strisce)
+      if (trovate) colpevoli.push(`${relativo}: ${[...new Set(trovate)].join(', ')}`)
+    }
+    expect(colpevoli).toEqual([])
+  })
+
+  it('nessun gradient text', () => {
+    // Divieto assoluto di DESIGN.md: decorativo, mai significante.
+    const colpevoli = sorgenti
+      .filter(({ testo }) => /bg-clip-text|background-clip:\s*text/.test(testo))
+      .map(({ relativo }) => relativo)
+    expect(colpevoli).toEqual([])
+  })
+
+  it('nessuna emoji nell’interfaccia', () => {
+    // Anti-reference dichiarata in PRODUCT.md: «l'app consumer allegra».
+    const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu
+    const colpevoli: string[] = []
+    for (const { relativo, testo } of sorgenti) {
+      const trovate = testo.match(emoji)
+      if (trovate) colpevoli.push(`${relativo}: ${[...new Set(trovate)].join(' ')}`)
+    }
+    expect(colpevoli).toEqual([])
+  })
+
   it('le deroghe esistono davvero e sono motivate', () => {
     // Una deroga verso un file cancellato nasconderebbe che la ragione non
     // vale più.

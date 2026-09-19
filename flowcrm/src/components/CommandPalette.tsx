@@ -5,6 +5,24 @@ import { useRicercaGlobale } from '@/lib/queries/ricerca'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
+/** Nome dell'evento con cui il resto dell'interfaccia chiede la palette. */
+const EVENTO_APERTURA = 'flowcrm:apri-palette'
+
+/**
+ * Apre la ricerca globale.
+ *
+ * ⚠️ Esiste perché il bottone «Cerca…» nell'intestazione **fabbricava un
+ * KeyboardEvent finto** `Ctrl+K` e lo lanciava su window, sperando che
+ * questo componente lo raccogliesse. Funzionava, ma: qualunque altro
+ * ascoltatore di Ctrl+K sulla pagina (un'estensione del browser, un altro
+ * componente) veniva attivato insieme, e un clic che finge di essere una
+ * pressione di tasti è impossibile da seguire quando si rompe. Un evento
+ * con un nome proprio dice cosa sta succedendo.
+ */
+export function apriPalette(): void {
+  window.dispatchEvent(new CustomEvent(EVENTO_APERTURA))
+}
+
 /**
  * Ricerca globale (Cmd/Ctrl+K) su organizzazioni e contatti.
  * Palette leggera senza dipendenze extra: Dialog + input + lista con
@@ -26,8 +44,15 @@ export function CommandPalette() {
         setOpen((o) => !o)
       }
     }
+    function onApertura() {
+      setOpen(true)
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener(EVENTO_APERTURA, onApertura)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener(EVENTO_APERTURA, onApertura)
+    }
   }, [])
 
   useEffect(() => {

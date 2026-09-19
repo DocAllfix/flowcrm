@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '@/hooks/useAuth'
 import { useNotificheSubscription } from '@/hooks/useNotifiche'
@@ -17,6 +17,25 @@ import { TourAutoStarter } from '@/lib/onboarding/TourAutoStarter'
 export function AppLayout() {
   const { user, isLoading, errorAccount } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // La preferenza sulla barra compressa resta fra una sessione e l'altra:
+  // chi lavora su un portatile la chiude una volta, non a ogni accesso.
+  const [compressa, setCompressa] = useState(() => {
+    try {
+      return localStorage.getItem('flowcrm-sidebar-compressa') === 'si'
+    } catch {
+      return false
+    }
+  })
+  const alternaCompressa = useCallback(() => {
+    setCompressa((c) => {
+      try {
+        localStorage.setItem('flowcrm-sidebar-compressa', c ? 'no' : 'si')
+      } catch {
+        // La scelta vale comunque per questa sessione.
+      }
+      return !c
+    })
+  }, [])
 
   // Canale Realtime notifiche — UNA sola subscription per l'intera app.
   // No-op finché l'utente non è autenticato (guard interna sull'userId).
@@ -25,7 +44,11 @@ export function AppLayout() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        <div
+          role="status"
+          aria-label="Caricamento della sessione"
+          className="size-8 rounded-full border-2 border-primary border-t-transparent motion-safe:animate-spin"
+        />
       </div>
     )
   }
@@ -37,11 +60,25 @@ export function AppLayout() {
   return (
     <VistaModuloProvider>
       <div className="flex h-screen overflow-hidden bg-background">
-        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        {/* Salto alla pagina: chi naviga da tastiera non deve attraversare
+            trenta voci di menu a ogni cambio di schermata. Invisibile finché
+            non riceve il focus. */}
+        <a
+          href="#contenuto"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-card focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:outline-2 focus:outline-offset-2 focus:outline-ring"
+        >
+          Vai al contenuto
+        </a>
+        <Sidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          compressa={compressa}
+          onToggleCompressa={alternaCompressa}
+        />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header onOpenSidebar={() => setSidebarOpen(true)} />
           <BannerDemo />
-          <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <main id="contenuto" tabIndex={-1} className="flex-1 overflow-y-auto p-4 md:p-6">
             <Outlet />
           </main>
         </div>

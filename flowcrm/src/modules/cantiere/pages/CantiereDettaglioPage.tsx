@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 import {
   ArrowLeft, Loader2, Pencil, Building2, MapPin, Trash2, Plus,
   HardHat, ShieldAlert, FileText, CheckCircle2,
+  TriangleAlert,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -354,7 +355,12 @@ function TabRapportini({ cantiere }: { cantiere: Cantiere }) {
             {[r.personale && `Personale: ${r.personale}`, r.mezzi && `Mezzi: ${r.mezzi}`,
               r.materiali && `Materiali: ${r.materiali}`].filter(Boolean).join(' · ')}
           </p>
-          {r.problemi && <p className="mt-1 text-sm text-warning-foreground">⚠ {r.problemi}</p>}
+          {r.problemi && (
+            <p className="mt-1 flex items-start gap-1.5 text-sm text-warning-foreground">
+              <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden />
+              <span>{r.problemi}</span>
+            </p>
+          )}
         </div>
       ))}
       <RapportinoDialog

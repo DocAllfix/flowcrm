@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, Pencil, Mail, Phone, Plus, Check, Trash2, Plane, GraduationCap } from 'lucide-react'
+import { ArrowLeft, Loader2, Pencil, Mail, Phone, Plus, Check, Trash2, Plane, GraduationCap, X } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   useDipendente, useAssenze, useCreateAssenza, useSetAssenzaStato, useDeleteAssenza,
@@ -104,7 +104,7 @@ function AssenzeSection({ dipId }: { dipId: string }) {
                   <button onClick={() => setStato.mutate({ id: a.id, stato: 'approvata', dipendente_id: dipId })}
                     className="text-success hover:opacity-70" aria-label="Approva"><Check className="h-4 w-4" /></button>
                   <button onClick={() => setStato.mutate({ id: a.id, stato: 'rifiutata', dipendente_id: dipId })}
-                    className="text-destructive hover:opacity-70" aria-label="Rifiuta">✕</button>
+                    className="text-destructive transition-opacity hover:opacity-70" aria-label="Rifiuta"><X className="size-4" aria-hidden /></button>
                 </>
               )}
               {isAdmin && (
