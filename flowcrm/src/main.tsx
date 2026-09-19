@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
-import { caricaConfigurazione } from '@/config/app.config'
+import { APP_CONFIG, caricaConfigurazione } from '@/config/app.config'
+import { applicaTemaCliente, applicaIdentitaCliente } from '@/lib/tema'
 import { inizializzaTelemetria } from '@/lib/telemetria'
 // Import STATICO e volutamente in cima: è ciò che rende `window.__supabase`
 // disponibile appena la pagina carica, invece che dopo gli `await` qui sotto.
@@ -48,10 +49,17 @@ async function avvia(): Promise<void> {
   // 1. Configurazione dell'istanza: deve arrivare prima di tutto il resto.
   await caricaConfigurazione()
 
-  // 2. Telemetria (spenta se il DSN è vuoto), che legge la configurazione.
+  // 2. Aspetto dell'istanza: colori derivati dai due del cliente, titolo
+  //    della scheda e favicon. Va qui e non dentro React: applicato dopo il
+  //    primo render si vedrebbe un lampo con i colori del prodotto al posto
+  //    di quelli del cliente, proprio nella schermata di accesso.
+  applicaTemaCliente(APP_CONFIG)
+  applicaIdentitaCliente(APP_CONFIG)
+
+  // 3. Telemetria (spenta se il DSN è vuoto), che legge la configurazione.
   inizializzaTelemetria()
 
-  // 3. L'applicazione. Il client Supabase si crea al primo uso (proxy pigro
+  // 4. L'applicazione. Il client Supabase si crea al primo uso (proxy pigro
   //    in src/lib/supabase.ts), quindi l'ordine di import non è più critico:
   //    conta solo che la configurazione sia caricata prima delle query.
   const { default: App } = await import('./App')

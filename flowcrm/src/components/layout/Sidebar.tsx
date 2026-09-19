@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Zap, X, User, Users } from 'lucide-react'
+import { X, User, Users } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
+import { MarchioCliente } from '@/components/layout/MarchioCliente'
 import { navForRole, filterSectionsForRole } from '@/config/nav.config'
 import { moduliAttivi, moduloBySlug } from '@/config/moduli.config'
 import { useVistaModulo } from '@/components/layout/VistaModuloContext'
@@ -15,9 +16,9 @@ interface SidebarProps {
 }
 
 /**
- * Sidebar chiara in stile prototipo: logo con gradiente arancio,
- * sezioni con titolo uppercase, voce attiva con barra laterale primary.
- * Le voci managerOnly sono filtrate da navForRole (la RLS resta la barriera).
+ * Barra laterale: marchio del cliente, sezioni con etichetta in maiuscoletto,
+ * voce corrente evidenziata. Le voci managerOnly sono filtrate da navForRole
+ * (la RLS resta la barriera vera).
  */
 export function Sidebar({ open, onClose }: SidebarProps) {
   const { isManager, isAdmin, userProfile } = useAuth()
@@ -60,11 +61,9 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex items-center justify-between border-b border-sidebar-border p-5">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-orange-600">
-              <Zap className="h-5 w-5 text-white" fill="currentColor" />
-            </div>
-            <span className="text-xl font-bold text-foreground">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <MarchioCliente />
+            <span className="truncate text-title font-semibold text-foreground">
               {APP_CONFIG.appName}
             </span>
           </div>

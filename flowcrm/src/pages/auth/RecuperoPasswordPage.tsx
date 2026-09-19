@@ -10,9 +10,10 @@
  */
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { Zap, MailCheck } from 'lucide-react'
+import { MailCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { APP_CONFIG } from '@/config/app.config'
+import { MarchioCliente } from '@/components/layout/MarchioCliente'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -49,9 +50,7 @@ export function RecuperoPasswordPage() {
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-orange-600 shadow-lg shadow-primary/25">
-            <Zap className="h-7 w-7 text-white" fill="currentColor" />
-          </div>
+          <MarchioCliente dimensione="lg" />
           <h1 className="text-2xl font-bold text-foreground">{APP_CONFIG.appName}</h1>
         </div>
 
