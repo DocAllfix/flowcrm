@@ -5,7 +5,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, HardHat, Loader2, Download } from 'lucide-react'
+import { Plus, Search, HardHat, Download } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,6 +21,8 @@ import { CANTIERE_STATI, statoCantiere, fmtImporto, fmtData } from '@/modules/ca
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 import {
   useCantieri, useCantieriKpiTutti, useArchiveCantiere, useDeleteCantiere, type Cantiere,
 } from '@/modules/cantiere/queries/cantieri'
@@ -98,7 +100,7 @@ export function CantieriPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={HardHat} title="Nessun cantiere"
@@ -132,9 +134,7 @@ export function CantieriPage() {
                     <TableCell><Badge tone={st.tone}>{st.label}</Badge></TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className="h-2 w-24 overflow-hidden rounded-full bg-muted">
-                          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${av}%` }} />
-                        </div>
+                        <Progress value={av} etichetta={`Avanzamento del cantiere ${c.denominazione}`} className="w-24" />
                         <span className="text-xs text-muted-foreground">{av}%</span>
                       </div>
                     </TableCell>

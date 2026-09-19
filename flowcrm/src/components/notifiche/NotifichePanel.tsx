@@ -17,6 +17,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { useNotifiche, useMarkAsRead, useMarkAllAsRead } from '@/hooks/useNotifiche'
 import type { Notifica } from '@/lib/queries/notifiche'
 import type { NotificaTipo } from '@/types/app.types'
+import { Spinner } from '@/components/ui/spinner'
 
 interface TipoConfig {
   Icon: React.ElementType
@@ -156,7 +157,7 @@ export const NotifichePanel = memo(function NotifichePanel({ open, onClose }: No
           <div className="py-2">
             {isLoading && (
               <div className="flex items-center justify-center py-8">
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <Spinner etichetta="Caricamento delle notifiche" className="text-primary" />
               </div>
             )}
 

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import {
-  Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, Loader2,
-} from 'lucide-react'
+  Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { AttivitaDialog } from '@/features/attivita/AttivitaDialog'
 import { useAuth } from '@/hooks/useAuth'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Spinner } from '@/components/ui/spinner'
 import {
   useMieAttivita, useToggleAttivitaStato, useArchiveAttivita, useDeleteAttivita,
   type AttivitaTipo, type Attivita,
@@ -85,7 +85,7 @@ export function AttivitaPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : attivita.length === 0 ? (
         <EmptyState icon={CheckSquare} title="Nessuna attività"

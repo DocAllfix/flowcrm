@@ -245,9 +245,15 @@
   }
 
   /* ── Movimento ridotto: non è un'opzione ───────────────────────────
-     Restano le dissolvenze e gli indicatori di stato, spariscono le
-     traslazioni. Le animazioni non si azzerano del tutto: una barra di
-     avanzamento ferma è peggio di una che si muove piano. */
+     Spariscono le traslazioni e le animazioni decorative.
+
+     ⚠️ Ma NON gli indicatori che dicono «il sistema sta lavorando». La
+     prima versione di questa regola li fermava insieme a tutto il resto,
+     e uno spinner immobile non comunica attesa: comunica che
+     l'applicazione si è piantata. Chi ha chiesto meno movimento ha
+     chiesto di non essere disturbato, non di non sapere più cosa sta
+     succedendo. Gli indicatori funzionali si marcano con
+     `data-movimento="funzionale"` e restano, rallentati. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -256,6 +262,12 @@
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
+    }
+
+    [data-movimento='funzionale'],
+    [data-movimento='funzionale'] * {
+      animation-duration: 1.8s !important;
+      animation-iteration-count: infinite !important;
     }
   }
 

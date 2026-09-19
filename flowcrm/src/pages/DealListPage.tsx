@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Loader2, Download } from 'lucide-react'
+import { Plus, Download } from 'lucide-react'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,7 @@ import { useDeals, usePipelineStages, useArchiveDeal, useDeleteDeal, type Deal }
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -51,7 +52,7 @@ export function DealListPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : deals.length === 0 ? (
         <EmptyState icon={CircleDollarSign} title="Nessun deal"

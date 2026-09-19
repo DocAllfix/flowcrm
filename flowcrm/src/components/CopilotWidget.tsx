@@ -149,10 +149,15 @@ export function CopilotWidget() {
             return (
               <div key={i} className="flex justify-start">
                 <div className="rounded-2xl bg-muted px-3 py-2 text-sm text-muted-foreground">
-                  <span className="inline-flex gap-1">
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.3s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground [animation-delay:-0.15s]" />
-                    <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-muted-foreground" />
+                  <span
+                    className="inline-flex gap-1"
+                    data-movimento="funzionale"
+                    role="status"
+                    aria-label="Il copilot sta rispondendo"
+                  >
+                    <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground" />
+                    <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:200ms]" />
+                    <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground [animation-delay:400ms]" />
                   </span>
                 </div>
               </div>

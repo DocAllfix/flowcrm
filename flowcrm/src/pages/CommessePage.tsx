@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Briefcase, Loader2 } from 'lucide-react'
+import { Plus, Briefcase } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -10,6 +10,7 @@ import { CommessaDialog } from '@/features/commesse/CommessaDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   useCommesse, useArchiveCommessa, useDeleteCommessa, type CommessaStato, type Commessa,
 } from '@/lib/queries/commesse'
@@ -41,7 +42,7 @@ export function CommessePage() {
       />
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : commesse.length === 0 ? (
         <EmptyState icon={Briefcase} title="Nessuna commessa"
           description="Le commesse nascono da un deal vinto o si creano manualmente." />

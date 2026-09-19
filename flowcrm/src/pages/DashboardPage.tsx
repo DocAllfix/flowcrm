@@ -6,6 +6,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
 import { Link } from 'react-router-dom'
+import NumberFlow from '@number-flow/react'
 import { useAuth } from '@/hooks/useAuth'
 import { useDashboardKpi, usePipelinePesata } from '@/lib/queries/dashboard'
 import { useMieAttivita, useRiunioni } from '@/lib/queries/attivita'
@@ -14,11 +15,13 @@ import { Card } from '@/components/ui/card'
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
 
-function KpiCard({ icon: Icon, label, value, tint, to, inCaricamento }: {
+function KpiCard({ icon: Icon, label, value, formato, tint, to, inCaricamento }: {
   icon: React.ElementType
   label: string
   /** `undefined` finché il dato non è arrivato: NON zero. */
-  value: string | undefined
+  value: number | undefined
+  /** Come si scrive il numero: conteggio secco o importo in euro. */
+  formato?: 'conteggio' | 'euro'
   tint: string
   to: string
   inCaricamento?: boolean
@@ -43,9 +46,22 @@ function KpiCard({ icon: Icon, label, value, tint, to, inCaricamento }: {
             className="h-8 w-16 rounded-md bg-muted motion-safe:animate-pulse"
           />
         ) : (
-          <span data-slot="kpi" className="text-3xl font-semibold text-foreground">
-            {value}
-          </span>
+          // NumberFlow anima la CIFRA, non la posizione: quando un
+          // aggiornamento realtime cambia un conteggio, il numero si
+          // trasforma invece di sostituirsi di scatto, e si vede che è
+          // cambiato senza dover confrontare due schermate a memoria.
+          // Rispetta `prefers-reduced-motion` per conto suo.
+          <NumberFlow
+            data-slot="kpi"
+            value={value}
+            locales="it-IT"
+            format={
+              formato === 'euro'
+                ? { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }
+                : undefined
+            }
+            className="text-3xl font-semibold text-foreground"
+          />
         )}
       </div>
       <p className="flex items-center gap-1 text-sm font-medium text-muted-foreground group-hover:text-foreground">
@@ -85,21 +101,21 @@ export function DashboardPage() {
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
         <KpiCard icon={Building2} label="Organizzazioni" tint="bg-primary/10 text-primary" to="/organizzazioni"
-          value={kpi ? String(kpi.organizzazioni) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.organizzazioni} inCaricamento={kpiInCorso} />
         <KpiCard icon={BookUser} label="Contatti" tint="bg-muted text-muted-foreground" to="/contatti"
-          value={kpi ? String(kpi.contatti) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.contatti} inCaricamento={kpiInCorso} />
         <KpiCard icon={CircleDollarSign} label="Deal aperti" tint="bg-muted text-muted-foreground" to="/deal"
-          value={kpi ? String(kpi.deal) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.deal} inCaricamento={kpiInCorso} />
         <KpiCard icon={Briefcase} label="Commesse attive" tint="bg-muted text-muted-foreground" to="/commesse"
-          value={kpi ? String(kpi.commesse) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.commesse} inCaricamento={kpiInCorso} />
         <KpiCard icon={FolderKanban} label="Progetti attivi" tint="bg-muted text-muted-foreground" to="/progetti"
-          value={kpi ? String(kpi.progetti) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.progetti} inCaricamento={kpiInCorso} />
         <KpiCard icon={CheckSquare} label="Attività da fare" tint="bg-muted text-muted-foreground" to="/attivita"
-          value={attivitaInCorso ? undefined : String(aperte.length)} inCaricamento={attivitaInCorso} />
+          value={attivitaInCorso ? undefined : aperte.length} inCaricamento={attivitaInCorso} />
         <KpiCard icon={CalendarDays} label="Riunioni in arrivo" tint="bg-muted text-muted-foreground" to="/riunioni"
-          value={riunioniInCorso ? undefined : String(prossimeRiunioni.length)} inCaricamento={riunioniInCorso} />
+          value={riunioniInCorso ? undefined : prossimeRiunioni.length} inCaricamento={riunioniInCorso} />
         <KpiCard icon={TrendingUp} label="Valore pipeline" tint="bg-muted text-muted-foreground" to="/kanban"
-          value={kpi ? fmtEuro(kpi.pipelinePesata) : undefined} inCaricamento={kpiInCorso} />
+          value={kpi?.pipelinePesata} formato="euro" inCaricamento={kpiInCorso} />
       </div>
 
       <Card className="mt-6 p-5">

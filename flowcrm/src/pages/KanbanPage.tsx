@@ -7,7 +7,7 @@
  *   il drag È l'azione, nessun bottone "avanza"
  */
 import { useState, useMemo } from 'react'
-import { Plus, Search, Loader2 } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 import { DragDropContext, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
 
@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { DealDialog } from '@/features/deal/DealDialog'
 import { usePipelineStages, useDeals, useMoveDeal, type DealWithOrg } from '@/lib/queries/deals'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Spinner } from '@/components/ui/spinner'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -93,7 +94,7 @@ export function KanbanPage() {
   if (loadingStages || loadingDeals) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner etichetta="Caricamento in corso" dimensione="lg" />
       </div>
     )
   }

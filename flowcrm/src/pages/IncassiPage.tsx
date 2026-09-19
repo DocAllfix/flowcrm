@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { Plus, Banknote, Loader2, Check } from 'lucide-react'
+import { Plus, Banknote, Check } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,6 +9,7 @@ import { RowActions } from '@/components/RowActions'
 import { IncassoDialog } from '@/features/amministrazione/IncassoDialog'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   useIncassi, useSetIncassato, useDeleteIncasso, type ScadenzaPagamento,
 } from '@/lib/queries/amministrazione'
@@ -51,7 +52,7 @@ export function IncassiPage() {
       )}
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : incassi.length === 0 ? (
         <EmptyState icon={Banknote} title="Nessun incasso previsto"
           description="Gli incassi compaiono qui quando registri una fattura attiva." />

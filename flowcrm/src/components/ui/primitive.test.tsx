@@ -20,6 +20,7 @@ import {
 } from './table'
 import { Skeleton, SkeletonTabella } from './skeleton'
 import { Progress } from './progress'
+import { Spinner, AttesaCentrata } from './spinner'
 import { EmptyState } from './empty-state'
 import { PageHeader } from './page-header'
 
@@ -162,6 +163,29 @@ describe('Progress', () => {
       '[data-slot="progress-indicator"]',
     )!
     expect(indicatore.style.transform).toBe('scaleX(0)')
+  })
+})
+
+describe('Spinner — un indicatore fermo dice «si e piantato»', () => {
+  it('e marcato come movimento funzionale', () => {
+    render(<Spinner etichetta="Caricamento" />)
+    const s = screen.getByRole('status')
+    // Il blocco globale prefers-reduced-motion azzera le animazioni. Per un
+    // indicatore di attesa sarebbe sbagliato: questo attributo lo esclude
+    // dall'azzeramento e lo rallenta soltanto.
+    expect(s.getAttribute('data-movimento')).toBe('funzionale')
+    expect(s.getAttribute('aria-label')).toBe('Caricamento')
+  })
+
+  it('senza etichetta resta decorativo e non disturba gli screen reader', () => {
+    render(<Spinner />)
+    expect(screen.queryByRole('status')).toBeNull()
+    expect(document.querySelector('[data-movimento]')?.getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('l’attesa centrata annuncia cosa si sta aspettando', () => {
+    render(<AttesaCentrata />)
+    expect(screen.getByRole('status').getAttribute('aria-label')).toBe('Caricamento in corso')
   })
 })
 

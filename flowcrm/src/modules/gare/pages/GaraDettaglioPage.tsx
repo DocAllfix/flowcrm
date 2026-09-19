@@ -9,7 +9,7 @@ import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Building2, Landmark, Trash2, Plus,
+  ArrowLeft, Pencil, Building2, Landmark, Trash2, Plus,
   CheckCircle2, Briefcase, ExternalLink,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -47,6 +47,8 @@ import {
 } from '@/modules/gare/queries/gare'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 
 // Criteri Go/No-Go suggeriti (documento §3)
 const CRITERI_GO_NO_GO = [
@@ -459,9 +461,7 @@ function TabRequisiti({ gara }: { gara: Gara }) {
         <h3 className="text-sm font-semibold text-foreground">Requisiti di partecipazione</h3>
         {requisiti.length > 0 && (
           <div className="flex items-center gap-2">
-            <div className="h-2 w-32 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-success transition-all" style={{ width: `${pct}%` }} />
-            </div>
+            <Progress value={pct} etichetta="Requisiti soddisfatti" tono="success" className="w-32" />
             <span className="text-xs font-medium text-muted-foreground">{soddisfatti}/{requisiti.length}</span>
           </div>
         )}
@@ -945,7 +945,7 @@ export function GaraDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!gara) return <p className="text-sm text-muted-foreground">Gara non trovata (o modulo non attivo).</p>
 

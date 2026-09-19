@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Users, Loader2, MapPin, Clock, CalendarPlus } from 'lucide-react'
+import { Plus, Users, MapPin, Clock, CalendarPlus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
@@ -10,6 +10,7 @@ import {
 import { scaricaIcs } from '@/lib/ics'
 import { toast } from 'sonner'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 function fmtQuando(iso: string | null) {
   if (!iso) return 'Data da definire'
@@ -72,7 +73,7 @@ export function RiunioniPage() {
       />
 
       {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : riunioni.length === 0 ? (
         <EmptyState icon={Users} title="Nessuna riunione"
           description="Pianifica la prima riunione del team."

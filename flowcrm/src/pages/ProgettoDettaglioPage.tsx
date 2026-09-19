@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, Building2, Cog, Pencil } from 'lucide-react'
+import { ArrowLeft, Building2, Cog, Pencil } from 'lucide-react'
 import { useProgetto, type ProgettoStato } from '@/lib/queries/progetti'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,6 +10,7 @@ import { StoricoSection } from '@/components/StoricoSection'
 import { MilestoneSection } from '@/components/MilestoneSection'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -28,7 +29,7 @@ export function ProgettoDettaglioPage() {
   const { data: p, isLoading } = useProgetto(id)
   const [editOpen, setEditOpen] = useState(false)
 
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+  if (isLoading) return <AttesaCentrata className="py-20" />
   if (!p) return <p className="text-sm text-muted-foreground">Progetto non trovato.</p>
 
   return (

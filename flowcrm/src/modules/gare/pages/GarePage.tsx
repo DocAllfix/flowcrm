@@ -5,7 +5,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, Gavel, Loader2, Download } from 'lucide-react'
+import { Plus, Search, Gavel, Download } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,6 +22,7 @@ import { useGare, useArchiveGara, useDeleteGara, type Gara } from '@/modules/gar
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 
 function CountdownTermine({ gara }: { gara: Gara }) {
   if (!['in_analisi', 'in_preparazione'].includes(gara.stato)) return <span className="text-muted-foreground">—</span>
@@ -103,7 +104,7 @@ export function GarePage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrate.length === 0 ? (
         <EmptyState icon={Gavel} title="Nessuna gara"

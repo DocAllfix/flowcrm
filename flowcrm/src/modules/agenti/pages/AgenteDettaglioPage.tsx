@@ -10,7 +10,7 @@ import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Trash2, Plus, Building2, MapPin,
+  ArrowLeft, Pencil, Trash2, Plus, Building2, MapPin,
   Calculator, ShoppingCart, Receipt,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -34,6 +34,8 @@ import { supabase } from '@/lib/supabase'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { AgenteDialog } from '@/modules/agenti/dialogs/AgenteDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 import {
   TIPOLOGIA_LABEL, AGENTE_STATO, VISITA_ESITO, OFFERTA_STATO, ORDINE_STATO,
   NOTA_SPESE_TIPO, NOTA_SPESE_STATO, fmtImporto, fmtData, periodoCorrente,
@@ -827,9 +829,7 @@ function TabObiettivi({ agente }: { agente: Agente }) {
                 <BtnElimina onClick={() => elimina.mutate({ agenteId: agente.id, tabella: 'agenti_obiettivi', id: o.id })} />
               )}
             </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
-            </div>
+            <Progress value={pct} etichetta="Avanzamento verso l'obiettivo" className="mt-1.5" />
           </div>
         )
       })}
@@ -986,7 +986,7 @@ export function AgenteDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!agente) return <p className="text-sm text-muted-foreground">Agente non trovato (o accesso non consentito).</p>
 

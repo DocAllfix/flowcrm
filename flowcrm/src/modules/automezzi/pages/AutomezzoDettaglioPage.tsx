@@ -9,7 +9,7 @@ import { useState, useRef, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Trash2, Plus, Fuel, Wrench, User, Upload,
+  ArrowLeft, Pencil, Trash2, Plus, Fuel, Wrench, User, Upload,
 } from 'lucide-react'
 import { parseCsv } from '@/lib/csv'
 import { Button } from '@/components/ui/button'
@@ -28,6 +28,7 @@ import { ScadenzeModuliSection } from '@/components/ScadenzeModuliSection'
 import { useAuth } from '@/hooks/useAuth'
 import { AutomezzoDialog } from '@/modules/automezzi/dialogs/AutomezzoDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   AUTOMEZZO_STATI, statoAutomezzo, CATEGORIA_LABEL, ALIMENTAZIONE_LABEL,
   ACQUISIZIONE_LABEL, COSTO_VOCE_LABEL, SINISTRO_STATO_LABEL,
@@ -896,7 +897,7 @@ export function AutomezzoDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!mezzo) return <p className="text-sm text-muted-foreground">Mezzo non trovato (o modulo non attivo).</p>
 

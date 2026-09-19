@@ -9,7 +9,7 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Building2, MapPin, Trash2, Plus,
+  ArrowLeft, Pencil, Building2, MapPin, Trash2, Plus,
   HardHat, ShieldAlert, FileText, CheckCircle2,
   TriangleAlert,
 } from 'lucide-react'
@@ -37,6 +37,8 @@ import { moduloBySlug } from '@/config/moduli.config'
 import { CantiereDialog } from '@/modules/cantiere/dialogs/CantiereDialog'
 import { RapportinoDialog } from '@/modules/cantiere/dialogs/RapportinoDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
+import { Progress } from '@/components/ui/progress'
 import {
   CANTIERE_STATI, statoCantiere, fmtImporto, fmtData,
   METEO_LABEL, SICUREZZA_LABEL, QUALITA_TIPO_LABEL, AMBIENTE_LABEL,
@@ -278,9 +280,7 @@ function TabCronoprogramma({ cantiere }: { cantiere: Cantiere }) {
               </Select>
               <BtnElimina onClick={() => elimina.mutate({ cantiereId: cantiere.id, tabella: 'cantiere_fasi', id: f.id })} />
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
-              <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${f.avanzamento}%` }} />
-            </div>
+            <Progress value={f.avanzamento} etichetta={`Avanzamento della fase ${f.nome}`} className="mt-2" />
           </div>
         ))}
       </div>
@@ -1291,7 +1291,7 @@ export function CantiereDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!cantiere) return <p className="text-sm text-muted-foreground">Cantiere non trovato (o modulo non attivo).</p>
 

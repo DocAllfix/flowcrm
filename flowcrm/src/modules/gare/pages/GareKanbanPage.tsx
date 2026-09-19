@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DragDropContext, Draggable, type DropResult } from '@hello-pangea/dnd'
 import { toast } from 'sonner'
-import { Plus, Loader2, Building2, CalendarClock } from 'lucide-react'
+import { Plus, Building2, CalendarClock } from 'lucide-react'
 import { StrictModeDroppable } from '@/components/kanban/StrictModeDroppable'
 import { PageHeader } from '@/components/ui/page-header'
 import { GaraDialog } from '@/modules/gare/dialogs/GaraDialog'
@@ -15,6 +15,7 @@ import { GARA_STATI, fmtImporto, giorniAlTermine } from '@/modules/gare/stati'
 import { useGare, useMoveGaraStato, type Gara, type GaraStato } from '@/modules/gare/queries/gare'
 import { cn } from '@/lib/utils'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Spinner } from '@/components/ui/spinner'
 
 export function GareKanbanPage() {
   const navigate = useNavigate()
@@ -65,7 +66,7 @@ export function GareKanbanPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner etichetta="Caricamento in corso" dimensione="lg" />
       </div>
     )
   }

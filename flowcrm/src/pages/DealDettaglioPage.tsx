@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Building2, Calendar, Loader2, Briefcase } from 'lucide-react'
+import { ArrowLeft, Building2, Calendar, Briefcase } from 'lucide-react'
 import { useDeal } from '@/lib/queries/deals'
 import { useCommessePerDeal } from '@/lib/queries/commesse'
 import { Badge } from '@/components/ui/badge'
@@ -12,6 +12,7 @@ import { TimelineSection } from '@/components/TimelineSection'
 import { FeedSection } from '@/components/FeedSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -26,7 +27,7 @@ export function DealDettaglioPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner etichetta="Caricamento in corso" dimensione="lg" />
       </div>
     )
   }

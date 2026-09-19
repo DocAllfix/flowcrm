@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, FileText, Loader2, Download } from 'lucide-react'
+import { Plus, FileText, Download } from 'lucide-react'
 import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(n)
@@ -61,7 +62,7 @@ export function FatturePage() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : fatture.length === 0 ? (
         <EmptyState icon={FileText} title="Nessuna fattura"
           description={`Registra la prima fattura ${direzione === 'attiva' ? 'verso un cliente' : 'da un fornitore'}.`} />

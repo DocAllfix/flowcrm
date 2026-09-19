@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Loader2, Pencil, Mail, Phone, Building2 } from 'lucide-react'
+import { ArrowLeft, Pencil, Mail, Phone, Building2 } from 'lucide-react'
 import { useContatto } from '@/lib/queries/contatti'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
@@ -9,6 +9,7 @@ import { StoricoSection } from '@/components/StoricoSection'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 export function ContattoDettaglioPage() {
   const { id } = useParams<{ id: string }>()
@@ -16,7 +17,7 @@ export function ContattoDettaglioPage() {
   const { data: c, isLoading } = useContatto(id)
   const [editOpen, setEditOpen] = useState(false)
 
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+  if (isLoading) return <AttesaCentrata className="py-20" />
   if (!c) return <p className="text-sm text-muted-foreground">Contatto non trovato.</p>
 
   return (

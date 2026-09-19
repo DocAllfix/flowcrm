@@ -5,7 +5,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, Truck, Loader2, Download, CalendarClock } from 'lucide-react'
+import { Plus, Search, Truck, Download, CalendarClock } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,6 +21,7 @@ import { AutomezzoDialog } from '@/modules/automezzi/dialogs/AutomezzoDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 import {
   AUTOMEZZO_STATI, statoAutomezzo, CATEGORIA_LABEL, fmtData,
 } from '@/modules/automezzi/stati'
@@ -113,7 +114,7 @@ export function AutomezziPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={Truck} title="Nessun mezzo"

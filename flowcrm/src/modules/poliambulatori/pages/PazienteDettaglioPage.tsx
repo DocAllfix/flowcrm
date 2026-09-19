@@ -8,7 +8,7 @@ import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Trash2, Plus, Lock, Stethoscope,
+  ArrowLeft, Pencil, Trash2, Plus, Lock, Stethoscope,
   FileSignature, Send, CheckCircle2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -26,6 +26,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { PazienteDialog } from '@/modules/poliambulatori/dialogs/PazienteDialog'
 import { AppuntamentoDialog } from '@/modules/poliambulatori/dialogs/AppuntamentoDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   CONDIZIONE_LABEL, CONSENSO_LABEL, CANALE_LABEL, APPUNTAMENTO_STATO,
   REFERTO_STATO, fmtData, fmtDataOra,
@@ -478,7 +479,7 @@ export function PazienteDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!paziente) return <p className="text-sm text-muted-foreground">Paziente non trovato (o modulo non attivo).</p>
 

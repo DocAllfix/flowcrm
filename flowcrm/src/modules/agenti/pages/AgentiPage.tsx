@@ -5,7 +5,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, BriefcaseBusiness, Loader2, Download } from 'lucide-react'
+import { Plus, Search, BriefcaseBusiness, Download } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,6 +18,7 @@ import { TIPOLOGIA_LABEL, AGENTE_STATO } from '@/modules/agenti/stati'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 import {
   useAgenti, useAgenteCorrente, useArchiveAgente, useDeleteAgente, type Agente,
 } from '@/modules/agenti/queries/agenti'
@@ -82,7 +83,7 @@ export function AgentiPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={BriefcaseBusiness} title="Nessun agente"

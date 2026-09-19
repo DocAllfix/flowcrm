@@ -7,6 +7,7 @@ import { Header } from '@/components/layout/Header'
 import { BannerDemo } from '@/components/layout/BannerDemo'
 import { VistaModuloProvider } from '@/components/layout/VistaModuloContext'
 import { CommandPalette } from '@/components/CommandPalette'
+import { Spinner } from '@/components/ui/spinner'
 import { CopilotWidget } from '@/components/CopilotWidget'
 import { TourAutoStarter } from '@/lib/onboarding/TourAutoStarter'
 
@@ -44,11 +45,7 @@ export function AppLayout() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <div
-          role="status"
-          aria-label="Caricamento della sessione"
-          className="size-8 rounded-full border-2 border-primary border-t-transparent motion-safe:animate-spin"
-        />
+        <Spinner etichetta="Caricamento della sessione" dimensione="lg" className="text-primary" />
       </div>
     )
   }

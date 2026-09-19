@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Users, Loader2 } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
@@ -10,6 +10,7 @@ import { DipendenteDialog } from '@/features/hr/DipendenteDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   useDipendenti, useArchiveDipendente, useDeleteDipendente, type Dipendente,
 } from '@/lib/queries/hr'
@@ -36,7 +37,7 @@ export function HRPage() {
       />
 
       {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : dipendenti.length === 0 ? (
         <EmptyState icon={Users} title="Nessun dipendente" description="Aggiungi il personale dell'azienda."
           action={<BottoneScrittura onClick={() => setCreateOpen(true)}><Plus className="h-4 w-4" /> Nuovo dipendente</BottoneScrittura>} />

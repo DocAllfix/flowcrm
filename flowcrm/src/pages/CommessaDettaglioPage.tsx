@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, Pencil } from 'lucide-react'
+import { ArrowLeft, Pencil } from 'lucide-react'
 import { useCommessa, type CommessaStato } from '@/lib/queries/commesse'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -26,7 +27,7 @@ export function CommessaDettaglioPage() {
   const { data: c, isLoading } = useCommessa(id)
   const [editOpen, setEditOpen] = useState(false)
 
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+  if (isLoading) return <AttesaCentrata className="py-20" />
   if (!c) return <p className="text-sm text-muted-foreground">Commessa non trovata.</p>
 
   return (

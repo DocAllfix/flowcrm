@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, Pencil, Mail, Phone, Plus, Check, Trash2, Plane, GraduationCap, X } from 'lucide-react'
+import { ArrowLeft, Pencil, Mail, Phone, Plus, Check, Trash2, Plane, GraduationCap, X } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   useDipendente, useAssenze, useCreateAssenza, useSetAssenzaStato, useDeleteAssenza,
@@ -17,6 +17,7 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { DipendenteDialog } from '@/features/hr/DipendenteDialog'
 import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 const STATO_TONE = { richiesta: 'warning', approvata: 'success', rifiutata: 'danger' } as const
 const TIPO_LABEL: Record<string, string> = { ferie: 'Ferie', permesso: 'Permesso', malattia: 'Malattia' }
@@ -27,7 +28,7 @@ export function DipendenteDettaglioPage() {
   const { data: d, isLoading } = useDipendente(id)
   const [editOpen, setEditOpen] = useState(false)
 
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+  if (isLoading) return <AttesaCentrata className="py-20" />
   if (!d) return <p className="text-sm text-muted-foreground">Dipendente non trovato.</p>
 
   return (

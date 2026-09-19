@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 
 export function MilestoneSection({ progettoId }: { progettoId: string }) {
   const { isAdmin } = useAuth()
@@ -41,9 +42,11 @@ export function MilestoneSection({ progettoId }: { progettoId: string }) {
             <span className="font-medium text-foreground">Avanzamento</span>
             <span className="text-muted-foreground">{completate}/{milestone.length} · {perc}%</span>
           </div>
-          <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${perc}%` }} />
-          </div>
+          <Progress
+            value={perc}
+            etichetta={`Milestone completate: ${completate} su ${milestone.length}`}
+            className="h-2.5"
+          />
         </Card>
       )}
 

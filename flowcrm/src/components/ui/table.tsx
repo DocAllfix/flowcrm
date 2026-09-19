@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { cn } from '@/lib/utils'
 
 /**
@@ -55,8 +56,18 @@ function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
+  // AutoAnimate sta QUI e non nelle pagine: così tutte le tabelle del
+  // prodotto guadagnano la transizione su creazione, filtro ed
+  // eliminazione senza che nessuna pagina debba ricordarsene. Anima solo
+  // `transform` e `opacity`, e rispetta `prefers-reduced-motion` da sé
+  // (l'opzione per ignorarlo esiste e non la usiamo).
+  const [corpo] = useAutoAnimate<HTMLTableSectionElement>({
+    duration: 200,
+    easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+  })
   return (
     <tbody
+      ref={corpo}
       data-slot="table-body"
       className={cn('[&_tr:last-child]:border-0', className)}
       {...props}
