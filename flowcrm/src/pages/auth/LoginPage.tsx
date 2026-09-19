@@ -58,7 +58,7 @@ export function LoginPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
+          className="space-y-4 rounded-lg border border-border bg-card p-6"
         >
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>

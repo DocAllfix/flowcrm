@@ -20,7 +20,7 @@ export function KanbanCard({ deal, stage }: Props) {
   return (
     <div
       onClick={() => navigate(`/deal/${deal.id}`)}
-      className="group cursor-pointer rounded-lg border border-border bg-card p-3 shadow-sm transition-colors duration-200 hover:border-primary/40 hover:bg-muted/30"
+      className="group cursor-pointer rounded-lg border border-border bg-card p-3 transition-colors duration-200 hover:border-primary/40 hover:bg-muted/30"
     >
       <div className="mb-2 flex items-start justify-between gap-2">
         <h4 className="text-sm font-semibold leading-snug text-foreground">{deal.nome}</h4>

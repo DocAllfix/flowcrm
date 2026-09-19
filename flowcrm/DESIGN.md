@@ -2,54 +2,55 @@
 name: FlowCRM
 description: Sistema di design per un CRM denso e silenzioso, in cui la tinta appartiene al cliente e non al prodotto.
 colors:
-  primary: "oklch(0.6861 0.2054 34.6)"
-  primary-foreground: "oklch(0.9900 0.0050 34.6)"
-  accent-brand: "oklch(0.3898 0.0425 249.0)"
-  surface-base: "oklch(0.9774 0.0042 236.5)"
-  surface-raised: "oklch(1.0000 0.0000 0)"
-  surface-sunken: "oklch(0.9650 0.0059 239.8)"
-  ink: "oklch(0.2781 0.0296 256.8)"
-  ink-muted: "oklch(0.5006 0.0250 259.2)"
-  hairline: "oklch(0.8713 0.0205 250.4)"
-  state-danger: "oklch(0.6616 0.1935 21.7)"
-  state-success: "oklch(0.7150 0.1303 179.3)"
-  state-warning: "oklch(0.7686 0.1647 70.1)"
-  night-base: "oklch(0.2086 0.0128 264.2)"
-  night-raised: "oklch(0.2425 0.0147 261.7)"
-  night-ink: "oklch(0.9297 0.0092 258.3)"
+  primary: "oklch(0.6857 0.2059 35)"
+  primary-foreground: "oklch(0.3030 0.0721 35)"
+  accent-brand: "oklch(0.3913 0.0424 249)"
+  surface-base: "oklch(0.9770 0.0042 236.5)"
+  surface-raised: "oklch(0.9950 0.0020 236.5)"
+  surface-sunken: "oklch(0.9616 0.0053 236.5)"
+  ink: "oklch(0.2794 0.0299 256.8)"
+  ink-muted: "oklch(0.5153 0.0317 256.8)"
+  hairline: "oklch(0.8707 0.0203 249.9)"
+  control-edge: "oklch(0.6430 0.0203 249.9)"
+  state-danger: "oklch(0.5750 0.1933 21.3)"
+  state-success: "oklch(0.5390 0.1008 178.6)"
+  state-warning: "oklch(0.7697 0.1645 70.6)"
+  night-base: "oklch(0.2092 0.0116 264.3)"
+  night-raised: "oklch(0.2409 0.0136 264.3)"
+  night-ink: "oklch(0.9369 0.0070 247.9)"
 typography:
   display:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "1.875rem"
     fontWeight: 600
     lineHeight: 1.2
     letterSpacing: "-0.02em"
   headline:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "1.5rem"
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "-0.02em"
   title:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
     lineHeight: 1.4
     letterSpacing: "-0.01em"
   body:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.5
     letterSpacing: "normal"
   data:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 400
     lineHeight: 1.45
     fontFeature: "tabular-nums"
   label:
-    fontFamily: "InterVariable, Inter, 'Segoe UI', system-ui, sans-serif"
+    fontFamily: "'Inter Variable', 'Segoe UI', system-ui, sans-serif"
     fontSize: "0.6875rem"
     fontWeight: 600
     lineHeight: 1.3
@@ -118,12 +119,17 @@ components:
 > `@theme` di Tailwind v4). Nessun colore, raggio, ombra o carattere scritto a mano nei
 > componenti: solo token. Il corrispettivo strategico è `PRODUCT.md`.
 >
-> **Stato al 2026-09-19.** Questo documento descrive il bersaglio, non ciò che è già in
-> piedi. Alla data di scrittura sono veri: i ruoli dei token, il tema chiaro e scuro, il
-> raggio unico a 12px. Devono ancora diventarlo: lo spazio OKLCH (Fase 1), Inter
-> auto-ospitato (Fase 1), i numeri tabellari (Fase 1), la derivazione della tinta dal
-> cliente (Fase 2) e la bonifica dei 79 colori fissi (Fase 4). Una riga di questo file non
-> è vera finché non esiste il comando che lo dimostra.
+> **Stato al 2026-09-19, dopo le Fasi 1-8.** Ciò che questo documento prescrive è in
+> piedi, e ogni regola verificabile ha la sua guardia che fa fallire la build:
+>
+> | Regola | Guardia |
+> |---|---|
+> | contrasti AA dei token, in entrambi i temi | `src/__tests__/contrasto-token.test.ts` |
+> | contrasti AA della palette derivata da qualunque tinta del cliente | `src/__tests__/tema-derivato.test.ts` |
+> | nessun colore fisso, nessuna striscia laterale, nessun gradient text, nessuna emoji | `src/__tests__/token-puri.test.ts` |
+> | WCAG 2.2 AA misurato in browser, entrambi i temi | `e2e/accessibilita.spec.ts` |
+>
+> Una riga di questo file non è vera finché non esiste il comando che lo dimostra.
 
 ## 1. Overview
 
@@ -163,7 +169,7 @@ blu notte.
 
 ## 2. Colors
 
-Neutri freddi tintati verso la tinta del cliente, una sola voce di accento, tre stati. La
+Neutri tintati verso la tinta del cliente, una sola voce di accento, tre stati. La
 strategia è **Restrained**: l'accento copre meno del 10% di qualunque schermata, ed è
 proprio la sua rarità a farlo funzionare.
 
@@ -228,7 +234,7 @@ coriandoli.
 
 ## 3. Typography
 
-**Family:** InterVariable, auto-ospitata (con ripiego `"Segoe UI", system-ui, sans-serif`).
+**Family:** Inter Variable, auto-ospitata (con ripiego `"Segoe UI", system-ui, sans-serif`).
 **Mono:** stack di sistema (`ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo`), zero
 byte scaricati.
 
@@ -239,9 +245,9 @@ gerarchia. Inter è auto-ospitata per obbligo, non per gusto: la CSP di produzio
 in sviluppo e fallisce dal cliente.
 
 **Character:** neutra e paziente. Non ha opinioni sulla pagina, le lascia al contenuto. Le
-varianti stilistiche `cv02 cv03 cv04` (una `l` con la coda, una `1` senza base, una `a` a
-due piani) esistono per una ragione sola: distinguere caratteri che in un codice cliente o in
-una partita IVA si confondono.
+varianti stilistiche `cv02 cv03 cv04` aprono i contorni di alcune cifre, e esistono per
+una ragione sola: distinguere caratteri che in un codice cliente o in una partita IVA si
+confondono a colpo d'occhio.
 
 ### Hierarchy
 

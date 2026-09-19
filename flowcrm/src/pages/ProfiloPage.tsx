@@ -46,7 +46,7 @@ export function ProfiloPage() {
       <PageHeader title="Il mio profilo" description="Gestisci i tuoi dati personali." />
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
+        className="space-y-4 rounded-lg border border-border bg-card p-6"
       >
         <div className="space-y-1.5">
           <Label htmlFor="nome">Nome</Label>
@@ -67,7 +67,7 @@ export function ProfiloPage() {
 
       <form
         onSubmit={handlePassword}
-        className="mt-6 space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
+        className="mt-6 space-y-4 rounded-lg border border-border bg-card p-6"
       >
         <div>
           <h2 className="text-title text-foreground">Sicurezza</h2>

@@ -56,7 +56,7 @@ export function RecuperoPasswordPage() {
 
         {inviata ? (
           <div
-            className="space-y-4 rounded-xl border border-border bg-card p-6 text-center shadow-sm"
+            className="space-y-4 rounded-lg border border-border bg-card p-6 text-center"
             data-testid="recupero-inviato"
           >
             <MailCheck className="mx-auto h-10 w-10 text-primary" />
@@ -74,7 +74,7 @@ export function RecuperoPasswordPage() {
         ) : (
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm"
+            className="space-y-4 rounded-lg border border-border bg-card p-6"
           >
             <div className="space-y-1.5">
               <Label htmlFor="email">Indirizzo email</Label>

@@ -129,7 +129,7 @@ export function AgendaPoliPage() {
         }
       />
 
-      <div className="rounded-xl border border-border bg-card p-4 shadow-sm" style={{ height: 640 }}>
+      <div className="rounded-lg border border-border bg-card p-4" style={{ height: 640 }}>
         <DnDCalendar
           localizer={localizer}
           culture="it"

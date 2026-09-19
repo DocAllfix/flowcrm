@@ -44,7 +44,7 @@ import {
   type AutomezzoPneumatico, type AutomezzoAttrezzatura,
 } from '@/modules/automezzi/queries/automezzi'
 
-const card = 'rounded-xl border border-border bg-card p-5 shadow-sm'
+const card = 'rounded-lg border border-border bg-card p-5'
 
 function Riga({ label, children }: { label: string; children: React.ReactNode }) {
   return (

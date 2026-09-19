@@ -72,7 +72,7 @@ export function TimelineSection({ scope }: Props) {
             const Icon = TIPO_ICON[a.tipo]
             const done = a.stato === 'completata'
             return (
-              <li key={a.id} className="flex gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
+              <li key={a.id} className="flex gap-3 rounded-lg border border-border bg-card p-3">
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted">
                   <Icon className="h-4 w-4 text-muted-foreground" />
                 </div>

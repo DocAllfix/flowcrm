@@ -50,7 +50,7 @@ export function ProgettiPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {progetti.map((p) => (
             <div key={p.id} onClick={() => navigate(`/progetti/${p.id}`)}
-              className="cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/40 hover:bg-muted/20">
+              className="cursor-pointer rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-muted/20">
               <div className="mb-2 flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   {p.tipo === 'cliente' ? <Building2 className="h-3.5 w-3.5" /> : <Cog className="h-3.5 w-3.5" />}

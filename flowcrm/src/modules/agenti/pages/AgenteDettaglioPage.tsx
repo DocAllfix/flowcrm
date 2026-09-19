@@ -49,7 +49,7 @@ import {
   type AgenteProvvigione, type AgenteObiettivo, type AgenteNotaSpese,
 } from '@/modules/agenti/queries/agenti'
 
-const card = 'rounded-xl border border-border bg-card p-5 shadow-sm'
+const card = 'rounded-lg border border-border bg-card p-5'
 
 function Riga({ label, children }: { label: string; children: React.ReactNode }) {
   return (

@@ -34,7 +34,7 @@ export function AttivitaPage() {
     const Icon = TIPO_ICON[a.tipo]
     const done = a.stato === 'completata'
     return (
-      <li key={a.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
+      <li key={a.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
         <button
           onClick={() => toggle.mutate({ id: a.id, stato: done ? 'da_fare' : 'completata' })}
           className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${

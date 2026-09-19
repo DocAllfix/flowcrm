@@ -116,7 +116,7 @@ export function NuovaPasswordPage() {
   }
 
   return cornice(
-    <form onSubmit={handleSubmit} className="space-y-4 rounded-xl border border-border bg-card p-6 shadow-sm">
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-border bg-card p-6">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <ShieldCheck className="h-4 w-4 text-primary" />
         Scegli una nuova password
