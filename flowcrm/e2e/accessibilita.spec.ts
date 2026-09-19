@@ -88,6 +88,9 @@ test.describe('pagine interne', () => {
   ]
 
   test('le pagine principali rispettano WCAG 2.2 AA nei due temi', async ({ page }) => {
+    // Otto pagine, due temi, una scansione axe completa per ciascuna: i 30
+    // secondi predefiniti bastano per arrivare a metà.
+    test.setTimeout(240_000)
     await page.goto('/login')
     await page.getByTestId('login-email').fill(EMAIL!)
     await page.getByTestId('login-password').fill(PASSWORD!)
