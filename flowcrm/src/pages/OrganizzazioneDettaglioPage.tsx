@@ -27,9 +27,10 @@ import {
 } from '@/components/ui/alert-dialog'
 import { OrganizzazioneDialog } from '@/features/organizzazioni/OrganizzazioneDialog'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
-  cliente: 'primary', fornitore: 'info', partner: 'purple',
+  cliente: 'primary', fornitore: 'info', partner: 'serie',
   potenziale_partner: 'warning', prospect: 'neutral',
 }
 
@@ -176,9 +177,7 @@ export function OrganizzazioneDettaglioPage() {
             <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
               {contatti!.map((c) => (
                 <div key={c.id} className="flex items-center gap-3 p-4">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">
-                    {(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}
-                  </div>
+                  <Avatar className="size-9"><AvatarFallback className="text-xs">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
                   <div className="flex-1">
                     <p className="font-medium text-foreground">{c.nome} {c.cognome ?? ''}</p>
                     <p className="text-xs text-muted-foreground">{c.ruolo_aziendale ?? c.email ?? ''}</p>

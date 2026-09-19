@@ -7,6 +7,7 @@ import { NotificheBadge } from '@/components/notifiche/NotificheBadge'
 import { NotifichePanel } from '@/components/notifiche/NotifichePanel'
 import { HelpButton } from '@/lib/onboarding/HelpButton'
 import { ModuleSwitcher } from '@/components/ModuleSwitcher'
+import { InterruttoreTema } from '@/components/layout/InterruttoreTema'
 import { Button } from '@/components/ui/button'
 
 interface HeaderProps {
@@ -50,6 +51,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
         </div>
         <div className="flex items-center gap-2">
           <ConnectionIndicator collapsed={false} />
+          <InterruttoreTema />
           <HelpButton />
           <span data-tour="notifiche" className="inline-flex">
             <NotificheBadge onClick={() => setNotificheOpen(true)} />

@@ -88,8 +88,36 @@
     --border:                 oklch(0.8707 0.0203 249.9);
     --input:                  oklch(0.6430 0.0203 249.9);
 
-    /* ── Scala DATI: separata dai colori semantici, perché in un grafico
-          il verde direbbe «positivo» mentre sta dicendo «terza serie». ─ */
+    /* ── Informativo: il quarto stato, quello che non è né un problema
+          né un successo (in attesa, in lavorazione, presentata). ────── */
+    --info:                   oklch(0.5200 0.1600 255);
+    --info-foreground:        oklch(0.9850 0.0050 255);
+
+    /* ── Scala DATI ────────────────────────────────────────────────────
+          Separata dai colori semantici — in un grafico il verde direbbe
+          «positivo» mentre sta dicendo «terza serie» — e separata anche
+          dalla tinta del cliente: il marchio cambia da un'istanza
+          all'altra, mentre «presentata» e «aggiudicata» devono restare
+          distinguibili ovunque. Sei tinte a distanza angolare regolare.
+
+          ⚠️ Le lightness NON sono identiche fra le tinte, e non è una
+          svista: OKLCH è percettivamente uniforme, la luminanza con cui
+          WCAG calcola il contrasto non lo è. Alla stessa lightness il
+          verde e il verde acqua restavano a 4,2 e 3,9 sul fondo mentre
+          blu e rosa passavano. Ogni L è risolta contro la superficie più
+          sfavorevole del proprio tema: il fondo pagina nel chiaro (che è
+          più scuro della card), la card nello scuro (che è più chiara del
+          fondo). */
+    --serie-1:                oklch(0.5480 0.1400 255);   /* blu */
+    --serie-2:                oklch(0.5320 0.1300 155);   /* verde */
+    --serie-3:                oklch(0.5530 0.1180 70);    /* ambra */
+    --serie-4:                oklch(0.5610 0.1400 300);   /* viola */
+    --serie-5:                oklch(0.5360 0.0900 195);   /* verde acqua */
+    --serie-6:                oklch(0.5650 0.1400 350);   /* rosa */
+    /* Grigio per gli stati «spenti» (annullato, in analisi): non è una
+       serie, è l'assenza di una serie. */
+    --serie-neutra:           oklch(0.5470 0.0200 255);
+
     --chart-1:                oklch(0.6857 0.2059 35);
     --chart-2:                oklch(0.6261 0.1859 259.6);
     --chart-3:                oklch(0.6902 0.1481 162.4);
@@ -157,6 +185,19 @@
 
     --border:                 oklch(0.3315 0.0182 262.9);
     --input:                  oklch(0.5350 0.0182 262.9);
+
+    --info:                   oklch(0.7600 0.1300 255);
+    --info-foreground:        oklch(0.2400 0.0500 255);
+
+    /* Le stesse sei tinte, schiarite: su fondo notte una serie a 0.55
+       sparisce contro il fondo invece di distinguersi dalle altre. */
+    --serie-1:                oklch(0.6260 0.1300 255);
+    --serie-2:                oklch(0.6110 0.1300 155);
+    --serie-3:                oklch(0.6320 0.1300 70);
+    --serie-4:                oklch(0.6380 0.1300 300);
+    --serie-5:                oklch(0.6130 0.1040 195);
+    --serie-6:                oklch(0.6430 0.1300 350);
+    --serie-neutra:           oklch(0.6250 0.0200 255);
 
     --chart-1:                oklch(0.7300 0.1830 40);
     --chart-2:                oklch(0.6684 0.1625 259.5);
@@ -262,7 +303,16 @@
   --color-success-foreground:     var(--success-foreground);
   --color-warning:                var(--warning);
   --color-warning-foreground:     var(--warning-foreground);
+  --color-info:                   var(--info);
+  --color-info-foreground:        var(--info-foreground);
   /* Scala dati */
+  --color-serie-1:                var(--serie-1);
+  --color-serie-2:                var(--serie-2);
+  --color-serie-3:                var(--serie-3);
+  --color-serie-4:                var(--serie-4);
+  --color-serie-5:                var(--serie-5);
+  --color-serie-6:                var(--serie-6);
+  --color-serie-neutra:           var(--serie-neutra);
   --color-chart-1:                var(--chart-1);
   --color-chart-2:                var(--chart-2);
   --color-chart-3:                var(--chart-3);

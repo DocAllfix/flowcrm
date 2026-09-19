@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { APP_CONFIG, caricaConfigurazione } from '@/config/app.config'
 import { applicaTemaCliente, applicaIdentitaCliente } from '@/lib/tema'
+import { inizializzaTema } from '@/hooks/useTheme'
 import { inizializzaTelemetria } from '@/lib/telemetria'
 // Import STATICO e volutamente in cima: è ciò che rende `window.__supabase`
 // disponibile appena la pagina carica, invece che dopo gli `await` qui sotto.
@@ -55,6 +56,9 @@ async function avvia(): Promise<void> {
   //    di quelli del cliente, proprio nella schermata di accesso.
   applicaTemaCliente(APP_CONFIG)
   applicaIdentitaCliente(APP_CONFIG)
+  // Chiaro o scuro, prima del primo render: applicato dopo si vedrebbe un
+  // lampo chiaro in faccia a chi lavora in tema scuro.
+  inizializzaTema()
 
   // 3. Telemetria (spenta se il DSN è vuoto), che legge la configurazione.
   inizializzaTelemetria()

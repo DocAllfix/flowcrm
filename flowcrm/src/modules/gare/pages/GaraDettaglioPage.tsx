@@ -45,6 +45,7 @@ import {
   useCreaFiglioGara, useAggiornaFiglioGara, useEliminaFiglioGara,
   type Gara, type GaraStato, type GaraRequisitoTipo,
 } from '@/modules/gare/queries/gare'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 // Criteri Go/No-Go suggeriti (documento §3)
 const CRITERI_GO_NO_GO = [
@@ -538,9 +539,7 @@ function TabTeam({ gara }: { gara: Gara }) {
         )}
         {team.map((m) => (
           <div key={m.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">
-              {(m.utente?.nome[0] ?? '?')}{(m.utente?.cognome?.[0] ?? '')}
-            </div>
+            <Avatar className="size-8"><AvatarFallback className="text-xs">{(m.utente?.nome[0] ?? '?')}{(m.utente?.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
             <span className="flex-1 font-medium text-foreground">
               {m.utente ? `${m.utente.nome} ${m.utente.cognome ?? ''}` : '—'}
             </span>

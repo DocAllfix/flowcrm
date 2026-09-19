@@ -42,7 +42,7 @@ const messages = {
 }
 
 const TIPO_COLORE: Record<CalEvent['tipo'], string> = {
-  riunione: '#ff5c35', attivita: '#3b82f6', incasso: '#16a34a', tassa: '#9333ea',
+  riunione: 'var(--primary)', attivita: 'var(--serie-1)', incasso: 'var(--serie-2)', tassa: 'var(--serie-4)',
 }
 
 export function CalendarioPage() {

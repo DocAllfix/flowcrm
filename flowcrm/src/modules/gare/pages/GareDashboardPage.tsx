@@ -49,8 +49,8 @@ function Kpi({ icon: Icon, label, value, tint }: {
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 const fmtDataBreve = (iso: string) =>
@@ -85,15 +85,15 @@ export function GareDashboardPage() {
       <PageHeader title="Dashboard gare" description="Andamento delle procedure: partecipazione, esiti, scadenze." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={Gavel} label="Gare in corso" tint="bg-orange-50 text-primary"
+        <Kpi icon={Gavel} label="Gare in corso" tint="bg-primary/10 text-primary"
           value={String((kpi?.in_analisi ?? 0) + (kpi?.in_preparazione ?? 0) + (kpi?.presentate ?? 0))} />
-        <Kpi icon={Trophy} label="Tasso aggiudicazione" tint="bg-green-50 text-green-600"
+        <Kpi icon={Trophy} label="Tasso aggiudicazione" tint="bg-muted text-muted-foreground"
           value={kpi?.tasso_aggiudicazione != null ? `${kpi.tasso_aggiudicazione}%` : '—'} />
-        <Kpi icon={TrendingUp} label="Valore vinto" tint="bg-green-50 text-green-600"
+        <Kpi icon={TrendingUp} label="Valore vinto" tint="bg-muted text-muted-foreground"
           value={fmtImporto(Number(kpi?.valore_vinte ?? 0))} />
-        <Kpi icon={Landmark} label="Valore in corso" tint="bg-blue-50 text-blue-600"
+        <Kpi icon={Landmark} label="Valore in corso" tint="bg-muted text-muted-foreground"
           value={fmtImporto(Number(kpi?.valore_in_corso ?? 0))} />
-        <Kpi icon={Timer} label="Preparazione media" tint="bg-purple-50 text-purple-600"
+        <Kpi icon={Timer} label="Preparazione media" tint="bg-muted text-muted-foreground"
           value={kpi?.giorni_medi_preparazione != null ? `${kpi.giorni_medi_preparazione} gg` : '—'} />
       </div>
 

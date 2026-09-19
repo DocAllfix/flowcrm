@@ -17,7 +17,7 @@ import { BottoneScrittura } from '@/components/BottoneScrittura'
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
   cliente: 'primary',
   fornitore: 'info',
-  partner: 'purple',
+  partner: 'serie',
   potenziale_partner: 'warning',
   prospect: 'neutral',
 }

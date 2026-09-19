@@ -50,16 +50,16 @@ export function PoliambulatorioDashboardPage() {
         description="La giornata della struttura: agenda, referti, scadenze, qualità." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-orange-50 text-primary"
+        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-primary/10 text-primary"
           value={String(kpi?.appuntamenti_oggi ?? 0)} />
-        <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-blue-50 text-blue-600"
+        <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-muted text-muted-foreground"
           value={String(kpi?.appuntamenti_7gg ?? 0)} />
-        <Kpi icon={Users} label="Pazienti" tint="bg-green-50 text-green-600"
+        <Kpi icon={Users} label="Pazienti" tint="bg-muted text-muted-foreground"
           value={`${kpi?.pazienti_totali ?? 0} (+${kpi?.nuovi_pazienti_mese ?? 0} nel mese)`} />
-        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-red-50 text-red-600"
+        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-destructive/10 text-destructive"
           value={kpi?.tasso_no_show_30gg != null ? `${kpi.tasso_no_show_30gg}%` : '—'} />
         <Kpi icon={FileSignature} label={sonoMedico ? 'Referti da validare' : 'Eventi qualità aperti'}
-          tint="bg-purple-50 text-purple-600"
+          tint="bg-muted text-muted-foreground"
           value={sonoMedico ? String(kpi?.referti_da_validare ?? 0) : String(kpi?.eventi_qualita_aperti ?? 0)} />
       </div>
 

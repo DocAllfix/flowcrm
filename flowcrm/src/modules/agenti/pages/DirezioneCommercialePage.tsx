@@ -16,8 +16,8 @@ import { useAgentiKpi } from '@/modules/agenti/queries/agenti'
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 export function DirezioneCommercialePage() {

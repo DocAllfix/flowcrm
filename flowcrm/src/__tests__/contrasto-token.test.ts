@@ -100,6 +100,20 @@ const COPPIE_TESTO: Array<[string, string]> = [
   // errore sopra le superfici. Deve reggere in entrambi i ruoli.
   ['--destructive', '--background'],
   ['--destructive', '--card'],
+  ['--info-foreground', '--info'],
+  ['--info', '--background'],
+  // La scala dati non serve solo a colorare punti: le stesse tinte fanno
+  // da testo negli elenchi di stato, quindi devono reggere AA su carta.
+  ['--serie-1', '--background'],
+  ['--serie-2', '--background'],
+  ['--serie-3', '--background'],
+  ['--serie-4', '--background'],
+  ['--serie-5', '--background'],
+  ['--serie-6', '--background'],
+  ['--serie-neutra', '--background'],
+  ['--serie-1', '--card'],
+  ['--serie-3', '--card'],
+  ['--serie-6', '--card'],
 ]
 
 /**

@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export function ContattoDettaglioPage() {
   const { id } = useParams<{ id: string }>()
@@ -27,9 +28,7 @@ export function ContattoDettaglioPage() {
       <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
         <div className="flex items-start justify-between gap-4">
           <div className="flex gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-lg font-semibold text-white">
-              {(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}
-            </div>
+            <Avatar className="size-14 shrink-0"><AvatarFallback className="text-lg">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
             <div>
               <h1 className="text-2xl font-bold text-foreground">{c.nome} {c.cognome ?? ''}</h1>
               {c.ruolo_aziendale && <p className="text-sm text-muted-foreground">{c.ruolo_aziendale}</p>}

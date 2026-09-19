@@ -8,6 +8,7 @@ import { moduliAttivi, moduloBySlug } from '@/config/moduli.config'
 import { useVistaModulo } from '@/components/layout/VistaModuloContext'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 interface SidebarProps {
   /** Stato off-canvas su mobile */
@@ -148,9 +149,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         {userProfile && (
           <div className="border-t border-sidebar-border p-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-sm font-semibold text-white">
-                {initials}
-              </div>
+              <Avatar className="size-10"><AvatarFallback>{initials}</AvatarFallback></Avatar>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-foreground">
                   {userProfile.nome} {userProfile.cognome ?? ''}

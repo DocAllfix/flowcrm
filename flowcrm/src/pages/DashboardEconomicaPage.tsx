@@ -30,8 +30,8 @@ const meseLabel = (iso: string) =>
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 export function DashboardEconomicaPage() {
@@ -53,11 +53,11 @@ export function DashboardEconomicaPage() {
       <PageHeader title="Dashboard economica" description="Fatturato e flusso di cassa, derivati dai dati reali." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-orange-50 text-primary" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
-        <KpiEco icon={Clock} label="Da incassare" tint="bg-blue-50 text-blue-600" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
-        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-red-50 text-red-600" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
-        <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-green-50 text-green-600" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
-        <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-purple-50 text-purple-600" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
+        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-primary/10 text-primary" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
+        <KpiEco icon={Clock} label="Da incassare" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
+        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-destructive/10 text-destructive" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
+        <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
+        <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

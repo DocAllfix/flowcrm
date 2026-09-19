@@ -11,6 +11,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export function ContattiPage() {
   const navigate = useNavigate()
@@ -83,9 +84,7 @@ export function ContattiPage() {
                   className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">
-                        {(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}
-                      </div>
+                      <Avatar className="size-8"><AvatarFallback className="text-xs">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
                       <span className="font-medium text-foreground">{c.nome} {c.cognome ?? ''}</span>
                     </div>
                   </td>

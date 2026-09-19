@@ -11,6 +11,7 @@ import { useFeed, useSendMessaggio, type FeedTarget, type Messaggio } from '@/li
 import { useUsers } from '@/lib/queries/users'
 import { useAuth } from '@/hooks/useAuth'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 interface Props {
   target: FeedTarget
@@ -72,9 +73,7 @@ export function FeedSection({ target }: Props) {
             const mine = m.autore_id === userProfile?.id
             return (
               <div key={m.id} className="flex gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-[11px] font-semibold text-white">
-                  {iniziali(m)}
-                </div>
+                <Avatar className="size-8 shrink-0"><AvatarFallback className="text-[11px]">{iniziali(m)}</AvatarFallback></Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-semibold text-foreground">

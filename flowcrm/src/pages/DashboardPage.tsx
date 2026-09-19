@@ -50,7 +50,7 @@ export function DashboardPage() {
   const chartData = pipeline.map((s) => ({
     nome: s.nome,
     pesato: Number(s.valore_pesato),
-    colore: s.colore ?? '#ff5c35',
+    colore: s.colore ?? 'var(--color-primary)',
   }))
 
   return (
@@ -61,21 +61,21 @@ export function DashboardPage() {
       <p className="mt-1 text-sm text-muted-foreground">Ecco la situazione operativa.</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        <KpiCard icon={Building2} label="Organizzazioni" tint="bg-orange-50 text-primary" to="/organizzazioni"
+        <KpiCard icon={Building2} label="Organizzazioni" tint="bg-primary/10 text-primary" to="/organizzazioni"
           value={String(kpi?.organizzazioni ?? 0)} />
-        <KpiCard icon={BookUser} label="Contatti" tint="bg-blue-50 text-blue-500" to="/contatti"
+        <KpiCard icon={BookUser} label="Contatti" tint="bg-muted text-muted-foreground" to="/contatti"
           value={String(kpi?.contatti ?? 0)} />
-        <KpiCard icon={CircleDollarSign} label="Deal aperti" tint="bg-green-50 text-green-600" to="/deal"
+        <KpiCard icon={CircleDollarSign} label="Deal aperti" tint="bg-muted text-muted-foreground" to="/deal"
           value={String(kpi?.deal ?? 0)} />
-        <KpiCard icon={Briefcase} label="Commesse attive" tint="bg-purple-50 text-purple-600" to="/commesse"
+        <KpiCard icon={Briefcase} label="Commesse attive" tint="bg-muted text-muted-foreground" to="/commesse"
           value={String(kpi?.commesse ?? 0)} />
-        <KpiCard icon={FolderKanban} label="Progetti attivi" tint="bg-teal-50 text-teal-600" to="/progetti"
+        <KpiCard icon={FolderKanban} label="Progetti attivi" tint="bg-muted text-muted-foreground" to="/progetti"
           value={String(kpi?.progetti ?? 0)} />
-        <KpiCard icon={CheckSquare} label="Attività da fare" tint="bg-amber-50 text-amber-600" to="/attivita"
+        <KpiCard icon={CheckSquare} label="Attività da fare" tint="bg-muted text-muted-foreground" to="/attivita"
           value={String(aperte.length)} />
-        <KpiCard icon={CalendarDays} label="Riunioni in arrivo" tint="bg-rose-50 text-rose-600" to="/riunioni"
+        <KpiCard icon={CalendarDays} label="Riunioni in arrivo" tint="bg-muted text-muted-foreground" to="/riunioni"
           value={String(prossimeRiunioni.length)} />
-        <KpiCard icon={TrendingUp} label="Valore pipeline" tint="bg-indigo-50 text-indigo-600" to="/kanban"
+        <KpiCard icon={TrendingUp} label="Valore pipeline" tint="bg-muted text-muted-foreground" to="/kanban"
           value={fmtEuro(kpi?.pipelinePesata ?? 0)} />
       </div>
 
@@ -98,7 +98,7 @@ export function DashboardPage() {
               <YAxis tickFormatter={(v) => `€${(v / 1000).toFixed(0)}k`} tick={{ fontSize: 12 }} stroke="currentColor" className="text-muted-foreground" />
               <Tooltip
                 formatter={(v) => [fmtEuro(Number(v)), 'Valore pesato']}
-                contentStyle={{ borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
+                contentStyle={{ borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)' }}
               />
               <Bar dataKey="pesato" radius={[6, 6, 0, 0]}>
                 {chartData.map((d, i) => <Cell key={i} fill={d.colore} />)}

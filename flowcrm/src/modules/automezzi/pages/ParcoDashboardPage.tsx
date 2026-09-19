@@ -34,8 +34,8 @@ import {
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 function Kpi({ icon: Icon, label, value, tint }: {
@@ -265,14 +265,14 @@ export function ParcoDashboardPage() {
       <PageHeader title="Dashboard parco" description="Disponibilità, scadenze e costi della flotta." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-orange-50 text-primary"
+        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-primary/10 text-primary"
           value={String(automezzi.length)} />
-        <Kpi icon={Truck} label="Disponibili" tint="bg-green-50 text-green-600"
+        <Kpi icon={Truck} label="Disponibili" tint="bg-muted text-muted-foreground"
           value={String(disponibili)} />
-        <Kpi icon={Wrench} label="In manutenzione" tint="bg-yellow-50 text-yellow-600"
+        <Kpi icon={Wrench} label="In manutenzione" tint="bg-muted text-muted-foreground"
           value={String(inManutenzione)} />
         <Kpi icon={Euro} label={isManager ? 'Costo totale parco' : 'Scadenze aperte'}
-          tint="bg-purple-50 text-purple-600"
+          tint="bg-muted text-muted-foreground"
           value={isManager ? fmtImporto(costoTotaleParco) : String(scadenze.length)} />
       </div>
 
