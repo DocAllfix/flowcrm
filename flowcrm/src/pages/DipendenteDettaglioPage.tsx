@@ -160,7 +160,7 @@ function FormazioneSection({ dipId }: { dipId: string }) {
           {corsi.map((c) => (
             <li key={c.id} className="flex items-center gap-3 p-3">
               <button onClick={() => toggle.mutate({ id: c.id, completato: !c.completato, dipendente_id: dipId })}
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${c.completato ? 'border-success bg-success text-white' : 'border-border hover:border-primary'}`}
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${c.completato ? 'border-success bg-success text-success-foreground' : 'border-border hover:border-primary'}`}
                 aria-label={c.completato ? 'Da completare' : 'Completa'}>
                 {c.completato && <Check className="h-3.5 w-3.5" />}
               </button>

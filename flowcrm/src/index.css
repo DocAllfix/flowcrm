@@ -68,6 +68,12 @@
        calcolo lo rifà la derivazione del tema: un cliente con primario
        giallo chiaro avrebbe un focus invisibile. */
     --ring:                   oklch(0.6670 0.2059 35);
+    /* Il primario come TESTO (collegamenti, etichette): a piena chiarezza
+       sta a 3,02:1 sulla card — misurato da axe sul collegamento «Vedi
+       tutte» della dashboard. Stessa tinta, lightness abbassata — risolta
+       contro il FONDO PAGINA, che è più scuro della card e quindi è la
+       superficie sfavorevole. */
+    --primary-testo:          oklch(0.5610 0.1959 35);
 
     /* ── Secondario (accentColor del cliente) ──────────────────────── */
     --secondary:              oklch(0.3913 0.0424 249);
@@ -92,6 +98,23 @@
           né un successo (in attesa, in lavorazione, presentata). ────── */
     --info:                   oklch(0.5200 0.1600 255);
     --info-foreground:        oklch(0.9850 0.0050 255);
+
+    /* ── Coppie per badge ed evidenziazioni: fondo tenue + testo ────────
+          Solide, non trasparenze: `bg-success/15 text-success` metteva il
+          colore di stato come testo sopra una velatura di sé stesso, a
+          3,86:1 — trovato da axe sulle pagine interne. Una coppia calcolata
+          insieme si puo' verificare; una trasparenza dipende da cosa c'e'
+          sotto. */
+    --success-tenue:          oklch(0.9550 0.0250 178.6);
+    --success-testo:          oklch(0.5160 0.0940 178.6);
+    --warning-tenue:          oklch(0.9550 0.0330 70.6);
+    --warning-testo:          oklch(0.5300 0.1140 70.6);
+    --destructive-tenue:      oklch(0.9550 0.0210 21.3);
+    --destructive-testo:      oklch(0.5480 0.1900 21.3);
+    --info-tenue:             oklch(0.9550 0.0210 255);
+    --info-testo:             oklch(0.5280 0.1600 255);
+    --serie-tenue:            oklch(0.9550 0.0250 300);
+    --serie-testo:            oklch(0.5380 0.1400 300);
 
     /* ── Scala DATI ────────────────────────────────────────────────────
           Separata dai colori semantici — in un grafico il verde direbbe
@@ -172,6 +195,7 @@
     --accent:                 oklch(0.2951 0.0704 35.2);
     --accent-foreground:      oklch(0.8065 0.1118 34.7);
     --ring:                   oklch(0.7300 0.1830 40);
+    --primary-testo:          oklch(0.7300 0.1830 40);
 
     --secondary:              oklch(0.7902 0.0287 248.2);
     --secondary-foreground:   oklch(0.2092 0.0116 264.3);
@@ -188,6 +212,17 @@
 
     --info:                   oklch(0.7600 0.1300 255);
     --info-foreground:        oklch(0.2400 0.0500 255);
+
+    --success-tenue:          oklch(0.2850 0.0350 178.6);
+    --success-testo:          oklch(0.6580 0.1000 178.6);
+    --warning-tenue:          oklch(0.2850 0.0500 70.6);
+    --warning-testo:          oklch(0.6720 0.1440 70.6);
+    --destructive-tenue:      oklch(0.2850 0.0500 21.3);
+    --destructive-testo:      oklch(0.6840 0.1900 21.3);
+    --info-tenue:             oklch(0.2850 0.0500 255);
+    --info-testo:             oklch(0.6680 0.1600 255);
+    --serie-tenue:            oklch(0.2850 0.0490 300);
+    --serie-testo:            oklch(0.6760 0.1400 300);
 
     /* Le stesse sei tinte, schiarite: su fondo notte una serie a 0.55
        sparisce contro il fondo invece di distinguersi dalle altre. */
@@ -299,6 +334,7 @@
   --color-popover-foreground:     var(--popover-foreground);
   --color-primary:                var(--primary);
   --color-primary-foreground:     var(--primary-foreground);
+  --color-primary-testo:          var(--primary-testo);
   --color-secondary:              var(--secondary);
   --color-secondary-foreground:   var(--secondary-foreground);
   --color-muted:                  var(--muted);
@@ -317,6 +353,16 @@
   --color-warning-foreground:     var(--warning-foreground);
   --color-info:                   var(--info);
   --color-info-foreground:        var(--info-foreground);
+  --color-success-tenue: var(--success-tenue);
+  --color-success-testo: var(--success-testo);
+  --color-warning-tenue: var(--warning-tenue);
+  --color-warning-testo: var(--warning-testo);
+  --color-destructive-tenue: var(--destructive-tenue);
+  --color-destructive-testo: var(--destructive-testo);
+  --color-info-tenue: var(--info-tenue);
+  --color-info-testo: var(--info-testo);
+  --color-serie-tenue: var(--serie-tenue);
+  --color-serie-testo: var(--serie-testo);
   /* Scala dati */
   --color-serie-1:                var(--serie-1);
   --color-serie-2:                var(--serie-2);

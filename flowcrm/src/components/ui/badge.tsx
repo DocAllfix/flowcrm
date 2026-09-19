@@ -4,17 +4,19 @@ import { cn } from '@/lib/utils'
 type BadgeTone = 'neutral' | 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'serie'
 
 const TONE: Record<BadgeTone, string> = {
+  // Ogni tono e' una coppia di token SOLIDI calcolata e verificata insieme
+  // (src/__tests__/contrasto-token.test.ts). Prima erano velature
+  // trasparenti del colore di stato con sopra lo stesso colore come testo:
+  // axe le ha misurate a 3,86:1 sulle pagine interne.
   neutral: 'bg-muted text-muted-foreground',
-  primary: 'bg-primary/10 text-primary',
-  success: 'bg-success/15 text-success',
-  warning: 'bg-warning/20 text-warning-foreground',
-  danger: 'bg-destructive/12 text-destructive',
-  // `info` e `serie` prendevano classi di palette Tailwind con le rispettive
-  // varianti dark scritte a mano: fuori dai token, quindi uguali per ogni
-  // cliente e da riverificare a ogni cambio di tema. Ora sono token, e le due
-  // versioni del tema le porta gia' il token.
-  info: 'bg-info/12 text-info',
-  serie: 'bg-serie-4/12 text-serie-4',
+  // Il primario e' del cliente: la velatura e il testo li calcola il tema
+  // derivato (accent / accent-foreground), per qualunque tinta.
+  primary: 'bg-accent text-accent-foreground',
+  success: 'bg-success-tenue text-success-testo',
+  warning: 'bg-warning-tenue text-warning-testo',
+  danger: 'bg-destructive-tenue text-destructive-testo',
+  info: 'bg-info-tenue text-info-testo',
+  serie: 'bg-serie-tenue text-serie-testo',
 }
 
 interface BadgeProps {

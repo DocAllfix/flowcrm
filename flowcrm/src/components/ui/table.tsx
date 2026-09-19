@@ -197,7 +197,7 @@ function CollegamentoRiga({
       data-slot="table-row-link"
       className={cn(
         'rounded-sm font-medium text-foreground transition-colors',
-        'hover:text-primary',
+        'hover:text-primary-testo',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
         className,
       )}

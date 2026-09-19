@@ -51,13 +51,13 @@ export function PoliambulatorioDashboardPage() {
         description="La giornata della struttura: agenda, referti, scadenze, qualità." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-primary/10 text-primary"
+        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-accent text-accent-foreground"
           value={String(kpi?.appuntamenti_oggi ?? 0)} />
         <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-muted text-muted-foreground"
           value={String(kpi?.appuntamenti_7gg ?? 0)} />
         <Kpi icon={Users} label="Pazienti" tint="bg-muted text-muted-foreground"
           value={`${kpi?.pazienti_totali ?? 0} (+${kpi?.nuovi_pazienti_mese ?? 0} nel mese)`} />
-        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-destructive/10 text-destructive"
+        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-destructive-tenue text-destructive-testo"
           value={kpi?.tasso_no_show_30gg != null ? `${kpi.tasso_no_show_30gg}%` : '—'} />
         <Kpi icon={FileSignature} label={sonoMedico ? 'Referti da validare' : 'Eventi qualità aperti'}
           tint="bg-muted text-muted-foreground"
@@ -67,7 +67,7 @@ export function PoliambulatorioDashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-primary" />
+            <CalendarDays className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Agenda di oggi</h2>
           </div>
           {appuntamentiOggi.length === 0 ? (
@@ -101,7 +101,7 @@ export function PoliambulatorioDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-primary" />
+            <CalendarClock className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Scadenze della struttura</h2>
           </div>
           {scadenze.length === 0 ? (
@@ -128,7 +128,7 @@ export function PoliambulatorioDashboardPage() {
         {sonoMedico && (
           <Card className="p-5 lg:col-span-2">
             <div className="mb-4 flex items-center gap-2">
-              <FileSignature className="h-5 w-5 text-primary" />
+              <FileSignature className="h-5 w-5 text-primary-testo" />
               <h2 className="text-title text-foreground">Referti da validare</h2>
             </div>
             {refertiDaValidare.length === 0 ? (

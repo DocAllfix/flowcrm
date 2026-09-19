@@ -29,6 +29,18 @@ function KpiCard({ icon: Icon, label, value, formato, tint, to, inCaricamento }:
   return (
     <Link
       to={to}
+      // Nome esplicito: mentre il dato arriva il numero è un segnaposto
+      // nascosto e la freccia un'icona decorativa, quindi il nome calcolato
+      // sarebbe solo «Organizzazioni» — identico alla voce di menu. La suite
+      // end-to-end, girata su uno stack con credenziali, l'ha colto: due
+      // collegamenti indistinguibili per chi usa uno screen reader.
+      aria-label={`${label}: ${
+        inCaricamento || value === undefined
+          ? 'dato in arrivo'
+          : formato === 'euro'
+            ? fmtEuro(value)
+            : value
+      }. Apri l'elenco`}
       // `transition-colors` e non `transition-all`: quest'ultima anima
       // anche ciò che non cambia, e costringe il browser a ricalcolare
       // proprietà che nessuno ha toccato.
@@ -100,7 +112,7 @@ export function DashboardPage() {
       <p className="mt-1 text-sm text-muted-foreground">Ecco la situazione operativa.</p>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        <KpiCard icon={Building2} label="Organizzazioni" tint="bg-primary/10 text-primary" to="/organizzazioni"
+        <KpiCard icon={Building2} label="Organizzazioni" tint="bg-accent text-accent-foreground" to="/organizzazioni"
           value={kpi?.organizzazioni} inCaricamento={kpiInCorso} />
         <KpiCard icon={BookUser} label="Contatti" tint="bg-muted text-muted-foreground" to="/contatti"
           value={kpi?.contatti} inCaricamento={kpiInCorso} />
@@ -121,7 +133,7 @@ export function DashboardPage() {
       <Card className="mt-6 p-5">
         <div className="mb-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
+            <TrendingUp className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Pipeline pesata</h2>
           </div>
           <span className="text-sm text-muted-foreground">
@@ -151,10 +163,10 @@ export function DashboardPage() {
         <Card className="p-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckSquare className="h-5 w-5 text-primary" />
+              <CheckSquare className="h-5 w-5 text-primary-testo" />
               <h2 className="text-title text-foreground">Le mie attività da fare</h2>
             </div>
-            <Link to="/attivita" className="text-sm text-primary hover:underline">Vedi tutte</Link>
+            <Link to="/attivita" className="text-sm text-primary-testo hover:underline">Vedi tutte</Link>
           </div>
           {daFare.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">Nessuna attività in sospeso. Ottimo lavoro!</p>
@@ -177,10 +189,10 @@ export function DashboardPage() {
         <Card className="p-5">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
+              <Users className="h-5 w-5 text-primary-testo" />
               <h2 className="text-title text-foreground">Prossime riunioni</h2>
             </div>
-            <Link to="/riunioni" className="text-sm text-primary hover:underline">Vedi tutte</Link>
+            <Link to="/riunioni" className="text-sm text-primary-testo hover:underline">Vedi tutte</Link>
           </div>
           {prossimeRiunioni.length === 0 ? (
             <p className="py-6 text-center text-sm text-muted-foreground">Nessuna riunione in programma.</p>

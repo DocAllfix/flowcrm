@@ -19,6 +19,7 @@ import { DealDialog } from '@/features/deal/DealDialog'
 import { usePipelineStages, useDeals, useMoveDeal, type DealWithOrg } from '@/lib/queries/deals'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Spinner } from '@/components/ui/spinner'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -133,11 +134,20 @@ export function KanbanPage() {
             return (
               <div key={stage.id} className="flex w-72 shrink-0 flex-col">
                 <div
-                  className="flex items-center gap-2 rounded-t-xl px-4 py-2.5"
-                  style={{ backgroundColor: stage.colore ?? 'var(--color-primary)' }}
+                  className="flex items-center gap-2 rounded-t-lg px-4 py-2.5"
+                  style={{
+                    backgroundColor: stage.colore ?? 'var(--color-primary)',
+                    color: coloreTestoLeggibile(stage.colore),
+                  }}
                 >
-                  <h3 className="flex-1 truncate text-sm font-semibold text-white">{stage.nome}</h3>
-                  <span className="rounded-full bg-black/20 px-2 py-0.5 text-xs font-bold text-white/90">
+                  <h3 className="flex-1 truncate text-sm font-semibold">{stage.nome}</h3>
+                  {/* Il contatore prende il colore del testo e un velo dello
+                      stesso colore: legge su qualunque tinta della fase, e
+                      non usa piu' il nero puro. */}
+                  <span
+                    className="rounded-full px-2 py-0.5 text-xs font-bold"
+                    style={{ backgroundColor: 'color-mix(in oklab, currentColor 18%, transparent)' }}
+                  >
                     {cards.length}
                   </span>
                 </div>

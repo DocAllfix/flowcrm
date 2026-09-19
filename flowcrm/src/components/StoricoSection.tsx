@@ -17,7 +17,7 @@ interface Props {
 
 const AZIONE_CONFIG: Record<string, { Icon: React.ElementType; label: string; color: string }> = {
   insert: { Icon: Plus, label: 'ha creato', color: 'text-success' },
-  update: { Icon: Pencil, label: 'ha modificato', color: 'text-primary' },
+  update: { Icon: Pencil, label: 'ha modificato', color: 'text-primary-testo' },
   delete: { Icon: Trash2, label: 'ha eliminato', color: 'text-destructive' },
 }
 

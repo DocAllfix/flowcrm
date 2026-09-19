@@ -107,7 +107,7 @@ function TabPanoramica({ cantiere }: { cantiere: Cantiere }) {
         <h3 className="mb-2 text-sm font-semibold text-foreground">Committenza e riferimenti</h3>
         <Riga label="Cliente">
           {cantiere.cliente ? (
-            <Link to={`/organizzazioni/${cantiere.cliente.id}`} className="text-primary hover:underline">
+            <Link to={`/organizzazioni/${cantiere.cliente.id}`} className="text-primary-testo hover:underline">
               {cantiere.cliente.ragione_sociale}
             </Link>
           ) : '—'}
@@ -153,10 +153,10 @@ function TabPanoramica({ cantiere }: { cantiere: Cantiere }) {
           <Riga label="Collegamenti">
             <span className="space-x-2">
               {cantiere.commessa_id && (
-                <Link to={`/commesse/${cantiere.commessa_id}`} className="text-primary hover:underline">commessa</Link>
+                <Link to={`/commesse/${cantiere.commessa_id}`} className="text-primary-testo hover:underline">commessa</Link>
               )}
               {cantiere.gara_id && (
-                <Link to={`/gare/${cantiere.gara_id}`} className="text-primary hover:underline">gara</Link>
+                <Link to={`/gare/${cantiere.gara_id}`} className="text-primary-testo hover:underline">gara</Link>
               )}
             </span>
           </Riga>
@@ -890,7 +890,7 @@ function TabContabilita({ cantiere }: { cantiere: Cantiere }) {
                 </Button>
               )}
               {s.fattura_id && (
-                <Link to={`/fatture/${s.fattura_id}`} className="text-xs text-primary hover:underline">
+                <Link to={`/fatture/${s.fattura_id}`} className="text-xs text-primary-testo hover:underline">
                   fattura
                 </Link>
               )}

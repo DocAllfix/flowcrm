@@ -38,7 +38,7 @@ export function AttivitaPage() {
         <button
           onClick={() => toggle.mutate({ id: a.id, stato: done ? 'da_fare' : 'completata' })}
           className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-            done ? 'border-success bg-success text-white' : 'border-border hover:border-primary'
+            done ? 'border-success bg-success text-success-foreground' : 'border-border hover:border-primary'
           }`}
           aria-label={done ? 'Riapri' : 'Completa'}
         >

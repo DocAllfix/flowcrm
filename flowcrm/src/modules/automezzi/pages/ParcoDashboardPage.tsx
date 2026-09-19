@@ -95,7 +95,7 @@ function SezioneRicambi() {
   return (
     <Card className="p-5">
       <div className="mb-3 flex items-center gap-2">
-        <Package className="h-5 w-5 text-primary" />
+        <Package className="h-5 w-5 text-primary-testo" />
         <h2 className="text-title text-foreground">Magazzino ricambi</h2>
       </div>
       {ricambi.map((r) => (
@@ -182,7 +182,7 @@ function SezionePatenti() {
   return (
     <Card className="p-5">
       <div className="mb-3 flex items-center gap-2">
-        <IdCard className="h-5 w-5 text-primary" />
+        <IdCard className="h-5 w-5 text-primary-testo" />
         <h2 className="text-title text-foreground">Conducenti: patenti e abilitazioni</h2>
       </div>
       {dipendenti.length === 0 && (
@@ -266,7 +266,7 @@ export function ParcoDashboardPage() {
       <PageHeader title="Dashboard parco" description="Disponibilità, scadenze e costi della flotta." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-primary/10 text-primary"
+        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-accent text-accent-foreground"
           value={String(automezzi.length)} />
         <Kpi icon={Truck} label="Disponibili" tint="bg-muted text-muted-foreground"
           value={String(disponibili)} />
@@ -280,7 +280,7 @@ export function ParcoDashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Truck className="h-5 w-5 text-primary" />
+            <Truck className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Mezzi per stato</h2>
           </div>
           {automezzi.length === 0 ? (
@@ -299,7 +299,7 @@ export function ParcoDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-primary" />
+            <CalendarClock className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (

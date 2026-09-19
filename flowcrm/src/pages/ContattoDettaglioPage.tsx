@@ -38,7 +38,7 @@ export function ContattoDettaglioPage() {
                 {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3.5 w-3.5" />{c.email}</span>}
                 {c.telefono && <span className="flex items-center gap-1.5"><Phone className="h-3.5 w-3.5" />{c.telefono}</span>}
                 {c.organizzazione && (
-                  <Link to={`/organizzazioni/${c.organizzazione.id}`} className="flex items-center gap-1.5 hover:text-primary">
+                  <Link to={`/organizzazioni/${c.organizzazione.id}`} className="flex items-center gap-1.5 hover:text-primary-testo">
                     <Building2 className="h-3.5 w-3.5" />{c.organizzazione.ragione_sociale}
                   </Link>
                 )}

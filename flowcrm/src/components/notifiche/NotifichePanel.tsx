@@ -111,7 +111,7 @@ export const NotifichePanel = memo(function NotifichePanel({ open, onClose }: No
 
   return (
     <>
-      <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-[2px]" onClick={onClose} />
+      <div className="fixed inset-0 z-50 bg-foreground/20" onClick={onClose} aria-hidden />
 
       <div className="fixed right-0 top-0 z-50 flex h-screen w-[440px] max-w-[calc(100vw-1rem)] flex-col border-l border-border bg-card shadow-2xl">
         <div className="shrink-0 px-5 pb-0 pt-5">
@@ -146,7 +146,7 @@ export const NotifichePanel = memo(function NotifichePanel({ open, onClose }: No
           <button
             onClick={() => countNonLette > 0 && markAllAsRead.mutate()}
             disabled={countNonLette === 0 || markAllAsRead.isPending}
-            className="flex cursor-pointer items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 disabled:cursor-not-allowed disabled:opacity-40"
+            className="flex cursor-pointer items-center gap-1 text-xs font-medium text-primary-testo hover:text-primary-testo/80 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <CheckCheck className="h-3.5 w-3.5" />
             Segna tutte lette
@@ -157,7 +157,7 @@ export const NotifichePanel = memo(function NotifichePanel({ open, onClose }: No
           <div className="py-2">
             {isLoading && (
               <div className="flex items-center justify-center py-8">
-                <Spinner etichetta="Caricamento delle notifiche" className="text-primary" />
+                <Spinner etichetta="Caricamento delle notifiche" className="text-primary-testo" />
               </div>
             )}
 

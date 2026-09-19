@@ -102,7 +102,7 @@ export function CopilotWidget() {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg shadow-primary/30 transition-transform hover:scale-105"
+        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105"
         aria-label="Apri assistente AI"
         data-testid="copilot-open"
       >
@@ -116,7 +116,7 @@ export function CopilotWidget() {
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-            <Sparkles className="h-4 w-4 text-primary" />
+            <Sparkles className="h-4 w-4 text-primary-testo" />
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">Assistente</p>
@@ -167,7 +167,7 @@ export function CopilotWidget() {
             <div key={i} className={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
               <div
                 className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${
-                  m.role === 'user' ? 'bg-primary text-white' : 'bg-muted text-foreground'
+                  m.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground'
                 }`}
               >
                 {m.content}
@@ -179,7 +179,7 @@ export function CopilotWidget() {
         {/* Card di conferma azione (mai scrittura senza conferma) */}
         {proposta && !propostaFatta && (
           <div className="rounded-xl border border-primary/40 bg-primary/5 p-3" data-testid="copilot-proposta">
-            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary">Vuoi creare questa attività?</p>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary-testo">Vuoi creare questa attività?</p>
             <p className="text-sm font-medium text-foreground">{proposta.titolo}</p>
             <p className="mt-0.5 text-xs capitalize text-muted-foreground">
               {proposta.tipo}
@@ -192,7 +192,7 @@ export function CopilotWidget() {
               <button
                 onClick={confermaProposta}
                 disabled={createAttivita.isPending}
-                className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50"
+                className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                 data-testid="copilot-conferma"
               >
                 <Check className="h-4 w-4" /> Conferma
@@ -225,7 +225,7 @@ export function CopilotWidget() {
         <button
           type="submit"
           disabled={pending || !input.trim()}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white hover:bg-primary/90 disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
           aria-label="Invia"
           data-testid="copilot-send"
         >

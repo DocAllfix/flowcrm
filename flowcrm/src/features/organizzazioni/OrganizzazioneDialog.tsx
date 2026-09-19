@@ -142,7 +142,7 @@ export function OrganizzazioneDialog({ open, onOpenChange, organizzazione }: Pro
                     className={cn(
                       'rounded-full border px-3 py-1.5 text-sm font-medium transition-colors',
                       active
-                        ? 'border-primary bg-primary/10 text-primary'
+                        ? 'border-primary bg-accent text-accent-foreground'
                         : 'border-border text-muted-foreground hover:border-primary/40'
                     )}>
                     {RUOLO_LABEL[r]}

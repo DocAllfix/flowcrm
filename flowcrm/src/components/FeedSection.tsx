@@ -105,7 +105,7 @@ export function FeedSection({ target }: Props) {
         <button
           type="submit"
           disabled={send.isPending || !testo.trim()}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
           aria-label="Invia"
           data-testid="feed-invia"
         >

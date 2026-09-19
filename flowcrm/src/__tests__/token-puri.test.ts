@@ -145,6 +145,22 @@ describe('purezza dei token — il colore appartiene al cliente', () => {
     expect(colpevoli).toEqual([])
   })
 
+  it('nessun testo bianco fisso e nessun nero puro', () => {
+    // `text-white` sopra un fondo che non si conosce è un contrasto
+    // indovinato: sul primario di ripiego stava a 3,08:1, sulle fasi della
+    // pipeline scelte dall'utente fino a 2,53:1. Il testo sopra un fondo
+    // colorato si prende dal suo `-foreground`, o si calcola con
+    // coloreTestoLeggibile() se il colore è un dato. `bg-black` e
+    // `text-black` sono il nero puro che DESIGN.md vieta.
+    const vietati = /\b(?:text-white|bg-black|text-black)\b/g
+    const colpevoli: string[] = []
+    for (const { relativo, testo } of sorgenti) {
+      const trovati = testo.match(vietati)
+      if (trovati) colpevoli.push(`${relativo}: ${[...new Set(trovati)].join(', ')}`)
+    }
+    expect(colpevoli).toEqual([])
+  })
+
   it('nessun gradient text', () => {
     // Divieto assoluto di DESIGN.md: decorativo, mai significante.
     const colpevoli = sorgenti

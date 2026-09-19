@@ -30,6 +30,7 @@ import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonElenco } from '@/components/ui/skeleton'
 import { Card } from '@/components/ui/card'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const RUOLO_TONE: Record<OrgRuolo, Parameters<typeof Badge>[0]['tone']> = {
   cliente: 'primary', fornitore: 'info', partner: 'serie',
@@ -79,7 +80,7 @@ export function OrganizzazioneDettaglioPage() {
       <Card className="mb-6 flex flex-col gap-4 p-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-primary/10">
-            <Building2 className="h-7 w-7 text-primary" />
+            <Building2 className="h-7 w-7 text-primary-testo" />
           </div>
           <div>
             <h1 className="text-headline text-foreground">{org.ragione_sociale}</h1>
@@ -202,7 +203,7 @@ export function OrganizzazioneDettaglioPage() {
                   <span className="font-medium text-foreground">{d.nome}</span>
                   <span className="flex items-center gap-3">
                     {d.stage && (
-                      <Badge className="text-white" style={{ backgroundColor: d.stage.colore ?? undefined }}>
+                      <Badge style={{ backgroundColor: d.stage.colore ?? undefined, color: d.stage.colore ? coloreTestoLeggibile(d.stage.colore) : undefined }}>
                         {d.stage.nome}
                       </Badge>
                     )}

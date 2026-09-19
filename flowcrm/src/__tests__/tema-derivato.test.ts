@@ -13,8 +13,8 @@
  * si verifica che il foglio generato regga AA in entrambi i temi.
  */
 import { describe, it, expect } from 'vitest'
-import { derivaFoglio } from '@/lib/tema'
-import { contrasto, tokenDelBlocco } from './_colore'
+import { derivaFoglio, coloreTestoLeggibile } from '@/lib/tema'
+import { contrasto, tokenDelBlocco, oklchToRgb } from './_colore'
 
 /** Tinte di prova: le ultime quattro esistono per rompere il calcolo. */
 const TINTE: Array<[string, string]> = [
@@ -43,6 +43,8 @@ const COPPIE_TESTO: Array<[string, string]> = [
   ['--muted-foreground', '--background'],
   ['--primary-foreground', '--primary'],
   ['--accent-foreground', '--accent'],
+  ['--primary-testo', '--card'],
+  ['--primary-testo', '--background'],
   ['--secondary-foreground', '--secondary'],
   ['--sidebar-foreground', '--sidebar-background'],
   ['--sidebar-primary-foreground', '--sidebar-primary'],
@@ -94,6 +96,34 @@ describe.each(TINTE)('tinta cliente: %s (%s)', (_nome, hex) => {
       })
     }
   }
+})
+
+describe('coloreTestoLeggibile — il colore è un dato, il contrasto no', () => {
+  /** Legge l'oklch restituito e lo converte, così si misura il vero. */
+  const rgbDi = (valore: string) => {
+    const m = valore.match(/oklch\(([\d.]+) ([\d.]+) ([\d.]+)\)/)!
+    return oklchToRgb(Number(m[1]), Number(m[2]), Number(m[3]))
+  }
+  const esadecimaleARgb = (hex: string) =>
+    [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number]
+
+  // I primi due sono quelli che la scansione axe ha trovato nella lista dei
+  // deal, con testo bianco: 3,67:1 e 2,53:1.
+  for (const hex of ['#3b82f6', '#10b981', '#f59e0b', '#fde047', '#0f172a', '#ef4444', '#8b5cf6']) {
+    it(`su ${hex} il testo sta sopra 4,5:1`, () => {
+      const testo = coloreTestoLeggibile(hex)
+      expect(contrasto(rgbDi(testo), esadecimaleARgb(hex))).toBeGreaterThanOrEqual(4.5)
+    })
+  }
+
+  it('sul primario rimanda al token già calcolato', () => {
+    expect(coloreTestoLeggibile('var(--color-primary)')).toBe('var(--primary-foreground)')
+    expect(coloreTestoLeggibile(null)).toBe('var(--primary-foreground)')
+  })
+
+  it('un colore illeggibile ricade sull’inchiostro invece di inventare', () => {
+    expect(coloreTestoLeggibile('non-un-colore')).toBe('var(--foreground)')
+  })
 })
 
 describe('robustezza', () => {

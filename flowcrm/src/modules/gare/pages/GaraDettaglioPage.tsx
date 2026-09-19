@@ -252,7 +252,7 @@ function TabPanoramica({ gara }: { gara: Gara }) {
         <Riga label="Piattaforma">
           {gara.piattaforma_url ? (
             <a href={gara.piattaforma_url} target="_blank" rel="noreferrer"
-              className="inline-flex items-center gap-1 text-primary hover:underline">
+              className="inline-flex items-center gap-1 text-primary-testo hover:underline">
               {gara.piattaforma ?? 'link'} <ExternalLink className="h-3 w-3" />
             </a>
           ) : (gara.piattaforma ?? '—')}
@@ -298,7 +298,7 @@ function TabPanoramica({ gara }: { gara: Gara }) {
             {gara.commessa_id ? (
               <span className="inline-flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <Link to={`/commesse/${gara.commessa_id}`} className="font-medium text-primary hover:underline">
+                <Link to={`/commesse/${gara.commessa_id}`} className="font-medium text-primary-testo hover:underline">
                   Apri la commessa
                 </Link>
               </span>
@@ -311,7 +311,7 @@ function TabPanoramica({ gara }: { gara: Gara }) {
             {moduloCantiereAttivo && (cantiereCollegato ? (
               <span className="inline-flex items-center gap-1.5 text-sm">
                 <CheckCircle2 className="h-4 w-4 text-success" />
-                <Link to={`/cantieri/${cantiereCollegato.id}`} className="font-medium text-primary hover:underline">
+                <Link to={`/cantieri/${cantiereCollegato.id}`} className="font-medium text-primary-testo hover:underline">
                   Apri il cantiere {cantiereCollegato.codice}
                 </Link>
               </span>

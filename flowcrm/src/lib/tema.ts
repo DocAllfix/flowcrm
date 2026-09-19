@@ -140,10 +140,22 @@ function versoIlContrasto(
   let miglioreRapporto = contrasto(migliore, fondo)
   if (miglioreRapporto >= bersaglio) return migliore
 
+  // Se il bersaglio non è raggiungibile — su un fondo di media luminosità
+  // né il chiaro né lo scuro arrivano sempre a 4,6 — si restituisce il
+  // colore PIÙ contrastato trovato, non quello di partenza. Prima di questa
+  // correzione succedeva il contrario: la ricerca falliva in silenzio e
+  // tornava il punto da cui era partita.
+  let piuContrastato = migliore
+  let rapportoMassimo = miglioreRapporto
+
   for (const passo of [-0.004, 0.004]) {
     for (let l = base.l + passo; l > 0.02 && l < 0.995; l += passo) {
       const candidato = inGamut({ l, c, h: base.h })
       const rapporto = contrasto(candidato, fondo)
+      if (rapporto > rapportoMassimo) {
+        piuContrastato = candidato
+        rapportoMassimo = rapporto
+      }
       if (rapporto >= bersaglio) {
         // Fra le due direzioni si tiene quella che si allontana meno.
         if (
@@ -157,11 +169,19 @@ function versoIlContrasto(
       }
     }
   }
-  return migliore
+  return miglioreRapporto >= bersaglio ? migliore : piuContrastato
 }
 
+/**
+ * Il bersaglio del testo è 4,6 e non 4,5. Il valore finisce arrotondato a
+ * quattro decimali nel CSS e poi a 8 bit per canale nel browser, e mirando
+ * esattamente a 4,5 si atterra a 4,49: misurato da axe in browser sul testo
+ * delle fasi della pipeline, dopo che il calcolo in memoria diceva 4,5.
+ */
+const SOGLIA_TESTO = 4.6
+
 /** Testo leggibile sopra `fondo`: sceglie da sé se andare chiaro o scuro. */
-function testoSu(fondo: Oklch, bersaglio = 4.5): Oklch {
+function testoSu(fondo: Oklch, bersaglio = SOGLIA_TESTO): Oklch {
   const chiaro = versoIlContrasto(
     { l: 0.985, c: Math.min(fondo.c * 0.03, 0.01), h: fondo.h },
     fondo,
@@ -290,6 +310,9 @@ export function derivaFoglio(primarioHex: string, accentoHex: string): string {
   // L'anello di focus deve stare sopra 3:1 sulla superficie adiacente
   // (WCAG 1.4.11): il primario a piena chiarezza spesso non ci arriva.
   const fondoC = mappaChiara.get('background')!
+  // Il primario usato come TESTO su una superficie chiara: la tinta piena
+  // spesso non regge 4,5:1 (l'arancio di ripiego sta a 3,02:1).
+  chiare.push(['primary-testo', css(versoIlContrasto(marchio, fondoC, SOGLIA_TESTO))])
   chiare.push(['ring', css(versoIlContrasto(marchio, fondoC, SOGLIA_ANELLO))])
   chiare.push(['sidebar-ring', css(versoIlContrasto(marchio, fondoC, SOGLIA_ANELLO))])
 
@@ -325,6 +348,7 @@ export function derivaFoglio(primarioHex: string, accentoHex: string): string {
   })
   scure.push(['primary', css(primarioS)])
   scure.push(['primary-foreground', css(testoSu(primarioS))])
+  scure.push(['primary-testo', css(versoIlContrasto(primarioS, mappaScura.get('card')!, SOGLIA_TESTO))])
   scure.push(['chart-1', css(primarioS)])
 
   const accentoS = inGamut({
@@ -359,6 +383,52 @@ export function derivaFoglio(primarioHex: string, accentoHex: string): string {
 
   // `.dark` DOPO `:root`: stessa specificità, vince l'ultimo.
   return [blocco(chiare, ':root'), blocco(scure, '.dark')].join('\n\n')
+}
+
+/** Legge `oklch(l c h)` come lo scrivono i token e il browser. */
+function leggiOklch(valore: string): Oklch | null {
+  const m = valore.trim().match(/^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)/)
+  if (!m) return null
+  const l = Number(m[1]) / (m[2] === '%' ? 100 : 1)
+  return { l, c: Number(m[3]), h: Number(m[4]) }
+}
+
+/**
+ * Colore di testo leggibile sopra un fondo che NON decide il design system.
+ *
+ * ── Perché esiste ───────────────────────────────────────────────────
+ * Le fasi della pipeline, i professionisti dell'agenda e altre entità
+ * hanno un colore scelto dall'utente e salvato nel database. Sei punti
+ * del prodotto ci scrivevano sopra `text-white` fisso. La scansione axe
+ * sulle pagine interne, girata per la prima volta su uno stack con
+ * credenziali, li ha trovati: «Proposta» bianco su #3b82f6 a 3,67:1,
+ * «Vinto» bianco su #10b981 a 2,53:1. Un token qui non basta, perché il
+ * colore è un dato: il testo va calcolato, con la stessa funzione che
+ * calcola il testo sul primario del cliente.
+ *
+ * Accetta un esadecimale, un `oklch(...)` o un riferimento `var(--token)`
+ * (risolto sul documento al momento della chiamata). Se non riesce a
+ * leggere il colore restituisce l'inchiostro del tema, che è la scelta
+ * meno dannosa.
+ */
+export function coloreTestoLeggibile(colore: string | null | undefined): string {
+  if (!colore) return 'var(--primary-foreground)'
+  const pulito = colore.trim()
+  if (/^var\(--(color-)?primary\)$/.test(pulito)) return 'var(--primary-foreground)'
+
+  let risolto = pulito
+  const riferimento = pulito.match(/^var\((--[a-z0-9-]+)\)$/)
+  if (riferimento) {
+    if (typeof document === 'undefined') return 'var(--foreground)'
+    risolto = getComputedStyle(document.documentElement)
+      .getPropertyValue(riferimento[1])
+      .trim()
+  }
+
+  const rgb = leggiEsadecimale(risolto)
+  const fondo = rgb ? rgbAOklch(rgb) : leggiOklch(risolto)
+  if (!fondo) return 'var(--foreground)'
+  return css(testoSu(inGamut(fondo)))
 }
 
 const ID_FOGLIO = 'tema-cliente'

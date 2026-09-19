@@ -86,7 +86,7 @@ export function GareDashboardPage() {
       <PageHeader title="Dashboard gare" description="Andamento delle procedure: partecipazione, esiti, scadenze." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={Gavel} label="Gare in corso" tint="bg-primary/10 text-primary"
+        <Kpi icon={Gavel} label="Gare in corso" tint="bg-accent text-accent-foreground"
           value={String((kpi?.in_analisi ?? 0) + (kpi?.in_preparazione ?? 0) + (kpi?.presentate ?? 0))} />
         <Kpi icon={Trophy} label="Tasso aggiudicazione" tint="bg-muted text-muted-foreground"
           value={kpi?.tasso_aggiudicazione != null ? `${kpi.tasso_aggiudicazione}%` : '—'} />
@@ -101,7 +101,7 @@ export function GareDashboardPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Gavel className="h-5 w-5 text-primary" />
+            <Gavel className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Gare per stato</h2>
           </div>
           {statoData.every((s) => s.numero === 0) ? (
@@ -120,7 +120,7 @@ export function GareDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-primary" />
+            <CalendarClock className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (
@@ -146,7 +146,7 @@ export function GareDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-primary" />
+            <Trophy className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Successo per ente appaltante</h2>
           </div>
           {enteData.length === 0 ? (
@@ -169,7 +169,7 @@ export function GareDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-primary" />
+            <Trophy className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Successo per categoria SOA</h2>
           </div>
           {perCategoria.length === 0 ? (
@@ -197,7 +197,7 @@ export function GareDashboardPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-primary" />
+            <MapPin className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Valore vinto per territorio</h2>
           </div>
           {territorioData.length === 0 ? (

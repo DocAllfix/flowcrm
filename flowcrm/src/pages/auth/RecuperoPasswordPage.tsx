@@ -59,7 +59,7 @@ export function RecuperoPasswordPage() {
             className="space-y-4 rounded-lg border border-border bg-card p-6 text-center"
             data-testid="recupero-inviato"
           >
-            <MailCheck className="mx-auto h-10 w-10 text-primary" />
+            <MailCheck className="mx-auto h-10 w-10 text-primary-testo" />
             <p className="text-sm text-foreground">
               Se esiste un account con questo indirizzo, riceverai un messaggio
               con il collegamento per reimpostare la password.
@@ -67,7 +67,7 @@ export function RecuperoPasswordPage() {
             <p className="text-sm text-muted-foreground">
               Il collegamento vale un'ora. Controlla anche la posta indesiderata.
             </p>
-            <Link to="/login" className="inline-block text-sm font-medium text-primary hover:underline">
+            <Link to="/login" className="inline-block text-sm font-medium text-primary-testo hover:underline">
               Torna all'accesso
             </Link>
           </div>

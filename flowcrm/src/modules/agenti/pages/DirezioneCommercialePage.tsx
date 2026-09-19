@@ -40,7 +40,7 @@ export function DirezioneCommercialePage() {
 
       <Card className="mb-6 p-5">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
+          <TrendingUp className="h-5 w-5 text-primary-testo" />
           <h2 className="text-title text-foreground">Venduto per agente</h2>
         </div>
         {chartData.length === 0 ? (

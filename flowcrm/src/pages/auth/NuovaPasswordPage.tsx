@@ -108,7 +108,7 @@ export function NuovaPasswordPage() {
         <p className="text-sm text-foreground">
           Collegamento non valido o scaduto.
         </p>
-        <Link to="/recupero" className="inline-block text-sm font-medium text-primary hover:underline">
+        <Link to="/recupero" className="inline-block text-sm font-medium text-primary-testo hover:underline">
           Richiedine uno nuovo
         </Link>
       </Card>
@@ -118,7 +118,7 @@ export function NuovaPasswordPage() {
   return cornice(
     <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-border bg-card p-6">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <ShieldCheck className="h-4 w-4 text-primary" />
+        <ShieldCheck className="h-4 w-4 text-primary-testo" />
         Scegli una nuova password
       </div>
 

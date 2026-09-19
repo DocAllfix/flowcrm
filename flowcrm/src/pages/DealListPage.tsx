@@ -15,6 +15,7 @@ import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -78,7 +79,7 @@ export function DealListPage() {
                     <TableCell className="text-muted-foreground">{d.organizzazione?.ragione_sociale ?? '—'}</TableCell>
                     <TableCell>
                       {stage && (
-                        <Badge className="text-white" style={{ backgroundColor: stage.colore ?? undefined }}>
+                        <Badge style={{ backgroundColor: stage.colore ?? undefined, color: stage.colore ? coloreTestoLeggibile(stage.colore) : undefined }}>
                           {stage.nome}
                         </Badge>
                       )}

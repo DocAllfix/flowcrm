@@ -13,6 +13,7 @@ import { FeedSection } from '@/components/FeedSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
 import { Card } from '@/components/ui/card'
 import { Spinner } from '@/components/ui/spinner'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -52,7 +53,7 @@ export function DealDettaglioPage() {
               {deal.organizzazione && (
                 <Link
                   to={`/organizzazioni/${deal.organizzazione.id}`}
-                  className="flex items-center gap-1.5 hover:text-primary"
+                  className="flex items-center gap-1.5 hover:text-primary-testo"
                 >
                   <Building2 className="h-4 w-4" />
                   {deal.organizzazione.ragione_sociale}
@@ -69,8 +70,11 @@ export function DealDettaglioPage() {
           <div className="text-right">
             <p className="text-headline text-foreground">{fmtImporto(Number(deal.importo))}</p>
             <Badge
-              className="mt-1 text-white"
-              style={{ backgroundColor: deal.stage.colore ?? undefined }}
+              className="mt-1"
+              style={{
+                backgroundColor: deal.stage.colore ?? undefined,
+                color: deal.stage.colore ? coloreTestoLeggibile(deal.stage.colore) : undefined,
+              }}
             >
               {deal.stage.nome} · {deal.stage.probabilita}%
             </Badge>

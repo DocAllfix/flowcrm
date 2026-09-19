@@ -45,7 +45,7 @@ export function AppLayout() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
-        <Spinner etichetta="Caricamento della sessione" dimensione="lg" className="text-primary" />
+        <Spinner etichetta="Caricamento della sessione" dimensione="lg" className="text-primary-testo" />
       </div>
     )
   }

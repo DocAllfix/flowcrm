@@ -54,9 +54,9 @@ export function DashboardEconomicaPage() {
       <PageHeader title="Dashboard economica" description="Fatturato e flusso di cassa, derivati dai dati reali." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-primary/10 text-primary" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
+        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-accent text-accent-foreground" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
         <KpiEco icon={Clock} label="Da incassare" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
-        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-destructive/10 text-destructive" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
+        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-destructive-tenue text-destructive-testo" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
         <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
         <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
       </div>
@@ -64,7 +64,7 @@ export function DashboardEconomicaPage() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
+            <TrendingUp className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Fatturato mensile</h2>
           </div>
           {fatturatoData.length === 0 ? (
@@ -83,7 +83,7 @@ export function DashboardEconomicaPage() {
 
         <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
+            <Wallet className="h-5 w-5 text-primary-testo" />
             <h2 className="text-title text-foreground">Cash flow previsto</h2>
           </div>
           {cashData.length === 0 ? (
@@ -105,7 +105,7 @@ export function DashboardEconomicaPage() {
 
       <Card className="mt-6 p-5">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
+          <TrendingUp className="h-5 w-5 text-primary-testo" />
           <h2 className="text-title text-foreground">Top clienti per fatturato</h2>
         </div>
         {topData.length === 0 ? (

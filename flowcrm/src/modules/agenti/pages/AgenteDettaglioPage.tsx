@@ -234,7 +234,7 @@ function TabPortafoglio({ agente }: { agente: Agente }) {
             <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
             {c.organizzazione ? (
               <Link to={`/organizzazioni/${c.organizzazione.id}`}
-                className="min-w-0 flex-1 truncate font-medium text-foreground hover:text-primary">
+                className="min-w-0 flex-1 truncate font-medium text-foreground hover:text-primary-testo">
                 {c.organizzazione.ragione_sociale}
               </Link>
             ) : <span className="flex-1">—</span>}

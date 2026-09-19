@@ -58,7 +58,7 @@ export function MilestoneSection({ progettoId }: { progettoId: string }) {
             <li key={m.id} className="flex items-center gap-3 p-3">
               <button
                 onClick={() => toggle.mutate({ id: m.id, completata: !m.completata, progetto_id: progettoId })}
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${m.completata ? 'border-success bg-success text-white' : 'border-border hover:border-primary'}`}
+                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${m.completata ? 'border-success bg-success text-success-foreground' : 'border-border hover:border-primary'}`}
                 aria-label={m.completata ? 'Segna da fare' : 'Completa'}
               >
                 {m.completata && <Check className="h-3.5 w-3.5" />}

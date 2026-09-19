@@ -100,6 +100,8 @@ const COPPIE_TESTO: Array<[string, string]> = [
   // errore sopra le superfici. Deve reggere in entrambi i ruoli.
   ['--destructive', '--background'],
   ['--destructive', '--card'],
+  ['--primary-testo', '--card'],
+  ['--primary-testo', '--background'],
   ['--info-foreground', '--info'],
   ['--info', '--background'],
   // La scala dati non serve solo a colorare punti: le stesse tinte fanno
@@ -114,6 +116,17 @@ const COPPIE_TESTO: Array<[string, string]> = [
   ['--serie-1', '--card'],
   ['--serie-3', '--card'],
   ['--serie-6', '--card'],
+  // Coppie dei badge: testo di stato sul proprio fondo tenue.
+  ['--success-testo', '--success-tenue'],
+  ['--success-testo', '--card'],
+  ['--warning-testo', '--warning-tenue'],
+  ['--warning-testo', '--card'],
+  ['--destructive-testo', '--destructive-tenue'],
+  ['--destructive-testo', '--card'],
+  ['--info-testo', '--info-tenue'],
+  ['--info-testo', '--card'],
+  ['--serie-testo', '--serie-tenue'],
+  ['--serie-testo', '--card'],
 ]
 
 /**
