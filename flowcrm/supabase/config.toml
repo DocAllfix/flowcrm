@@ -27,7 +27,11 @@ enable_refresh_token_rotation = true
 enable_signup = false
 
 [auth.email]
-enable_signup = false
+# Provider email ACCESO: qui `enable_signup` governa il provider, non solo la
+# registrazione — con false ogni login risponde 422 email_provider_disabled e
+# la suite end-to-end non può nemmeno autenticarsi. L'auto-registrazione resta
+# comunque bloccata da `enable_signup = false` nella sezione [auth] sopra.
+enable_signup = true
 enable_confirmations = false
 
 [storage]
@@ -36,3 +40,11 @@ file_size_limit = "50MiB"
 
 [realtime]
 enabled = true
+
+# ── Edge Functions ──────────────────────────────────────────────────
+# `health` è l'UNICA funzione aperta: una sonda di uptime non può portarsi
+# dietro un JWT, e un health check autenticato non saprebbe dire se è caduta
+# proprio l'autenticazione. La risposta è content-free (vedi la funzione).
+# Tutte le altre restano con verify_jwt al default `true`.
+[functions.health]
+verify_jwt = false

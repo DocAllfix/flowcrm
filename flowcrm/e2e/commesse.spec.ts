@@ -43,8 +43,26 @@ test('deal vinto genera una commessa con codice', async ({ page }) => {
   await page.keyboard.press('ArrowRight')
   await page.keyboard.press(' ')
 
-  // Apri il dettaglio del deal
-  await page.getByText(nomeDeal).click()
+  // Attendere che lo spostamento sia PERSISTITO, non solo disegnato.
+  // Il trascinamento aggiorna subito la colonna a schermo e scrive sul
+  // database in modo asincrono: navigando subito, il dettaglio legge lo
+  // stage VECCHIO e il bottone "Crea commessa" non compare. Il deal risulta
+  // poi correttamente "Vinto" nel database, il che rende il guasto
+  // particolarmente ingannevole — sembra un difetto dell'applicazione.
+  await expect
+    .poll(async () => page.evaluate(async (nome) => {
+      // @ts-expect-error client esposto per test
+      const sb = window.__supabase
+      const { data } = await sb.from('deals')
+        .select('stage:pipeline_stages(is_won)').eq('nome', nome).single()
+      return data?.stage?.is_won ?? false
+    }, nomeDeal), { timeout: 10_000 })
+    .toBe(true)
+
+  // Aprire il dettaglio cliccando la SCHEDA, non un testo qualsiasi: dopo lo
+  // spostamento compare anche un avviso «"…" spostato in Vinto», quindi
+  // `getByText(nomeDeal)` trova due elementi e Playwright rifiuta di scegliere.
+  await card.click()
   await expect(page).toHaveURL(/\/deal\/[0-9a-f-]+$/, { timeout: 10_000 })
 
   // Il bottone "Crea commessa da deal" è visibile perché lo stage è vinto

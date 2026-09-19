@@ -20,6 +20,37 @@ function safeName(name: string): string {
   return name.replace(/[^\w.\-]+/g, '_').slice(0, 120)
 }
 
+/**
+ * MIME type per estensione, allineato all'allowlist del bucket
+ * (migrazione 20260918000003_storage_mime_allowlist.sql).
+ *
+ * Serve perché alcuni browser consegnano `File.type` vuoto: senza un
+ * contentType esplicito l'upload parte come application/octet-stream, che
+ * l'allowlist del bucket rifiuta. L'estensione è già stata validata da
+ * FileUpload.validateFile prima di arrivare qui.
+ */
+const MIME_PER_ESTENSIONE: Record<string, string> = {
+  pdf:  'application/pdf',
+  doc:  'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  xls:  'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ppt:  'application/vnd.ms-powerpoint',
+  pptx: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  jpg:  'image/jpeg',
+  jpeg: 'image/jpeg',
+  png:  'image/png',
+  webp: 'image/webp',
+  zip:  'application/zip',
+  txt:  'text/plain',
+}
+
+function mimeDiFile(file: File): string | undefined {
+  if (file.type) return file.type
+  const ext = file.name.split('.').pop()?.toLowerCase() ?? ''
+  return MIME_PER_ESTENSIONE[ext]
+}
+
 export function useAllegati(entita: string, entitaId: string) {
   return useQuery({
     queryKey: allegatiKeys.perEntita(entita, entitaId),
@@ -49,9 +80,10 @@ export function useUploadAllegati(entita: string, entitaId: string) {
 
       for (const file of files) {
         const path = `${userId}/${entita}/${entitaId}/${crypto.randomUUID()}-${safeName(file.name)}`
+        const mime = mimeDiFile(file)
         const { error: upErr } = await supabase.storage
           .from(BUCKET)
-          .upload(path, file, { contentType: file.type || undefined })
+          .upload(path, file, { contentType: mime })
         if (upErr) throw upErr
 
         const { error: metaErr } = await supabase.from('allegati').insert({
@@ -60,7 +92,7 @@ export function useUploadAllegati(entita: string, entitaId: string) {
           nome_file: safeName(file.name),
           nome_originale: sanitizeText(file.name),
           storage_path: path,
-          mime_type: file.type || null,
+          mime_type: mime ?? null,
           dimensione_bytes: file.size,
           caricato_da: userId,
           categoria,

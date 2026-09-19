@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Navigate, useLocation } from 'react-router-dom'
+import { Navigate, useLocation, Link } from 'react-router-dom'
 import { Zap } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
@@ -101,6 +101,14 @@ export function LoginPage() {
           >
             {submitting ? 'Accesso in corso…' : 'Accedi'}
           </Button>
+
+          <Link
+            to="/recupero"
+            className="block text-center text-sm text-muted-foreground hover:underline"
+            data-testid="login-recupero"
+          >
+            Password dimenticata?
+          </Link>
         </form>
       </div>
     </div>

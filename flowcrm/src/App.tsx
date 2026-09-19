@@ -4,6 +4,8 @@ import { AuthProvider } from '@/components/layout/AuthProvider'
 import { moduliAttivi } from '@/config/moduli.config'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LoginPage } from '@/pages/auth/LoginPage'
+import { RecuperoPasswordPage } from '@/pages/auth/RecuperoPasswordPage'
+import { NuovaPasswordPage } from '@/pages/auth/NuovaPasswordPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { DashboardEconomicaPage } from '@/pages/DashboardEconomicaPage'
 import { ProfiloPage } from '@/pages/ProfiloPage'
@@ -38,6 +40,11 @@ export default function App() {
     <AuthProvider>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        {/* Pubbliche: chi ha dimenticato la password non ha una sessione.
+            /auth/recupero è l'indirizzo su cui GoTrue rimanda dopo aver
+            verificato il token del messaggio (MAILER_URLPATHS_RECOVERY). */}
+        <Route path="/recupero" element={<RecuperoPasswordPage />} />
+        <Route path="/auth/recupero" element={<NuovaPasswordPage />} />
         <Route element={<AppLayout />}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard-economica" element={<ManagerOnly><DashboardEconomicaPage /></ManagerOnly>} />

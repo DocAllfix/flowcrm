@@ -8,6 +8,11 @@ const EMAIL = process.env.E2E_ADMIN_EMAIL
 const PASSWORD = process.env.E2E_ADMIN_PASSWORD
 
 test.skip(!EMAIL || !PASSWORD, 'credenziali E2E non impostate')
+// Il copilot richiede le credenziali Azure OpenAI nelle Edge Functions:
+// senza, la funzione risponde errore e il test fallirebbe per un motivo
+// che non riguarda il codice. Si salta in modo esplicito invece di
+// lasciare un rosso che si impara a ignorare.
+test.skip(!process.env.E2E_COPILOT, 'copilot non configurato (E2E_COPILOT assente)')
 
 test('copilot propone un task e lo crea SOLO dopo conferma', async ({ page }) => {
   await page.goto('/login')

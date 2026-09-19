@@ -6,7 +6,7 @@ import {
   useCallback,
   type ReactNode,
 } from 'react'
-import * as Sentry from '@sentry/react'
+import { identificaUtente, dimenticaUtente } from '@/lib/telemetria'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import type { UserProfile, UserRole } from '@/types/app.types'
@@ -101,8 +101,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSolaLettura(false)
     }
 
-    // Sentry: identifica utente autenticato (solo id + email, minimizzazione dati)
-    Sentry.setUser({ id: authUser.id, email: authUser.email })
+    // Telemetria: identificativo OPACO, mai id o email reali. Il collettore
+    // è condiviso fra più titolari del trattamento (vedi src/lib/telemetria.ts).
+    await identificaUtente(authUser.id)
   }, [])
 
   useEffect(() => {
@@ -129,7 +130,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
           setSolaLettura(false)
           setErrorAccount(null)
           setIsLoading(false)
-          Sentry.setUser(null)
+          dimenticaUtente()
           return
         }
 
