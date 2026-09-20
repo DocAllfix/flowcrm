@@ -201,11 +201,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # GHCR rifiuta i nomi con maiuscole, e `github.repository_owner` e'
+      # `DocAllfix`. Il resto del deploy (docker-compose, preflight.sh,
+      # provision-client.sh, RUNBOOK) cerca gia' `ghcr.io/docallfix/flowcrm`
+      # in minuscolo: era la CI a produrre un nome che non esisteva.
+      - name: Nome dell'immagine in minuscolo
+        run: echo "IMMAGINE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/flowcrm" >> "$GITHUB_ENV"
+
       - uses: docker/build-push-action@v6
         with:
           context: ./flowcrm
           file: ./flowcrm/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/flowcrm:${{ github.sha }}
+          tags: ${{ env.IMMAGINE }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
