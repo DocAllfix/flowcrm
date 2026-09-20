@@ -19,7 +19,8 @@ cosa in questo file:
 |---|---|
 | Migrazioni di sicurezza (Fase 0) | **provata** — 241/241 pgTAP verdi il 2026-09-18 |
 | Build applicativa e configurazione a runtime | **provata** — typecheck, build, 13/13 unit test |
-| `check-no-secrets.sh` | **provato** contro una fuga reale in history |
+| `check-no-secrets.sh` | **provato** contro una fuga reale in history, e **in CI** dopo la correzione del bit di esecuzione (prima non poteva partire: usciva 126) |
+| CI, lavoro `immagine` | **provato in produzione** — immagine costruita e pubblicata su GHCR al primo push su `main` |
 | Suite end-to-end (19 spec) | **provata** contro uno stack Supabase reale: **25 passati, 0 falliti, 2 saltati per prerequisito dichiarato** (da 21 fallimenti iniziali) |
 | Recupero password | **provato end-to-end** — richiesta, mail in casella, collegamento seguito (303 con sessione), password cambiata; nuova 200 e **vecchia 400** |
 | Caddyfile | **provato** — `caddy validate` OK, redirect http→https confermato |
@@ -92,6 +93,13 @@ git tag -a v1.x.y -m "release" && git push --tags
 Annotare il `GIT_SHA`: è il valore di `FLOWCRM_TAG`. **Mai `latest`** — con
 `latest` due istanze aggiornate in giorni diversi eseguono codice diverso e
 non c'è modo di sapere quale.
+
+La CI pubblica l'immagine con **due tag**, lo SHA completo e quello corto a 7
+caratteri, quindi va bene sia `git rev-parse HEAD` sia quello che si legge in
+`git log --oneline`. È deliberato: chiedere di copiare a mano 40 caratteri
+esatti è una richiesta che prima o poi qualcuno sbaglia, e l'errore si
+manifesta come «immagine non pubblicata» — un messaggio che manda a cercare
+il guasto nella CI invece che nel tag.
 
 ---
 

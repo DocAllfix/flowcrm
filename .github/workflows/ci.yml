@@ -208,11 +208,24 @@ jobs:
       - name: Nome dell'immagine in minuscolo
         run: echo "IMMAGINE=ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/flowcrm" >> "$GITHUB_ENV"
 
+      # DUE tag per la stessa immagine, e non è ridondanza.
+      # `github.sha` è lo SHA COMPLETO a 40 caratteri, ma chi installa legge
+      # `git log --oneline` e copia naturalmente i 7 corti. Con il tag corto
+      # `docker manifest inspect` in preflight.sh non trova nulla e il deploy
+      # si ferma dicendo «immagine non pubblicata»: fallisce in sicurezza, ma
+      # manda a cercare il difetto nella CI invece che nel tag copiato.
+      # Pubblicandoli entrambi funzionano tutti e due, e il caso limite
+      # sparisce invece di essere documentato.
+      - name: Tag corto oltre a quello completo
+        run: echo "SHA_CORTO=$(echo '${{ github.sha }}' | cut -c1-7)" >> "$GITHUB_ENV"
+
       - uses: docker/build-push-action@v6
         with:
           context: ./flowcrm
           file: ./flowcrm/Dockerfile
           push: true
-          tags: ${{ env.IMMAGINE }}:${{ github.sha }}
+          tags: |
+            ${{ env.IMMAGINE }}:${{ github.sha }}
+            ${{ env.IMMAGINE }}:${{ env.SHA_CORTO }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
