@@ -25,6 +25,7 @@ import { useAuth } from '@/hooks/useAuth'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { supabase } from '@/lib/supabase'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { Card } from '@/components/ui/card'
 import {
   AUTOMEZZO_STATI, PATENTE_LABEL, fmtImporto, fmtData,
 } from '@/modules/automezzi/stati'
@@ -34,21 +35,21 @@ import {
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 function Kpi({ icon: Icon, label, value, tint }: {
   icon: React.ElementType; label: string; value: string; tint: string
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+    <Card className="p-4">
       <div className="mb-2 flex items-center gap-2">
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl font-bold text-foreground">{value}</p>
-    </div>
+      <p className="text-title text-foreground">{value}</p>
+    </Card>
   )
 }
 
@@ -92,10 +93,10 @@ function SezioneRicambi() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-3 flex items-center gap-2">
-        <Package className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold text-foreground">Magazzino ricambi</h2>
+        <Package className="h-5 w-5 text-primary-testo" />
+        <h2 className="text-title text-foreground">Magazzino ricambi</h2>
       </div>
       {ricambi.map((r) => (
         <div key={r.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
@@ -132,7 +133,7 @@ function SezioneRicambi() {
         </div>
         <Button type="submit"><Plus className="h-4 w-4" /></Button>
       </form>
-    </div>
+    </Card>
   )
 }
 
@@ -179,10 +180,10 @@ function SezionePatenti() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <Card className="p-5">
       <div className="mb-3 flex items-center gap-2">
-        <IdCard className="h-5 w-5 text-primary" />
-        <h2 className="text-lg font-semibold text-foreground">Conducenti: patenti e abilitazioni</h2>
+        <IdCard className="h-5 w-5 text-primary-testo" />
+        <h2 className="text-title text-foreground">Conducenti: patenti e abilitazioni</h2>
       </div>
       {dipendenti.length === 0 && (
         <p className="py-2 text-sm text-muted-foreground">
@@ -242,7 +243,7 @@ function SezionePatenti() {
         </div>
         <Button type="submit" disabled={crea.isPending}><Plus className="h-4 w-4" /> Aggiungi</Button>
       </form>
-    </div>
+    </Card>
   )
 }
 
@@ -265,22 +266,22 @@ export function ParcoDashboardPage() {
       <PageHeader title="Dashboard parco" description="Disponibilità, scadenze e costi della flotta." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-orange-50 text-primary"
+        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-accent text-accent-foreground"
           value={String(automezzi.length)} />
-        <Kpi icon={Truck} label="Disponibili" tint="bg-green-50 text-green-600"
+        <Kpi icon={Truck} label="Disponibili" tint="bg-muted text-muted-foreground"
           value={String(disponibili)} />
-        <Kpi icon={Wrench} label="In manutenzione" tint="bg-yellow-50 text-yellow-600"
+        <Kpi icon={Wrench} label="In manutenzione" tint="bg-muted text-muted-foreground"
           value={String(inManutenzione)} />
         <Kpi icon={Euro} label={isManager ? 'Costo totale parco' : 'Scadenze aperte'}
-          tint="bg-purple-50 text-purple-600"
+          tint="bg-muted text-muted-foreground"
           value={isManager ? fmtImporto(costoTotaleParco) : String(scadenze.length)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Truck className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Mezzi per stato</h2>
+            <Truck className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Mezzi per stato</h2>
           </div>
           {automezzi.length === 0 ? (
             <EmptyState icon={Truck} title="Nessun mezzo" description="Registra i veicoli per vedere il quadro del parco." />
@@ -294,12 +295,12 @@ export function ParcoDashboardPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Scadenze imminenti</h2>
+            <CalendarClock className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (
             <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
@@ -320,7 +321,7 @@ export function ParcoDashboardPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">

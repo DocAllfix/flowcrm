@@ -4,7 +4,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, HeartPulse, Loader2, Download } from 'lucide-react'
+import { Plus, Search, HeartPulse, Download } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,9 @@ import { toCsv, scaricaCsv } from '@/lib/csv'
 import { PazienteDialog } from '@/modules/poliambulatori/dialogs/PazienteDialog'
 import { fmtData } from '@/modules/poliambulatori/stati'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 import {
   usePazienti, useArchivePaziente, useDeletePaziente, type Paziente,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
@@ -73,40 +76,40 @@ export function PazientiPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={HeartPulse} title="Nessun paziente"
           description="Registra il primo paziente per gestire agenda e fascicoli." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Paziente</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice fiscale</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nascita</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Telefono</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Convenzione</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Codice</TableHead>
+                <TableHead>Paziente</TableHead>
+                <TableHead>Codice fiscale</TableHead>
+                <TableHead>Nascita</TableHead>
+                <TableHead>Telefono</TableHead>
+                <TableHead>Convenzione</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtrati.map((p) => (
-                <tr key={p.id} onClick={() => navigate(`/pazienti/${p.id}`)}
-                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{p.codice}</td>
-                  <td className="px-4 py-3 font-medium text-foreground">{p.nome} {p.cognome ?? ''}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-muted-foreground">{p.codice_fiscale ?? '—'}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{fmtData(p.data_nascita)}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{p.telefono ?? '—'}</td>
-                  <td className="px-4 py-3">
+                <TableRow key={p.id} onActivate={() => navigate(`/pazienti/${p.id}`)}
+                  >
+                  <TableCell><CollegamentoRiga to={`/pazienti/${p.id}`} className="font-mono text-xs font-semibold">{p.codice}</CollegamentoRiga></TableCell>
+                  <TableCell className="font-medium text-foreground">{p.nome} {p.cognome ?? ''}</TableCell>
+                  <TableCell className="font-mono text-xs text-muted-foreground">{p.codice_fiscale ?? '—'}</TableCell>
+                  <TableCell className="text-muted-foreground">{fmtData(p.data_nascita)}</TableCell>
+                  <TableCell className="text-muted-foreground">{p.telefono ?? '—'}</TableCell>
+                  <TableCell>
                     {p.convenzione
                       ? <Badge tone="info">{p.convenzione.nome}</Badge>
                       : <span className="text-xs text-muted-foreground">Privato</span>}
-                  </td>
-                  <td className="px-4 py-3 text-right">
+                  </TableCell>
+                  <TableCell numerica>
                     <RowActions
                       nome={`${p.nome} ${p.cognome ?? ''}`.trim()}
                       onEdit={() => setEditPaziente(p)}
@@ -119,12 +122,12 @@ export function PazientiPage() {
                         onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                       })}
                     />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <PazienteDialog

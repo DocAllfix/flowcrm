@@ -11,6 +11,7 @@ import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Badge } from '@/components/ui/badge'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
+import { Card } from '@/components/ui/card'
 import {
   APPUNTAMENTO_STATO, nomePaziente, fmtData,
 } from '@/modules/poliambulatori/stati'
@@ -22,13 +23,13 @@ function Kpi({ icon: Icon, label, value, tint }: {
   icon: React.ElementType; label: string; value: string; tint: string
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+    <Card className="p-4">
       <div className="mb-2 flex items-center gap-2">
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl font-bold text-foreground">{value}</p>
-    </div>
+      <p className="text-title text-foreground">{value}</p>
+    </Card>
   )
 }
 
@@ -50,24 +51,24 @@ export function PoliambulatorioDashboardPage() {
         description="La giornata della struttura: agenda, referti, scadenze, qualità." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-orange-50 text-primary"
+        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-accent text-accent-foreground"
           value={String(kpi?.appuntamenti_oggi ?? 0)} />
-        <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-blue-50 text-blue-600"
+        <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-muted text-muted-foreground"
           value={String(kpi?.appuntamenti_7gg ?? 0)} />
-        <Kpi icon={Users} label="Pazienti" tint="bg-green-50 text-green-600"
+        <Kpi icon={Users} label="Pazienti" tint="bg-muted text-muted-foreground"
           value={`${kpi?.pazienti_totali ?? 0} (+${kpi?.nuovi_pazienti_mese ?? 0} nel mese)`} />
-        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-red-50 text-red-600"
+        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-destructive-tenue text-destructive-testo"
           value={kpi?.tasso_no_show_30gg != null ? `${kpi.tasso_no_show_30gg}%` : '—'} />
         <Kpi icon={FileSignature} label={sonoMedico ? 'Referti da validare' : 'Eventi qualità aperti'}
-          tint="bg-purple-50 text-purple-600"
+          tint="bg-muted text-muted-foreground"
           value={sonoMedico ? String(kpi?.referti_da_validare ?? 0) : String(kpi?.eventi_qualita_aperti ?? 0)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Agenda di oggi</h2>
+            <CalendarDays className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Agenda di oggi</h2>
           </div>
           {appuntamentiOggi.length === 0 ? (
             <EmptyState icon={CalendarDays} title="Nessun appuntamento oggi"
@@ -96,12 +97,12 @@ export function PoliambulatorioDashboardPage() {
               })}
             </div>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Scadenze della struttura</h2>
+            <CalendarClock className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Scadenze della struttura</h2>
           </div>
           {scadenze.length === 0 ? (
             <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
@@ -122,13 +123,13 @@ export function PoliambulatorioDashboardPage() {
               ))}
             </div>
           )}
-        </div>
+        </Card>
 
         {sonoMedico && (
-          <div className="rounded-xl border border-border bg-card p-5 shadow-sm lg:col-span-2">
+          <Card className="p-5 lg:col-span-2">
             <div className="mb-4 flex items-center gap-2">
-              <FileSignature className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Referti da validare</h2>
+              <FileSignature className="h-5 w-5 text-primary-testo" />
+              <h2 className="text-title text-foreground">Referti da validare</h2>
             </div>
             {refertiDaValidare.length === 0 ? (
               <EmptyState icon={HeartPulse} title="Nessun referto in attesa"
@@ -146,7 +147,7 @@ export function PoliambulatorioDashboardPage() {
                 ))}
               </div>
             )}
-          </div>
+          </Card>
         )}
       </div>
     </div>

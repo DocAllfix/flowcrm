@@ -1,6 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react'
 import { Route } from 'react-router-dom'
-import { Loader2 } from 'lucide-react'
+import { Spinner } from '@/components/ui/spinner'
 
 const PazientiPage = lazy(() => import('@/modules/poliambulatori/pages/PazientiPage').then((m) => ({ default: m.PazientiPage })))
 const PazienteDettaglioPage = lazy(() => import('@/modules/poliambulatori/pages/PazienteDettaglioPage').then((m) => ({ default: m.PazienteDettaglioPage })))
@@ -12,7 +12,7 @@ function Caricamento({ children }: { children: ReactNode }) {
   return (
     <Suspense fallback={
       <div className="flex justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner etichetta="Caricamento in corso" dimensione="lg" />
       </div>
     }>
       {children}

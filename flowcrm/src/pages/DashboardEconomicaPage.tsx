@@ -4,6 +4,7 @@ import {
 import { TrendingUp, Wallet, Euro, Clock, AlertTriangle, Landmark } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Card } from '@/components/ui/card'
 import {
   useFatturatoMensile, useCashFlow, useKpiEconomici, useTopClienti,
 } from '@/lib/queries/dashboard'
@@ -15,13 +16,13 @@ function KpiEco({ icon: Icon, label, value, tint }: {
   icon: React.ElementType; label: string; value: string; tint: string
 }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+    <Card className="p-4">
       <div className="mb-2 flex items-center gap-2">
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
         <span className="text-xs font-medium text-muted-foreground">{label}</span>
       </div>
-      <p className="text-xl font-bold text-foreground">{value}</p>
-    </div>
+      <p className="text-title text-foreground">{value}</p>
+    </Card>
   )
 }
 
@@ -30,8 +31,8 @@ const meseLabel = (iso: string) =>
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 export function DashboardEconomicaPage() {
@@ -53,18 +54,18 @@ export function DashboardEconomicaPage() {
       <PageHeader title="Dashboard economica" description="Fatturato e flusso di cassa, derivati dai dati reali." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-orange-50 text-primary" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
-        <KpiEco icon={Clock} label="Da incassare" tint="bg-blue-50 text-blue-600" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
-        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-red-50 text-red-600" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
-        <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-green-50 text-green-600" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
-        <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-purple-50 text-purple-600" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
+        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-accent text-accent-foreground" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
+        <KpiEco icon={Clock} label="Da incassare" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
+        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-destructive-tenue text-destructive-testo" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
+        <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
+        <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <TrendingUp className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Fatturato mensile</h2>
+            <TrendingUp className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Fatturato mensile</h2>
           </div>
           {fatturatoData.length === 0 ? (
             <EmptyState icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere il fatturato." />
@@ -78,12 +79,12 @@ export function DashboardEconomicaPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
 
-        <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+        <Card className="p-5">
           <div className="mb-4 flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">Cash flow previsto</h2>
+            <Wallet className="h-5 w-5 text-primary-testo" />
+            <h2 className="text-title text-foreground">Cash flow previsto</h2>
           </div>
           {cashData.length === 0 ? (
             <EmptyState icon={Wallet} title="Nessun dato" description="Incassi previsti e scadenze fiscali appariranno qui." />
@@ -99,13 +100,13 @@ export function DashboardEconomicaPage() {
               </BarChart>
             </ResponsiveContainer>
           )}
-        </div>
+        </Card>
       </div>
 
-      <div className="mt-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mt-6 p-5">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">Top clienti per fatturato</h2>
+          <TrendingUp className="h-5 w-5 text-primary-testo" />
+          <h2 className="text-title text-foreground">Top clienti per fatturato</h2>
         </div>
         {topData.length === 0 ? (
           <EmptyState icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere i clienti principali." />
@@ -119,7 +120,7 @@ export function DashboardEconomicaPage() {
             </BarChart>
           </ResponsiveContainer>
         )}
-      </div>
+      </Card>
     </div>
   )
 }

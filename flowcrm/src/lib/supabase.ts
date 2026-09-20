@@ -1,27 +1,59 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database.types'
+import { APP_CONFIG } from '@/config/app.config'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+// Il client si crea alla PRIMA USO, non all'import del modulo.
+//
+// Serve perché la configurazione ora arriva a runtime da /config.json: se il
+// client nascesse all'import, questo modulo andrebbe importato solo DOPO il
+// caricamento della configurazione, cioè in modo asincrono. E l'avvio
+// asincrono ha un effetto collaterale che è costato caro: `window.__supabase`
+// — che i test end-to-end usano in 20 punti — comparirebbe qualche istante
+// DOPO il caricamento della pagina, e un `page.evaluate()` subito dopo una
+// navigazione lo troverebbe `undefined`.
+//
+// Con la creazione pigra il modulo si importa in modo statico (quindi
+// `window.__supabase` esiste da subito), mentre le credenziali vengono lette
+// solo quando qualcuno fa davvero una query — a configurazione già caricata.
+let istanza: SupabaseClient<Database> | null = null
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Variabili VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY obbligatorie in .env.local'
-  )
+function client(): SupabaseClient<Database> {
+  if (istanza) return istanza
+
+  const { supabaseUrl, supabaseAnonKey } = APP_CONFIG
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error(
+      'Client Supabase usato prima del caricamento della configurazione ' +
+        "(attendere caricaConfigurazione() prima di eseguire query)."
+    )
+  }
+
+  istanza = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+    realtime: {
+      params: { eventsPerSecond: 10 },
+    },
+  })
+  return istanza
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-  realtime: {
-    params: { eventsPerSecond: 10 },
+// I metodi vanno LEGATI al client reale: senza `bind`, chiamare
+// `supabase.from(...)` passerebbe il proxy come `this` e il client non
+// funzionerebbe.
+export const supabase = new Proxy({} as SupabaseClient<Database>, {
+  get(_bersaglio, prop) {
+    const c = client() as unknown as Record<string | symbol, unknown>
+    const valore = c[prop]
+    return typeof valore === 'function' ? valore.bind(c) : valore
   },
 })
 
-// Solo in sviluppo: espone il client per i test E2E (Playwright).
+// Solo in sviluppo: espone il client ai test end-to-end (Playwright).
+// Assegnato all'import del modulo, quindi disponibile appena la pagina carica.
 if (import.meta.env.DEV) {
   ;(window as unknown as { __supabase: typeof supabase }).__supabase = supabase
 }

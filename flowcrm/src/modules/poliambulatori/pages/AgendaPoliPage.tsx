@@ -22,6 +22,7 @@ import {
 } from '@/modules/poliambulatori/queries/poliambulatorio'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import 'react-big-calendar/lib/addons/dragAndDrop/styles.css'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const localizer = dateFnsLocalizer({
   format: fnsFormat,
@@ -104,6 +105,9 @@ export function AgendaPoliPage() {
       style: {
         backgroundColor: colore,
         borderColor: colore,
+        // react-big-calendar scrive il titolo in bianco: sul colore di un
+        // professionista chiaro diventava illeggibile.
+        color: coloreTestoLeggibile(colore),
         opacity: ev.appuntamento.stato === 'eseguito' ? 0.6 : 1,
       },
     }
@@ -129,7 +133,7 @@ export function AgendaPoliPage() {
         }
       />
 
-      <div className="rounded-xl border border-border bg-card p-4 shadow-sm" style={{ height: 640 }}>
+      <div className="rounded-lg border border-border bg-card p-4" style={{ height: 640 }}>
         <DnDCalendar
           localizer={localizer}
           culture="it"

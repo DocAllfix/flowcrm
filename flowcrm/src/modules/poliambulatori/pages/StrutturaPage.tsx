@@ -30,7 +30,7 @@ import {
   type Apparecchiatura, type ArticoloSanitario, type EventoQualita,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
 
-const card = 'rounded-xl border border-border bg-card p-5 shadow-sm'
+const card = 'rounded-lg border border-border bg-card p-5'
 
 function BtnElimina({ onClick }: { onClick: () => void }) {
   return (
@@ -61,7 +61,7 @@ function TabProfessionisti() {
       </p>
       {professionisti.map((p) => (
         <div key={p.id} className="flex items-center gap-3 border-b border-border py-2 text-sm last:border-0">
-          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: p.colore ?? '#94a3b8' }} />
+          <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: p.colore ?? 'var(--serie-neutra)' }} />
           <span className="flex-1 font-medium text-foreground">
             {p.nome} {p.cognome ?? ''}
             {p.specializzazione && <span className="ml-2 text-xs font-normal text-muted-foreground">{p.specializzazione}</span>}
@@ -75,7 +75,7 @@ function TabProfessionisti() {
         onSubmit={(e: FormEvent) => {
           e.preventDefault()
           if (!nome.trim()) { toast.error('Il nome è obbligatorio'); return }
-          const colori = ['#ff5c35', '#3b82f6', '#10b981', '#8b5cf6', '#f59e0b', '#0ea5e9']
+          const colori = ['var(--serie-1)', 'var(--serie-2)', 'var(--serie-3)', 'var(--serie-4)', 'var(--serie-5)', 'var(--serie-6)']
           crea.mutate({
             tabella: 'professionisti',
             values: {

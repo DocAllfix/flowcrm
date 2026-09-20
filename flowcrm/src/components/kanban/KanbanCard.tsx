@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Building2 } from 'lucide-react'
 import type { DealWithOrg, PipelineStage } from '@/lib/queries/deals'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 interface Props {
   deal: DealWithOrg
@@ -20,13 +21,16 @@ export function KanbanCard({ deal, stage }: Props) {
   return (
     <div
       onClick={() => navigate(`/deal/${deal.id}`)}
-      className="group cursor-pointer rounded-lg border border-border bg-card p-3 shadow-sm transition-colors duration-200 hover:border-primary/40 hover:bg-muted/30"
+      className="group cursor-pointer rounded-lg border border-border bg-card p-3 transition-colors duration-200 hover:border-primary/40 hover:bg-muted/30"
     >
       <div className="mb-2 flex items-start justify-between gap-2">
         <h4 className="text-sm font-semibold leading-snug text-foreground">{deal.nome}</h4>
         <span
-          className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold text-white"
-          style={{ backgroundColor: stage.colore ?? 'var(--color-primary)' }}
+          className="shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+          style={{
+            backgroundColor: stage.colore ?? 'var(--color-primary)',
+            color: coloreTestoLeggibile(stage.colore),
+          }}
           title={`Probabilità ${stage.probabilita}%`}
         >
           {stage.probabilita}%

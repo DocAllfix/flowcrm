@@ -1,7 +1,12 @@
 /**
- * Toaster — wrapper Sonner per CertDesk.
- * Ref: ../evalisdesk-ref/src/components/ui/sonner.jsx
- * Adattato: usa useTheme da @/hooks/useTheme invece di next-themes.
+ * Toaster — involucro di Sonner.
+ *
+ * ⚠️ Questo componente LEGGE il tema, non lo applica. Fino al 2026-09-19
+ * era l'unico consumatore di `useTheme()`, e siccome quell'hook scriveva
+ * `.dark` su <html> dentro un effetto, era il Toaster a decidere il tema
+ * dell'intera applicazione — su una macchina col sistema in scuro la
+ * rendeva scura, senza che esistesse un interruttore per tornare indietro.
+ * Ora il tema si applica all'avvio in main.tsx e lo stato è condiviso.
  */
 import { Toaster as Sonner } from 'sonner'
 import { useTheme } from '@/hooks/useTheme'

@@ -11,6 +11,9 @@ import { useFeed, useSendMessaggio, type FeedTarget, type Messaggio } from '@/li
 import { useUsers } from '@/lib/queries/users'
 import { useAuth } from '@/hooks/useAuth'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 interface Props {
   target: FeedTarget
@@ -53,7 +56,7 @@ export function FeedSection({ target }: Props) {
   }
 
   return (
-    <div className="flex flex-col rounded-xl border border-border bg-card shadow-sm">
+    <Card className="flex flex-col">
       <div className="flex items-center gap-2 border-b border-border px-5 py-3">
         <MessageSquare className="h-4 w-4 text-muted-foreground" />
         <h3 className="text-sm font-semibold text-foreground">
@@ -63,7 +66,7 @@ export function FeedSection({ target }: Props) {
 
       <div className="max-h-[420px] min-h-[160px] flex-1 space-y-3 overflow-y-auto p-4">
         {isLoading ? (
-          <p className="py-6 text-center text-sm text-muted-foreground">Caricamento…</p>
+          <SkeletonElenco righe={3} altezza="h-12" />
         ) : messaggi.length === 0 ? (
           <EmptyState icon={MessageSquare} title="Nessun messaggio"
             description="Scrivi il primo commento. Usa @nome per menzionare un collega." />
@@ -72,9 +75,7 @@ export function FeedSection({ target }: Props) {
             const mine = m.autore_id === userProfile?.id
             return (
               <div key={m.id} className="flex gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-[11px] font-semibold text-white">
-                  {iniziali(m)}
-                </div>
+                <Avatar className="size-8 shrink-0"><AvatarFallback className="text-[11px]">{iniziali(m)}</AvatarFallback></Avatar>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">
                     <span className="text-sm font-semibold text-foreground">
@@ -104,13 +105,13 @@ export function FeedSection({ target }: Props) {
         <button
           type="submit"
           disabled={send.isPending || !testo.trim()}
-          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-white transition-colors hover:bg-primary/90 disabled:opacity-40"
+          className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-40"
           aria-label="Invia"
           data-testid="feed-invia"
         >
           <Send className="h-4 w-4" />
         </button>
       </form>
-    </div>
+    </Card>
   )
 }

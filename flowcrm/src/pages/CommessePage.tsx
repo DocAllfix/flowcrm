@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Briefcase, Loader2 } from 'lucide-react'
+import { Plus, Briefcase } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   useCommesse, useArchiveCommessa, useDeleteCommessa, type CommessaStato, type Commessa,
 } from '@/lib/queries/commesse'
@@ -39,33 +42,33 @@ export function CommessePage() {
       />
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : commesse.length === 0 ? (
         <EmptyState icon={Briefcase} title="Nessuna commessa"
           description="Le commesse nascono da un deal vinto o si creano manualmente." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Organizzazione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Descrizione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Importo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Codice</TableHead>
+                <TableHead>Organizzazione</TableHead>
+                <TableHead>Descrizione</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead numerica>Importo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {commesse.map((c) => (
-                <tr key={c.id} onClick={() => navigate(`/commesse/${c.id}`)}
-                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{c.codice}</td>
-                  <td className="px-4 py-3 text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</td>
-                  <td className="max-w-xs truncate px-4 py-3 text-muted-foreground">{c.descrizione}</td>
-                  <td className="px-4 py-3"><Badge tone={STATO_TONE[c.stato]}>{STATO_LABEL[c.stato]}</Badge></td>
-                  <td className="px-4 py-3 text-right font-bold text-foreground">{fmtImporto(Number(c.importo))}</td>
-                  <td className="px-4 py-3 text-right">
+                <TableRow key={c.id} onActivate={() => navigate(`/commesse/${c.id}`)}
+                  >
+                  <TableCell><CollegamentoRiga to={`/commesse/${c.id}`} className="font-mono text-xs font-semibold">{c.codice}</CollegamentoRiga></TableCell>
+                  <TableCell className="text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</TableCell>
+                  <TableCell className="max-w-xs truncate text-muted-foreground">{c.descrizione}</TableCell>
+                  <TableCell><Badge tone={STATO_TONE[c.stato]}>{STATO_LABEL[c.stato]}</Badge></TableCell>
+                  <TableCell numerica className="font-bold text-foreground">{fmtImporto(Number(c.importo))}</TableCell>
+                  <TableCell numerica>
                     <RowActions
                       nome={c.codice ?? undefined}
                       onEdit={() => setEditCommessa(c)}
@@ -78,12 +81,12 @@ export function CommessePage() {
                         onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                       })}
                     />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <CommessaDialog

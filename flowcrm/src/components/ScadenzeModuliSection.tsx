@@ -23,6 +23,8 @@ import {
   useEliminaScadenzaModulo, type ScadenzaModulo,
 } from '@/lib/queries/scadenzeModuli'
 import { useAuth } from '@/hooks/useAuth'
+import { SkeletonElenco } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 
 interface Props {
   modulo: string
@@ -106,7 +108,7 @@ export function ScadenzeModuliSection({ modulo, entita, entitaId, tipi, azioneUr
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card shadow-sm">
+    <Card>
       <div className="flex items-center justify-between border-b border-border px-5 py-3">
         <div className="flex items-center gap-2">
           <CalendarClock className="h-4 w-4 text-muted-foreground" />
@@ -122,7 +124,7 @@ export function ScadenzeModuliSection({ modulo, entita, entitaId, tipi, azioneUr
 
       <div className="p-2">
         {isLoading && (
-          <p className="px-3 py-4 text-center text-sm text-muted-foreground">Caricamento…</p>
+          <SkeletonElenco righe={2} altezza="h-12" />
         )}
         {!isLoading && scadenze.length === 0 && (
           <EmptyState
@@ -217,6 +219,6 @@ export function ScadenzeModuliSection({ modulo, entita, entitaId, tipi, azioneUr
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </Card>
   )
 }

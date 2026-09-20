@@ -1,171 +1,468 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Inter variabile AUTO-OSPITATA.
+   Non è una preferenza: la CSP di produzione dichiara `font-src 'self' data:`
+   (deploy/Caddyfile), quindi qualunque CDN di caratteri viene bloccato — in
+   sviluppo funziona e dal cliente no. Il pacchetto porta un @font-face per
+   sottoinsieme con `unicode-range`: un'istanza italiana scarica il solo
+   `latin` (48 kB), gli altri restano nell'immagine senza essere richiesti.
+   Fino al 2026-09-19 `--font-sans` dichiarava "Inter" senza che nessuno la
+   caricasse: tutti vedevano Segoe UI, e i `font-feature-settings` qui sotto
+   — che sono varianti DI Inter — non facevano nulla. */
+@import "@fontsource-variable/inter/wght.css";
+
 /* Class-based dark mode — `.dark` su <html> */
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════════
-   FlowCRM — Design System
-   Base: palette del prototipo (arancio #ff5c35, superfici chiare,
-   stile HubSpot-like) ammodernata. Light default, dark opzionale.
+   FlowCRM — Design System.  Registro vincolante: DESIGN.md
+   Stella polare: «Il registro di studio».
+
+   ── Perché OKLCH e non HSL ──────────────────────────────────────────
+   In HSL gradini uguali di lightness NON si vedono uguali (50% nel giallo
+   è chiaro, 50% nel blu è scuro). Qui serve il contrario: la tinta arriva
+   dal cliente a runtime e il sistema deve poterne derivare fondi, hover e
+   testo leggibili SENZA sapere quale sia. In OKLCH la lightness è
+   percettiva, quindi una soglia su di essa vale per ogni tinta.
+
+   ── I neutri sono tintati ───────────────────────────────────────────
+   Nessun grigio a chroma zero, nessun #000, nessun #fff: i neutri
+   portano una chroma fra 0.002 e 0.03 verso la tinta corrente. È ciò che
+   li fa sembrare della stessa famiglia del colore di marca.
+
+   ── I contrasti sono calcolati, non scelti a occhio ─────────────────
+   Ogni coppia `X` / `X-foreground` qui sotto è risolta numericamente per
+   stare sopra WCAG AA, e il test src/__tests__/contrasto-token.test.ts
+   lo verifica a ogni build. Prima di questa revisione fallivano in sei
+   punti: i badge «riuscita» stavano a 2,39:1 (bianco su verde acqua) e i
+   bordi dei campi a 1,48:1.
    ═══════════════════════════════════════════════════════════════════ */
 
 @layer base {
   :root {
-    /* ── Light mode (default) ─────────────────────────────────────── */
-    --background:             204 33% 97%;      /* #f5f8fa — bg prototipo */
-    --foreground:             215 28% 17%;      /* #1f2937 gray-800 */
-    --card:                   0 0% 100%;        /* #ffffff */
-    --card-foreground:        215 28% 17%;
-    --popover:                0 0% 100%;
-    --popover-foreground:     215 28% 17%;
-    --primary:                12 100% 60%;      /* #ff5c35 — arancio prototipo */
-    --primary-foreground:     0 0% 100%;
-    --secondary:              210 28% 28%;      /* #33475b — slate prototipo */
-    --secondary-foreground:   0 0% 100%;
-    --muted:                  204 25% 95%;      /* #f0f4f7 */
-    --muted-foreground:       215 14% 42%;      /* #5b6472 */
-    --accent:                 12 100% 96%;      /* arancio 8% — hover sidebar */
-    --accent-foreground:      12 85% 45%;
-    --destructive:            357 86% 64%;      /* #f2545b prototipo */
-    --destructive-foreground: 0 0% 100%;
-    --border:                 211 28% 84%;      /* #cbd6e2 prototipo */
-    --input:                  211 28% 84%;
-    --ring:                   12 100% 60%;
-    --success:                172 100% 37%;     /* #00bda5 prototipo */
-    --success-foreground:     0 0% 100%;
-    --warning:                38 92% 50%;       /* #f59e0b */
-    --warning-foreground:     215 28% 17%;
-    --chart-1:                12 100% 60%;      /* arancio */
-    --chart-2:                217 91% 60%;      /* blu #3b82f6 */
-    --chart-3:                160 84% 39%;      /* verde #10b981 */
-    --chart-4:                262 83% 66%;      /* viola */
-    --chart-5:                38 92% 50%;       /* ambra */
-    --radius:                 0.75rem;          /* card rounded-xl del prototipo */
-    /* ── Sidebar — chiara come il prototipo (in dark segue le card) ── */
-    --sidebar-background:           0 0% 100%;
-    --sidebar-foreground:           215 16% 35%;
-    --sidebar-primary:              12 100% 60%;
-    --sidebar-primary-foreground:   0 0% 100%;
-    --sidebar-accent:               12 100% 96%;
-    --sidebar-accent-foreground:    12 85% 45%;
-    --sidebar-border:               211 28% 88%;
-    --sidebar-ring:                 12 100% 60%;
+    /* ── Superfici: tre piani, dal più basso al più alto ───────────── */
+    --background:             oklch(0.9770 0.0042 236.5);  /* fondo pagina */
+    --card:                   oklch(0.9950 0.0020 236.5);  /* sollevato */
+    --popover:                oklch(0.9950 0.0020 236.5);
+    --muted:                  oklch(0.9616 0.0053 236.5);  /* incassato */
+
+    /* ── Inchiostro ────────────────────────────────────────────────── */
+    --foreground:             oklch(0.2794 0.0299 256.8);
+    --card-foreground:        oklch(0.2794 0.0299 256.8);
+    --popover-foreground:     oklch(0.2794 0.0299 256.8);
+    --muted-foreground:       oklch(0.5153 0.0317 256.8);  /* 5,6:1 su card */
+
+    /* ── Accento: valore di RIPIEGO. Per ogni cliente arriva da
+          /config.json (primaryColor) e viene riscritto a runtime.
+          `--primary-foreground` NON è bianco: su questo arancio il bianco
+          stava a 3,08:1. Il testo scuro tintato sta a 4,5:1. ────────── */
+    --primary:                oklch(0.6857 0.2059 35);
+    --primary-foreground:     oklch(0.3030 0.0721 35);
+    --accent:                 oklch(0.9629 0.0186 34.3);   /* velatura per hover */
+    --accent-foreground:      oklch(0.5630 0.1981 34);
+    /* L'anello di focus NON è il primario tale e quale: deve stare sopra
+       3:1 sulla superficie adiacente (WCAG 1.4.11), e il primario a piena
+       chiarezza si ferma a 2,88:1 sul fondo pagina. Qui è lo stesso colore
+       con la lightness abbassata quanto basta. Con la tinta del cliente il
+       calcolo lo rifà la derivazione del tema: un cliente con primario
+       giallo chiaro avrebbe un focus invisibile. */
+    --ring:                   oklch(0.6670 0.2059 35);
+    /* Il primario come TESTO (collegamenti, etichette): a piena chiarezza
+       sta a 3,02:1 sulla card — misurato da axe sul collegamento «Vedi
+       tutte» della dashboard. Stessa tinta, lightness abbassata — risolta
+       contro il FONDO PAGINA, che è più scuro della card e quindi è la
+       superficie sfavorevole. */
+    --primary-testo:          oklch(0.5610 0.1959 35);
+
+    /* ── Secondario (accentColor del cliente) ──────────────────────── */
+    --secondary:              oklch(0.3913 0.0424 249);
+    --secondary-foreground:   oklch(0.9850 0.0040 249);
+
+    /* ── Stati: tre, e non entrano MAI in un grafico ───────────────── */
+    --destructive:            oklch(0.5750 0.1933 21.3);
+    --destructive-foreground: oklch(0.9850 0.0050 21.3);
+    --success:                oklch(0.5390 0.1008 178.6);
+    --success-foreground:     oklch(0.9850 0.0040 178.6);
+    --warning:                oklch(0.7697 0.1645 70.6);
+    --warning-foreground:     oklch(0.2794 0.0299 256.8);
+
+    /* ── Linee. Due token, due lavori diversi:
+          `border` separa (decorativo, può essere tenue);
+          `input` delimita un COMANDO e deve stare sopra 3:1 (WCAG 1.4.11).
+          Prima erano lo stesso valore, a 1,48:1. ───────────────────── */
+    --border:                 oklch(0.8707 0.0203 249.9);
+    --input:                  oklch(0.6430 0.0203 249.9);
+
+    /* ── Informativo: il quarto stato, quello che non è né un problema
+          né un successo (in attesa, in lavorazione, presentata). ────── */
+    --info:                   oklch(0.5200 0.1600 255);
+    --info-foreground:        oklch(0.9850 0.0050 255);
+
+    /* ── Coppie per badge ed evidenziazioni: fondo tenue + testo ────────
+          Solide, non trasparenze: `bg-success/15 text-success` metteva il
+          colore di stato come testo sopra una velatura di sé stesso, a
+          3,86:1 — trovato da axe sulle pagine interne. Una coppia calcolata
+          insieme si puo' verificare; una trasparenza dipende da cosa c'e'
+          sotto. */
+    --success-tenue:          oklch(0.9550 0.0250 178.6);
+    --success-testo:          oklch(0.5160 0.0940 178.6);
+    --warning-tenue:          oklch(0.9550 0.0330 70.6);
+    --warning-testo:          oklch(0.5300 0.1140 70.6);
+    --destructive-tenue:      oklch(0.9550 0.0210 21.3);
+    --destructive-testo:      oklch(0.5480 0.1900 21.3);
+    --info-tenue:             oklch(0.9550 0.0210 255);
+    --info-testo:             oklch(0.5280 0.1600 255);
+    --serie-tenue:            oklch(0.9550 0.0250 300);
+    --serie-testo:            oklch(0.5380 0.1400 300);
+
+    /* ── Scala DATI ────────────────────────────────────────────────────
+          Separata dai colori semantici — in un grafico il verde direbbe
+          «positivo» mentre sta dicendo «terza serie» — e separata anche
+          dalla tinta del cliente: il marchio cambia da un'istanza
+          all'altra, mentre «presentata» e «aggiudicata» devono restare
+          distinguibili ovunque. Sei tinte a distanza angolare regolare.
+
+          ⚠️ Le lightness NON sono identiche fra le tinte, e non è una
+          svista: OKLCH è percettivamente uniforme, la luminanza con cui
+          WCAG calcola il contrasto non lo è. Alla stessa lightness il
+          verde e il verde acqua restavano a 4,2 e 3,9 sul fondo mentre
+          blu e rosa passavano. Ogni L è risolta contro la superficie più
+          sfavorevole del proprio tema: il fondo pagina nel chiaro (che è
+          più scuro della card), la card nello scuro (che è più chiara del
+          fondo). */
+    --serie-1:                oklch(0.5480 0.1400 255);   /* blu */
+    --serie-2:                oklch(0.5320 0.1300 155);   /* verde */
+    --serie-3:                oklch(0.5530 0.1180 70);    /* ambra */
+    --serie-4:                oklch(0.5610 0.1400 300);   /* viola */
+    --serie-5:                oklch(0.5360 0.0900 195);   /* verde acqua */
+    --serie-6:                oklch(0.5650 0.1400 350);   /* rosa */
+    /* Grigio per gli stati «spenti» (annullato, in analisi): non è una
+       serie, è l'assenza di una serie. */
+    --serie-neutra:           oklch(0.5470 0.0200 255);
+
+    --chart-1:                oklch(0.6857 0.2059 35);
+    --chart-2:                oklch(0.6261 0.1859 259.6);
+    --chart-3:                oklch(0.6902 0.1481 162.4);
+    --chart-4:                oklch(0.6176 0.2072 296.8);
+    --chart-5:                oklch(0.7697 0.1645 70.6);
+
+    /* ── Forma: base 10px, i controlli scendono, i pannelli salgono ── */
+    --radius:                 0.625rem;
+
+    /* ── Barra laterale ────────────────────────────────────────────── */
+    --sidebar-background:           oklch(0.9950 0.0020 236.5);
+    --sidebar-foreground:           oklch(0.4525 0.0312 256.8);
+    --sidebar-primary:              oklch(0.6857 0.2059 35);
+    --sidebar-primary-foreground:   oklch(0.3030 0.0721 35);
+    --sidebar-accent:               oklch(0.9629 0.0186 34.3);
+    --sidebar-accent-foreground:    oklch(0.5630 0.1981 34);
+    --sidebar-border:               oklch(0.9033 0.0151 249.8);
+    --sidebar-ring:                 oklch(0.6670 0.2059 35);
+
+    /* ── Movimento. Curva esponenziale in uscita: gli oggetti reali
+          decelerano, non rimbalzano. Niente bounce, niente elastic. ─── */
+    --ease-out-quart:         cubic-bezier(0.25, 1, 0.5, 1);
+    --durata-istante:         120ms;  /* pressione, cambio di colore */
+    --durata-stato:           200ms;  /* hover, apertura di un menu */
+    --durata-pannello:        280ms;  /* pannelli, cassetti, dialog */
+
+    /* ── Elevazione: piatto a riposo, l'ombra è una RISPOSTA a uno
+          stato. Costruite sull'inchiostro, mai su nero puro. ────────── */
+    --ombra-risposta: 0 1px 2px oklch(0.28 0.03 257 / 0.06),
+                      0 2px 8px oklch(0.28 0.03 257 / 0.06);
+    --ombra-sospeso:  0 8px 30px oklch(0.28 0.03 257 / 0.14);
+    --ombra-modale:   0 16px 48px oklch(0.28 0.03 257 / 0.20);
   }
 
   .dark {
-    /* ── Dark mode — neutro moderno, stesso arancio brand ─────────── */
-    --background:             220 16% 10%;      /* #15181e */
-    --foreground:             210 20% 92%;      /* #e4e8ee */
-    --card:                   220 15% 13%;      /* #1c2027 */
-    --card-foreground:        210 20% 92%;
-    --popover:                220 15% 13%;
-    --popover-foreground:     210 20% 92%;
-    --primary:                12 100% 62%;      /* arancio leggermente più chiaro su dark */
-    --primary-foreground:     0 0% 100%;
-    --secondary:              210 24% 74%;
-    --secondary-foreground:   220 16% 10%;
-    --muted:                  219 14% 18%;
-    --muted-foreground:       216 12% 62%;
-    --accent:                 12 60% 18%;
-    --accent-foreground:      12 100% 78%;
-    --destructive:            357 80% 62%;
-    --destructive-foreground: 0 0% 100%;
-    --border:                 219 13% 22%;
-    --input:                  219 13% 22%;
-    --ring:                   12 100% 62%;
-    --success:                172 80% 42%;
-    --success-foreground:     0 0% 100%;
-    --warning:                38 92% 56%;
-    --warning-foreground:     220 16% 10%;
-    --chart-1:                12 100% 62%;
-    --chart-2:                217 91% 65%;
-    --chart-3:                160 74% 46%;
-    --chart-4:                262 83% 72%;
-    --chart-5:                38 92% 56%;
-    --sidebar-background:           220 15% 13%;
-    --sidebar-foreground:           216 12% 72%;
-    --sidebar-primary:              12 100% 62%;
-    --sidebar-primary-foreground:   0 0% 100%;
-    --sidebar-accent:               12 60% 18%;
-    --sidebar-accent-foreground:    12 100% 78%;
-    --sidebar-border:               219 13% 20%;
-    --sidebar-ring:                 12 100% 62%;
+    /* Tema scuro: NON è il chiaro invertito. La profondità viene dalla
+       chiarezza della superficie, non dall'ombra, e i pieni degli stati
+       si schiariscono prendendo testo scuro — un rosso scuro su fondo
+       notte non si vedrebbe. */
+    --background:             oklch(0.2092 0.0116 264.3);
+    --card:                   oklch(0.2409 0.0136 264.3);
+    --popover:                oklch(0.2409 0.0136 264.3);
+    --muted:                  oklch(0.2921 0.0165 262.9);
+
+    --foreground:             oklch(0.9369 0.0070 247.9);
+    --card-foreground:        oklch(0.9369 0.0070 247.9);
+    --popover-foreground:     oklch(0.9369 0.0070 247.9);
+    --muted-foreground:       oklch(0.6891 0.0231 258.4);
+
+    --primary:                oklch(0.7300 0.1830 40);
+    --primary-foreground:     oklch(0.2600 0.0600 35.1);
+    --accent:                 oklch(0.2951 0.0704 35.2);
+    --accent-foreground:      oklch(0.8065 0.1118 34.7);
+    --ring:                   oklch(0.7300 0.1830 40);
+    --primary-testo:          oklch(0.7300 0.1830 40);
+
+    --secondary:              oklch(0.7902 0.0287 248.2);
+    --secondary-foreground:   oklch(0.2092 0.0116 264.3);
+
+    --destructive:            oklch(0.7100 0.1600 21.4);
+    --destructive-foreground: oklch(0.2400 0.0600 21.4);
+    --success:                oklch(0.7800 0.1150 178.6);
+    --success-foreground:     oklch(0.2400 0.0400 178.6);
+    --warning:                oklch(0.7929 0.1577 74.7);
+    --warning-foreground:     oklch(0.2092 0.0116 264.3);
+
+    --border:                 oklch(0.3315 0.0182 262.9);
+    --input:                  oklch(0.5350 0.0182 262.9);
+
+    --info:                   oklch(0.7600 0.1300 255);
+    --info-foreground:        oklch(0.2400 0.0500 255);
+
+    --success-tenue:          oklch(0.2850 0.0350 178.6);
+    --success-testo:          oklch(0.6580 0.1000 178.6);
+    --warning-tenue:          oklch(0.2850 0.0500 70.6);
+    --warning-testo:          oklch(0.6720 0.1440 70.6);
+    --destructive-tenue:      oklch(0.2850 0.0500 21.3);
+    --destructive-testo:      oklch(0.6840 0.1900 21.3);
+    --info-tenue:             oklch(0.2850 0.0500 255);
+    --info-testo:             oklch(0.6680 0.1600 255);
+    --serie-tenue:            oklch(0.2850 0.0490 300);
+    --serie-testo:            oklch(0.6760 0.1400 300);
+
+    /* Le stesse sei tinte, schiarite: su fondo notte una serie a 0.55
+       sparisce contro il fondo invece di distinguersi dalle altre. */
+    --serie-1:                oklch(0.6260 0.1300 255);
+    --serie-2:                oklch(0.6110 0.1300 155);
+    --serie-3:                oklch(0.6320 0.1300 70);
+    --serie-4:                oklch(0.6380 0.1300 300);
+    --serie-5:                oklch(0.6130 0.1040 195);
+    --serie-6:                oklch(0.6430 0.1300 350);
+    --serie-neutra:           oklch(0.6250 0.0200 255);
+
+    --chart-1:                oklch(0.7300 0.1830 40);
+    --chart-2:                oklch(0.6684 0.1625 259.5);
+    --chart-3:                oklch(0.7507 0.1558 163.5);
+    --chart-4:                oklch(0.6808 0.1723 298.7);
+    --chart-5:                oklch(0.7929 0.1577 74.7);
+
+    --sidebar-background:           oklch(0.2409 0.0136 264.3);
+    --sidebar-foreground:           oklch(0.7737 0.0165 258.4);
+    --sidebar-primary:              oklch(0.7300 0.1830 40);
+    --sidebar-primary-foreground:   oklch(0.2600 0.0600 35.1);
+    --sidebar-accent:               oklch(0.2951 0.0704 35.2);
+    --sidebar-accent-foreground:    oklch(0.8065 0.1118 34.7);
+    --sidebar-border:               oklch(0.3123 0.0168 262.9);
+    --sidebar-ring:                 oklch(0.7300 0.1830 40);
+
+    /* Su fondo notte un'ombra non si vede: la profondità la fa il bordo. */
+    --ombra-risposta: 0 1px 2px oklch(0 0 0 / 0.30);
+    --ombra-sospeso:  0 8px 30px oklch(0 0 0 / 0.45);
+    --ombra-modale:   0 16px 48px oklch(0 0 0 / 0.60);
   }
 
   * {
-    border-color: hsl(var(--border));
+    border-color: var(--border);
   }
 
   body {
-    background: hsl(var(--background));
-    color: hsl(var(--foreground));
+    background: var(--background);
+    color: var(--foreground);
+    /* Varianti di carattere di Inter: aprono i contorni di alcune cifre e
+       lettere che nei codici di questo prodotto (partite IVA, codici
+       fiscali, PAZ-2026-0001) si confondono a colpo d'occhio. Ora che
+       Inter è davvero caricata, queste righe fanno qualcosa. */
     font-feature-settings: "cv02", "cv03", "cv04";
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Scrollbar sottile come nel prototipo */
+  /* ── Registro «app densa»: i numeri stanno SEMPRE in colonna ───────
+     Una colonna di importi a larghezza variabile non si confronta a
+     colpo d'occhio, e si legge come un errore di calcolo anche quando il
+     numero è giusto. Regola globale, non componente per componente. */
+  table,
+  [data-slot="kpi"] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Movimento ridotto: non è un'opzione ───────────────────────────
+     Spariscono le traslazioni e le animazioni decorative.
+
+     ⚠️ Ma NON gli indicatori che dicono «il sistema sta lavorando». La
+     prima versione di questa regola li fermava insieme a tutto il resto,
+     e uno spinner immobile non comunica attesa: comunica che
+     l'applicazione si è piantata. Chi ha chiesto meno movimento ha
+     chiesto di non essere disturbato, non di non sapere più cosa sta
+     succedendo. Gli indicatori funzionali si marcano con
+     `data-movimento="funzionale"` e restano, rallentati. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    [data-movimento='funzionale'],
+    [data-movimento='funzionale'] * {
+      animation-duration: 1.8s !important;
+      animation-iteration-count: infinite !important;
+    }
+  }
+
+  /* Barra di scorrimento discreta, ma VERA: una colonna che scorre senza
+     dirlo è un pezzo di prodotto che gli utenti non trovano. */
   * {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--border)) transparent;
+    scrollbar-color: var(--border) transparent;
   }
   *::-webkit-scrollbar { width: 6px; height: 6px; }
   *::-webkit-scrollbar-track { background: transparent; }
   *::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--border));
+    background-color: var(--border);
     border-radius: 3px;
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   @theme inline — mappa token CSS → utility Tailwind v4
+   @theme inline — mappa i token CSS sulle utility di Tailwind v4.
+   I valori NON si duplicano qui: questa è solo la traduzione.
    ═══════════════════════════════════════════════════════════════════ */
 @theme inline {
   /* Base */
-  --color-background:             hsl(var(--background));
-  --color-foreground:             hsl(var(--foreground));
-  --color-card:                   hsl(var(--card));
-  --color-card-foreground:        hsl(var(--card-foreground));
-  --color-popover:                hsl(var(--popover));
-  --color-popover-foreground:     hsl(var(--popover-foreground));
-  --color-primary:                hsl(var(--primary));
-  --color-primary-foreground:     hsl(var(--primary-foreground));
-  --color-secondary:              hsl(var(--secondary));
-  --color-secondary-foreground:   hsl(var(--secondary-foreground));
-  --color-muted:                  hsl(var(--muted));
-  --color-muted-foreground:       hsl(var(--muted-foreground));
-  --color-accent:                 hsl(var(--accent));
-  --color-accent-foreground:      hsl(var(--accent-foreground));
-  --color-destructive:            hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-  --color-border:                 hsl(var(--border));
-  --color-input:                  hsl(var(--input));
-  --color-ring:                   hsl(var(--ring));
+  --color-background:             var(--background);
+  --color-foreground:             var(--foreground);
+  --color-card:                   var(--card);
+  --color-card-foreground:        var(--card-foreground);
+  --color-popover:                var(--popover);
+  --color-popover-foreground:     var(--popover-foreground);
+  --color-primary:                var(--primary);
+  --color-primary-foreground:     var(--primary-foreground);
+  --color-primary-testo:          var(--primary-testo);
+  --color-secondary:              var(--secondary);
+  --color-secondary-foreground:   var(--secondary-foreground);
+  --color-muted:                  var(--muted);
+  --color-muted-foreground:       var(--muted-foreground);
+  --color-accent:                 var(--accent);
+  --color-accent-foreground:      var(--accent-foreground);
+  --color-destructive:            var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border:                 var(--border);
+  --color-input:                  var(--input);
+  --color-ring:                   var(--ring);
   /* Semantici */
-  --color-success:                hsl(var(--success));
-  --color-success-foreground:     hsl(var(--success-foreground));
-  --color-warning:                hsl(var(--warning));
-  --color-warning-foreground:     hsl(var(--warning-foreground));
-  /* Chart */
-  --color-chart-1:                hsl(var(--chart-1));
-  --color-chart-2:                hsl(var(--chart-2));
-  --color-chart-3:                hsl(var(--chart-3));
-  --color-chart-4:                hsl(var(--chart-4));
-  --color-chart-5:                hsl(var(--chart-5));
-  /* Sidebar */
-  --color-sidebar:                     hsl(var(--sidebar-background));
-  --color-sidebar-foreground:          hsl(var(--sidebar-foreground));
-  --color-sidebar-primary:             hsl(var(--sidebar-primary));
-  --color-sidebar-primary-foreground:  hsl(var(--sidebar-primary-foreground));
-  --color-sidebar-accent:              hsl(var(--sidebar-accent));
-  --color-sidebar-accent-foreground:   hsl(var(--sidebar-accent-foreground));
-  --color-sidebar-border:              hsl(var(--sidebar-border));
-  --color-sidebar-ring:                hsl(var(--sidebar-ring));
-  /* Radius */
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  /* Font */
-  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --color-success:                var(--success);
+  --color-success-foreground:     var(--success-foreground);
+  --color-warning:                var(--warning);
+  --color-warning-foreground:     var(--warning-foreground);
+  --color-info:                   var(--info);
+  --color-info-foreground:        var(--info-foreground);
+  --color-success-tenue: var(--success-tenue);
+  --color-success-testo: var(--success-testo);
+  --color-warning-tenue: var(--warning-tenue);
+  --color-warning-testo: var(--warning-testo);
+  --color-destructive-tenue: var(--destructive-tenue);
+  --color-destructive-testo: var(--destructive-testo);
+  --color-info-tenue: var(--info-tenue);
+  --color-info-testo: var(--info-testo);
+  --color-serie-tenue: var(--serie-tenue);
+  --color-serie-testo: var(--serie-testo);
+  /* Scala dati */
+  --color-serie-1:                var(--serie-1);
+  --color-serie-2:                var(--serie-2);
+  --color-serie-3:                var(--serie-3);
+  --color-serie-4:                var(--serie-4);
+  --color-serie-5:                var(--serie-5);
+  --color-serie-6:                var(--serie-6);
+  --color-serie-neutra:           var(--serie-neutra);
+  --color-chart-1:                var(--chart-1);
+  --color-chart-2:                var(--chart-2);
+  --color-chart-3:                var(--chart-3);
+  --color-chart-4:                var(--chart-4);
+  --color-chart-5:                var(--chart-5);
+  /* Barra laterale */
+  --color-sidebar:                     var(--sidebar-background);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-ring:                var(--sidebar-ring);
+
+  /* Forma — derivata per moltiplicazione, così cambiare `--radius`
+     riscala l'intero sistema mantenendo le proporzioni. */
+  --radius-sm:  calc(var(--radius) * 0.4);   /*  4px */
+  --radius-md:  calc(var(--radius) * 0.6);   /*  6px — controlli */
+  --radius-lg:  var(--radius);               /* 10px — superfici */
+  --radius-xl:  calc(var(--radius) * 1.4);   /* 14px — pannelli */
+  --radius-2xl: calc(var(--radius) * 1.8);   /* 18px */
+
+  /* Tipografia — sette ruoli, scala fissa in rem.
+     Mai clamp() in un'interfaccia di prodotto: l'utente lavora a DPI
+     costante e un titolo che si restringe dentro un pannello peggiora
+     la lettura invece di migliorarla. */
+  --font-sans: "Inter Variable", "Segoe UI", system-ui, -apple-system,
+               "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo,
+               Consolas, monospace;
+
+  --text-display: 1.875rem;
+  --text-display--line-height: 1.2;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 600;
+
+  --text-headline: 1.5rem;
+  --text-headline--line-height: 1.25;
+  --text-headline--letter-spacing: -0.02em;
+  --text-headline--font-weight: 600;
+
+  --text-title: 1rem;
+  --text-title--line-height: 1.4;
+  --text-title--letter-spacing: -0.01em;
+  --text-title--font-weight: 600;
+
+  --text-data: 0.8125rem;
+  --text-data--line-height: 1.45;
+
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.08em;
+  --text-label--font-weight: 600;
+
+  /* Elevazione */
+  --shadow-risposta: var(--ombra-risposta);
+  --shadow-sospeso:  var(--ombra-sospeso);
+  --shadow-modale:   var(--ombra-modale);
+
+  /* Movimento — impostando i due valori predefiniti, le 41 occorrenze di
+     `transition-colors` già presenti nel sorgente adottano la curva e la
+     durata del sistema senza toccare un solo componente. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --default-transition-duration: var(--durata-stato);
+  --default-transition-timing-function: var(--ease-out-quart);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Utility proprie
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Bersaglio comodo al dito senza perdere densità sul desktop.
+   Le linee guida chiedono 44px di area toccabile, ma alzare l'altezza
+   REALE dei comandi renderebbe l'interfaccia meno densa anche dove il
+   puntatore è preciso. Qui si allarga soltanto l'area SENSIBILE, con uno
+   pseudo-elemento invisibile, e solo dove il puntatore è grossolano. */
+@utility tocco-comodo {
+  @media (pointer: coarse) {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -0.625rem;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+}
+
+/* Numeri in colonna là dove non c'è né una tabella né un KPI (per esempio
+   un importo dentro una riga di elenco costruita con flex). */
+@utility numeri-tabellari {
+  font-variant-numeric: tabular-nums;
 }

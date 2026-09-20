@@ -11,6 +11,10 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { ContattoDialog } from '@/features/contatti/ContattoDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { SkeletonTabella } from '@/components/ui/skeleton'
 
 export function ContattiPage() {
   const navigate = useNavigate()
@@ -57,7 +61,7 @@ export function ContattiPage() {
       </div>
 
       {isLoading ? (
-        <div className="py-12 text-center text-sm text-muted-foreground">Caricamento…</div>
+        <SkeletonTabella colonne={5} />
       ) : filtered.length === 0 ? (
         <EmptyState
           icon={BookUser}
@@ -66,39 +70,37 @@ export function ContattiPage() {
           action={<BottoneScrittura onClick={() => setDialogOpen(true)}><Plus className="h-4 w-4" /> Nuovo contatto</BottoneScrittura>}
         />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nome</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Organizzazione</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Contatti</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ruolo</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nome</TableHead>
+                <TableHead>Organizzazione</TableHead>
+                <TableHead>Contatti</TableHead>
+                <TableHead>Ruolo</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtered.map((c) => (
-                <tr key={c.id} onClick={() => navigate(`/contatti/${c.id}`)}
-                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3">
+                <TableRow key={c.id} onActivate={() => navigate(`/contatti/${c.id}`)}
+                  >
+                  <TableCell>
                     <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-xs font-semibold text-white">
-                        {(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}
-                      </div>
-                      <span className="font-medium text-foreground">{c.nome} {c.cognome ?? ''}</span>
+                      <Avatar className="size-8"><AvatarFallback className="text-xs">{(c.nome[0] ?? '')}{(c.cognome?.[0] ?? '')}</AvatarFallback></Avatar>
+                      <CollegamentoRiga to={`/contatti/${c.id}`}>{c.nome} {c.cognome ?? ''}</CollegamentoRiga>
                     </div>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{c.organizzazione?.ragione_sociale ?? '—'}</TableCell>
+                  <TableCell>
                     <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
                       {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />{c.email}</span>}
                       {c.telefono && <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{c.telefono}</span>}
                       {!c.email && !c.telefono && '—'}
                     </div>
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">{c.ruolo_aziendale ?? '—'}</td>
-                  <td className="px-4 py-3 text-right">
+                  </TableCell>
+                  <TableCell className="text-muted-foreground">{c.ruolo_aziendale ?? '—'}</TableCell>
+                  <TableCell numerica>
                     <RowActions
                       nome={`${c.nome} ${c.cognome ?? ''}`.trim()}
                       onEdit={() => setEditContatto(c)}
@@ -111,12 +113,12 @@ export function ContattiPage() {
                         onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                       })}
                     />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <ContattoDialog

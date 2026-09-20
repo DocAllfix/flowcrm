@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
 
@@ -11,10 +12,19 @@ defaults:
     working-directory: flowcrm
 
 jobs:
-  build-and-test:
+  # ── Controlli veloci: falliscono in un minuto se qualcosa non va ───
+  qualita:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # fetch-depth: 0 NON è opzionale.
+          # `actions/checkout` fa un clone SUPERFICIALE: con la profondità
+          # predefinita `git grep` e `git log --all` vedono solo il commit di
+          # punta, quindi check-no-secrets.sh direbbe "pulito" su un
+          # repository che pulito non è. Un cancello che dice sempre OK è
+          # peggio di nessun cancello, perché ci si smette di pensare.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -27,10 +37,16 @@ jobs:
         # dipendenze opzionali Linux (bug npm #4828) e npm ci fallirebbe.
         run: npm install --no-audit --no-fund
 
+      - name: Nessun segreto nel repository
+        run: ./deploy/check-no-secrets.sh
+
       - name: Typecheck
         run: npx tsc -b
 
-      - name: Unit tests
+      - name: Lint
+        run: npx oxlint src/
+
+      - name: Unit test
         run: npx vitest run
 
       - name: Build
@@ -39,5 +55,150 @@ jobs:
           VITE_SUPABASE_URL: http://localhost:54321
           VITE_SUPABASE_ANON_KEY: ci-placeholder
 
-  # I test pgTAP (supabase test db) e Playwright si attivano in F1,
-  # quando esistono migrazioni e login reale da esercitare.
+  # ── La prova che la sicurezza funziona ────────────────────────────
+  # I 241 pgTAP verificano che la RLS neghi ciò che deve negare: sono
+  # l'unica barriera di questo prodotto, e fino a oggi non li eseguiva
+  # nessuno automaticamente. Insieme agli e2e in un solo job perché
+  # avviare lo stack Supabase costa alcuni minuti e va fatto una volta.
+  verifica-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: flowcrm/package-lock.json
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Install
+        run: npm install --no-audit --no-fund
+
+      - name: Avvia lo stack Supabase locale
+        # Esclusi i servizi che i test non toccano: ogni immagine in meno
+        # sono decine di secondi e centinaia di MB in meno per esecuzione.
+        run: supabase start -x studio,imgproxy,vector,supavisor
+
+      - name: pgTAP — RLS, trigger, policy (241 asserzioni)
+        run: supabase test db
+
+      - name: Crea gli utenti per gli end-to-end
+        # Password GENERATE QUI, non conservate da nessuna parte: l'istanza
+        # è effimera e muore con il job. Così non serve un segreto GitHub e
+        # soprattutto non finisce nessuna credenziale nel repository — che è
+        # esattamente il difetto che check-no-secrets.sh esiste per trovare.
+        # Il ruolo arriva da raw_user_meta_data: lo legge handle_new_user().
+        run: |
+          set -euo pipefail
+          # `-o env` produce righe NOME=valore, che è il formato documentato
+          # dalla CLI: più solido che estrarre chiavi da JSON indovinandone
+          # il nome. E se un nome cambiasse fra due versioni della CLI, il
+          # controllo sotto fallisce con un messaggio leggibile invece di
+          # passare una stringa vuota a curl e ottenere un 401 misterioso.
+          eval "$(supabase status -o env)"
+          : "${API_URL:?supabase status non ha fornito API_URL — nomi disponibili: $(supabase status -o env | cut -d= -f1 | tr '\n' ' ')}"
+          : "${SERVICE_ROLE_KEY:?supabase status non ha fornito SERVICE_ROLE_KEY}"
+          API="$API_URL"
+          SRV="$SERVICE_ROLE_KEY"
+          ADMIN_PW=$(openssl rand -hex 16)
+          OPER_PW=$(openssl rand -hex 16)
+
+          crea() {
+            curl -sS -f -X POST "$API/auth/v1/admin/users" \
+              -H "apikey: $SRV" -H "Authorization: Bearer $SRV" \
+              -H "Content-Type: application/json" \
+              -d "{\"email\":\"$1\",\"password\":\"$2\",\"email_confirm\":true,
+                   \"user_metadata\":{\"ruolo\":\"$3\",\"nome\":\"CI\"}}" > /dev/null
+          }
+          crea ci.admin@flowcrm.local "$ADMIN_PW" admin
+          crea ci.oper@flowcrm.local  "$OPER_PW"  operatore
+
+          # Passati ai passi successivi senza comparire nel log.
+          {
+            echo "E2E_ADMIN_EMAIL=ci.admin@flowcrm.local"
+            echo "E2E_OPER_EMAIL=ci.oper@flowcrm.local"
+            echo "VITE_SUPABASE_URL=$API"
+          } >> "$GITHUB_ENV"
+          echo "::add-mask::$ADMIN_PW"
+          echo "::add-mask::$OPER_PW"
+          echo "E2E_ADMIN_PASSWORD=$ADMIN_PW" >> "$GITHUB_ENV"
+          echo "E2E_OPER_PASSWORD=$OPER_PW" >> "$GITHUB_ENV"
+
+      - name: Chiave anonima dell'istanza effimera
+        run: |
+          set -euo pipefail
+          eval "$(supabase status -o env)"
+          : "${ANON_KEY:?supabase status non ha fornito ANON_KEY}"
+          echo "VITE_SUPABASE_ANON_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+
+      - name: Attiva le licenze dei moduli verticali
+        # Senza queste righe la RLS non restituisce NESSUNA riga dei moduli —
+        # nemmeno all'amministratore — e le spec di gare, cantiere, automezzi,
+        # agenti e poliambulatori falliscono con elementi "non trovati".
+        # È il prodotto che funziona come deve: la licenza è la barriera, non
+        # il menu. Ma va attivata anche nell'ambiente di prova, altrimenti si
+        # insegue un difetto che non esiste.
+        # `VITE_MODULES` serve in aggiunta: governa cosa MOSTRA la UI.
+        run: |
+          set -euo pipefail
+          supabase db push --db-url "$(supabase status -o env | grep '^DB_URL=' | cut -d= -f2-)" >/dev/null 2>&1 || true
+          psql "$(supabase status -o env | grep '^DB_URL=' | cut -d= -f2- | tr -d '"')" -c \
+            "INSERT INTO moduli_licenze (slug) VALUES ('gare'),('cantiere'),('automezzi'),('agenti'),('poliambulatori') ON CONFLICT DO NOTHING;"
+          echo "VITE_MODULES=gare,cantiere,automezzi,agenti,poliambulatori" >> "$GITHUB_ENV"
+
+      - name: Installa il browser
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end
+        # `--workers=1` non è una preferenza di prudenza: in parallelo le spec
+        # si autenticano tutte con lo STESSO utente, e con la rotazione dei
+        # refresh token attiva sessioni concorrenti della stessa identità si
+        # invalidano a vicenda. Il sintomo è sottile — il browser torna alla
+        # pagina di accesso dopo un accesso riuscito — e produce da due a
+        # quattro rossi diversi a ogni esecuzione.
+        # È un rattoppo, non la correzione: quella è **un utente distinto per
+        # spec**. Finché non c'è, la parallelizzazione va lasciata giù, perché
+        # una suite che fallisce a caso è peggio di una suite lenta.
+        run: npx playwright test --workers=1
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: flowcrm/playwright-report/
+          retention-days: 7
+
+  # ── L'immagine che gireranno TUTTI i clienti ──────────────────────
+  # Si costruisce qui e da nessun'altra parte: è ciò che garantisce che
+  # ogni istanza esegua lo stesso binario, e quindi che un difetto che
+  # compare da un cliente solo non possa essere la sua build.
+  # Il tag è il GIT_SHA, mai "latest": con "latest" due istanze aggiornate
+  # in giorni diversi eseguono codice diverso e non c'è modo di saperlo.
+  immagine:
+    if: github.event_name == 'push'
+    needs: [qualita, verifica-supabase]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./flowcrm
+          file: ./flowcrm/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/flowcrm:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

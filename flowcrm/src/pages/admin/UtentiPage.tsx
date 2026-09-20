@@ -17,6 +17,9 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { SkeletonTabella } from '@/components/ui/skeleton'
 
 const RUOLI: UserRole[] = ['admin', 'manager', 'operatore']
 
@@ -60,27 +63,27 @@ export function UtentiPage() {
         }
       />
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <table className="w-full text-sm">
-          <thead className="border-b border-border bg-muted/50">
-            <tr>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Nome</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ruolo</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Attivo</th>
-            </tr>
-          </thead>
-          <tbody>
+      <Card className="overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nome</TableHead>
+              <TableHead>Ruolo</TableHead>
+              <TableHead>Attivo</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {isLoading && (
-              <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Caricamento…</td></tr>
+              <TableRow><TableCell colSpan={3} className="p-0"><SkeletonTabella righe={4} colonne={3} /></TableCell></TableRow>
             )}
             {users?.map((u) => {
               const isSelf = u.id === userProfile?.id
               return (
-                <tr key={u.id} className="border-b border-border last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3">
+                <TableRow key={u.id} className="border-b border-border last:border-0 hover:bg-muted/30">
+                  <TableCell>
                     <p className="font-medium text-foreground">{u.nome} {u.cognome ?? ''}</p>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <Select
                       value={u.ruolo}
                       onValueChange={(v) => changeRole(u.id, v as UserRole)}
@@ -93,21 +96,21 @@ export function UtentiPage() {
                         ))}
                       </SelectContent>
                     </Select>
-                  </td>
-                  <td className="px-4 py-3">
+                  </TableCell>
+                  <TableCell>
                     <Switch
                       checked={u.attivo}
                       onCheckedChange={(v) => toggleAttivo(u.id, v)}
                       disabled={isSelf}
                       aria-label="Attivo"
                     />
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               )
             })}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </Card>
 
       <p className="mt-4 text-xs text-muted-foreground">
         Non puoi modificare il tuo stesso ruolo o stato.

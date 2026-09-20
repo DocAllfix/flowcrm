@@ -21,12 +21,33 @@ test('agente: crea → offerta → ordine', async ({ page }) => {
   // Serve un'organizzazione cliente
   const orgNome = `Org Agenti E2E ${Date.now()}`
   await page.goto('/agenti')
+  // Attendere che la SESSIONE sia ripristinata, non solo che il client esista.
+  // Dopo una navigazione supabase-js rilegge la sessione dall'archivio del
+  // browser in modo asincrono: `getUser()` chiamato subito torna `user: null`
+  // e la riga successiva fallisce con "Cannot read properties of null".
+  // È una corsa, quindi passa spesso e fallisce ogni tanto — il tipo di rosso
+  // che si archivia come "instabilità dei test" invece di essere capito.
+  await expect
+    .poll(async () => page.evaluate(async () => {
+      // @ts-expect-error client esposto per test
+      const { data } = await window.__supabase.auth.getUser()
+      return Boolean(data?.user?.id)
+    }), { timeout: 10_000 })
+    .toBe(true)
+
   await page.evaluate(async (nome) => {
     // @ts-expect-error client esposto per test
     const sb = window.__supabase
     const { data: u } = await sb.auth.getUser()
     await sb.from('organizzazioni').insert({ ragione_sociale: nome, created_by: u.user.id })
   }, orgNome)
+
+  // L'inserimento è fatto col client diretto, quindi React Query non lo sa e
+  // continua a servire l'elenco organizzazioni dalla cache (staleTime 30s):
+  // il menu a tendina non mostrerebbe mai la nuova voce. Un ricaricamento
+  // forza il rifornimento. Non è un difetto dell'applicazione — è il prezzo
+  // di scavalcare il livello dati nei test.
+  await page.reload()
 
   const cognome = `E2E${String(Date.now()).slice(-6)}`
   await page.getByRole('button', { name: 'Nuovo agente' }).first().click()

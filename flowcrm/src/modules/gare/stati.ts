@@ -1,18 +1,27 @@
 import type { GaraStato } from '@/modules/gare/queries/gare'
 
-/** Stati della gara: etichette, toni badge e colori colonna Kanban. */
+/**
+ * Stati della gara: etichette, toni badge e colori della colonna Kanban.
+ *
+ * I colori sono token della scala dati (`--serie-*`), non esadecimali: gli
+ * esadecimali che c'erano qui non avevano una versione per il tema scuro e
+ * non erano mai stati verificati per contrasto. I token sì, e cambiano da
+ * soli col tema. Funzionano dentro `style` perché il browser risolve `var()`
+ * nelle proprietà in linea — è già il modo in cui KanbanCard usa
+ * `var(--color-primary)` come ripiego.
+ */
 export const GARA_STATI: {
   value: GaraStato
   label: string
   tone: 'neutral' | 'primary' | 'info' | 'success' | 'danger' | 'warning'
   colore: string
 }[] = [
-  { value: 'in_analisi', label: 'In analisi', tone: 'neutral', colore: '#94a3b8' },
-  { value: 'in_preparazione', label: 'In preparazione', tone: 'primary', colore: '#f59e0b' },
-  { value: 'presentata', label: 'Presentata', tone: 'info', colore: '#3b82f6' },
-  { value: 'aggiudicata', label: 'Aggiudicata', tone: 'success', colore: '#10b981' },
-  { value: 'non_aggiudicata', label: 'Non aggiudicata', tone: 'danger', colore: '#f2545b' },
-  { value: 'annullata', label: 'Annullata', tone: 'neutral', colore: '#64748b' },
+  { value: 'in_analisi', label: 'In analisi', tone: 'neutral', colore: 'var(--serie-neutra)' },
+  { value: 'in_preparazione', label: 'In preparazione', tone: 'primary', colore: 'var(--serie-3)' },
+  { value: 'presentata', label: 'Presentata', tone: 'info', colore: 'var(--serie-1)' },
+  { value: 'aggiudicata', label: 'Aggiudicata', tone: 'success', colore: 'var(--serie-2)' },
+  { value: 'non_aggiudicata', label: 'Non aggiudicata', tone: 'danger', colore: 'var(--destructive)' },
+  { value: 'annullata', label: 'Annullata', tone: 'neutral', colore: 'var(--serie-neutra)' },
 ]
 
 export const statoGara = (v: GaraStato) => GARA_STATI.find((s) => s.value === v) ?? GARA_STATI[0]

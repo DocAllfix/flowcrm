@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Plus, Users, Loader2, MapPin, Clock, CalendarPlus } from 'lucide-react'
+import { Plus, Users, MapPin, Clock, CalendarPlus } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
@@ -10,6 +10,7 @@ import {
 import { scaricaIcs } from '@/lib/ics'
 import { toast } from 'sonner'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 function fmtQuando(iso: string | null) {
   if (!iso) return 'Data da definire'
@@ -29,9 +30,9 @@ export function RiunioniPage() {
 
   function riga(r: Attivita) {
     return (
-      <li key={r.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
+      <li key={r.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-          <Users className="h-5 w-5 text-primary" />
+          <Users className="h-5 w-5 text-primary-testo" />
         </div>
         <div className="min-w-0 flex-1">
           <p className="font-medium text-foreground">{r.titolo}</p>
@@ -72,7 +73,7 @@ export function RiunioniPage() {
       />
 
       {isLoading ? (
-        <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : riunioni.length === 0 ? (
         <EmptyState icon={Users} title="Nessuna riunione"
           description="Pianifica la prima riunione del team."

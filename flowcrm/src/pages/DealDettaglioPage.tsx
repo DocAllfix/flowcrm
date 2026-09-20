@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { ArrowLeft, Building2, Calendar, Loader2, Briefcase } from 'lucide-react'
+import { ArrowLeft, Building2, Calendar, Briefcase } from 'lucide-react'
 import { useDeal } from '@/lib/queries/deals'
 import { useCommessePerDeal } from '@/lib/queries/commesse'
 import { Badge } from '@/components/ui/badge'
@@ -11,6 +11,9 @@ import { StoricoSection } from '@/components/StoricoSection'
 import { TimelineSection } from '@/components/TimelineSection'
 import { FeedSection } from '@/components/FeedSection'
 import { CommessaDialog } from '@/features/commesse/CommessaDialog'
+import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
+import { coloreTestoLeggibile } from '@/lib/tema'
 
 const fmtImporto = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
@@ -25,7 +28,7 @@ export function DealDettaglioPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Spinner etichetta="Caricamento in corso" dimensione="lg" />
       </div>
     )
   }
@@ -42,15 +45,15 @@ export function DealDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Indietro
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{deal.nome}</h1>
+            <h1 className="text-headline text-foreground">{deal.nome}</h1>
             <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               {deal.organizzazione && (
                 <Link
                   to={`/organizzazioni/${deal.organizzazione.id}`}
-                  className="flex items-center gap-1.5 hover:text-primary"
+                  className="flex items-center gap-1.5 hover:text-primary-testo"
                 >
                   <Building2 className="h-4 w-4" />
                   {deal.organizzazione.ragione_sociale}
@@ -65,10 +68,13 @@ export function DealDettaglioPage() {
             </div>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-foreground">{fmtImporto(Number(deal.importo))}</p>
+            <p className="text-headline text-foreground">{fmtImporto(Number(deal.importo))}</p>
             <Badge
-              className="mt-1 text-white"
-              style={{ backgroundColor: deal.stage.colore ?? undefined }}
+              className="mt-1"
+              style={{
+                backgroundColor: deal.stage.colore ?? undefined,
+                color: deal.stage.colore ? coloreTestoLeggibile(deal.stage.colore) : undefined,
+              }}
             >
               {deal.stage.nome} · {deal.stage.probabilita}%
             </Badge>
@@ -96,7 +102,7 @@ export function DealDettaglioPage() {
             </Button>
           )}
         </div>
-      </div>
+      </Card>
 
       <CommessaDialog
         open={commessaOpen}

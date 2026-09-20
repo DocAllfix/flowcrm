@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, FolderKanban, Loader2, Building2, Cog } from 'lucide-react'
+import { Plus, FolderKanban, Building2, Cog } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { ProgettoDialog } from '@/features/progetti/ProgettoDialog'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   useProgetti, useArchiveProgetto, useDeleteProgetto, type ProgettoStato, type Progetto,
 } from '@/lib/queries/progetti'
@@ -41,7 +42,7 @@ export function ProgettiPage() {
       />
 
       {isLoading ? (
-        <div className="flex items-center justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+        <AttesaCentrata className="py-20" />
       ) : progetti.length === 0 ? (
         <EmptyState icon={FolderKanban} title="Nessun progetto"
           description="Crea un progetto cliente o interno." />
@@ -49,7 +50,7 @@ export function ProgettiPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {progetti.map((p) => (
             <div key={p.id} onClick={() => navigate(`/progetti/${p.id}`)}
-              className="cursor-pointer rounded-xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-primary/40 hover:bg-muted/20">
+              className="cursor-pointer rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/40 hover:bg-muted/20">
               <div className="mb-2 flex items-center justify-between">
                 <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   {p.tipo === 'cliente' ? <Building2 className="h-3.5 w-3.5" /> : <Cog className="h-3.5 w-3.5" />}

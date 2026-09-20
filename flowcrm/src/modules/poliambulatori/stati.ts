@@ -1,10 +1,10 @@
 export const APPUNTAMENTO_STATO: Record<string, { label: string; tone: 'primary' | 'info' | 'warning' | 'success' | 'neutral' | 'danger'; colore: string }> = {
-  prenotato: { label: 'Prenotato', tone: 'primary', colore: '#f59e0b' },
-  confermato: { label: 'Confermato', tone: 'info', colore: '#3b82f6' },
-  in_sala: { label: 'In sala', tone: 'warning', colore: '#8b5cf6' },
-  eseguito: { label: 'Eseguito', tone: 'success', colore: '#10b981' },
-  annullato: { label: 'Annullato', tone: 'neutral', colore: '#94a3b8' },
-  no_show: { label: 'No show', tone: 'danger', colore: '#f2545b' },
+  prenotato: { label: 'Prenotato', tone: 'primary', colore: 'var(--serie-3)' },
+  confermato: { label: 'Confermato', tone: 'info', colore: 'var(--serie-1)' },
+  in_sala: { label: 'In sala', tone: 'warning', colore: 'var(--serie-4)' },
+  eseguito: { label: 'Eseguito', tone: 'success', colore: 'var(--serie-2)' },
+  annullato: { label: 'Annullato', tone: 'neutral', colore: 'var(--serie-neutra)' },
+  no_show: { label: 'No show', tone: 'danger', colore: 'var(--destructive)' },
 }
 
 export const CONDIZIONE_LABEL: Record<string, string> = {

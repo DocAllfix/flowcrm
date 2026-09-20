@@ -23,19 +23,26 @@ console del browser; così invece è impossibile aggirarla.
 
 ## Credenziali demo (istanza online con i dati di test)
 
-Quattro account **admin in sola lettura** (vedono tutto, non toccano niente),
-utilizzabili anche **in contemporanea** senza conflitti (la sola lettura
-elimina ogni rischio di collisione):
+> **Le password non stanno in questo file né altrove nel repository.**
+> Sono nel password manager, voce «FlowCRM — demo». Questo file è versionato
+> in git: una password scritta qui è pubblica per chiunque abbia accesso al
+> repo, a ogni fork e in ogni copia della history.
 
-| Email | Password |
-|---|---|
-| `demo1@flowcrm.local` | `DemoFlowCRM2026` |
-| `demo2@flowcrm.local` | `DemoFlowCRM2026` |
-| `demo3@flowcrm.local` | `DemoFlowCRM2026` |
-| `demo4@flowcrm.local` | `DemoFlowCRM2026` |
+Account disponibili sull'istanza dimostrativa:
 
-Account **di manutenzione** (può scrivere, per curare i dati della demo):
-`manutenzione@flowcrm.local` / `Manutenzione2026!`
+| Utenza | Ruolo | Scrive? |
+|---|---|---|
+| `demo1@flowcrm.local` … `demo4@flowcrm.local` | admin in sola lettura | no |
+| `manutenzione@flowcrm.local` | manutentore | **sì** |
+
+I quattro account demo vedono tutto e non toccano niente, e sono utilizzabili
+anche **in contemporanea** senza conflitti (la sola lettura elimina ogni
+rischio di collisione).
+
+L'account di manutenzione ha `manutentore = true`: **bypassa il trigger di
+sola lettura e scrive su tutte le tabelle di dominio**. Non va consegnato a
+nessuno insieme alle credenziali demo e va trattato come un'utenza
+amministrativa a tutti gli effetti.
 
 ## Comandi di gestione (come `postgres`, es. SQL editor Supabase o db query)
 

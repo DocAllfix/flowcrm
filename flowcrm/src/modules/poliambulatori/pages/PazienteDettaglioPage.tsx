@@ -8,7 +8,7 @@ import { useState, type FormEvent } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
-  ArrowLeft, Loader2, Pencil, Trash2, Plus, Lock, Stethoscope,
+  ArrowLeft, Pencil, Trash2, Plus, Lock, Stethoscope,
   FileSignature, Send, CheckCircle2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -25,6 +25,8 @@ import { StoricoSection } from '@/components/StoricoSection'
 import { useAuth } from '@/hooks/useAuth'
 import { PazienteDialog } from '@/modules/poliambulatori/dialogs/PazienteDialog'
 import { AppuntamentoDialog } from '@/modules/poliambulatori/dialogs/AppuntamentoDialog'
+import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 import {
   CONDIZIONE_LABEL, CONSENSO_LABEL, CANALE_LABEL, APPUNTAMENTO_STATO,
   REFERTO_STATO, fmtData, fmtDataOra,
@@ -38,7 +40,7 @@ import {
   type Professionista,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
 
-const card = 'rounded-xl border border-border bg-card p-5 shadow-sm'
+const card = 'rounded-lg border border-border bg-card p-5'
 
 function Riga({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -477,7 +479,7 @@ export function PazienteDettaglioPage() {
   const [editOpen, setEditOpen] = useState(false)
 
   if (isLoading) {
-    return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+    return <AttesaCentrata className="py-20" />
   }
   if (!paziente) return <p className="text-sm text-muted-foreground">Paziente non trovato (o modulo non attivo).</p>
 
@@ -488,11 +490,11 @@ export function PazienteDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Pazienti
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <p className="font-mono text-xs font-semibold text-muted-foreground">{paziente.codice}</p>
-            <h1 className="mt-0.5 text-2xl font-bold text-foreground">
+            <h1 className="mt-0.5 text-headline text-foreground">
               {paziente.nome} {paziente.cognome ?? ''}
             </h1>
             <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -505,7 +507,7 @@ export function PazienteDettaglioPage() {
             <Pencil className="h-4 w-4" /> Modifica
           </Button>
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="panoramica">
         <TabsList className="h-auto flex-wrap">

@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useFattura } from '@/lib/queries/amministrazione'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { StoricoSection } from '@/components/StoricoSection'
+import { Card } from '@/components/ui/card'
+import { AttesaCentrata } from '@/components/ui/spinner'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2 }).format(n)
@@ -13,10 +15,10 @@ const STATO_TONE = { da_pagare: 'warning', pagata: 'success', scaduta: 'danger',
 
 function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4">
+    <Card className="p-4">
       <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{label}</p>
       <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
-    </div>
+    </Card>
   )
 }
 
@@ -25,7 +27,7 @@ export function FatturaDettaglioPage() {
   const navigate = useNavigate()
   const { data: f, isLoading } = useFattura(id)
 
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>
+  if (isLoading) return <AttesaCentrata className="py-20" />
   if (!f) return <p className="text-sm text-muted-foreground">Fattura non trovata.</p>
 
   return (
@@ -35,17 +37,17 @@ export function FatturaDettaglioPage() {
         <ArrowLeft className="h-4 w-4" /> Registro fatture
       </button>
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
             <span className="text-xs uppercase tracking-wider text-muted-foreground">
               Fattura {f.direzione === 'attiva' ? 'attiva (cliente)' : 'passiva (fornitore)'}
             </span>
-            <h1 className="mt-1 text-2xl font-bold text-foreground">{f.numero}</h1>
+            <h1 className="mt-1 text-headline text-foreground">{f.numero}</h1>
             {f.organizzazione && <p className="mt-0.5 text-sm text-muted-foreground">{f.organizzazione.ragione_sociale}</p>}
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-foreground">{fmtEuro(Number(f.totale))}</p>
+            <p className="text-headline text-foreground">{fmtEuro(Number(f.totale))}</p>
             <Badge tone={STATO_TONE[f.stato]} className="mt-1">{f.stato.replace('_', ' ')}</Badge>
           </div>
         </div>
@@ -55,7 +57,7 @@ export function FatturaDettaglioPage() {
           <Info label="Imponibile" value={fmtEuro(Number(f.imponibile))} />
           <Info label="Totale" value={fmtEuro(Number(f.totale))} />
         </div>
-      </div>
+      </Card>
 
       <Tabs defaultValue="allegati">
         <TabsList>

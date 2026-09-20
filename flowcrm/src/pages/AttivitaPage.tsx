@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import {
-  Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, Loader2,
-} from 'lucide-react'
+  Plus, CheckSquare, Phone, Mail, Users, StickyNote, Check, } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { RowActions } from '@/components/RowActions'
 import { AttivitaDialog } from '@/features/attivita/AttivitaDialog'
 import { useAuth } from '@/hooks/useAuth'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Spinner } from '@/components/ui/spinner'
 import {
   useMieAttivita, useToggleAttivitaStato, useArchiveAttivita, useDeleteAttivita,
   type AttivitaTipo, type Attivita,
@@ -34,11 +34,11 @@ export function AttivitaPage() {
     const Icon = TIPO_ICON[a.tipo]
     const done = a.stato === 'completata'
     return (
-      <li key={a.id} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
+      <li key={a.id} className="flex items-center gap-3 rounded-lg border border-border bg-card p-3">
         <button
           onClick={() => toggle.mutate({ id: a.id, stato: done ? 'da_fare' : 'completata' })}
           className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border ${
-            done ? 'border-success bg-success text-white' : 'border-border hover:border-primary'
+            done ? 'border-success bg-success text-success-foreground' : 'border-border hover:border-primary'
           }`}
           aria-label={done ? 'Riapri' : 'Completa'}
         >
@@ -85,7 +85,7 @@ export function AttivitaPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : attivita.length === 0 ? (
         <EmptyState icon={CheckSquare} title="Nessuna attività"

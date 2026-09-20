@@ -17,6 +17,7 @@ import {
   type AttivitaScope, type AttivitaTipo, type Attivita,
 } from '@/lib/queries/attivita'
 import { scaricaIcs } from '@/lib/ics'
+import { SkeletonElenco } from '@/components/ui/skeleton'
 
 const TIPO_ICON: Record<AttivitaTipo, React.ElementType> = {
   task: CheckSquare,
@@ -61,7 +62,7 @@ export function TimelineSection({ scope }: Props) {
       </div>
 
       {isLoading ? (
-        <p className="py-6 text-center text-sm text-muted-foreground">Caricamento…</p>
+        <SkeletonElenco righe={3} altezza="h-12" />
       ) : attivita.length === 0 ? (
         <EmptyState icon={CheckSquare} title="Nessuna attività"
           description="Registra task, chiamate, email, riunioni e note." />
@@ -71,7 +72,7 @@ export function TimelineSection({ scope }: Props) {
             const Icon = TIPO_ICON[a.tipo]
             const done = a.stato === 'completata'
             return (
-              <li key={a.id} className="flex gap-3 rounded-xl border border-border bg-card p-3 shadow-sm">
+              <li key={a.id} className="flex gap-3 rounded-lg border border-border bg-card p-3">
                 <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-muted">
                   <Icon className="h-4 w-4 text-muted-foreground" />
                 </div>

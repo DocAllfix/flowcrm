@@ -11,6 +11,7 @@ import {
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { parseCsv, type ParsedCsv } from '@/lib/csv'
+import { Card } from '@/components/ui/card'
 
 interface Campo { key: string; label: string; required?: boolean }
 interface EntitaConfig {
@@ -142,7 +143,7 @@ export function ImportaPage() {
         </label>
       ) : (
         <div className="space-y-6">
-          <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <Card className="p-5">
             <h2 className="mb-3 text-sm font-semibold text-foreground">
               Mappa le colonne ({csv.rows.length} righe rilevate)
             </h2>
@@ -171,10 +172,10 @@ export function ImportaPage() {
                 Annulla
               </Button>
             </div>
-          </div>
+          </Card>
 
           {esito && (
-            <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+            <Card className="p-5">
               <div className="flex items-center gap-2 text-success">
                 <CheckCircle2 className="h-5 w-5" />
                 <span className="font-semibold" data-testid="import-esito">{esito.importate} importate</span>
@@ -192,7 +193,7 @@ export function ImportaPage() {
                   </ul>
                 </div>
               )}
-            </div>
+            </Card>
           )}
         </div>
       )}

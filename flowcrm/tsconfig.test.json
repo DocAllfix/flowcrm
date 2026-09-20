@@ -1,0 +1,46 @@
+{
+  /* Progetto separato per i test.
+   *
+   * Serve perché tsconfig.app.json dichiara `"types": ["vite/client"]` e NON
+   * i tipi di Node, di proposito: il codice dell'interfaccia non deve poter
+   * raggiungere `node:fs`. Alcuni test però devono leggere file veri del
+   * repository — la guardia sui contrasti legge `src/index.css`, perché un
+   * test che si porta dietro una copia dei valori non sta verificando niente.
+   *
+   * (`import '...?raw'` non è un'alternativa: vitest neutralizza gli import
+   * di CSS e restituisce una stringa vuota. Verificato.)
+   *
+   * Quindi: i test escono da tsconfig.app.json ed entrano qui, dove hanno i
+   * tipi di Node *e* quelli del DOM, perché usano anche @testing-library.
+   */
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "esnext",
+    "types": ["node", "vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode — uguale all'applicazione: i test importano i suoi moduli */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Strictness — la stessa dell'applicazione */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/__tests__/**/*"]
+}

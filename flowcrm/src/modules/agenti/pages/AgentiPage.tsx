@@ -5,7 +5,7 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
-import { Plus, Search, BriefcaseBusiness, Loader2, Download } from 'lucide-react'
+import { Plus, Search, BriefcaseBusiness, Download } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,6 +16,9 @@ import { toCsv, scaricaCsv } from '@/lib/csv'
 import { AgenteDialog } from '@/modules/agenti/dialogs/AgenteDialog'
 import { TIPOLOGIA_LABEL, AGENTE_STATO } from '@/modules/agenti/stati'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
+import { Spinner } from '@/components/ui/spinner'
 import {
   useAgenti, useAgenteCorrente, useArchiveAgente, useDeleteAgente, type Agente,
 } from '@/modules/agenti/queries/agenti'
@@ -80,47 +83,47 @@ export function AgentiPage() {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-20">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Spinner etichetta="Caricamento in corso" dimensione="lg" />
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={BriefcaseBusiness} title="Nessun agente"
           description="Registra la rete vendita per gestire mandati, visite e provvigioni." />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Codice</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Agente</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tipologia</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Zone</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stato</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Portale</th>
-                <th className="px-4 py-3"></th>
-              </tr>
-            </thead>
-            <tbody>
+        <Card className="overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Codice</TableHead>
+                <TableHead>Agente</TableHead>
+                <TableHead>Tipologia</TableHead>
+                <TableHead>Zone</TableHead>
+                <TableHead>Stato</TableHead>
+                <TableHead>Portale</TableHead>
+                <TableHead><span className="sr-only">Azioni</span></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filtrati.map((a) => {
                 const st = AGENTE_STATO[a.stato] ?? AGENTE_STATO.attivo
                 return (
-                  <tr key={a.id} onClick={() => navigate(`/agenti/${a.id}`)}
-                    className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                    <td className="px-4 py-3 font-mono text-xs font-semibold text-foreground">{a.codice}</td>
-                    <td className="px-4 py-3 font-medium text-foreground">
+                  <TableRow key={a.id} onActivate={() => navigate(`/agenti/${a.id}`)}
+                    >
+                    <TableCell><CollegamentoRiga to={`/agenti/${a.id}`} className="font-mono text-xs font-semibold">{a.codice}</CollegamentoRiga></TableCell>
+                    <TableCell className="font-medium text-foreground">
                       {a.nome} {a.cognome ?? ''}
                       {a.ragione_sociale && (
                         <span className="block text-xs font-normal text-muted-foreground">{a.ragione_sociale}</span>
                       )}
-                    </td>
-                    <td className="px-4 py-3 text-muted-foreground">{TIPOLOGIA_LABEL[a.tipologia]}</td>
-                    <td className="max-w-[160px] truncate px-4 py-3 text-muted-foreground">
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">{TIPOLOGIA_LABEL[a.tipologia]}</TableCell>
+                    <TableCell className="max-w-[160px] truncate text-muted-foreground">
                       {a.zone ?? a.area_geografica ?? '—'}
-                    </td>
-                    <td className="px-4 py-3"><Badge tone={st.tone}>{st.label}</Badge></td>
-                    <td className="px-4 py-3">
+                    </TableCell>
+                    <TableCell><Badge tone={st.tone}>{st.label}</Badge></TableCell>
+                    <TableCell>
                       {a.user_id ? <Badge tone="info">Attivo</Badge> : <span className="text-xs text-muted-foreground">—</span>}
-                    </td>
-                    <td className="px-4 py-3 text-right">
+                    </TableCell>
+                    <TableCell numerica>
                       <RowActions
                         nome={`${a.nome} ${a.cognome ?? ''}`.trim()}
                         onEdit={() => setEditAgente(a)}
@@ -133,13 +136,13 @@ export function AgentiPage() {
                           onError: (e) => toast.error((e as Error)?.message ?? 'Errore'),
                         })}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
-        </div>
+            </TableBody>
+          </Table>
+        </Card>
       )}
 
       <AgenteDialog

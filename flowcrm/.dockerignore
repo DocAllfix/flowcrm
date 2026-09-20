@@ -1,0 +1,63 @@
+# ═══════════════════════════════════════════════════════════════════
+# Cosa NON entra nel contesto di build.
+#
+# Senza questo file `COPY . .` porta dentro tutto, e due voci fanno danno
+# vero — non solo peso:
+#
+#   .env.local  →  `vite build` LEGGE i file .env e sostituisce le variabili
+#                  nel bundle. Le credenziali dell'istanza di SVILUPPO
+#                  finirebbero cotte dentro l'immagine che poi gira da ogni
+#                  cliente: la configurazione a runtime verrebbe scavalcata
+#                  e l'immagine smetterebbe di essere unica.
+#   node_modules →  centinaia di MB inviati al demone per essere subito
+#                  buttati via (il Dockerfile fa `npm ci` da sé), più il
+#                  rischio concreto di binari compilati per Windows dentro
+#                  un'immagine Linux.
+#
+# Regola: elencare cosa si esclude, e verificare il risultato DENTRO
+# l'immagine, non fidandosi del file:
+#   docker run --rm --entrypoint sh flowcrm:<tag> -c 'ls -A /srv'
+#   docker image inspect --format '{{.Config.Env}}' flowcrm:<tag>
+# ═══════════════════════════════════════════════════════════════════
+
+# Segreti e configurazione locale — la voce più importante del file
+.env
+.env.*
+!.env.example
+deploy/.env.prod
+
+# Dipendenze e prodotti di build: il Dockerfile li ricrea
+node_modules
+dist
+dist-ssr
+*.tsbuildinfo
+
+# Esiti dei test: possono contenere tracce con dati reali
+test-results
+playwright-report
+coverage
+.playwright-mcp
+
+# Git e cronologia
+.git
+.github
+.gitignore
+
+# Documentazione e materiale operativo: non serve all'applicazione, e
+# GUASTI.md/RUNBOOK.md descrivono la nostra infrastruttura interna.
+# Fa eccezione deploy/, da cui il Dockerfile prende Caddyfile ed entrypoint.
+docs
+provisioning
+*.md
+
+# Supabase: migrazioni e funzioni si applicano al database, non finiscono
+# nell'immagine del frontend
+supabase
+
+# Editor e sistema
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log

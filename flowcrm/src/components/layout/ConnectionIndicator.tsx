@@ -20,12 +20,15 @@ interface StatusConfig {
   dotClass:  string
   textClass: string
   Icon:      React.ElementType
+  /** Il puntino che pulsa dice che il canale sta riagganciando: fermarlo
+   *  col movimento ridotto farebbe credere che sia rimasto disconnesso. */
+  movimento?: 'funzionale'
 }
 
 const STATUS_CONFIG: Record<RealtimeConnectionStatus, StatusConfig> = {
   connected:    { label: 'Connesso',          dotClass: 'bg-success',              textClass: 'text-success',     Icon: Wifi      },
-  connecting:   { label: 'Connessione...',    dotClass: 'bg-warning animate-pulse', textClass: 'text-warning',    Icon: RefreshCw },
-  reconnecting: { label: 'Riconnessione...', dotClass: 'bg-warning animate-pulse', textClass: 'text-warning',     Icon: RefreshCw },
+  connecting:   { label: 'Connessione...',    dotClass: 'bg-warning animate-pulse', movimento: 'funzionale', textClass: 'text-warning',    Icon: RefreshCw },
+  reconnecting: { label: 'Riconnessione...', dotClass: 'bg-warning animate-pulse', movimento: 'funzionale', textClass: 'text-warning',     Icon: RefreshCw },
   polling:      { label: 'Polling attivo',   dotClass: 'bg-warning',               textClass: 'text-warning',     Icon: RefreshCw },
   error:        { label: 'Disconnesso',      dotClass: 'bg-destructive',           textClass: 'text-destructive', Icon: WifiOff   },
 }
@@ -40,14 +43,14 @@ interface ConnectionIndicatorProps {
 
 export function ConnectionIndicator({ collapsed }: ConnectionIndicatorProps) {
   const status = useRealtimeStatus()
-  const { label, dotClass, textClass } = STATUS_CONFIG[status]
+  const { label, dotClass, textClass, movimento } = STATUS_CONFIG[status]
 
   if (collapsed) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex justify-center py-1">
-            <span className={`w-2 h-2 rounded-full ${dotClass}`} />
+            <span data-movimento={movimento} className={`size-2 rounded-full ${dotClass}`} />
           </div>
         </TooltipTrigger>
         <TooltipContent side="right">
@@ -59,7 +62,7 @@ export function ConnectionIndicator({ collapsed }: ConnectionIndicatorProps) {
 
   return (
     <div className="flex items-center gap-2 px-3 py-1.5">
-      <span className={`w-2 h-2 rounded-full shrink-0 ${dotClass}`} />
+      <span data-movimento={movimento} className={`size-2 shrink-0 rounded-full ${dotClass}`} />
       <span className={`text-xs ${textClass}`}>{label}</span>
     </div>
   )

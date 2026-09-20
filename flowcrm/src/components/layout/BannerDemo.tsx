@@ -13,7 +13,7 @@ export function BannerDemo() {
   return (
     <div
       role="status"
-      className="flex items-center justify-center gap-2 border-b border-amber-300/60 bg-amber-50 px-4 py-2 text-center text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-200"
+      className="flex items-center justify-center gap-2 border-b border-warning/40 bg-warning/15 px-4 py-2 text-center text-sm text-foreground"
     >
       <Eye className="h-4 w-4 shrink-0" aria-hidden />
       <span>

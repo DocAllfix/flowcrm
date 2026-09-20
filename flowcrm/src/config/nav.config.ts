@@ -110,3 +110,53 @@ export function filterSectionsForRole(sections: NavSection[], isManager: boolean
 export function navForRole(isManager: boolean): NavSection[] {
   return filterSectionsForRole(NAV_SECTIONS, isManager)
 }
+
+/**
+ * Dove sono. Cerca fra TUTTE le voci di navigazione (core e moduli) quella
+ * il cui percorso è il prefisso più lungo di `pathname`.
+ *
+ * ── Perché serve ────────────────────────────────────────────────────
+ * L'intestazione portava solo comandi: aperta una scheda di dettaglio —
+ * e in questo prodotto ce ne sono da tredici schede — non c'era modo di
+ * sapere in che sezione si fosse né come tornare all'elenco, se non col
+ * tasto indietro del browser.
+ *
+ * ── Perché il prefisso più lungo ────────────────────────────────────
+ * `/commesse/42` deve risolvere in «Commesse», non in «Dashboard» (che
+ * sta su `/` ed è prefisso di tutto). La voce `/` si accetta solo per
+ * corrispondenza esatta, per la stessa ragione.
+ */
+export interface Posizione {
+  /** Titolo della sezione, se la voce ne ha una (es. «CRM»). */
+  sezione: string | null
+  /** Etichetta della voce (es. «Commesse»). */
+  voce: string
+  /** Percorso della voce: è il collegamento per tornare all'elenco. */
+  path: string
+  /** Vero se siamo su una pagina di dettaglio sotto la voce. */
+  dettaglio: boolean
+}
+
+export function posizioneCorrente(
+  pathname: string,
+  sezioni: NavSection[],
+): Posizione | null {
+  let migliore: Posizione | null = null
+
+  for (const sezione of sezioni) {
+    for (const voce of sezione.items) {
+      const esatto = pathname === voce.path
+      const sotto = voce.path !== '/' && pathname.startsWith(voce.path + '/')
+      if (!esatto && !sotto) continue
+      if (migliore && migliore.path.length >= voce.path.length) continue
+      migliore = {
+        sezione: sezione.title,
+        voce: voce.label,
+        path: voce.path,
+        dettaglio: sotto,
+      }
+    }
+  }
+
+  return migliore
+}

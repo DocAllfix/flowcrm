@@ -13,11 +13,13 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { useNavigate } from 'react-router-dom'
 import { fmtImporto } from '@/modules/agenti/stati'
 import { useAgentiKpi } from '@/modules/agenti/queries/agenti'
+import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
+import { Card } from '@/components/ui/card'
 
 const tooltipStyle = {
   borderRadius: 8,
-  border: '1px solid hsl(var(--border))',
-  background: 'hsl(var(--card))',
+  border: '1px solid var(--border)',
+  background: 'var(--card)',
 }
 
 export function DirezioneCommercialePage() {
@@ -36,10 +38,10 @@ export function DirezioneCommercialePage() {
         description="Confronto della rete vendita: attività, risultati, efficienza (anno corrente)."
       />
 
-      <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+      <Card className="mb-6 p-5">
         <div className="mb-4 flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold text-foreground">Venduto per agente</h2>
+          <TrendingUp className="h-5 w-5 text-primary-testo" />
+          <h2 className="text-title text-foreground">Venduto per agente</h2>
         </div>
         {chartData.length === 0 ? (
           <EmptyState icon={TrendingUp} title="Nessun dato"
@@ -56,9 +58,9 @@ export function DirezioneCommercialePage() {
             </BarChart>
           </ResponsiveContainer>
         )}
-      </div>
+      </Card>
 
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+      <Card className="overflow-hidden">
         <div className="flex items-center gap-2 border-b border-border px-5 py-3">
           <Users className="h-4 w-4 text-muted-foreground" />
           <h3 className="text-sm font-semibold text-foreground">Confronto agenti</h3>
@@ -68,44 +70,44 @@ export function DirezioneCommercialePage() {
             <EmptyState icon={Users} title="Nessun agente" description="Registra la rete vendita per vedere il confronto." />
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead className="border-b border-border bg-muted/50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">Agente</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Visite</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ordini</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Venduto</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Conversione</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">€/visita</th>
-                <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">Provvigioni</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Agente</TableHead>
+                <TableHead numerica>Visite</TableHead>
+                <TableHead numerica>Ordini</TableHead>
+                <TableHead numerica>Venduto</TableHead>
+                <TableHead numerica>Conversione</TableHead>
+                <TableHead numerica>€/visita</TableHead>
+                <TableHead numerica>Provvigioni</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {kpi.map((k) => (
-                <tr key={k.agente_id as string}
-                  onClick={() => navigate(`/agenti/${k.agente_id}`)}
-                  className="cursor-pointer border-b border-border transition-colors last:border-0 hover:bg-muted/30">
-                  <td className="px-4 py-3 font-medium text-foreground">{k.agente as string}</td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">{k.visite}</td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">{k.ordini}</td>
-                  <td className="px-4 py-3 text-right font-bold text-foreground">
+                <TableRow key={k.agente_id as string} onActivate={() => navigate(`/agenti/${k.agente_id}`)}>
+                  <TableCell>
+                    <CollegamentoRiga to={`/agenti/${k.agente_id}`}>{k.agente as string}</CollegamentoRiga>
+                  </TableCell>
+                  <TableCell numerica className="text-muted-foreground">{k.visite}</TableCell>
+                  <TableCell numerica className="text-muted-foreground">{k.ordini}</TableCell>
+                  <TableCell numerica className="font-bold text-foreground">
                     {fmtImporto(Number(k.valore_ordini ?? 0))}
-                  </td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">
+                  </TableCell>
+                  <TableCell numerica className="text-muted-foreground">
                     {k.tasso_conversione != null ? `${k.tasso_conversione}%` : '—'}
-                  </td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">
+                  </TableCell>
+                  <TableCell numerica className="text-muted-foreground">
                     {k.fatturato_per_visita != null ? fmtImporto(Number(k.fatturato_per_visita)) : '—'}
-                  </td>
-                  <td className="px-4 py-3 text-right text-muted-foreground">
+                  </TableCell>
+                  <TableCell numerica className="text-muted-foreground">
                     {fmtImporto(Number(k.provvigioni_anno ?? 0))}
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         )}
-      </div>
+      </Card>
     </div>
   )
 }
