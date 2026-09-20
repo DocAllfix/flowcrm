@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { useAutoAnimate } from '@formkit/auto-animate/react'
 import { cn } from '@/lib/utils'
 
 /**
@@ -56,18 +55,20 @@ function TableHeader({ className, ...props }: React.ComponentProps<'thead'>) {
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<'tbody'>) {
-  // AutoAnimate sta QUI e non nelle pagine: così tutte le tabelle del
-  // prodotto guadagnano la transizione su creazione, filtro ed
-  // eliminazione senza che nessuna pagina debba ricordarsene. Anima solo
-  // `transform` e `opacity`, e rispetta `prefers-reduced-motion` da sé
-  // (l'opzione per ignorarlo esiste e non la usiamo).
-  const [corpo] = useAutoAnimate<HTMLTableSectionElement>({
-    duration: 200,
-    easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-  })
+  // ⚠️ Qui c'era AutoAnimate, che dava a tutte le tabelle la transizione su
+  // creazione, filtro ed eliminazione. L'ho tolto dopo averlo MISURATO
+  // sulla build di produzione: su una tabella di sole 18 righe costava
+  // 54-73 ms di blocco del thread principale per ciclo di filtro, e quel
+  // costo si paga a ogni tasto digitato nella casella di ricerca. Con il
+  // movimento ridotto attivo — cioè con AutoAnimate spento — gli stessi
+  // cicli non producevano nessun compito lungo.
+  //
+  // Non è solo una questione di prestazioni: su un elenco denso che si
+  // filtra, le righe che scorrono non comunicano uno stato, decorano. Il
+  // registro di DESIGN.md chiede movimento che dica qualcosa, e qui non
+  // diceva niente al prezzo di far scattare la digitazione.
   return (
     <tbody
-      ref={corpo}
       data-slot="table-body"
       className={cn('[&_tr:last-child]:border-0', className)}
       {...props}
