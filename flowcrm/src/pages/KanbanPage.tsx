@@ -132,7 +132,13 @@ export function KanbanPage() {
               0,
             )
             return (
-              <div key={stage.id} className="flex w-72 shrink-0 flex-col">
+              // `data-colonna` e' un appiglio per i test: identifica la
+              // colonna per NOME. Serve perche' la spec del kanban risaliva
+              // alla colonna con `locator('div').first()`, che prendeva un
+              // contenitore cosi' ampio da includere anche le notifiche — e
+              // la notifica «spostato in Negoziazione» contiene lo stesso
+              // testo della card, quindi l'asserzione diventava ambigua.
+              <div key={stage.id} data-colonna={stage.nome} className="flex w-72 shrink-0 flex-col">
                 <div
                   className="flex items-center gap-2 rounded-t-lg px-4 py-2.5"
                   style={{
