@@ -22,6 +22,7 @@ import {
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { Card } from '@/components/ui/card'
+import { SchedaKpi } from '@/components/ui/kpi'
 
 function useGareSuccessoCategoria(limit = 6) {
   return useQuery({
@@ -34,20 +35,6 @@ function useGareSuccessoCategoria(limit = 6) {
   })
 }
 
-function Kpi({ icon: Icon, label, value, tint }: {
-  icon: React.ElementType; label: string; value: string; tint: string
-}) {
-  return (
-    <Card className="p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      </div>
-      <p className="text-title text-foreground">{value}</p>
-    </Card>
-  )
-}
-
 const tooltipStyle = {
   borderRadius: 8,
   border: '1px solid var(--border)',
@@ -58,7 +45,7 @@ const fmtDataBreve = (iso: string) =>
   new Date(iso + 'T00:00:00').toLocaleDateString('it-IT', { day: '2-digit', month: 'short' })
 
 export function GareDashboardPage() {
-  const { data: kpi } = useGareKpi()
+  const { data: kpi, isPending: kpiInCorso } = useGareKpi()
   const { data: perStato = [] } = useGarePerStato()
   const { data: perEnte = [] } = useGareSuccessoEnte(6)
   const { data: perTerritorio = [] } = useGareSuccessoTerritorio(6)
@@ -86,16 +73,19 @@ export function GareDashboardPage() {
       <PageHeader title="Dashboard gare" description="Andamento delle procedure: partecipazione, esiti, scadenze." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={Gavel} label="Gare in corso" tint="bg-accent text-accent-foreground"
-          value={String((kpi?.in_analisi ?? 0) + (kpi?.in_preparazione ?? 0) + (kpi?.presentate ?? 0))} />
-        <Kpi icon={Trophy} label="Tasso aggiudicazione" tint="bg-muted text-muted-foreground"
-          value={kpi?.tasso_aggiudicazione != null ? `${kpi.tasso_aggiudicazione}%` : '—'} />
-        <Kpi icon={TrendingUp} label="Valore vinto" tint="bg-muted text-muted-foreground"
-          value={fmtImporto(Number(kpi?.valore_vinte ?? 0))} />
-        <Kpi icon={Landmark} label="Valore in corso" tint="bg-muted text-muted-foreground"
-          value={fmtImporto(Number(kpi?.valore_in_corso ?? 0))} />
-        <Kpi icon={Timer} label="Preparazione media" tint="bg-muted text-muted-foreground"
-          value={kpi?.giorni_medi_preparazione != null ? `${kpi.giorni_medi_preparazione} gg` : '—'} />
+        <SchedaKpi icona={Gavel} etichetta="Gare in corso" tinta="bg-accent text-accent-foreground"
+          valore={kpiInCorso ? undefined
+            : (kpi?.in_analisi ?? 0) + (kpi?.in_preparazione ?? 0) + (kpi?.presentate ?? 0)} />
+        <SchedaKpi icona={Trophy} etichetta="Tasso aggiudicazione" tinta="bg-muted text-muted-foreground"
+          formato="percentuale"
+          valore={kpiInCorso ? undefined : kpi?.tasso_aggiudicazione ?? '—'} />
+        <SchedaKpi icona={TrendingUp} etichetta="Valore vinto" tinta="bg-muted text-muted-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.valore_vinte ?? 0)} />
+        <SchedaKpi icona={Landmark} etichetta="Valore in corso" tinta="bg-muted text-muted-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.valore_in_corso ?? 0)} />
+        <SchedaKpi icona={Timer} etichetta="Preparazione media" tinta="bg-muted text-muted-foreground"
+          formato="giorni"
+          valore={kpiInCorso ? undefined : kpi?.giorni_medi_preparazione ?? '—'} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

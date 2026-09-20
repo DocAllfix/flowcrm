@@ -26,8 +26,9 @@ import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { supabase } from '@/lib/supabase'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Card } from '@/components/ui/card'
+import { SchedaKpi } from '@/components/ui/kpi'
 import {
-  AUTOMEZZO_STATI, PATENTE_LABEL, fmtImporto, fmtData,
+  AUTOMEZZO_STATI, PATENTE_LABEL, fmtData,
 } from '@/modules/automezzi/stati'
 import {
   useAutomezzi, usePatenti, useCreaPatente, useEliminaPatente,
@@ -37,20 +38,6 @@ const tooltipStyle = {
   borderRadius: 8,
   border: '1px solid var(--border)',
   background: 'var(--card)',
-}
-
-function Kpi({ icon: Icon, label, value, tint }: {
-  icon: React.ElementType; label: string; value: string; tint: string
-}) {
-  return (
-    <Card className="p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      </div>
-      <p className="text-title text-foreground">{value}</p>
-    </Card>
-  )
 }
 
 /** Magazzino ricambi (§16): elenco generale con quantità e mezzo di
@@ -249,9 +236,9 @@ function SezionePatenti() {
 
 export function ParcoDashboardPage() {
   const { isManager } = useAuth()
-  const { data: automezzi = [] } = useAutomezzi()
-  const { data: scadenze = [] } = useScadenzeAperteModulo('automezzi', 10)
-  const { data: costiParco = [] } = useCostiParco()
+  const { data: automezzi = [], isPending: automezziInCorso } = useAutomezzi()
+  const { data: scadenze = [], isPending: scadenzeInCorso } = useScadenzeAperteModulo('automezzi', 10)
+  const { data: costiParco = [], isPending: costiInCorso } = useCostiParco()
 
   const perStato = AUTOMEZZO_STATI.map((s) => ({
     stato: s.label,
@@ -266,15 +253,18 @@ export function ParcoDashboardPage() {
       <PageHeader title="Dashboard parco" description="Disponibilità, scadenze e costi della flotta." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Kpi icon={Truck} label="Mezzi nel parco" tint="bg-accent text-accent-foreground"
-          value={String(automezzi.length)} />
-        <Kpi icon={Truck} label="Disponibili" tint="bg-muted text-muted-foreground"
-          value={String(disponibili)} />
-        <Kpi icon={Wrench} label="In manutenzione" tint="bg-muted text-muted-foreground"
-          value={String(inManutenzione)} />
-        <Kpi icon={Euro} label={isManager ? 'Costo totale parco' : 'Scadenze aperte'}
-          tint="bg-muted text-muted-foreground"
-          value={isManager ? fmtImporto(costoTotaleParco) : String(scadenze.length)} />
+        <SchedaKpi icona={Truck} etichetta="Mezzi nel parco" tinta="bg-accent text-accent-foreground"
+          valore={automezziInCorso ? undefined : automezzi.length} />
+        <SchedaKpi icona={Truck} etichetta="Disponibili" tinta="bg-muted text-muted-foreground"
+          valore={automezziInCorso ? undefined : disponibili} />
+        <SchedaKpi icona={Wrench} etichetta="In manutenzione" tinta="bg-muted text-muted-foreground"
+          valore={automezziInCorso ? undefined : inManutenzione} />
+        <SchedaKpi icona={Euro} etichetta={isManager ? 'Costo totale parco' : 'Scadenze aperte'}
+          tinta="bg-muted text-muted-foreground"
+          formato={isManager ? 'euro' : 'conteggio'}
+          valore={isManager
+            ? (costiInCorso ? undefined : costoTotaleParco)
+            : (scadenzeInCorso ? undefined : scadenze.length)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

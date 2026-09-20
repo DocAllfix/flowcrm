@@ -12,6 +12,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Badge } from '@/components/ui/badge'
 import { useScadenzeAperteModulo } from '@/lib/queries/scadenzeModuli'
 import { Card } from '@/components/ui/card'
+import { SchedaKpi } from '@/components/ui/kpi'
 import {
   APPUNTAMENTO_STATO, nomePaziente, fmtData,
 } from '@/modules/poliambulatori/stati'
@@ -19,22 +20,8 @@ import {
   usePoliKpi, useAppuntamenti, useRefertiDaValidare, useSonoMedico,
 } from '@/modules/poliambulatori/queries/poliambulatorio'
 
-function Kpi({ icon: Icon, label, value, tint }: {
-  icon: React.ElementType; label: string; value: string; tint: string
-}) {
-  return (
-    <Card className="p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      </div>
-      <p className="text-title text-foreground">{value}</p>
-    </Card>
-  )
-}
-
 export function PoliambulatorioDashboardPage() {
-  const { data: kpi } = usePoliKpi()
+  const { data: kpi, isPending: kpiInCorso } = usePoliKpi()
   const { data: appuntamenti = [] } = useAppuntamenti()
   const { data: refertiDaValidare = [] } = useRefertiDaValidare()
   const { data: sonoMedico } = useSonoMedico()
@@ -51,17 +38,20 @@ export function PoliambulatorioDashboardPage() {
         description="La giornata della struttura: agenda, referti, scadenze, qualità." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <Kpi icon={CalendarDays} label="Appuntamenti oggi" tint="bg-accent text-accent-foreground"
-          value={String(kpi?.appuntamenti_oggi ?? 0)} />
-        <Kpi icon={CalendarDays} label="Prossimi 7 giorni" tint="bg-muted text-muted-foreground"
-          value={String(kpi?.appuntamenti_7gg ?? 0)} />
-        <Kpi icon={Users} label="Pazienti" tint="bg-muted text-muted-foreground"
-          value={`${kpi?.pazienti_totali ?? 0} (+${kpi?.nuovi_pazienti_mese ?? 0} nel mese)`} />
-        <Kpi icon={AlertTriangle} label="No-show (30gg)" tint="bg-destructive-tenue text-destructive-testo"
-          value={kpi?.tasso_no_show_30gg != null ? `${kpi.tasso_no_show_30gg}%` : '—'} />
-        <Kpi icon={FileSignature} label={sonoMedico ? 'Referti da validare' : 'Eventi qualità aperti'}
-          tint="bg-muted text-muted-foreground"
-          value={sonoMedico ? String(kpi?.referti_da_validare ?? 0) : String(kpi?.eventi_qualita_aperti ?? 0)} />
+        <SchedaKpi icona={CalendarDays} etichetta="Appuntamenti oggi" tinta="bg-accent text-accent-foreground"
+          valore={kpiInCorso ? undefined : kpi?.appuntamenti_oggi ?? 0} />
+        <SchedaKpi icona={CalendarDays} etichetta="Prossimi 7 giorni" tinta="bg-muted text-muted-foreground"
+          valore={kpiInCorso ? undefined : kpi?.appuntamenti_7gg ?? 0} />
+        <SchedaKpi icona={Users} etichetta="Pazienti" tinta="bg-muted text-muted-foreground"
+          valore={kpiInCorso ? undefined : kpi?.pazienti_totali ?? 0}
+          nota={kpiInCorso ? undefined : `+${kpi?.nuovi_pazienti_mese ?? 0} nel mese`} />
+        <SchedaKpi icona={AlertTriangle} etichetta="No-show (30gg)" tinta="bg-destructive-tenue text-destructive-testo"
+          formato="percentuale"
+          valore={kpiInCorso ? undefined : kpi?.tasso_no_show_30gg ?? '—'} />
+        <SchedaKpi icona={FileSignature} etichetta={sonoMedico ? 'Referti da validare' : 'Eventi qualità aperti'}
+          tinta="bg-muted text-muted-foreground"
+          valore={kpiInCorso ? undefined
+            : (sonoMedico ? kpi?.referti_da_validare ?? 0 : kpi?.eventi_qualita_aperti ?? 0)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
