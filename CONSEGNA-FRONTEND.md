@@ -188,12 +188,39 @@ per esclusione i dati di chi ha solo lo stack spento).
 
 ## 6. Prima di dichiarare finito
 
+**6.0 Un cancello va provato in entrambi i versi.** Che passi su un caso buono
+non dice se scatterebbe su uno cattivo, e che scatti non dice che scatti per la
+ragione giusta. Prima di fidarti di un controllo che hai appena scritto,
+rompilo apposta e guarda se se ne accorge — poi rimetti a posto.
+
+Non e' prudenza teorica, e' successo tre volte su questo repository:
+
+- `restore-test.sh` gridava su un backup sano e taceva su uno rotto
+  (`deploy/GUASTI.md`, G-27);
+- `check-no-secrets.sh` diceva «pulito» perche' `actions/checkout` fa un clone
+  superficiale e `git grep` vedeva solo il commit di punta;
+- la guardia su `text-warning` in `token-puri.test.ts`, scritta il 20/09, aveva
+  un `\b` trasformato in un carattere di backspace invisibile: la regex non
+  poteva combaciare con niente, quindi passava **anche reintroducendo la
+  violazione che doveva fermare**. Trovato solo provandola a fallire.
+
+Una guardia che non puo' fallire e' indistinguibile da nessuna guardia, e
+sembra molto meglio — il che la rende peggio.
+
+**Corollario sui controlli dinamici.** Una scansione vede solo lo stato che il
+caso le mette davanti. Il contrasto illeggibile di `text-warning` (2,11:1) e'
+sfuggito a ogni passaggio di axe perche' l'elemento che lo usava compare **solo
+a canale realtime non agganciato**, e la connessione e' sempre riuscita durante
+le scansioni. L'ha trovato un ambiente rotto per caso. Dove puoi, preferisci una
+guardia statica: non dipende da cosa era a schermo.
+
+
 ```bash
 cd flowcrm
 npx tsc -b            # deve uscire 0
 npx oxlint src/       # deve uscire 0
 npx vite build        # stampa il peso di avvio e fallisce se e' cresciuto
-npx vitest run        # 13/13
+npx vitest run        # 669 test su 11 file
 ```
 
 E soprattutto, contro uno stack locale con utenti di prova:
