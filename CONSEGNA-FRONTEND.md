@@ -114,10 +114,43 @@ o si carichi da CDN **non funziona in produzione** — e funziona benissimo in
 sviluppo, quindi il difetto si scopre dal cliente. Verifica la voce
 `script-src` prima di scegliere, non dopo.
 
-**4.2 Budget del bundle.** Il chunk iniziale è passato da 1,41 MB a **429 kB**
-grazie all'import dinamico. I 5 moduli verticali sono già in `React.lazy`,
-le pagine core no. Se aggiungi librerie di animazione, mettile nei chunk
-pigri e ricontrolla il numero: `npx vite build` lo stampa.
+**4.2 Budget del bundle.** Questa sezione diceva «il chunk iniziale è 429 kB,
+ricontrolla il numero dopo `npx vite build`». **Quel controllo era rotto, e la
+correzione insegna più del numero.**
+
+Rendendo pigre le 26 pagine interne, rollup ha ridisegnato i confini dei chunk:
+il client Supabase — che `main.tsx` importa staticamente per esporre
+`window.__supabase` ai test — è finito dentro `index`, e react-router ne è
+uscito. Il chunk `index` è così passato da 429 a 637 kB **mentre il carico reale
+scendeva da 1823 a 919 kB**. La soglia segnalava un peggioramento durante un
+dimezzamento.
+
+La ragione è che «quanto pesa il chunk che si chiama index» è il contenuto di una
+scatola il cui perimetro decide il bundler: con lo stesso codice e un
+`manualChunks` diverso quel numero si muove di 200 kB senza che un byte cambi
+posto nella rete. Non misurava il carico dell'utente.
+
+**Cosa si misura adesso**: il grafo degli import *statici* a partire dall'entry di
+`index.html`, più il chunk `App`, che `main.tsx` attende con
+`await import('./App')` prima di montare React — pigro per rollup, obbligatorio
+per chi guarda lo schermo.
+
+**E non è più una frase in un documento.** `scripts/peso-avvio.mjs` è un plugin
+registrato in `vite.config.ts`, quindi gira a ogni `vite build` — compreso quello
+nudo della CI, dove un controllo appeso a `npm run build` non girerebbe. Il
+riferimento sta in `flowcrm/peso-avvio.json`; il build **fallisce** se il peso
+cresce oltre il 5%.
+
+Se la crescita è voluta, si aggiorna `peso-avvio.json` **nello stesso commit** che
+la introduce, scrivendo in `perche` cosa l'ha causata. Il margine esiste perché un
+tetto fissato al numero di oggi fa fallire la prima aggiunta legittima, e chi la
+subisce alza la soglia per sbloccarsi: a quel punto il controllo è diventato la
+cosa che si alza quando è scomoda. Un delta costringe invece a **nominare** la
+crescita, che è lo scopo.
+
+Per vedere chi occupa cosa dentro un chunk non serve installare nulla: le
+sourcemap in `dist/assets/*.js.map` elencano i moduli sorgente e la loro
+dimensione (il `Dockerfile` le cancella comunque dall'immagine).
 
 **4.3 `prefers-reduced-motion` non è opzionale qui.** Il prodotto si vende a
 studi e aziende con obblighi di accessibilità; è anche nel tuo prompt.
@@ -159,7 +192,7 @@ per esclusione i dati di chi ha solo lo stack spento).
 cd flowcrm
 npx tsc -b            # deve uscire 0
 npx oxlint src/       # deve uscire 0
-npx vite build        # guarda la dimensione del chunk iniziale
+npx vite build        # stampa il peso di avvio e fallisce se e' cresciuto
 npx vitest run        # 13/13
 ```
 

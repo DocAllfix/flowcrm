@@ -5,26 +5,13 @@ import { TrendingUp, Wallet, Euro, Clock, AlertTriangle, Landmark } from 'lucide
 import { PageHeader } from '@/components/ui/page-header'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Card } from '@/components/ui/card'
+import { SchedaKpi } from '@/components/ui/kpi'
 import {
   useFatturatoMensile, useCashFlow, useKpiEconomici, useTopClienti,
 } from '@/lib/queries/dashboard'
 
 const fmtEuro = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
-
-function KpiEco({ icon: Icon, label, value, tint }: {
-  icon: React.ElementType; label: string; value: string; tint: string
-}) {
-  return (
-    <Card className="p-4">
-      <div className="mb-2 flex items-center gap-2">
-        <div className={`flex h-8 w-8 items-center justify-center rounded-lg ${tint}`}><Icon className="h-4 w-4" /></div>
-        <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      </div>
-      <p className="text-title text-foreground">{value}</p>
-    </Card>
-  )
-}
 
 const meseLabel = (iso: string) =>
   new Date(iso).toLocaleDateString('it-IT', { month: 'short', year: '2-digit' })
@@ -38,7 +25,7 @@ const tooltipStyle = {
 export function DashboardEconomicaPage() {
   const { data: fatturato = [] } = useFatturatoMensile()
   const { data: cashflow = [] } = useCashFlow()
-  const { data: kpi } = useKpiEconomici()
+  const { data: kpi, isPending: kpiInCorso } = useKpiEconomici()
   const { data: topClienti = [] } = useTopClienti(5)
 
   const fatturatoData = fatturato.map((r) => ({ mese: meseLabel(r.mese as string), totale: Number(r.totale) }))
@@ -54,11 +41,16 @@ export function DashboardEconomicaPage() {
       <PageHeader title="Dashboard economica" description="Fatturato e flusso di cassa, derivati dai dati reali." />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
-        <KpiEco icon={Euro} label="Fatturato anno" tint="bg-accent text-accent-foreground" value={fmtEuro(Number(kpi?.fatturato_ytd ?? 0))} />
-        <KpiEco icon={Clock} label="Da incassare" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.da_incassare ?? 0))} />
-        <KpiEco icon={AlertTriangle} label="Scaduto" tint="bg-destructive-tenue text-destructive-testo" value={fmtEuro(Number(kpi?.scaduto ?? 0))} />
-        <KpiEco icon={Wallet} label="Incassato (mese)" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.incassato_mese ?? 0))} />
-        <KpiEco icon={Landmark} label="Tasse 30gg" tint="bg-muted text-muted-foreground" value={fmtEuro(Number(kpi?.tasse_30gg ?? 0))} />
+        <SchedaKpi icona={Euro} etichetta="Fatturato anno" tinta="bg-accent text-accent-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.fatturato_ytd ?? 0)} />
+        <SchedaKpi icona={Clock} etichetta="Da incassare" tinta="bg-muted text-muted-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.da_incassare ?? 0)} />
+        <SchedaKpi icona={AlertTriangle} etichetta="Scaduto" tinta="bg-destructive-tenue text-destructive-testo"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.scaduto ?? 0)} />
+        <SchedaKpi icona={Wallet} etichetta="Incassato (mese)" tinta="bg-muted text-muted-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.incassato_mese ?? 0)} />
+        <SchedaKpi icona={Landmark} etichetta="Tasse 30gg" tinta="bg-muted text-muted-foreground"
+          formato="euro" valore={kpiInCorso ? undefined : Number(kpi?.tasse_30gg ?? 0)} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

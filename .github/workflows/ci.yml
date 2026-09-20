@@ -179,6 +179,14 @@ jobs:
   # Il tag è il GIT_SHA, mai "latest": con "latest" due istanze aggiornate
   # in giorni diversi eseguono codice diverso e non c'è modo di saperlo.
   immagine:
+    # Questa condizione non è solo un risparmio di minuti: tiene insieme due
+    # cose. Su `push` `github.sha` è lo SHA del commit spinto, quindi il tag
+    # corto qui sotto è davvero quello che si legge in `git log --oneline`.
+    # Su `pull_request` sarebbe invece lo SHA del **merge commit effimero**
+    # (`refs/pull/N/merge`), che non esiste in nessun `git log` locale: un tag
+    # corto ricavato da lì non corrisponderebbe a niente di copiabile.
+    # Chi un domani la togliesse per «costruire l'immagine anche sulle PR»
+    # riattiverebbe insieme quel tag fantasma.
     if: github.event_name == 'push'
     needs: [qualita, verifica-supabase]
     runs-on: ubuntu-latest

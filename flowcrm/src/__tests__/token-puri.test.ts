@@ -161,6 +161,30 @@ describe('purezza dei token — il colore appartiene al cliente', () => {
     expect(colpevoli).toEqual([])
   })
 
+  it('nessun `text-warning` nudo: e il token di riempimento, non quello del testo', () => {
+    // Misurato su `card` in tema chiaro: `--warning` da 2,11:1, sotto il
+    // minimo di 4,5:1 per il testo e sotto i 3:1 richiesti anche alle
+    // icone. `--warning-testo` esiste per questo e sta a 5,34:1.
+    //
+    // axe l'aveva mancato per mesi e l'ha trovato solo quando la suite e2e
+    // e' girata con il realtime disconnesso: lo stato «Connessione...» e'
+    // transitorio, e durante le scansioni precedenti era gia' passato. Una
+    // guardia statica non dipende da quale stato era a schermo.
+    //
+    // Perche' solo `warning` e non tutti gli stati: `--success` (4,74) e
+    // `--destructive` (4,76) su `card` superano il minimo, quindi vietarli
+    // qui imporrebbe una bonifica di una trentina di punti senza correggere
+    // nessun difetto. Se un giorno quei valori scendessero, la guardia sui
+    // contrasti in contrasto-token.test.ts lo direbbe prima.
+    const nudo = /(?<![\w-])text-warning(?![\w-])/g
+    const colpevoli: string[] = []
+    for (const { relativo, testo } of sorgenti) {
+      if (nudo.test(testo)) colpevoli.push(relativo)
+      nudo.lastIndex = 0
+    }
+    expect(colpevoli).toEqual([])
+  })
+
   it('nessun gradient text', () => {
     // Divieto assoluto di DESIGN.md: decorativo, mai significante.
     const colpevoli = sorgenti
