@@ -811,3 +811,42 @@ dell'utente di prova resta cambiata e la suite end-to-end non entra più.
 Va ripristinata subito via API di amministrazione.
 
 **VERIFICATO** — provato il 2026-09-18 contro Mailpit dello stack locale: consumo accidentale riprodotto (401), flusso completo poi superato — nuova 200, vecchia 400.
+
+---
+
+## G-29 · Una cancellazione ricorsiva attraversa un collegamento e svuota l'originale
+
+**SINTOMO** — Dopo aver smontato una cartella di lavoro temporanea, `npx` non
+esegue più niente: i pacchetti risultano installati ma gli eseguibili in
+`node_modules/.bin` sono spariti. Codice e git intatti, quindi non sembra una
+cancellazione.
+
+**CAUSA** — Per confrontare due build senza reinstallare centinaia di
+pacchetti è comodo collegare `node_modules` con una giunzione (Windows) o un
+collegamento simbolico. Ma una cancellazione ricorsiva della cartella
+temporanea **attraversa il collegamento** e agisce sull'originale: si è
+cancellato il `node_modules` vero credendo di togliere una copia.
+
+Si ferma solo quando incontra un file in uso — quindi il danno è **parziale**,
+e questo lo rende peggiore: qualche eseguibile resta, l'installazione sembra
+intera, e l'errore che arriva parla di un comando mancante invece che di
+un'installazione mutilata.
+
+**RIMEDIO** — Togliere il collegamento **prima** della cartella che lo
+contiene:
+```bash
+rmdir node_modules        # Windows: rimuove la giunzione, non il bersaglio
+rm -rf <cartella-temporanea>
+```
+Su Linux e macOS vale lo stesso: `rm link` prima di `rm -rf dir/`. E prima di
+qualunque cancellazione ricorsiva in una cartella preparata a mano:
+```bash
+find <cartella> -maxdepth 2 \( -type l -o -xtype l \) -print
+```
+Se stampa qualcosa, quella cosa punta altrove.
+
+Riparazione: `npm install` ricostruisce `.bin`, poi si rilancia la suite per
+avere la prova che l'installazione sia di nuovo intera — non basta che `npx`
+risponda.
+
+**VERIFICATO** — accaduto il 2026-09-21 sulla macchina di sviluppo (segnalato dalla sessione frontend): `.bin` svuotato, ripristinato con `npm install` e riverificato con 669 test verdi.

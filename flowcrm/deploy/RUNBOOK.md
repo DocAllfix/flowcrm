@@ -96,7 +96,19 @@ non c'è modo di sapere quale.
 
 La CI pubblica l'immagine con **due tag**, lo SHA completo e quello corto a 7
 caratteri, quindi va bene sia `git rev-parse HEAD` sia quello che si legge in
-`git log --oneline`. È deliberato: chiedere di copiare a mano 40 caratteri
+`git log --oneline`.
+
+> **Se si verifica per digest, dire QUALE.** `docker manifest inspect`
+> restituisce una **lista**: c'è il digest dell'indice e, dentro, quello del
+> manifest di piattaforma. Sono valori diversi dello stesso oggetto, e due
+> persone che controllano «lo stesso digest» guardando campi diversi si
+> confermano a vicenda senza parlarsi. Successo davvero, fra due sessioni, su
+> `2c6f1c0`. Per l'indice:
+> ```bash
+> docker buildx imagetools inspect ghcr.io/docallfix/flowcrm:<tag> | grep -i digest
+> ```
+> Quello che conta per ancorare un deploy è **l'indice**, perché è ciò che
+> `docker pull` risolve. È deliberato: chiedere di copiare a mano 40 caratteri
 esatti è una richiesta che prima o poi qualcuno sbaglia, e l'errore si
 manifesta come «immagine non pubblicata» — un messaggio che manda a cercare
 il guasto nella CI invece che nel tag.
