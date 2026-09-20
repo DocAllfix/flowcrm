@@ -26,10 +26,10 @@ interface TipoConfig {
 }
 
 const TIPO_CONFIG: Record<NotificaTipo, TipoConfig> = {
-  critical: { Icon: AlertTriangle, color: 'text-destructive', bg: 'bg-destructive/15' },
-  warning:  { Icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/15' },
-  success:  { Icon: ArrowRight, color: 'text-success', bg: 'bg-success/15' },
-  info:     { Icon: Info, color: 'text-secondary', bg: 'bg-secondary/15' },
+  critical: { Icon: AlertTriangle, color: 'text-destructive-testo', bg: 'bg-destructive/15' },
+  warning:  { Icon: AlertTriangle, color: 'text-warning-testo', bg: 'bg-warning/15' },
+  success:  { Icon: ArrowRight, color: 'text-success-testo', bg: 'bg-success/15' },
+  info:     { Icon: Info, color: 'text-info-testo', bg: 'bg-info/15' },
   sistema:  { Icon: MessageSquare, color: 'text-muted-foreground', bg: 'bg-muted' },
 }
 

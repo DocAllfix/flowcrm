@@ -183,7 +183,7 @@ export function ImportaPage() {
               {esito.scarti.length > 0 && (
                 <div className="mt-3">
                   <div className="flex items-center gap-2 text-warning-foreground">
-                    <AlertTriangle className="h-4 w-4 text-warning" />
+                    <AlertTriangle className="h-4 w-4 text-warning-testo" />
                     <span className="text-sm font-medium">{esito.scarti.length} scarti</span>
                   </div>
                   <ul className="mt-2 max-h-48 space-y-1 overflow-y-auto text-xs text-muted-foreground">
