@@ -1,0 +1,8 @@
+{
+  "compresso": 287915,
+  "grezzo": 940536,
+  "file": 47,
+  "misurato": "2026-09-20",
+  "origine": "build dell immagine Docker (flowcrm:<tag>), non il build locale",
+  "perche": "E il carico che il browser scarica prima del primo render: grafo statico da index.html piu il chunk App, atteso da main.tsx prima di montare React. Al commit b0a73db, prima che le 26 pagine interne diventassero pigre, lo stesso carico era 1823 kB grezzi. Il budget precedente (CONSEGNA-FRONTEND.md 4.2: 429 kB sul chunk index) misurava il contenuto di una scatola il cui perimetro decide rollup: e salito a 637 kB mentre questo carico si dimezzava. Il riferimento viene dal build dell immagine e non da quello locale perche in locale Vite inlina URL e chiave anon da .env.local, che .dockerignore esclude: 293 byte grezzi di differenza, misurati. Oggi e dentro il margine con abbondanza, ma il numero deve venire dal build che spedisce."
+}
