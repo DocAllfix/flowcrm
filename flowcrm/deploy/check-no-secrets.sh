@@ -69,14 +69,30 @@ else
   ok "nessun segreto hardcoded sospetto"
 fi
 
-# 7. Bundle buildato (se presente): il service_role non deve MAI finire nel JS.
-if [ -d flowcrm/dist ]; then
-  if grep -rlE 'service_role|PRIVATE KEY' flowcrm/dist >/dev/null 2>&1; then
-    fail "possibili segreti nel bundle flowcrm/dist"
+# 7. Bundle buildato: nel JS non deve MAI finire una chiave service_role.
+#
+# Si cercano JWT VERI e se ne decodifica il ruolo, non la stringa
+# "service_role": quella compare come COMMENTO nel sorgente della libreria
+# supabase-js («Requires the `service_role` key») e finisce in ogni
+# source map. Cercarla faceva fallire il controllo su qualunque macchina
+# avesse fatto un build — un allarme che suona sempre smette di allarmare.
+#
+# La chiave `anon` invece è attesa: viaggia in ogni browser per progetto.
+for D in flowcrm/dist; do
+  [ -d "$D" ] || continue
+  TROVATI=""
+  for TOK in $(grep -rhoE 'eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}' "$D" --include='*.js' 2>/dev/null | sort -u); do
+    RUOLO=$(printf '%s' "$TOK" | cut -d. -f2 | tr '_-' '/+' | base64 -d 2>/dev/null | grep -oE '"role"[[:space:]]*:[[:space:]]*"[^"]+"' | cut -d'"' -f4)
+    case "$RUOLO" in
+      service_role) TROVATI="$TROVATI service_role" ;;
+    esac
+  done
+  if [ -n "$TROVATI" ]; then
+    fail "chiave service_role dentro il bundle $D — MAI esporla al browser"
   else
-    ok "bundle flowcrm/dist pulito"
+    ok "bundle $D senza chiavi service_role"
   fi
-fi
+done
 
 echo ""
 if [ "$ERR" -gt 0 ]; then
