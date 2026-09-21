@@ -850,3 +850,44 @@ avere la prova che l'installazione sia di nuovo intera — non basta che `npx`
 risponda.
 
 **VERIFICATO** — accaduto il 2026-09-21 sulla macchina di sviluppo (segnalato dalla sessione frontend): `.bin` svuotato, ripristinato con `npm install` e riverificato con 669 test verdi.
+
+---
+
+## G-30 · La demo in produzione non parte: «Avvio interrotto»
+
+**SINTOMO** — L'istanza su Vercel mostra una pagina rossa:
+*«Configurazione non caricata: /config.json non è raggiungibile o non è JSON
+valido (SyntaxError: Unexpected token '<', "<!doctype "...)»*. Nessuno riesce
+ad accedere.
+
+**CAUSA** — Il caricatore della configurazione a runtime era stato progettato
+per l'immagine Docker, dove l'entrypoint **genera** `/config.json`. Ma il
+prodotto aveva **già** un'altra via di produzione: la demo su Vercel, che
+rideploya da sola a ogni push su `main`. Lì il file non esiste, e il rewrite
+SPA (`/(.*)` → `/index.html`) risponde a `/config.json` con la pagina HTML,
+200. Il parse fallisce sul `<!doctype` e il codice, in produzione, trattava
+«file assente» come errore fatale.
+
+È passato inosservato fino alla fusione in `main` perché **ogni verifica era
+stata fatta sulla via nuova**: in sviluppo (dove il file mancante ricade su
+`.env.local`) e nel container (dove il file c'è). La via di produzione già
+esistente non è mai stata provata.
+
+**RIMEDIO** — Distinguere i due casi con il **content-type**, non con l'esito
+del parse:
+- file **assente** (risposta non JSON o non 200) → si usa la configurazione
+  delle `VITE_*` inlined a build time;
+- file **presente ma rotto** → errore che ferma l'avvio.
+
+La lezione vale più del codice: **prima di cambiare come parte
+l'applicazione, elencare TUTTE le vie da cui parte in produzione** — non solo
+quella che si sta costruendo. Qui erano due: Docker (nuova) e Vercel (già
+viva, e collegata a `main`).
+
+Riproduzione della condizione di Vercel in locale:
+```bash
+npx vite build && npx vite preview
+curl -sI http://localhost:4173/config.json   # deve dare 200 text/html
+```
+
+**VERIFICATO** — 2026-09-21: rotto in produzione dopo la fusione in `main`; condizione riprodotta in locale (200 text/html), corretto, e produzione verificata sul sito live con pagina di accesso e zero errori JavaScript.
