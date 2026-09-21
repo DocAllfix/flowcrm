@@ -99,19 +99,37 @@ export const APP_CONFIG: Config = daAmbiente()
 export async function caricaConfigurazione(): Promise<void> {
   let grezzo: unknown
 
+  // Due casi DIVERSI, e confonderli ha fermato la demo in produzione:
+  //
+  //  - file ASSENTE: deploy che non usa l'immagine Docker (Vercel). Lì il
+  //    rewrite SPA risponde a /config.json con index.html, cioè 200 e HTML.
+  //    È normale: la configurazione arriva dalle VITE_* inlined a build time,
+  //    già in APP_CONFIG. Si prosegue con quelle.
+  //  - file PRESENTE ma rotto: JSON malformato o chiavi sbagliate. Questo è
+  //    un errore di configurazione vero e deve fermare l'avvio.
+  //
+  // Il discrimine è il content-type, non l'esito del parse: un parse fallito
+  // su HTML non dice "file rotto", dice "file che non c'è".
+  let res: Response
   try {
-    const res = await fetch('/config.json', { cache: 'no-store' })
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    res = await fetch('/config.json', { cache: 'no-store' })
+  } catch {
+    // Rete assente: si ricade sulla configurazione di build.
+    validaMinimo(APP_CONFIG)
+    return
+  }
+
+  const tipo = res.headers.get('content-type') ?? ''
+  if (!res.ok || !tipo.includes('json')) {
+    validaMinimo(APP_CONFIG)
+    return
+  }
+
+  try {
     grezzo = await res.json()
   } catch (causa) {
-    if (import.meta.env.DEV) {
-      // In sviluppo si lavora con .env.local: nessun config.json da montare.
-      validaMinimo(APP_CONFIG)
-      return
-    }
     throw new Error(
-      `Configurazione non caricata: /config.json non è raggiungibile o non è JSON valido (${String(causa)}). ` +
-        `Il file va montato dal deploy accanto all'applicazione.`,
+      `Configurazione /config.json presente ma non è JSON valido (${String(causa)}).`,
     )
   }
 
