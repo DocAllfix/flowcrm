@@ -5,7 +5,7 @@
 # L'ORDINE NON È NEGOZIABILE: **il record DNS si toglie per primo.**
 # Un sottodominio che punta a un IP non più nostro è un subdomain
 # takeover: Hetzner riassegna quell'indirizzo a qualcun altro, e da quel
-# momento uno sconosciuto serve contenuti su `cliente.flowcrm.it` — con
+# momento uno sconosciuto serve contenuti su `cliente.pmiflow.it` — con
 # un certificato valido, perché se lo fa emettere lui. È il modo più
 # rapido di trasformare una dismissione ordinaria in un incidente che
 # riguarda il nome del cliente e il nostro.
@@ -20,7 +20,7 @@ set -euo pipefail
 
 SLUG="${1:?Uso: teardown-client.sh <slug> [--conferma]}"
 CONFERMA="${2:-}"
-BASE_DOMAIN="${BASE_DOMAIN:-flowcrm.it}"
+BASE_DOMAIN="${BASE_DOMAIN:-pmiflow.it}"
 PERCORSO="${PERCORSO:-/opt/flowcrm}"
 DOMINIO="${SLUG}.${BASE_DOMAIN}"
 

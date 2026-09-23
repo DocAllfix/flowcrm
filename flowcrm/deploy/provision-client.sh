@@ -21,7 +21,7 @@
 set -euo pipefail
 
 SLUG="${1:?Uso: provision-client.sh <slug>}"
-BASE_DOMAIN="${BASE_DOMAIN:-flowcrm.it}"
+BASE_DOMAIN="${BASE_DOMAIN:-pmiflow.it}"
 TIPO_SERVER="${TIPO_SERVER:-cx32}"
 LOCALITA="${LOCALITA:-nbg1}"
 IMMAGINE="${IMMAGINE:-ubuntu-24.04}"

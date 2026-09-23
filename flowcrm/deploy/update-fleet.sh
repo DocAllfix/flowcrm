@@ -5,7 +5,7 @@
 # Inventario in deploy/fleet.txt (NON committato: contiene gli host reali),
 # una riga per istanza:
 #   <slug>  <utente@host>  <percorso-istanza>  <dominio>
-#   acme    root@203.0.113.10  /opt/flowcrm  acme.flowcrm.it
+#   acme    root@203.0.113.10  /opt/flowcrm  acme.pmiflow.it
 #
 # Le due regole che lo rendono sicuro:
 #

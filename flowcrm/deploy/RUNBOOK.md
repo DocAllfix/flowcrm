@@ -108,10 +108,12 @@ caratteri, quindi va bene sia `git rev-parse HEAD` sia quello che si legge in
 > docker buildx imagetools inspect ghcr.io/docallfix/flowcrm:<tag> | grep -i digest
 > ```
 > Quello che conta per ancorare un deploy è **l'indice**, perché è ciò che
-> `docker pull` risolve. È deliberato: chiedere di copiare a mano 40 caratteri
-esatti è una richiesta che prima o poi qualcuno sbaglia, e l'errore si
-manifesta come «immagine non pubblicata» — un messaggio che manda a cercare
-il guasto nella CI invece che nel tag.
+> `docker pull` risolve.
+
+Il doppio tag è deliberato: chiedere di copiare a mano 40 caratteri esatti è
+una richiesta che prima o poi qualcuno sbaglia, e l'errore si manifesta come
+«immagine non pubblicata» — un messaggio che manda a cercare il guasto nella
+CI invece che nel tag.
 
 ---
 
@@ -154,7 +156,7 @@ Attendere la propagazione prima del passo 5, altrimenti Let's Encrypt fallisce
 e si consumano tentativi di emissione:
 
 ```bash
-dig +short <slug>.flowcrm.it   # deve rispondere l'IP nuovo
+dig +short <slug>.pmiflow.it   # deve rispondere l'IP nuovo
 ```
 
 ---
@@ -286,7 +288,7 @@ si dichiara finché `restore-test.sh` non stampa `PASSED`.
 
 Sul control plane: progetto GlitchTip per questa istanza
 (`environment = <slug>`, `release = GIT_SHA`), monitor Uptime Kuma su
-`https://<slug>.flowcrm.it/functions/v1/health`, monitor **push** per backup
+`https://<slug>.pmiflow.it/functions/v1/health`, monitor **push** per backup
 (26 h) e sentinella (15 min).
 
 Il DSN va in `SENTRY_DSN` **e** l'origine in `SENTRY_ORIGIN`: senza la seconda
@@ -305,13 +307,13 @@ Nessuna si salta. Ognuna corrisponde a un modo reale di consegnare un'istanza
 rotta o insicura.
 
 - [ ] `ss -tlnp` → solo 80 e 443 pubbliche
-- [ ] `./deploy/security-headers-check.sh https://<slug>.flowcrm.it` → tutto OK
+- [ ] `./deploy/security-headers-check.sh https://<slug>.pmiflow.it` → tutto OK
 - [ ] **accesso amministratore funziona** (`token?grant_type=password` → `access_token`)
 - [ ] **auto-registrazione NEGATA** (`/auth/v1/signup` → `signup_disabled`)
       — sono due voci, non una: spegnere il provider email per bloccare la
       registrazione blocca anche l'accesso ([G-21](GUASTI.md#g-21--listanza-consegnata-non-fa-entrare-nessuno))
-- [ ] `curl -s https://<slug>.flowcrm.it/config.json | jq .` → nome, moduli e colori giusti
-- [ ] `curl -s https://<slug>.flowcrm.it/functions/v1/health` → `"status":"ok"`
+- [ ] `curl -s https://<slug>.pmiflow.it/config.json | jq .` → nome, moduli e colori giusti
+- [ ] `curl -s https://<slug>.pmiflow.it/functions/v1/health` → `"status":"ok"`
 - [ ] operatore: **0 righe** su fatture/incassi/tasse/HR via API
 - [ ] moduli **non** acquistati: 0 righe via API **anche per l'admin**
 - [ ] (se agenti) utente-agente vede solo i propri dati

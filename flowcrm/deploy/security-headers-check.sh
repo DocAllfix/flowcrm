@@ -12,7 +12,7 @@
 # funzionare benissimo, semplicemente senza protezioni. Nessuno se ne
 # accorge finché non serve.
 #
-# Uso:  ./deploy/security-headers-check.sh https://acme.flowcrm.it
+# Uso:  ./deploy/security-headers-check.sh https://acme.pmiflow.it
 # ═══════════════════════════════════════════════════════════════════
 set -uo pipefail
 

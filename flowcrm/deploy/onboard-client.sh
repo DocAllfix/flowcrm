@@ -12,14 +12,14 @@
 #   senza --avvia : genera solo l'ambiente e stampa cosa manca
 #   con --avvia   : prosegue e mette in piedi l'istanza
 #
-# Variabili: BASE_DOMAIN (default flowcrm.it), CLIENTE_NAME, MODULES,
+# Variabili: BASE_DOMAIN (default pmiflow.it), CLIENTE_NAME, MODULES,
 #            FLOWCRM_TAG (obbligatoria), ACME_EMAIL, SMTP_*
 # ═══════════════════════════════════════════════════════════════════
 set -euo pipefail
 
 SLUG="${1:?Uso: onboard-client.sh <slug> [--avvia]}"
 AVVIA="${2:-}"
-BASE_DOMAIN="${BASE_DOMAIN:-flowcrm.it}"
+BASE_DOMAIN="${BASE_DOMAIN:-pmiflow.it}"
 ENV_FILE="deploy/.env.prod"
 COMPOSE_SUPABASE="supabase-docker/docker-compose.yml"
 COMPOSE_FLOWCRM="deploy/docker-compose.flowcrm.yml"
