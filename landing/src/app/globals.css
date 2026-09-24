@@ -227,3 +227,62 @@
   .diagramma-notte .etichetta-accento { color: var(--color-cotto-notte); }
   .diagramma-notte .etichetta-su-pieno { color: var(--color-notte); }
 }
+
+/* Finestra del prodotto nell'hero (componenti/FinestraProdotto.tsx).
+   Tre radio + :has(): zero JavaScript. Senza :has() resta il cruscotto. */
+@layer components {
+  .finestra .pannello-vista { display: none; }
+  .finestra .pannello-vista[data-vista="cruscotto"] { display: block; }
+
+  @supports selector(:has(*)) {
+    .finestra .pannello-vista[data-vista="cruscotto"] { display: none; }
+    .finestra:has(#vista-cruscotto:checked) [data-vista="cruscotto"],
+    .finestra:has(#vista-trattative:checked) [data-vista="trattative"],
+    .finestra:has(#vista-cantieri:checked) [data-vista="cantieri"] {
+      display: block;
+      animation: pannello 240ms var(--ease-uscita);
+    }
+
+    /* `!important` di proposito: in Tailwind 4 le utilità (`text-tenue` sull'etichetta)
+       stanno in un livello che vince su `components`, e lo stato attivo perdeva:
+       testo scuro su fondo scuro. */
+    /* voce di menu attiva (tablet e desktop) */
+    .finestra:has(#vista-cruscotto:checked) :is(label[for="vista-cruscotto"].voce-vista, [data-voce="cruscotto"]),
+    .finestra:has(#vista-trattative:checked) :is(label[for="vista-trattative"].voce-vista, [data-voce="trattative"]),
+    .finestra:has(#vista-cantieri:checked) :is(label[for="vista-cantieri"].voce-vista, [data-voce="cantieri"]) {
+      background: var(--color-carta-2) !important;
+      color: var(--color-inchiostro) !important;
+      font-weight: 650;
+    }
+
+    /* pulsante attivo (telefono) */
+    .finestra:has(#vista-cruscotto:checked) label[for="vista-cruscotto"].linguetta-vista,
+    .finestra:has(#vista-trattative:checked) label[for="vista-trattative"].linguetta-vista,
+    .finestra:has(#vista-cantieri:checked) label[for="vista-cantieri"].linguetta-vista {
+      background: var(--color-inchiostro) !important;
+      border-color: var(--color-inchiostro) !important;
+      color: var(--color-carta) !important;
+    }
+
+    /* da tastiera: l'anello di focus va sull'etichetta visibile, non sul radio nascosto */
+    .finestra:has(#vista-cruscotto:focus-visible) label[for="vista-cruscotto"],
+    .finestra:has(#vista-trattative:focus-visible) label[for="vista-trattative"],
+    .finestra:has(#vista-cantieri:focus-visible) label[for="vista-cantieri"] {
+      outline: 2px solid var(--color-cotto);
+      outline-offset: 2px;
+    }
+  }
+  .finestra .voce-vista:hover { color: var(--color-inchiostro); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .finestra .pannello-vista { animation: none !important; }
+  }
+
+  /* Griglia a punti dell'hero: trama sulla griglia a 8 pt (24 px), che sfuma verso
+     il basso. È una trama, non un gradiente decorativo: non cambia colore. */
+  .trama-punti {
+    background-image: radial-gradient(var(--color-filo) 1px, transparent 1.2px);
+    background-size: 24px 24px;
+    mask-image: linear-gradient(to bottom, black 55%, transparent);
+  }
+}

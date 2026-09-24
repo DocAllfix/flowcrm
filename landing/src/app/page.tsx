@@ -63,8 +63,8 @@ export default function Pagina() {
         <Eroe />
         <Prove />
         <Funzioni />
-        <Anteprima />
         <Moduli />
+        <Anteprima />
         <ComeSiParte />
         <Domande />
         <ChiamataFinale />

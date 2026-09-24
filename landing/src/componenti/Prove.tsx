@@ -9,9 +9,27 @@ import { Diagramma } from "./Diagramma";
  * Il 241 è scritto nell'HTML dal server: chi non esegue JavaScript (i crawler degli
  * assistenti, le anteprime dei link) legge il valore vero, non uno zero.
  */
+/**
+ * Per chi è, detto in una riga subito sotto l'hero: la stessa funzione della striscia
+ * degli standard ISO nel riferimento FormazioneEvalis. Chi arriva capisce in un colpo
+ * d'occhio se la pagina parla di lui. Sono i settori dei cinque moduli, non un elenco
+ * scelto per fare numero.
+ */
+const SETTORI = ["Imprese edili", "Impiantisti", "Studi e poliambulatori", "Reti di agenti", "Chi partecipa a gare", "Aziende di servizi"];
+
 export function Prove() {
   return (
     <section aria-labelledby="titolo-prove" className="sezione-notte bg-notte text-carta">
+      <div className="border-b border-filo-notte">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 py-6 sm:px-6 md:flex-row md:items-center md:gap-10">
+          <p className="shrink-0 text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-cotto-notte">Pensato per</p>
+          <ul className="flex flex-wrap gap-x-8 gap-y-2 text-[0.9375rem] font-semibold [font-stretch:106%]">
+            {SETTORI.map((s) => (
+              <li key={s}>{s}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:gap-16 md:py-32">
         <div>
           <p className="occhiello">Perché fidarsi</p>

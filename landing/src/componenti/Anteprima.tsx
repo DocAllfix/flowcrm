@@ -1,5 +1,8 @@
 /**
- * «Com'è, davvero»: tre ARTEFATTI del prodotto ricostruiti in HTML, non fotografie.
+ * «Ognuno vede il suo»: tre ARTEFATTI del prodotto, uno per ruolo (titolare, agente,
+ * professionista sanitario), ricostruiti in HTML, non fotografie. Il cantiere sta
+ * nella finestra dell'hero: qui non si ripete (lezione di FormazioneEvalis, niente
+ * doppioni fra hero e sezioni).
  *
  * Principio preso dai due riferimenti sullo stesso PC (`evalisdeck/.../hero-deck.tsx`,
  * `FormazioneEvalis/.../BentoHero.jsx`): si mostra ciò che il prodotto produce e cosa
@@ -8,8 +11,8 @@
  * noi, coerenti fra loro e con il marchio PMIFlow.
  *
  * Ogni voce corrisponde a una funzione che esiste nel codice (`flowcrm/src/modules`):
- * incassi e scadenze, SAL/DURC/subappaltatori/CIG del modulo Cantiere, visite,
- * portafoglio e provvigioni del modulo Agenti. Nessun importo in euro: sulla landing
+ * incassi e scadenze, visite, portafoglio e ordini del modulo Agenti, agenda e referti
+ * del modulo Poliambulatori. Nessun importo in euro: sulla landing
  * non compaiono cifre, nemmeno finte.
  *
  * L'unica interazione (le schede dello scadenziario) è CSS puro: radio + `:has()`.
@@ -86,52 +89,49 @@ function Scadenziario() {
   );
 }
 
-const SAL = [
-  ["SAL 1", "approvato"],
-  ["SAL 2", "approvato"],
-  ["SAL 3", "in verifica"],
-  ["SAL 4", "da emettere"],
-  ["SAL 5", "da emettere"],
+const AGENDA = [
+  ["9:00", "Giulia R.", "visita cardiologica", "fatta"],
+  ["9:40", "Paolo T.", "controllo", "in corso"],
+  ["10:20", "Anna M.", "prima visita", ""],
 ] as const;
 
-function Cantiere() {
+/**
+ * Il professionista sanitario (modulo Poliambulatori). La riservatezza è VISIBILE:
+ * visite e referti li vedono solo i professionisti collegati al paziente e
+ * l'amministratore, per regola del database (`puo_clinica()`); segreteria e direzione
+ * non li vedono. Il referto validato non si modifica più. Nomi abbreviati come in
+ * un'agenda vera di studio: nessun dato che sembri una persona reale.
+ */
+function Medico() {
   return (
-    <div className="grid gap-x-12 gap-y-6 rounded-lg bg-inchiostro p-6 text-carta sm:p-8 md:grid-cols-2 md:p-10">
+    <div className="grid gap-x-12 gap-y-8 rounded-lg bg-inchiostro p-6 text-carta sm:p-8 md:grid-cols-2 md:p-10">
       <div>
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-cotto-notte">Cantiere · attivo</p>
-        <p className="mt-3 text-[1.25rem] font-bold leading-tight [font-stretch:108%]">Ristrutturazione sede Rossi</p>
-        <p className="mt-1 text-[0.875rem] text-tenue-notte">Via Cremona 14, Brescia</p>
-        <ol className="mt-6 grid grid-cols-5 gap-1.5" aria-label="Stato dei SAL">
-          {SAL.map(([n, stato], i) => (
-            <li key={n}>
-              <span
-                aria-hidden="true"
-                className={`block h-2 rounded-[2px] ${i < 2 ? "bg-cotto-notte" : i === 2 ? "bg-cotto-notte/45" : "bg-filo-notte"}`}
-              />
-              <span className="sr-only">
-                {n}: {stato}
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.18em] text-cotto-notte">Agenda di oggi · Dott.ssa Neri</p>
+        <ul className="mt-5 divide-y divide-filo-notte border-t border-filo-notte">
+          {AGENDA.map(([ora, chi, cosa, stato]) => (
+            <li key={ora} className="grid grid-cols-[3.25rem_1fr_auto] items-baseline gap-3 py-3 text-[0.9375rem]">
+              <span className="cifre font-semibold text-cotto-notte">{ora}</span>
+              <span>
+                <span className="font-semibold">{chi}</span> <span className="text-tenue-notte">{cosa}</span>
               </span>
+              <span className="text-[0.8125rem] text-tenue-notte">{stato}</span>
             </li>
           ))}
-        </ol>
-        <p className="mt-3 text-[0.875rem] text-tenue-notte">
-          <span className="font-semibold text-carta">SAL 3 di 5</span> in verifica dalla direzione lavori
-        </p>
+        </ul>
       </div>
-      <ul className="self-center divide-y divide-filo-notte border-t border-filo-notte text-[0.875rem]">
-        <li className="flex justify-between gap-4 py-3">
-          <span className="text-tenue-notte">DURC impresa</span>
-          <span>valido, scade fra 41 giorni</span>
-        </li>
-        <li className="flex justify-between gap-4 py-3">
-          <span className="text-tenue-notte">Subappaltatori</span>
-          <span>2, documenti in ordine</span>
-        </li>
-        <li className="flex justify-between gap-4 py-3">
-          <span className="text-tenue-notte">CIG</span>
-          <span className="cifre">B2F4E81A07</span>
-        </li>
-      </ul>
+      <div className="self-center rounded-md border border-filo-notte p-5">
+        <div className="flex items-baseline justify-between gap-4">
+          <p className="text-[0.9375rem] font-semibold">Referto · Giulia R.</p>
+          <p className="text-[0.8125rem] text-cotto-notte">da validare</p>
+        </div>
+        <p className="mt-3 text-[0.875rem] leading-relaxed text-tenue-notte">
+          Visibile solo a te e all&apos;amministratore. Dopo la validazione non si modifica più.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2 text-[0.8125rem]">
+          <span className="rounded-sm border border-filo-notte px-2.5 py-1 text-tenue-notte">Segreteria: non visibile</span>
+          <span className="rounded-sm border border-filo-notte px-2.5 py-1 text-tenue-notte">Direzione: non visibile</span>
+        </div>
+      </div>
     </div>
   );
 }
@@ -177,7 +177,7 @@ function Agente() {
 const DIDASCALIE = [
   ["Chi devo sollecitare.", "Il titolare apre e sa chi chiamare, senza incrociare estratti conto e fogli Excel."],
   ["La giornata dell'agente.", "Dal telefono, fra una visita e l'altra: i suoi clienti, i suoi ordini, le sue provvigioni."],
-  ["A che punto è il cantiere.", "SAL, DURC e subappaltatori sulla stessa scheda: la scadenza si vede prima che fermi i lavori."],
+  ["Il referto lo vede chi deve.", "Il professionista vede i suoi pazienti; segreteria e direzione no. Lo decide il database, non un menu nascosto."],
 ] as const;
 
 function Didascalia({ n }: { n: 0 | 1 | 2 }) {
@@ -195,12 +195,12 @@ function Didascalia({ n }: { n: 0 | 1 | 2 }) {
 
 export function Anteprima() {
   return (
-    <section aria-labelledby="titolo-anteprima" className="border-b border-filo bg-carta-2/60">
+    <section id="anteprima" aria-labelledby="titolo-anteprima" className="border-b border-filo bg-carta-2/60">
       <div className="mx-auto w-full max-w-6xl px-4 py-24 sm:px-6 md:py-32">
         <div className="max-w-2xl">
-          <p className="occhiello">Com&apos;è, davvero</p>
+          <p className="occhiello">Ognuno vede il suo</p>
           <h2 id="titolo-anteprima" className="titolo-sezione mt-6">
-            Le tre risposte che cerchi appena apri il programma.
+            Il titolare, l&apos;agente, il medico: stesso programma, tre giornate diverse.
           </h2>
         </div>
         <div className="mt-16 grid gap-x-8 gap-y-14 lg:grid-cols-[1.35fr_1fr]">
@@ -217,7 +217,7 @@ export function Anteprima() {
             <Didascalia n={1} />
           </Rivela>
           <Rivela className="lg:col-span-2">
-            <Cantiere />
+            <Medico />
             <Didascalia n={2} />
           </Rivela>
         </div>
