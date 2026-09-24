@@ -926,7 +926,7 @@ che è il nostro** dalla riga di comando:
 ```powershell
 $c = Get-NetTCPConnection -LocalPort 3417 -State Listen | Select -First 1
 $p = Get-CimInstance Win32_Process -Filter "ProcessId=$($c.OwningProcess)"
-if ($p.CommandLine -like "*FlowtestcrmDavid\landing*") { Stop-Process -Id $p.ProcessId -Force }
+if ($p.CommandLine -like "*\landing\node_modules\*next*") { Stop-Process -Id $p.ProcessId -Force }
 ```
 
 **VERIFICATO** — 2026-09-24: processo orfano 7184 con `next start -p 3417`, fermato; il nuovo server serve la build corrente.
