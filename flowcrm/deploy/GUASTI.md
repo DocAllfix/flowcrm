@@ -984,13 +984,18 @@ colonna `user_profiles.manutentore`). E `playwright.config.ts` prende
 `VITE_SUPABASE_URL` dall'ambiente: con il `.env.local` di sviluppo, che punta
 alla demo, un `npx playwright test` in locale scrive in produzione.
 
-**RIMEDIO** — Da fare: (1) le e2e non devono più girare contro la demo, ma su
-un'istanza di collaudo o sullo stack locale; (2) ripulire i record `E2E %`
-dalla demo; (3) la sezione della landing che doveva mostrare schermate vere è
-stata rifatta con artefatti HTML scritti a mano, così non dipende dallo stato
-della demo.
+**RIMEDIO** —
+1. **Blocco:** `playwright.config.ts` rifiuta di partire se il bersaglio è il
+   database della demo, da variabile d'ambiente o da `.env.local` (il server di
+   sviluppo riusato legge quello). Per girarci davvero serve `E2E_CONSENTI_DEMO=1`.
+2. **Pulizia:** righe cercate in tutte le tabelle sulle colonne descrittive
+   (attenzione: `ricerca` è un tsvector e rompe `ilike`), riviste a mano,
+   copiate in `scratch_domini/backup-righe-e2e-demo-2026-09-24.json`, poi
+   cancellate dai figli ai genitori: incassi, fatture, attività, fasi,
+   cantieri, commesse, trattative, organizzazioni.
+3. La landing non usa schermate della demo: gli artefatti sono HTML scritti a mano.
 
-**VERIFICATO** — 2026-09-24: sintomo osservato sulle schermate (poi cancellate, mai pubblicate). Pulizia **non ancora eseguita**.
+**VERIFICATO** — 2026-09-24: 43 righe in 8 tabelle, cancellate 43 su 43 (conteggio restituito dal database, tabella per tabella); nuova scansione: 0 righe; nel browser, zero «E2E» su trattative, commesse, fatture, organizzazioni. Blocco provato: senza consenso `playwright test` si ferma, con `E2E_CONSENTI_DEMO=1` elenca i 33 test.
 
 ---
 
