@@ -83,7 +83,7 @@ jobs:
         # sono decine di secondi e centinaia di MB in meno per esecuzione.
         run: supabase start -x studio,imgproxy,vector,supavisor
 
-      - name: pgTAP — RLS, trigger, policy (241 asserzioni)
+      - name: pgTAP — RLS, trigger, policy (250 asserzioni)
         run: supabase test db
 
       - name: Crea gli utenti per gli end-to-end
