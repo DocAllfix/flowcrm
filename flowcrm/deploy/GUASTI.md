@@ -978,7 +978,11 @@ importi a zero. È ciò che vede un potenziale cliente.
 
 **CAUSA** — Le suite e2e sono state lanciate contro il **database della demo**
 (gli utenti di verifica `claude.*` vivono lì) e creano record che non
-cancellano.
+cancellano. Il blocco di sola lettura non le ferma per costruzione: quegli
+account sono **manutentori** («account di test automatici» nel commento della
+colonna `user_profiles.manutentore`). E `playwright.config.ts` prende
+`VITE_SUPABASE_URL` dall'ambiente: con il `.env.local` di sviluppo, che punta
+alla demo, un `npx playwright test` in locale scrive in produzione.
 
 **RIMEDIO** — Da fare: (1) le e2e non devono più girare contro la demo, ma su
 un'istanza di collaudo o sullo stack locale; (2) ripulire i record `E2E %`
@@ -1001,13 +1005,17 @@ profilo chiama `supabase.auth.updateUser({ password })` per chiunque, anche per
 gli account dimostrativi. Chi conosce le credenziali (sono state pubbliche su
 GitHub) può cambiarle.
 
-**RIMEDIO** — Da fare, prima di riaccendere il pulsante «Prova la demo» sulla
-landing: bloccare lato server il cambio password e secondo fattore per gli
-account demo (lezione di gdprhub: un blocco lato server, non un pulsante
-nascosto), ruotare le credenziali, e valutare l'ingresso in demo con un clic
-senza credenziali digitate.
+**RIMEDIO** — Blocco lato server (lezione di gdprhub: un blocco nel database,
+non un pulsante nascosto), migrazione `20260924000001_blocco_credenziali_demo.sql`:
+trigger su `auth.users` (password, email) e `auth.mfa_factors` (nuovo secondo
+fattore). Con l'istanza in sola lettura, ciò che passa da GoTrue (sessione
+`supabase_auth_admin`) viene rifiutato per chi non è manutentore; la
+manutenzione da SQL resta libera, un normale accesso passa sempre.
 
-**VERIFICATO** — 2026-09-24: percorso nel codice verificato (`src/pages/ProfiloPage.tsx`, riga 37). Correzione **non ancora fatta**: tocca la produzione della demo e richiede la decisione del committente.
+Dopo averla applicata: ruotare le password degli account demo **da SQL** (è
+la via che resta aperta) e valutare l'ingresso in demo con un clic.
+
+**VERIFICATO** — 2026-09-24: pgTAP `020_credenziali_demo.sql` nella CI (PR #5). **Non ancora applicata al database della demo**: serve `npx supabase login` sul PC, poi `npx supabase db push`.
 
 ---
 
