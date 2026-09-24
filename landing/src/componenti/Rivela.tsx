@@ -8,7 +8,8 @@
  * globals.css). Dove il browser non la supporta il contenuto è semplicemente
  * visibile: si perde un effetto, non un contenuto.
  *
- * Solo transform e opacity. Mai nell'hero: l'h1 è l'elemento LCP.
+ * Solo transform, niente opacità: il contenuto resta visibile anche fuori dalla
+ * finestra (scatti a pagina intera, stampa). Mai nell'hero: l'h1 è l'elemento LCP.
  */
 export function Rivela({
   children,

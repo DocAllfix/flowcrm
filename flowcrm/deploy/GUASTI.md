@@ -891,3 +891,120 @@ curl -sI http://localhost:4173/config.json   # deve dare 200 text/html
 ```
 
 **VERIFICATO** — 2026-09-21: rotto in produzione dopo la fusione in `main`; condizione riprodotta in locale (200 text/html), corretto, e produzione verificata sul sito live con pagina di accesso e zero errori JavaScript.
+
+---
+
+## G-31 · Lo scatto mostra la pagina di un altro progetto
+
+**SINTOMO** — `next start -p 3100` per la landing esce con errore in
+background, ma lo script di scatto riesce lo stesso e produce immagini
+«corrette»: sono la home di **Legisboard** (gdprhub), che già occupava la porta.
+
+**CAUSA** — È la categoria ricorrente in testa a questo registro, «ambienti condivisi scambiati per isolati»: sul PC girano più progetti, e una
+porta «libera» non lo è. L'errore del server finiva in un file di output che
+nessuno leggeva; lo script non verificava *chi* rispondeva.
+
+**RIMEDIO** — Prima di ogni scatto o gate, verificare l'identità della pagina
+(`<title>` con «PMIFlow»), non solo il 200. Porte alte e poco comuni (3417).
+
+**VERIFICATO** — 2026-09-24: `curl -s localhost:3100 | grep title` → «Legisboard»; dopo il cambio di porta e il controllo del titolo, scatti corretti.
+
+---
+
+## G-32 · Il server fermato è ancora lì, con la build vecchia
+
+**SINTOMO** — Dopo una nuova build, sitemap vuota e `/grazie` in 404: sono
+le pagine della build precedente.
+
+**CAUSA** — Su Windows, fermare il comando in background (`TaskStop`) chiude
+il guscio bash ma **non** il `node` figlio di `next start`, che resta in
+ascolto sulla porta con la build vecchia. Il nuovo `next start` fallisce con
+EADDRINUSE, in silenzio.
+
+**RIMEDIO** — Fermare il processo che tiene la porta, **dopo aver verificato
+che è il nostro** dalla riga di comando:
+```powershell
+$c = Get-NetTCPConnection -LocalPort 3417 -State Listen | Select -First 1
+$p = Get-CimInstance Win32_Process -Filter "ProcessId=$($c.OwningProcess)"
+if ($p.CommandLine -like "*FlowtestcrmDavid\landing*") { Stop-Process -Id $p.ProcessId -Force }
+```
+
+**VERIFICATO** — 2026-09-24: processo orfano 7184 con `next start -p 3417`, fermato; il nuovo server serve la build corrente.
+
+---
+
+## G-33 · Spazio sparito dopo un grassetto, solo nell'HTML
+
+**SINTOMO** — Su `/sicurezza` si legge «Row Level Security)di PostgreSQL»,
+«Dati sanitari(modulo», «emailcon sede». Nel sorgente lo spazio c'è.
+
+**CAUSA** — Il compilatore JSX toglie lo spazio iniziale di un nodo di testo
+che va a capo **quando il testo contiene un'entità** (`&apos;`). La stessa
+struttura senza entità, nella privacy, esce corretta. Non si vede leggendo il
+codice: si vede solo nella pagina servita.
+
+**RIMEDIO** — `{" "}` esplicito dopo il tag in linea. E un controllo nel gate
+`landing/scripts/verifica-seo.mjs` che cerca `</strong>`, `</em>`, `</a>`
+attaccati a una lettera nell'HTML servito: al primo giro ha trovato un quarto
+caso su `/cookie` che la ricerca a mano aveva perso.
+
+**VERIFICATO** — 2026-09-24: gate verde su tutte le pagine dopo la correzione.
+
+---
+
+## G-34 · Sezioni vuote nello scatto a pagina intera
+
+**SINTOMO** — Lo scatto a tutta pagina della landing mostra solo i titoli
+delle sezioni: elenchi, schede e moduli sono spariti.
+
+**CAUSA** — Le comparse allo scroll usano `animation-timeline: view()` con
+opacità da 0 a 1. Tutto ciò che non è ancora entrato nella finestra resta
+all'inizio dell'animazione, cioè **invisibile**: per chi scorre va bene, per
+uno scatto a pagina intera, una stampa o un anteprimatore no.
+
+**RIMEDIO** — Animare solo `transform` (24 px verso l'alto), mai l'opacità.
+Il contenuto è sempre visibile; il movimento è solo un di più. Stessa regola
+che gdprhub e FormazioneEvalis avevano già scritto.
+
+**VERIFICATO** — 2026-09-24: scatto a pagina intera senza forzature, tutte le sezioni visibili.
+
+---
+
+## G-35 · La demo di produzione mostra dati di test
+
+**SINTOMO** — Scattando la demo `flowcrm-orcin.vercel.app` per la landing, la
+pipeline è piena di «E2E Att 1784890193689», «E2E Kanban…», «E2E Comm…», con
+importi a zero. È ciò che vede un potenziale cliente.
+
+**CAUSA** — Le suite e2e sono state lanciate contro il **database della demo**
+(gli utenti di verifica `claude.*` vivono lì) e creano record che non
+cancellano.
+
+**RIMEDIO** — Da fare: (1) le e2e non devono più girare contro la demo, ma su
+un'istanza di collaudo o sullo stack locale; (2) ripulire i record `E2E %`
+dalla demo; (3) la sezione della landing che doveva mostrare schermate vere è
+stata rifatta con artefatti HTML scritti a mano, così non dipende dallo stato
+della demo.
+
+**VERIFICATO** — 2026-09-24: sintomo osservato sulle schermate (poi cancellate, mai pubblicate). Pulizia **non ancora eseguita**.
+
+---
+
+## G-36 · Un visitatore della demo può chiudere fuori tutti gli altri
+
+**SINTOMO** — Le password degli account demo condivisi risultano cambiate da
+qualcuno (nota in memoria del progetto: «FlowDemo2026 non più valide»).
+
+**CAUSA** — La sola lettura della demo è un trigger sulle tabelle `public`. La
+password sta in `auth.users` e la cambia GoTrue: il trigger non la vede. Il
+profilo chiama `supabase.auth.updateUser({ password })` per chiunque, anche per
+gli account dimostrativi. Chi conosce le credenziali (sono state pubbliche su
+GitHub) può cambiarle.
+
+**RIMEDIO** — Da fare, prima di riaccendere il pulsante «Prova la demo» sulla
+landing: bloccare lato server il cambio password e secondo fattore per gli
+account demo (lezione di gdprhub: un blocco lato server, non un pulsante
+nascosto), ruotare le credenziali, e valutare l'ingresso in demo con un clic
+senza credenziali digitate.
+
+**VERIFICATO** — 2026-09-24: percorso nel codice verificato (`src/pages/ProfiloPage.tsx`, riga 37). Correzione **non ancora fatta**: tocca la produzione della demo e richiede la decisione del committente.

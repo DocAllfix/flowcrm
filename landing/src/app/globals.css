@@ -143,12 +143,16 @@
 }
 
 /* Comparsa allo scroll, legata allo scorrimento e senza JavaScript. Solo sotto
-   la piega (l hero non la usa: l h1 è l elemento LCP). Solo transform e opacity.
+   la piega (l'hero non la usa: l'h1 è l'elemento LCP). Solo transform.
    Senza supporto per animation-timeline il contenuto resta visibile e fermo. */
 @layer utilities {
+  /* SOLO transform, niente opacità: con animation-timeline tutto ciò che non è ancora
+     entrato nella finestra resta allo stato iniziale, e con opacity 0 uno scatto a
+     pagina intera, una stampa o un anteprimatore vedevano sezioni vuote. Il contenuto
+     deve essere sempre visibile; il movimento è solo un di più. */
   @keyframes comparsa {
-    from { opacity: 0; transform: translateY(16px); }
-    to { opacity: 1; transform: none; }
+    from { transform: translateY(24px); }
+    to { transform: none; }
   }
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {
@@ -161,6 +165,9 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .bottone, .bottone .freccia { transition: none; }
+  }
+  @media print {
+    .rivela { animation: none !important; }
   }
 }
 
@@ -181,4 +188,42 @@
   .testo-lungo ul { list-style: none; padding: 0; border-top: 1px solid var(--color-filo); }
   .testo-lungo ul li { border-bottom: 1px solid var(--color-filo); padding: 0.875rem 0; }
   .testo-lungo a { color: var(--color-inchiostro); text-decoration: underline; text-underline-offset: 3px; }
+}
+
+/* Schede dello scadenziario (sezione «Com'è, davvero»): radio + :has(), zero JS.
+   Senza :has() resta visibile la prima scheda, che è anche quella preselezionata. */
+@layer components {
+  .schede .pannello { display: none; }
+  .schede .pannello[data-pannello="sollecitare"] { display: block; }
+  @supports selector(:has(*)) {
+    .schede .pannello[data-pannello="sollecitare"] { display: none; }
+    .schede:has(#scheda-sollecitare:checked) [data-pannello="sollecitare"],
+    .schede:has(#scheda-scadenza:checked) [data-pannello="scadenza"],
+    .schede:has(#scheda-incassate:checked) [data-pannello="incassate"] {
+      display: block;
+      animation: pannello 240ms var(--ease-uscita);
+    }
+  }
+  @keyframes pannello {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .schede .pannello { animation: none !important; }
+  }
+}
+
+/* Diagrammi di Social-Studio in linea (vedi componenti/Diagramma.tsx). */
+@layer components {
+  .diagramma svg { display: block; width: 100%; height: auto; }
+  .diagramma .etichetta { font-size: clamp(0.75rem, 2.6cqw, 0.9375rem); line-height: 1.2; }
+  .diagramma .etichetta-tenue { color: var(--color-tenue); font-weight: 500; }
+  .diagramma-notte .etichetta-tenue { color: var(--color-tenue-notte); }
+  .diagramma .etichetta-accento { color: var(--color-cotto); }
+  .diagramma .etichetta-su-pieno { color: var(--color-carta); }
+  .diagramma-notte [fill="#ba4823"] { fill: var(--color-cotto-notte); }
+  .diagramma-notte [stroke="#ba4823"] { stroke: var(--color-cotto-notte); }
+  .diagramma-notte [fill="#f6e4dc"] { fill: oklch(0.7 0.14 42 / 0.14); }
+  .diagramma-notte .etichetta-accento { color: var(--color-cotto-notte); }
+  .diagramma-notte .etichetta-su-pieno { color: var(--color-notte); }
 }

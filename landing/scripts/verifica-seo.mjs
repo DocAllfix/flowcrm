@@ -50,6 +50,12 @@ for (const percorso of [...percorsi, "/grazie"]) {
   if (/€|&euro;|\bEUR\b|\beuro\b|\d\s*\/\s*(mese|anno|utente)\b|listino prezzi/i.test(html)) errore(`${percorso}: contiene un prezzo o un riferimento di prezzo`);
   if (/—/.test(visibile.replace(/<[^>]+>/g, ""))) errore(`${percorso}: lineetta lunga nel testo visibile`);
 
+  // Parola incollata a un tag in linea («Security</em>di»). Il compilatore JSX toglie lo
+  // spazio iniziale di un testo su più righe quando contiene un'entità come &apos;:
+  // in sorgente lo spazio c'è, nell'HTML no. Si vede solo guardando la pagina servita.
+  const incollato = visibile.match(/<\/(strong|em|a|span|time)>[A-Za-zÀ-ú(]/);
+  if (incollato) errore(`${percorso}: spazio mancante dopo un tag in linea («${incollato[0]}»)`);
+
   if (!errori) bene(`${percorso}`);
 }
 

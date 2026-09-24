@@ -397,3 +397,60 @@ disattivato. La retention dei backup la fissa il **contratto**, non noi.
    dopo che qualcuno le ha esercitate davvero.
 4. Formato condiviso con `gdprhub` e `sistemacommercialisti`: se si cambia, si
    cambia per tutti e tre.
+
+---
+
+## Landing pmiflow.eu (cartella `landing/`)
+
+Nome commerciale **PMIFlow**; FlowCRM resta il nome tecnico. La landing è un
+progetto separato, e un suo difetto non tocca la demo, né viceversa.
+
+| | |
+|---|---|
+| codice | `landing/` (Next.js 16, tutto statico tranne `/api/contatti`) |
+| progetto Vercel | `pmiflow-landing` (team `docallfixs-projects`), `rootDirectory: landing`, produzione da `main` |
+| demo | progetto Vercel `flowcrm`, `rootDirectory: flowcrm`, sempre da `main` |
+| token | `~/.config/flotta/vercel.env` → `VERCEL_TOKEN`; `~/.config/flotta/hostinger.env` → `HOSTINGER_API_TOKEN` |
+| vincolo | **nessun prezzo**, in nessuna pagina (decisione del committente, 24/09/2026) |
+
+Entrambi i `vercel.json` hanno `ignoreCommand: git diff --quiet HEAD^ HEAD -- .`,
+quindi un push che tocca solo una cartella non ricompila l'altro progetto.
+
+### Rilascio
+
+```bash
+cd landing
+npx tsc --noEmit && npx next build
+npx next start -p 3417 &                     # porta poco comune: vedi GUASTI G-31
+curl -s localhost:3417 | grep -o '<title>[^<]*'   # deve dire PMIFlow
+node scripts/verifica-seo.mjs http://localhost:3417   # gate: h1, canonical, JSON-LD, niente prezzi, spazi
+```
+Poi push; dopo il deploy, **lo stesso gate sul sito vivo**:
+`node scripts/verifica-seo.mjs https://pmiflow-landing.vercel.app`.
+
+`flowcrm/deploy/security-headers-check.sh` segnala `unsafe-inline` su
+`script-src`: sulla landing è un **compromesso dichiarato** in `next.config.ts`
+(il nonce renderebbe dinamiche le pagine). Non vale per le istanze cliente.
+
+### Interruttori (variabili Vercel, lette al build)
+
+| variabile | effetto | stato al 24/09/2026 |
+|---|---|---|
+| `NEXT_PUBLIC_CONTATTI_ATTIVI=1` | mostra il modulo e le CTA «Richiedi una presentazione» | spento: mancano titolare e casella |
+| `RESEND_API_KEY`, `CONTATTI_DESTINATARIO`, `CONTATTI_MITTENTE` | invio del modulo (server-only) | non impostate |
+| `NEXT_PUBLIC_RAGIONE_SOCIALE`, `_PARTITA_IVA`, `_SEDE`, `_EMAIL_CONTATTO` | piede, privacy, JSON-LD | non impostate: **obbligatorie prima di pmiflow.eu** |
+| `NEXT_PUBLIC_DEMO_ATTIVA=1`, `NEXT_PUBLIC_URL_DEMO` | pulsante «Prova la demo» | spento: vedi GUASTI G-35, G-36 |
+
+### Switch DNS (Hostinger → Vercel)
+
+Zone attuali di `pmiflow.eu` e `pmiflow.it`: solo parcheggio (`A @ 2.57.91.91`,
+`CNAME www @`), nessun MX. I record attesi si leggono da Vercel al momento, non da
+qui (`GET /v6/domains/<dominio>/config`). Al 24/09 erano `A @ 216.150.1.1`
+(alternativa `76.76.21.21`) e `CNAME www 72ee11c69c4ea431.vercel-dns-016.com.`.
+
+1. Snapshot della zona (`GET /api/dns/v1/zones/<dominio>`) salvato con la data.
+2. Eliminare **solo** il record di parcheggio, con filtro `name=@ type=A`.
+3. Aggiungere i record Vercel con `overwrite: false`. Mai `overwrite: true`.
+4. Finché il dominio non spedisce posta: `TXT @ "v=spf1 -all"` e `TXT _dmarc "v=DMARC1; p=reject"`.
+5. Verificare da `1.1.1.1` e `8.8.8.8`, non dal resolver di casa (Telecom risponde 127.0.0.1).
+6. `curl -sI https://pmiflow.eu` → 200 con HSTS; `https://pmiflow.it` e `www` → 308.

@@ -16,7 +16,7 @@ export default function Cookie() {
   return (
     <PaginaTesto occhiello="Legale" titolo="Cookie" percorso="/cookie" aggiornata={LEGALI_AGGIORNATI_AL}>
       <p>
-        Il sito <strong>pmiflow.eu</strong> non installa cookie di profilazione, cookie di terze parti o altri strumenti
+        Il sito <strong>pmiflow.eu</strong>{" "}non installa cookie di profilazione, cookie di terze parti o altri strumenti
         di tracciamento. Per questo non ti chiediamo alcun consenso all&apos;apertura della pagina.
       </p>
       <p>

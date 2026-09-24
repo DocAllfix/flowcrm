@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PaginaTesto } from "@/componenti/PaginaTesto";
+import { Diagramma } from "@/componenti/Diagramma";
 
 export const metadata: Metadata = {
   title: "Sicurezza e dati",
@@ -28,6 +29,15 @@ export default function Sicurezza() {
       </p>
 
       <h2>Un server per ogni azienda</h2>
+      <Diagramma
+        nome="istanza-privata"
+        className="-my-6 max-w-md text-inchiostro"
+        etichette={[
+          { x: 110, y: 318, testo: "un'altra azienda", tono: "tenue" },
+          { x: 300, y: 318, testo: "la tua", tono: "accento" },
+          { x: 490, y: 318, testo: "un'altra azienda", tono: "tenue" },
+        ]}
+      />
       <p>
         La tua istanza gira su una macchina virtuale dedicata presso <strong>Hetzner Online GmbH</strong>, in un data
         center in <strong>Germania</strong>. Database, documenti caricati e copie di sicurezza non condividono spazio con
@@ -36,7 +46,7 @@ export default function Sicurezza() {
 
       <h2>Chi vede cosa lo decide il database</h2>
       <p>
-        I permessi non stanno nei menu dell&apos;applicazione ma nelle regole del database (<em>Row Level Security</em> di
+        I permessi non stanno nei menu dell&apos;applicazione ma nelle regole del database (<em>Row Level Security</em>{" "}di
         PostgreSQL). Anche chi chiamasse il server direttamente, senza passare dall&apos;interfaccia, riceverebbe solo le
         righe che il suo ruolo può vedere.
       </p>
@@ -45,7 +55,7 @@ export default function Sicurezza() {
           <strong>Agenti di commercio:</strong> vedono solo i propri clienti, visite e provvigioni.
         </li>
         <li>
-          <strong>Dati sanitari</strong> (modulo Poliambulatori): visite e referti sono visibili solo ai professionisti
+          <strong>Dati sanitari</strong>{" "}(modulo Poliambulatori): visite e referti sono visibili solo ai professionisti
           collegati al paziente e all&apos;amministratore. Segreteria e direzione non li vedono.
         </li>
         <li>
@@ -55,6 +65,15 @@ export default function Sicurezza() {
       </ul>
 
       <h2>Copie di sicurezza</h2>
+      <Diagramma
+        nome="backup"
+        className="-my-6 max-w-md text-inchiostro"
+        etichette={[
+          { x: 125, y: 305, testo: "il tuo server" },
+          { x: 490, y: 280, testo: "un secondo luogo" },
+          { x: 346, y: 78, testo: "ogni notte", tono: "accento" },
+        ]}
+      />
       <p>
         Ogni notte parte una copia completa, cifrata, verso uno spazio di archiviazione separato dal server. La chiave
         che il server usa per scrivere le copie <strong>non può cancellarle</strong>: chi riuscisse a entrare nel server
@@ -79,7 +98,7 @@ export default function Sicurezza() {
           <strong>Hetzner Online GmbH</strong> (Germania): server e spazio per le copie di sicurezza.
         </li>
         <li>
-          <strong>Servizio di invio email</strong> con sede nell&apos;Unione Europea: le notifiche e il recupero password.
+          <strong>Servizio di invio email</strong>{" "}con sede nell&apos;Unione Europea: le notifiche e il recupero password.
         </li>
         <li>
           <strong>Microsoft Azure OpenAI</strong>, solo se attivi l&apos;assistente: le domande che gli fai passano da

@@ -1,5 +1,6 @@
 import { PROVE } from "@/contenuti/prove";
 import { Rivela } from "./Rivela";
+import { Diagramma } from "./Diagramma";
 
 /**
  * «Perché fidarsi», senza inventare. Frasi verificabili in un elenco rigato, non
@@ -17,6 +18,16 @@ export function Prove() {
           <h2 id="titolo-prove" className="titolo-sezione mt-6 leading-[1.14]">
             Un gestionale si giudica il giorno in cui qualcosa va storto.
           </h2>
+          <Diagramma
+            nome="istanza-privata"
+            notte
+            className="mt-12 max-w-md"
+            etichette={[
+              { x: 110, y: 318, testo: "un'altra azienda", tono: "tenue" },
+              { x: 300, y: 318, testo: "la tua", tono: "accento" },
+              { x: 490, y: 318, testo: "un'altra azienda", tono: "tenue" },
+            ]}
+          />
         </div>
         <ol className="border-t border-filo-notte">
           {PROVE.map((p, i) => (
