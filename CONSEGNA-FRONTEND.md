@@ -265,19 +265,17 @@ Sintesi di uno scambio con la sessione **Social-Studio** (24/09), che produce
 gli asset vettoriali. Serve a chi prenderà in carico la landing: sono
 decisioni già prese, non da rinegoziare.
 
-### ⛔ Una cosa è ferma e aspetta il committente
+### ✅ Il nome è deciso (24/09/2026)
 
-**Il prodotto ha due nomi.** Il dominio comprato è `pmiflow.eu` (più
-`pmiflow.it`); il codice dice `FlowCRM` — nome del repository, dell'immagine
-(`ghcr.io/docallfix/flowcrm`) e valore predefinito di `VITE_APP_NAME`.
+**PMIFlow** è il nome commerciale: logotipo, landing su `pmiflow.eu`.
+**FlowCRM** resta il nome tecnico (repository, immagine
+`ghcr.io/docallfix/flowcrm`, `VITE_APP_NAME` predefinito) e non si tocca.
 
-Nessun marchio va prodotto finché non è deciso quale dei due va nel logotipo:
-è l'asset che si trascina su landing, segnaposto, anteprima social e documenti
-di consegna, e rifarlo dopo costa dieci volte tanto.
-
-Cambiare il nome **nel prodotto** non è però un refactoring: arriva da
-`/config.json` per istanza e non è cablato da nessuna parte. Da allineare
-sarebbero solo repository e immagine.
+Il marchio è consegnato (la «P che scorre», Social-Studio) ed è già nella
+landing, cartella `landing/`. Per le istanze senza logo resta il monogramma di
+`MarchioCliente`: decisione del committente, `/logo-default.svg` può restare
+assente. Stato completo della landing: `flowcrm/deploy/RUNBOOK.md`, sezione
+«Landing pmiflow.eu».
 
 ### Due famiglie di marchio, e non vanno confuse
 
