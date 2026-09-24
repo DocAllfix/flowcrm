@@ -237,3 +237,29 @@ jobs:
             ${{ env.IMMAGINE }}:${{ env.SHA_CORTO }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # ── Landing pmiflow.eu (cartella landing/, progetto Vercel separato) ──
+  # Stessi cancelli che si lanciano a mano: build statica, poi il gate SEO sulle
+  # pagine servite davvero (un solo h1, canonical, JSON-LD, NESSUN PREZZO).
+  landing:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: landing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Dipendenze
+        # npm install e non npm ci: stesso motivo del job qualita (lockfile da Windows).
+        run: npm install --no-audit --no-fund
+      - name: Tipi
+        run: npx tsc --noEmit
+      - name: Build
+        run: npx next build
+      - name: Gate SEO sulle pagine servite
+        run: |
+          npx next start -p 3417 &
+          for i in $(seq 1 30); do curl -sf http://localhost:3417/sitemap.xml >/dev/null && break; sleep 1; done
+          node scripts/verifica-seo.mjs http://localhost:3417
