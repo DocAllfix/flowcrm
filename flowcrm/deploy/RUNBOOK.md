@@ -438,19 +438,28 @@ Poi push; dopo il deploy, **lo stesso gate sul sito vivo**:
 |---|---|---|
 | `NEXT_PUBLIC_CONTATTI_ATTIVI=1` | mostra il modulo e le CTA «Richiedi una presentazione» | spento: mancano titolare e casella |
 | `RESEND_API_KEY`, `CONTATTI_DESTINATARIO`, `CONTATTI_MITTENTE` | invio del modulo (server-only) | non impostate |
-| `NEXT_PUBLIC_RAGIONE_SOCIALE`, `_PARTITA_IVA`, `_SEDE`, `_EMAIL_CONTATTO` | piede, privacy, JSON-LD | non impostate: **obbligatorie prima di pmiflow.eu** |
+| `NEXT_PUBLIC_RAGIONE_SOCIALE`, `_PARTITA_IVA`, `_SEDE`, `_EMAIL_CONTATTO` | piede, privacy, JSON-LD | non impostate: pubblicato senza, per scelta del committente (24/09/2026) |
 | `NEXT_PUBLIC_DEMO_ATTIVA=1`, `NEXT_PUBLIC_URL_DEMO` | pulsante «Prova la demo» | spento: vedi GUASTI G-35, G-36 |
 
 ### Switch DNS (Hostinger → Vercel)
 
-Zone attuali di `pmiflow.eu` e `pmiflow.it`: solo parcheggio (`A @ 2.57.91.91`,
-`CNAME www @`), nessun MX. I record attesi si leggono da Vercel al momento, non da
-qui (`GET /v6/domains/<dominio>/config`). Al 24/09 erano `A @ 216.150.1.1`
-(alternativa `76.76.21.21`) e `CNAME www 72ee11c69c4ea431.vercel-dns-016.com.`.
+**Fatto il 24/09/2026.** `pmiflow.eu` è in produzione, `www` e i due `.it` in 308
+verso `https://pmiflow.eu`. Le zone di prima (solo parcheggio: `A @ 2.57.91.91`,
+`CNAME www @`, nessun MX) sono salvate in `scratch_domini/zona-*-2026-09-24-prima.json`.
+I record attesi si leggono da Vercel al momento, non da qui
+(`GET /v6/domains/<dominio>/config`). Al 24/09 erano `A @ 216.150.1.1, 216.150.16.1`
+e `CNAME www 72ee11c69c4ea431.vercel-dns-016.com.`, uguali per `.eu` e `.it`.
+
+Procedura usata, da ripetere identica per un nuovo dominio:
 
 1. Snapshot della zona (`GET /api/dns/v1/zones/<dominio>`) salvato con la data.
-2. Eliminare **solo** il record di parcheggio, con filtro `name=@ type=A`.
+2. Eliminare **solo** i record di parcheggio, con filtri espliciti:
+   `DELETE /api/dns/v1/zones/<dominio>` con `{"filters":[{"name":"@","type":"A"},{"name":"www","type":"CNAME"}]}`.
 3. Aggiungere i record Vercel con `overwrite: false`. Mai `overwrite: true`.
 4. Finché il dominio non spedisce posta: `TXT @ "v=spf1 -all"` e `TXT _dmarc "v=DMARC1; p=reject"`.
-5. Verificare da `1.1.1.1` e `8.8.8.8`, non dal resolver di casa (Telecom risponde 127.0.0.1).
-6. `curl -sI https://pmiflow.eu` → 200 con HSTS; `https://pmiflow.it` e `www` → 308.
+5. Verificare da `1.1.1.1` e `8.8.8.8` (DNS-over-HTTPS). Se il PC risponde ancora
+   127.0.0.1 o il vecchio IP, è la cache di Windows: `Clear-DnsClientCache`.
+6. Se dopo cinque minuti l'HTTPS non si apre (handshake fallito), il certificato non
+   è stato emesso: chiederlo con `POST /v8/certs` e `{"cns":["<dominio>","www.<dominio>"]}`.
+   Vedi GUASTI G-37.
+7. `curl -sI https://pmiflow.eu` → 200 con HSTS; `https://pmiflow.it` e `www` → 308.

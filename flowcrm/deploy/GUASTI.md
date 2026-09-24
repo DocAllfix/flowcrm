@@ -1008,3 +1008,32 @@ nascosto), ruotare le credenziali, e valutare l'ingresso in demo con un clic
 senza credenziali digitate.
 
 **VERIFICATO** — 2026-09-24: percorso nel codice verificato (`src/pages/ProfiloPage.tsx`, riga 37). Correzione **non ancora fatta**: tocca la produzione della demo e richiede la decisione del committente.
+
+---
+
+## G-37 · DNS giusto, dominio verificato, ma HTTPS non si apre
+
+**SINTOMO** — Dopo lo switch di `pmiflow.eu` su Vercel i resolver pubblici
+danno gli IP giusti e Vercel segna i quattro host `misconfigured=false`, ma per
+più di dieci minuti `https://pmiflow.eu` fallisce l'handshake TLS (curl 000,
+«SSL/TLS connection failed»). Lo stesso IP serve senza problemi
+`pmiflow-landing.vercel.app`.
+
+**CAUSA** — Nessun certificato emesso per i domini nuovi: l'elenco dei
+certificati del team (`GET /v4/certs`) non conteneva niente per `pmiflow`.
+L'emissione automatica non era partita dopo che il DNS era diventato corretto.
+
+**RIMEDIO** — Chiedere il certificato esplicitamente:
+```bash
+curl -X POST "https://api.vercel.com/v8/certs?teamId=<team>" \
+  -H "Authorization: Bearer $VERCEL_TOKEN" -H "Content-Type: application/json" \
+  -d '{"cns":["pmiflow.eu","www.pmiflow.eu"]}'
+```
+La risposta arriva in pochi secondi, con la scadenza (rinnovo automatico di
+Vercel). Controllare sempre l'HTTPS vero, non lo stato «verificato» del dominio:
+sono due cose diverse.
+
+Trappola collegata: il PC risolveva ancora `pmiflow.eu` su 127.0.0.1 per la
+cache DNS di Windows. `Clear-DnsClientCache` e si allinea.
+
+**VERIFICATO** — 2026-09-24: certificati emessi per `.eu` e `.it` (scadenza 23/12/2026); `https://pmiflow.eu` 200 con HSTS, `www` e `.it` in 308, gate SEO verde sul dominio vero.

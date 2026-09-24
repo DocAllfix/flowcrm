@@ -60,7 +60,7 @@ for (const percorso of [...percorsi, "/grazie"]) {
 }
 
 const home = await (await fetch(`${BASE}/`)).text();
-if (!/P\. IVA/.test(home)) console.warn("! piede senza ragione sociale e P. IVA: obbligatorie prima di pubblicare su pmiflow.eu");
+if (!/P\. IVA/.test(home)) console.warn("! piede senza ragione sociale e P. IVA (pubblicato così per scelta del committente, 24/09/2026)");
 
 console.log(errori ? `\n${errori} errori` : "\nnessun errore");
 process.exit(errori ? 1 : 0);
