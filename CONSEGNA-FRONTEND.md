@@ -256,3 +256,76 @@ l'uscita di un comando non prova il suo effetto, un file di log non prova
 niente finché non verifichi che contenga qualcosa, e un test verde può essere
 di un altro progetto. Se il tuo piano dice «fase completata», accanto ci deve
 essere il comando che lo dimostra.
+
+---
+
+## 8. Landing di prodotto e asset visivi
+
+Sintesi di uno scambio con la sessione **Social-Studio** (24/09), che produce
+gli asset vettoriali. Serve a chi prenderà in carico la landing: sono
+decisioni già prese, non da rinegoziare.
+
+### ⛔ Una cosa è ferma e aspetta il committente
+
+**Il prodotto ha due nomi.** Il dominio comprato è `pmiflow.eu` (più
+`pmiflow.it`); il codice dice `FlowCRM` — nome del repository, dell'immagine
+(`ghcr.io/docallfix/flowcrm`) e valore predefinito di `VITE_APP_NAME`.
+
+Nessun marchio va prodotto finché non è deciso quale dei due va nel logotipo:
+è l'asset che si trascina su landing, segnaposto, anteprima social e documenti
+di consegna, e rifarlo dopo costa dieci volte tanto.
+
+Cambiare il nome **nel prodotto** non è però un refactoring: arriva da
+`/config.json` per istanza e non è cablato da nessuna parte. Da allineare
+sarebbero solo repository e immagine.
+
+### Due famiglie di marchio, e non vanno confuse
+
+| | dove vive | colore |
+|---|---|---|
+| marchio di **prodotto** | solo la landing | a colori, primario caldo |
+| marchio **segnaposto** | istanza senza logo del cliente | **monocromatico**, `currentColor` |
+
+Il secondo è un vincolo di prodotto, non estetico: `src/lib/tema.ts` deriva
+l'intero foglio di stile da `primaryColor` e `accentColor` del cliente, quindi
+un marchio a colori fissi stona su ogni istanza che non usa il nostro arancio.
+
+**Il segnaposto oggi è già coperto**: `logoUrl` ha come predefinito
+`/logo-default.svg`, quel file **non esiste**, e `MarchioCliente` se ne accorge
+e disegna un monogramma invece di mostrare un'immagine rotta. Un asset nuovo
+**sostituisce un ripiego funzionante**, quindi entra solo se è chiaramente
+migliore.
+
+### Ingombro, misurato dal componente
+
+```
+barra laterale     36 × 36 px   (h-9 w-9,  rounded-lg)   glifo interno 18 px
+pagine di accesso  48 × 48 px   (h-12 w-12, rounded-xl)  glifo interno 24 px
+```
+
+Quadrato, 1:1. Il logo del cliente finisce nello stesso riquadro: **è a 36 px
+che si decide se un marchio funziona**, non a 512. Sopra le due forme distinte,
+a quella misura, non si legge più niente.
+
+### Peso degli SVG — il rischio vero, più della CSP
+
+La CSP (`script-src 'self'`) esclude gli SVG con `<script>`, ma quelli
+generati non ne hanno. Il problema è il **numero di tracciati**: un marchio
+semplice ne produce qualche decina, una texture «sfarinata» migliaia — e pesa
+più di un PNG, peggiorando proprio l'LCP che la landing vuole ottimizzare.
+Social-Studio consegna file ripuliti dichiarando tracciati e peso di ciascuno:
+**se un asset arriva senza quei due numeri, chiedili prima di metterlo in pagina.**
+
+### Icone: Lucide, questione chiusa
+
+Usata in **113 file**. Un set proprio spaccherebbe il linguaggio visivo fra
+landing e applicazione. L'unico spazio per un segno nostro sono **diagrammi e
+illustrazioni** della landing, dove Lucide non arriva.
+
+### Anteprima Open Graph
+
+Schermata vera della dashboard, non composizione tipografica. **Va scattata
+dalla sessione che conosce i dati**: la demo contiene dati di prova con nomi
+inventati e l'immagine finisce su un'anteprima pubblica. Da chiedere quando la
+landing ha una data di pubblicazione, non prima — il frontend è appena stato
+rifatto e una schermata di oggi invecchia domani.
