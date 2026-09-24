@@ -409,7 +409,7 @@ progetto separato, e un suo difetto non tocca la demo, né viceversa.
 |---|---|
 | codice | `landing/` (Next.js 16, tutto statico tranne `/api/contatti`) |
 | progetto Vercel | `pmiflow-landing` (team `docallfixs-projects`), `rootDirectory: landing`, produzione da `main` |
-| demo | progetto Vercel `flowcrm`, `rootDirectory: flowcrm`, sempre da `main` |
+| demo | progetto Vercel `pmiflow-demo` (era `flowcrm`, rinominato il 24/09/2026), `rootDirectory: flowcrm`, da `main`; indirizzi `https://demo.pmiflow.eu` e `flowcrm-orcin.vercel.app` (alias tenuto per i link già inviati) |
 | token | `~/.config/flotta/vercel.env` → `VERCEL_TOKEN`; `~/.config/flotta/hostinger.env` → `HOSTINGER_API_TOKEN` |
 | vincolo | **nessun prezzo**, in nessuna pagina (decisione del committente, 24/09/2026) |
 

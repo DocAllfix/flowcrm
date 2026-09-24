@@ -9,8 +9,8 @@
 export const URL_CANONICO = "https://pmiflow.eu";
 export const NOME = "PMIFlow";
 
-/** Dove porta «Prova la demo». Diventa `demo.pmiflow.eu` quando il dominio è attivo. */
-export const URL_DEMO = process.env.NEXT_PUBLIC_URL_DEMO ?? "https://flowcrm-orcin.vercel.app";
+/** Dove porta «Prova la demo». `flowcrm-orcin.vercel.app` resta attivo come alias. */
+export const URL_DEMO = process.env.NEXT_PUBLIC_URL_DEMO ?? "https://demo.pmiflow.eu";
 
 /**
  * Il pulsante della demo si mostra solo quando la demo si apre con un clic.

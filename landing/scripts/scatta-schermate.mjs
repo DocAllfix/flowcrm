@@ -3,7 +3,7 @@
  * rifanno in un comando quando l'app cambia.
  *
  *   SCATTI_EMAIL=… SCATTI_PASSWORD=… SCATTI_AGENTE_EMAIL=… SCATTI_AGENTE_PASSWORD=… \
- *     node scripts/scatta-schermate.mjs [https://flowcrm-orcin.vercel.app]
+ *     node scripts/scatta-schermate.mjs [https://demo.pmiflow.eu]
  *
  * Le credenziali arrivano dall'ambiente e non si scrivono mai qui: questo file è
  * versionato. Si naviga e basta, nessun clic che scrive.
@@ -22,7 +22,7 @@ const qui = path.dirname(fileURLToPath(import.meta.url));
 const richiedi = createRequire(path.join(qui, "../../flowcrm/package.json"));
 const { chromium } = richiedi("@playwright/test");
 
-const BASE = process.argv[2] ?? "https://flowcrm-orcin.vercel.app";
+const BASE = process.argv[2] ?? "https://demo.pmiflow.eu";
 const USCITA = path.join(qui, "../public/schermate");
 
 const SCATTI = [
