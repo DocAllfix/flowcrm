@@ -1020,7 +1020,9 @@ manutenzione da SQL resta libera, un normale accesso passa sempre.
 Dopo averla applicata: ruotare le password degli account demo **da SQL** (è
 la via che resta aperta) e valutare l'ingresso in demo con un clic.
 
-**VERIFICATO** — 2026-09-24: pgTAP `020_credenziali_demo.sql` nella CI (PR #5). **Non ancora applicata al database della demo**: serve `npx supabase login` sul PC, poi `npx supabase db push`.
+**VERIFICATO** — 2026-09-24: pgTAP `020_credenziali_demo.sql` nella CI (PR #5). 2026-09-25: applicata alla demo con `supabase db push --linked` (token in `~/.config/flotta/supabase.env`, nessuna password del DB), insieme alle quattro migrazioni del 18/09 che mancavano. Trigger presenti su `auth.users` e `auth.mfa_factors`; password degli account demo **non toccate** (per scelta del committente); demo navigata senza errori come amministratore, agente e medico. Stesso rilascio: `copilot_rate_check` con soglie scelte da chi chiama ora risponde 404, FORCE RLS su 92 tabelle su 92.
+
+Lezione di metodo: prima di `db push` si guarda **cosa** manca (`migration list` o `schema_migrations`), non solo la migrazione a cui si pensa. Qui ne mancavano cinque, fra cui FORCE RLS: verificato prima che `postgres` avesse BYPASSRLS, e salvato lo stato degli oggetti toccati in `scratch_domini/`.
 
 ---
 
