@@ -37,7 +37,7 @@ Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`.
 9. **DNS**: `<cliente>.flowcrm.com` → A/CNAME verso il server (wildcard
    `*.flowcrm.com` sul dominio principale).
 10. **Backup**: `pg_dump` notturno + copia off-site; test di restore documentato.
-11. **Seed demo** (solo istanze dimostrative): `seed_demo_moduli.sql`.
+11. **Seed demo** (solo istanze dimostrative): `seed_demo_moduli.sql` per i moduli, poi `demo-dati-dimostrativi.sql` per CRM, amministrazione e cantiere. Il secondo ha date relative a oggi ed è ripetibile: quando la demo invecchia (tutto «scaduto») si rilancia così com'è. Rilanciarlo rigenera gli id di trattative, commesse e fatture.
 
 ## Checklist di consegna (da eseguire a ogni installazione)
 
