@@ -10,6 +10,7 @@ import { identificaUtente, dimenticaUtente } from '@/lib/telemetria'
 import type { User } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 import type { UserProfile, UserRole } from '@/types/app.types'
+import { DEMO_PUBBLICA, demoPubblicaAttiva } from '@/lib/demo'
 
 // ── Tipo del Context ─────────────────────────────────────────────
 
@@ -25,6 +26,10 @@ export interface AuthContextValue {
    * solo a UI (banner, bottoni disabilitati). Deriva da `puo_scrivere()`.
    */
   solaLettura: boolean
+  /** L'istanza è una demo (interruttore `impostazioni_istanza.sola_lettura`): fa comparire la fascia. */
+  istanzaDemo: boolean
+  /** Account ospite della demo pubblica: prova il CRM, non cancella; i dati si ripristinano ogni notte. */
+  ospiteDemo: boolean
   errorAccount: string | null
   logout: () => Promise<void>
 }
@@ -66,6 +71,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [solaLettura, setSolaLettura] = useState(false)
+  const [istanzaDemo, setIstanzaDemo] = useState(false)
   const [errorAccount, setErrorAccount] = useState<string | null>(null)
 
   // Carica il profilo utente dopo il login.
@@ -79,13 +85,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (error || !data) {
       setErrorAccount('Profilo utente non trovato. Contatta l\'amministratore.')
-      await supabase.auth.signOut()
+      // scope LOCALE: signOut() di supabase-js è globale per impostazione, e
+      // sull'account condiviso della demo pubblica butterebbe fuori tutti.
+      await supabase.auth.signOut({ scope: 'local' })
       return
     }
 
     if (!data.attivo) {
       setErrorAccount('Account disattivato. Contatta l\'amministratore.')
-      await supabase.auth.signOut()
+      // scope LOCALE: signOut() di supabase-js è globale per impostazione, e
+      // sull'account condiviso della demo pubblica butterebbe fuori tutti.
+      await supabase.auth.signOut({ scope: 'local' })
       return
     }
 
@@ -95,10 +105,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     // Sola lettura: chiediamo al DB se l'utente può scrivere (istanza demo +
     // whitelist manutentori). È solo per la UI: la barriera è nel trigger.
     try {
-      const { data: puoScrivere } = await supabase.rpc('puo_scrivere')
+      const [{ data: puoScrivere }, { data: istanza }] = await Promise.all([
+        supabase.rpc('puo_scrivere'),
+        supabase.from('impostazioni_istanza').select('sola_lettura').maybeSingle(),
+      ])
       setSolaLettura(puoScrivere === false)
+      setIstanzaDemo(Boolean(istanza?.sola_lettura))
     } catch {
       setSolaLettura(false)
+      setIstanzaDemo(false)
     }
 
     // Telemetria: identificativo OPACO, mai id o email reali. Il collettore
@@ -128,6 +143,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (event === 'SIGNED_OUT') {
           setUserProfile(null)
           setSolaLettura(false)
+          setIstanzaDemo(false)
           setErrorAccount(null)
           setIsLoading(false)
           dimenticaUtente()
@@ -150,9 +166,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = useCallback(async () => {
     setIsLoading(true)
-    await supabase.auth.signOut()
+    const ospite = userProfile?.ospite_demo === true
+    // Esce solo QUESTO browser: sull'account condiviso della demo pubblica
+    // l'uscita globale butterebbe fuori ogni altro visitatore.
+    await supabase.auth.signOut({ scope: 'local' })
+    // Il visitatore della demo pubblica che esce torna al sito: altrimenti il
+    // rientro automatico lo riporterebbe dentro subito.
+    if (ospite && demoPubblicaAttiva()) window.location.assign(DEMO_PUBBLICA.sito)
     // onAuthStateChange gestirà il reset dello stato
-  }, [])
+  }, [userProfile])
 
   const { isAdmin, isManager } = computeRuoli(userProfile?.ruolo)
 
@@ -165,6 +187,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAdmin,
         isManager,
         solaLettura,
+        istanzaDemo,
+        ospiteDemo: userProfile?.ospite_demo === true,
         errorAccount,
         logout,
       }}

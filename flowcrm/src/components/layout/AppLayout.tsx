@@ -10,6 +10,7 @@ import { CommandPalette } from '@/components/CommandPalette'
 import { Spinner } from '@/components/ui/spinner'
 import { CopilotWidget } from '@/components/CopilotWidget'
 import { TourAutoStarter } from '@/lib/onboarding/TourAutoStarter'
+import { demoPubblicaAttiva } from '@/lib/demo'
 
 /**
  * Shell autenticata: sidebar + header + contenuto (Outlet).
@@ -51,6 +52,13 @@ export function AppLayout() {
   }
 
   if (!user) {
+    // Demo pubblica: la sessione dell'ospite può cadere (scaduta, o revocata da
+    // qualcuno sull'account condiviso). Si rientra da soli, senza passare dal
+    // login. Con un errore d'account no: rientrare darebbe lo stesso errore, in
+    // un ciclo. Chi è uscito apposta è già stato mandato al sito.
+    if (demoPubblicaAttiva() && !errorAccount) {
+      return <Navigate to="/demo" replace />
+    }
     return <Navigate to="/login" replace state={{ errorAccount }} />
   }
 

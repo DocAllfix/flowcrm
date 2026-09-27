@@ -42,6 +42,20 @@ Deno.serve(async (req) => {
   const { data: ruoloChiamante } = await userClient.rpc('get_user_role')
   if (ruoloChiamante !== 'admin') return json({ error: 'Riservato agli amministratori' }, 403)
 
+  // Demo: l'utente si crea con la service_role key, che scavalca il blocco di sola
+  // lettura del database. Con la demo pubblica le credenziali dell'ospite (admin)
+  // stanno nella pagina: senza questo controllo chiunque creerebbe account veri.
+  // Si legge l'interruttore e il flag manutentore, NON puo_scrivere(), che per
+  // l'ospite risponde sì (serve all'interfaccia). Nel dubbio si rifiuta.
+  const [istanza, profilo] = await Promise.all([
+    userClient.from('impostazioni_istanza').select('sola_lettura').maybeSingle(),
+    userClient.from('user_profiles').select('manutentore').eq('id', user.id).maybeSingle(),
+  ])
+  if (istanza.error || profilo.error) return json({ error: 'Verifica non riuscita, riprova' }, 503)
+  if (istanza.data?.sola_lettura && !profilo.data?.manutentore) {
+    return json({ error: 'Nella demo non si creano utenti.' }, 403)
+  }
+
   let payload: { email?: string; password?: string; nome?: string; cognome?: string; ruolo?: string }
   try { payload = await req.json() } catch { return json({ error: 'Richiesta non valida' }, 400) }
   const email = (payload.email ?? '').trim().toLowerCase()

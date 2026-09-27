@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { askCopilot, type CopilotMessage, type AzioneProposta } from '@/lib/queries/copilot'
 import { useCreateAttivita } from '@/lib/queries/attivita'
 import { useAuth } from '@/hooks/useAuth'
+import { AVVISO_SIMULAZIONE, DOMANDE_SIMULATE, rispostaSimulata } from '@/lib/queries/copilotSimulato'
 import { Card } from '@/components/ui/card'
 
 /**
@@ -20,7 +21,12 @@ const SUGGERIMENTI = [
 ]
 
 export function CopilotWidget() {
-  const { userProfile } = useAuth()
+  const { userProfile, istanzaDemo } = useAuth()
+  // Nella demo il Copilot vero è spento lato server (costa: Azure OpenAI). Qui lo
+  // si fa vedere con risposte costruite dai dati: stessa regola della funzione,
+  // istanza demo e utente non manutentore.
+  const simulato = istanzaDemo && !userProfile?.manutentore
+  const suggerimenti: readonly string[] = simulato ? DOMANDE_SIMULATE : SUGGERIMENTI
   const navigate = useNavigate()
   const createAttivita = useCreateAttivita()
   const [open, setOpen] = useState(false)
@@ -47,6 +53,17 @@ export function CopilotWidget() {
     setPropostaFatta(false)
     // bolla assistente vuota che si riempie in streaming
     setMessaggi([...nuovi, { role: 'assistant', content: '' }])
+    if (simulato) {
+      try {
+        const risposta = await rispostaSimulata(q, userProfile?.id ?? '')
+        setMessaggi([...nuovi, { role: 'assistant', content: risposta }])
+      } catch {
+        setMessaggi([...nuovi, { role: 'assistant', content: 'Non sono riuscito a leggere i dati. Riprova fra poco.' }])
+      } finally {
+        setPending(false)
+      }
+      return
+    }
     try {
       const esito = await askCopilot(nuovi, (chunk) => {
         setMessaggi((prev) => {
@@ -120,7 +137,7 @@ export function CopilotWidget() {
           </div>
           <div>
             <p className="text-sm font-semibold text-foreground">Assistente</p>
-            <p className="text-[11px] text-muted-foreground">Fai domande sui tuoi dati</p>
+            <p className="text-[11px] text-muted-foreground">{simulato ? 'Anteprima nella demo' : 'Fai domande sui tuoi dati'}</p>
           </div>
         </div>
         <button onClick={() => setOpen(false)} className="text-muted-foreground hover:text-foreground" aria-label="Chiudi">
@@ -131,8 +148,11 @@ export function CopilotWidget() {
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
         {messaggi.length === 0 && (
           <div className="space-y-2">
+            {simulato && (
+              <p className="rounded-lg bg-primary/5 px-3 py-2 text-xs text-foreground">{AVVISO_SIMULAZIONE}</p>
+            )}
             <p className="text-sm text-muted-foreground">Prova a chiedere:</p>
-            {SUGGERIMENTI.map((s) => (
+            {suggerimenti.map((s) => (
               <button
                 key={s}
                 onClick={() => invia(s)}

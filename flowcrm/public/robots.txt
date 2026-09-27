@@ -1,0 +1,4 @@
+# Gestionale privato: nessuna pagina va indicizzata, né sulla demo né sulle istanze clienti.
+# La pagina pubblica del prodotto è https://pmiflow.eu
+User-agent: *
+Disallow: /

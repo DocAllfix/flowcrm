@@ -356,9 +356,36 @@ Deno.serve(async (req) => {
   const { data: userData } = await sb.auth.getUser()
   if (!userData?.user) return new Response('Unauthorized', { status: 401, headers: cors })
 
+  // Demo: il Copilot costa (Azure OpenAI) e con la demo pubblica le credenziali
+  // dell'ospite stanno nella pagina. Nella demo l'interfaccia lo SIMULA con
+  // risposte costruite dai dati; qui si rifiuta prima di qualunque chiamata ad
+  // Azure, perché un blocco solo nell'interfaccia non ferma chi chiama l'API.
+  // Nel dubbio si rifiuta.
+  const [istanza, profilo] = await Promise.all([
+    sb.from('impostazioni_istanza').select('sola_lettura').maybeSingle(),
+    sb.from('user_profiles').select('manutentore').eq('id', userData.user.id).maybeSingle(),
+  ])
+  if (istanza.error || profilo.error) {
+    return new Response(JSON.stringify({ error: 'Verifica non riuscita, riprova' }), {
+      status: 503, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
+  if (istanza.data?.sola_lettura && !profilo.data?.manutentore) {
+    return new Response(JSON.stringify({ error: "L'assistente è disponibile nella versione completa." }), {
+      status: 403, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
+
   // Rate-limit per utente (backstop anti-abuso/costi). auth.uid() dal JWT.
-  const { data: rl } = await sb.rpc('copilot_rate_check')
-  if (rl && rl.allowed === false) {
+  // Se il controllo non risponde NON si procede: senza quota verificata una
+  // chiamata ad Azure è una spesa senza tetto.
+  const { data: rl, error: rlErrore } = await sb.rpc('copilot_rate_check')
+  if (rlErrore || !rl) {
+    return new Response(JSON.stringify({ error: 'Assistente momentaneamente non disponibile' }), {
+      status: 503, headers: { ...cors, 'Content-Type': 'application/json' },
+    })
+  }
+  if (rl.allowed === false) {
     return new Response(JSON.stringify({ error: rl.motivo ?? 'limite raggiunto' }), {
       status: 429, headers: { ...cors, 'Content-Type': 'application/json' },
     })
