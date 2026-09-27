@@ -6838,6 +6838,7 @@ export type Database = {
           created_at: string
           id: string
           manutentore: boolean
+          ospite_demo: boolean
           nome: string
           ruolo: Database["public"]["Enums"]["user_role"]
         }
@@ -6848,6 +6849,7 @@ export type Database = {
           created_at?: string
           id: string
           manutentore?: boolean
+          ospite_demo?: boolean
           nome: string
           ruolo?: Database["public"]["Enums"]["user_role"]
         }
@@ -6858,6 +6860,7 @@ export type Database = {
           created_at?: string
           id?: string
           manutentore?: boolean
+          ospite_demo?: boolean
           nome?: string
           ruolo?: Database["public"]["Enums"]["user_role"]
         }

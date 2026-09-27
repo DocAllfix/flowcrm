@@ -1,24 +1,65 @@
 -- ═══════════════════════════════════════════════════════════════════
--- Dati dimostrativi della DEMO PMIFlow (demo.pmiflow.eu), per i video e
--- per i clienti. Scritto il 26/09/2026.
+-- DEMO PUBBLICA di PMIFlow (demo.pmiflow.eu): dati dimostrativi e
+-- RIPRISTINO NOTTURNO. Solo per il database della demo (ref
+-- ozwqvriqhkckzxcumelr): non è una migrazione per tutte le istanze.
 --
--- RIPETIBILE: le date sono relative a current_date, quindi quando la demo
--- invecchia (tutto «scaduto») si rilancia così com'è e torna credibile.
--- Tutto in un blocco: o passa tutto o non cambia niente.
+-- Il visitatore della demo pubblica lavora davvero sui dati (sposta
+-- trattative, emette fatture, segna incassi). Ogni notte pg_cron chiama
+-- `ripristina_demo()` e tutto torna come nuovo, con date relative a oggi.
 --
--- Come si lancia (token in ~/.config/flotta/supabase.env): con la
--- Management API, POST /v1/projects/<ref>/database/query col contenuto
--- del file, oppure incollandolo nel SQL Editor del pannello Supabase.
--- Gira come postgres, quindi il blocco di sola lettura non lo ferma.
+-- Lanciare questo file = INSTALLARE o AGGIORNARE (funzioni e job).
+-- Ripristinare subito, a mano:   SELECT public.ripristina_demo();
+-- Come si lancia: Management API (POST /v1/projects/<ref>/database/query,
+-- token in ~/.config/flotta/supabase.env) o SQL Editor del pannello.
+-- Gira come postgres: il blocco di sola lettura non lo ferma.
 --
--- SOLO per la demo: gli UUID di pipeline, fasi e utente titolare sono
--- quelli del progetto `flowcrm` (ref ozwqvriqhkckzxcumelr). L'utente
--- titolare.video@pmiflow.eu va creato prima dall'API di autenticazione;
--- la password sta in ~/.config/flotta/pmiflow-demo-video.env.
+-- Prerequisito: l'account ospite visita@pmiflow.eu, creato dall'API di
+-- autenticazione (password in ~/.config/flotta/pmiflow-demo-pubblica.env).
+--
+-- REGOLA d'oro, da Legisboard: il ripristino deve reggere a QUALUNQUE
+-- cosa abbia fatto un visitatore. Uno che fallisce per colpa di un
+-- visitatore fallisce ogni notte, per sempre. Per questo le anagrafiche
+-- tornano a una FOTOGRAFIA per identificativo, non si cercano per nome.
 -- ═══════════════════════════════════════════════════════════════════
-DO $$
+
+-- ── Fotografia delle anagrafiche buone (presa alla PRIMA installazione) ──
+-- Schema a parte: PostgREST espone solo `public`, quindi nessun utente la
+-- legge dall'API. IF NOT EXISTS: rilanciare il file non la sovrascrive con
+-- dati magari già toccati dai visitatori. Per rifarla: DROP SCHEMA demo_seme CASCADE.
+CREATE SCHEMA IF NOT EXISTS demo_seme;
+REVOKE ALL ON SCHEMA demo_seme FROM PUBLIC, anon, authenticated;
+CREATE TABLE IF NOT EXISTS demo_seme.organizzazioni       AS SELECT * FROM public.organizzazioni;
+CREATE TABLE IF NOT EXISTS demo_seme.organizzazioni_ruoli AS SELECT * FROM public.organizzazioni_ruoli;
+CREATE TABLE IF NOT EXISTS demo_seme.contatti             AS SELECT * FROM public.contatti;
+CREATE TABLE IF NOT EXISTS demo_seme.cantieri             AS SELECT * FROM public.cantieri;
+CREATE TABLE IF NOT EXISTS demo_seme.cantiere_sal         AS SELECT * FROM public.cantiere_sal;
+-- Le fatture si ricreano a ogni ripristino con identificativi nuovi: il SAL
+-- non deve puntare a quelle di oggi. Il collegamento lo rifà il seme (passo 6).
+UPDATE demo_seme.cantiere_sal SET fattura_id = NULL;
+
+-- Riporta le righe di una tabella ai valori della fotografia, colonna per
+-- colonna (escluse id, date di sistema e colonne generate come `ricerca`).
+CREATE OR REPLACE FUNCTION public.ripristina_da_seme(p_tabella text)
+RETURNS void
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog AS $fn$
 DECLARE
-  U  uuid := '20cf924e-6dc9-401f-9ff4-f506eb042455';           -- titolare dei video
+  v_set text;
+BEGIN
+  SELECT string_agg(format('%I = s.%I', column_name, column_name), ', ')
+    INTO v_set
+    FROM information_schema.columns
+   WHERE table_schema = 'public' AND table_name = p_tabella
+     AND column_name NOT IN ('id', 'created_at', 'updated_at')
+     AND is_generated = 'NEVER';
+  EXECUTE format('UPDATE public.%I t SET %s FROM demo_seme.%I s WHERE t.id = s.id', p_tabella, v_set, p_tabella);
+END $fn$;
+REVOKE ALL ON FUNCTION public.ripristina_da_seme(text) FROM PUBLIC, anon, authenticated;
+
+CREATE OR REPLACE FUNCTION public.ripristina_demo()
+RETURNS text
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog AS $ripristino$
+DECLARE
+  U  uuid;   -- l'ospite della demo pubblica: attività e trattative sono sue
   PIPE uuid := '912a30b5-0e68-4c0f-9a64-72c71845de75';
   S_PROP uuid := 'f2b37016-fd72-4998-ab51-bc003134f798';
   S_NEG  uuid := 'ff482997-80f5-4992-bc98-b3e6e4537d71';
@@ -34,12 +75,17 @@ DECLARE
   v_cant uuid;
   oggi date := current_date;
 BEGIN
-  -- ── 0. Profilo del titolare ─────────────────────────────────────
-  UPDATE user_profiles SET nome = 'Giulia', cognome = 'Martini', ruolo = 'admin', manutentore = false WHERE id = U;
-  IF NOT FOUND THEN RAISE EXCEPTION 'profilo del titolare mancante'; END IF;
+  -- ── 0. L'ospite: chi entra nella demo pubblica è «Giulia Martini», la titolare ──
+  SELECT id INTO U FROM auth.users WHERE email = 'visita@pmiflow.eu';
+  IF U IS NULL THEN RAISE EXCEPTION 'account ospite visita@pmiflow.eu mancante'; END IF;
+  UPDATE user_profiles SET nome = 'Giulia', cognome = 'Martini', ruolo = 'admin',
+         manutentore = false, ospite_demo = true, attivo = true WHERE id = U;
+  IF NOT FOUND THEN RAISE EXCEPTION 'profilo dell''ospite mancante'; END IF;
 
   -- ── 1. Pulizia: dati vecchi (luglio-agosto) e resti delle suite di test ──
-  DELETE FROM attivita WHERE gara_id IS NULL AND cantiere_id IS NULL AND automezzo_id IS NULL AND agente_id IS NULL;
+  -- Tutte: anche quelle del cantiere sono del seme, e un visitatore può crearne di
+  -- legate a un modulo, che altrimenti sopravvivrebbero a ogni ripristino.
+  DELETE FROM attivita;
   UPDATE cantiere_sal SET fattura_id = NULL WHERE fattura_id IS NOT NULL;
   -- Prima gli incassi, poi le fatture: una fattura con un incasso registrato
   -- è protetta dalla cancellazione (protect_fattura_delete), e al secondo lancio
@@ -50,20 +96,23 @@ BEGIN
   DELETE FROM commesse;
   DELETE FROM deal_stage_history;
   DELETE FROM deals;
-  DELETE FROM milestone WHERE progetto_id IN (SELECT id FROM progetti WHERE nome = 'Prova CRM');
-  DELETE FROM progetti WHERE nome = 'Prova CRM';
-  DELETE FROM contatti WHERE (nome, coalesce(cognome, '')) IN (('A','B'),('PINCO','PALLA'),('S','V'),('Mario',''))
-                          OR (nome = 'Mario' AND cognome = 'Rossi' AND email IS NULL);
-  DELETE FROM organizzazioni_ruoli WHERE organizzazione_id IN (
-    SELECT id FROM organizzazioni WHERE ragione_sociale ~ '^(Cliente Fatt|Org F7|Alfa|Beta) [0-9]{13}' OR ragione_sociale = 'jnsjnj');
-  DELETE FROM organizzazioni WHERE ragione_sociale ~ '^(Cliente Fatt|Org F7|Alfa|Beta) [0-9]{13}' OR ragione_sociale = 'jnsjnj';
-  -- ripetibilità: le quattro aziende che questo script crea, con i loro contatti
-  DELETE FROM contatti WHERE organizzazione_id IN (SELECT id FROM organizzazioni WHERE ragione_sociale IN
-    ('Autotrasporti Bassi Srl', 'Studio Ferri Commercialisti', 'Tecnoservice Srl', 'Edil Garda Srl'));
-  DELETE FROM organizzazioni_ruoli WHERE organizzazione_id IN (SELECT id FROM organizzazioni WHERE ragione_sociale IN
-    ('Autotrasporti Bassi Srl', 'Studio Ferri Commercialisti', 'Tecnoservice Srl', 'Edil Garda Srl'));
-  DELETE FROM organizzazioni WHERE ragione_sociale IN
-    ('Autotrasporti Bassi Srl', 'Studio Ferri Commercialisti', 'Tecnoservice Srl', 'Edil Garda Srl');
+  -- ── 1b. Anagrafiche, cantiere e SAL riportati alla FOTOGRAFIA (demo_seme) ──
+  -- Per identificativo, non per nome: un visitatore può rinominare «Studio Blu»,
+  -- e un ripristino che cerca per nome si romperebbe ogni notte, per sempre.
+  -- I visitatori non cancellano (lo vieta il database), quindi le righe della
+  -- fotografia ci sono sempre; quelle in più sono dei visitatori e se ne vanno.
+  DELETE FROM organizzazioni_ruoli;
+  INSERT INTO organizzazioni_ruoli SELECT * FROM demo_seme.organizzazioni_ruoli;
+  PERFORM ripristina_da_seme('organizzazioni');
+  PERFORM ripristina_da_seme('contatti');
+  -- un'azienda del visitatore può avere per referente un contatto del visitatore
+  UPDATE organizzazioni SET referente_principale_id = NULL
+   WHERE id NOT IN (SELECT id FROM demo_seme.organizzazioni);
+  DELETE FROM contatti WHERE id NOT IN (SELECT id FROM demo_seme.contatti);
+  DELETE FROM organizzazioni WHERE id NOT IN (SELECT id FROM demo_seme.organizzazioni);
+  DELETE FROM cantiere_sal WHERE id NOT IN (SELECT id FROM demo_seme.cantiere_sal);
+  PERFORM ripristina_da_seme('cantiere_sal');
+  PERFORM ripristina_da_seme('cantieri');
 
   -- ── 2. Anagrafiche ──────────────────────────────────────────────
   SELECT id INTO o_verdi   FROM organizzazioni WHERE ragione_sociale = 'Verdi Software SRL';
@@ -79,20 +128,13 @@ BEGIN
     RAISE EXCEPTION 'anagrafica esistente non trovata';
   END IF;
 
-  INSERT INTO organizzazioni (ragione_sociale, settore, citta, provincia, dipendenti)
-    VALUES ('Autotrasporti Bassi Srl', 'Logistica', 'Brescia', 'BS', 24) RETURNING id INTO o_bassi;
-  INSERT INTO organizzazioni (ragione_sociale, settore, citta, provincia, dipendenti)
-    VALUES ('Studio Ferri Commercialisti', 'Consulenza fiscale', 'Cremona', 'CR', 9) RETURNING id INTO o_ferri;
-  INSERT INTO organizzazioni (ragione_sociale, settore, citta, provincia, dipendenti)
-    VALUES ('Tecnoservice Srl', 'Manutenzioni', 'Mantova', 'MN', 15) RETURNING id INTO o_tecno;
-  INSERT INTO organizzazioni (ragione_sociale, settore, citta, provincia, dipendenti)
-    VALUES ('Edil Garda Srl', 'Edilizia', 'Desenzano del Garda', 'BS', 32) RETURNING id INTO o_garda;
-
-  INSERT INTO contatti (nome, cognome, ruolo_aziendale, organizzazione_id) VALUES
-    ('Marco', 'Bassi', 'Titolare', o_bassi),
-    ('Elena', 'Ferri', 'Socia', o_ferri),
-    ('Davide', 'Conti', 'Responsabile tecnico', o_tecno),
-    ('Paolo', 'Lanfranchi', 'Direttore tecnico', o_garda);
+  SELECT id INTO o_bassi FROM organizzazioni WHERE ragione_sociale = 'Autotrasporti Bassi Srl';
+  SELECT id INTO o_ferri FROM organizzazioni WHERE ragione_sociale = 'Studio Ferri Commercialisti';
+  SELECT id INTO o_tecno FROM organizzazioni WHERE ragione_sociale = 'Tecnoservice Srl';
+  SELECT id INTO o_garda FROM organizzazioni WHERE ragione_sociale = 'Edil Garda Srl';
+  IF o_bassi IS NULL OR o_ferri IS NULL OR o_tecno IS NULL OR o_garda IS NULL THEN
+    RAISE EXCEPTION 'anagrafica del seme non trovata';
+  END IF;
   SELECT id INTO c_bianchi FROM contatti WHERE nome = 'Laura' AND cognome = 'Bianchi';
   SELECT id INTO c_rossi   FROM contatti WHERE nome = 'Marco' AND cognome = 'Rossi';
 
@@ -209,4 +251,20 @@ BEGIN
   -- ── 9. Progetti: date da oggi ───────────────────────────────────
   UPDATE progetti SET scadenza = oggi + 35 WHERE nome = 'Sito e-commerce Verdi';
   UPDATE progetti SET scadenza = oggi + 50 WHERE nome = 'Migrazione gestionale interno';
-END $$;
+  -- ── 10. Sessioni dell'ospite: una per ingresso, crescono. Via quelle di ieri. ──
+  -- Un errore qui non deve far fallire il ripristino dei dati.
+  BEGIN
+    DELETE FROM auth.sessions WHERE user_id = U AND created_at < now() - interval '1 day';
+  EXCEPTION WHEN OTHERS THEN
+    RAISE WARNING 'pulizia sessioni non riuscita: %', SQLERRM;
+  END;
+
+  RETURN 'ripristinata ' || to_char(now() AT TIME ZONE 'Europe/Rome', 'DD/MM/YYYY HH24:MI');
+END $ripristino$;
+
+REVOKE ALL ON FUNCTION public.ripristina_demo() FROM PUBLIC, anon, authenticated;
+
+-- ── Ogni notte alle 2:00 UTC (le 3 o le 4 in Italia) ────────────────
+SELECT cron.unschedule(jobid) FROM cron.job WHERE jobname = 'ripristino-demo';
+SELECT cron.schedule('ripristino-demo', '0 2 * * *', 'SELECT public.ripristina_demo()');
+

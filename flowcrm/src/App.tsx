@@ -12,6 +12,8 @@ import { AttesaCentrata } from '@/components/ui/spinner'
 import { LoginPage } from '@/pages/auth/LoginPage'
 import { RecuperoPasswordPage } from '@/pages/auth/RecuperoPasswordPage'
 import { NuovaPasswordPage } from '@/pages/auth/NuovaPasswordPage'
+import { DemoPubblicaPage } from '@/pages/auth/DemoPubblicaPage'
+import { demoPubblicaAttiva } from '@/lib/demo'
 
 /**
  * ── Perché le pagine interne sono pigre ─────────────────────────────
@@ -72,6 +74,9 @@ export default function App() {
             verificato il token del messaggio (MAILER_URLPATHS_RECOVERY). */}
         <Route path="/recupero" element={<RecuperoPasswordPage />} />
         <Route path="/auth/recupero" element={<NuovaPasswordPage />} />
+        {/* Demo pubblica: esiste solo se l'istanza ha le credenziali dell'ospite
+            (build della demo su Vercel). Altrove /demo è una pagina non trovata. */}
+        {demoPubblicaAttiva() && <Route path="/demo" element={<DemoPubblicaPage />} />}
         <Route element={<AppLayout />}>
           {/* Un solo Suspense attorno a tutte le rotte interne: la shell
               (barra laterale e intestazione) resta in piedi mentre la
