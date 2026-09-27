@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export function ProfiloPage() {
-  const { userProfile } = useAuth()
+  const { userProfile, istanzaDemo } = useAuth()
   const updateProfile = useUpdateProfile()
   const [nome, setNome] = useState(userProfile?.nome ?? '')
   const [cognome, setCognome] = useState(userProfile?.cognome ?? '')
@@ -18,6 +18,10 @@ export function ProfiloPage() {
   const [savingPwd, setSavingPwd] = useState(false)
 
   if (!userProfile) return null
+
+  // Nella demo le credenziali di chi non è manutentore sono bloccate nel database
+  // (G-36): GoTrue risponderebbe con un errore 500 generico. Meglio dirlo prima.
+  const credenzialiBloccate = istanzaDemo && !userProfile.manutentore
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -65,6 +69,14 @@ export function ProfiloPage() {
         </Button>
       </form>
 
+      {credenzialiBloccate ? (
+        <section className="mt-6 space-y-1 rounded-lg border border-border bg-card p-6">
+          <h2 className="text-title text-foreground">Sicurezza</h2>
+          <p className="text-sm text-muted-foreground">
+            Nella demo le credenziali dell&apos;account non si cambiano: l&apos;account è condiviso da tutti i visitatori.
+          </p>
+        </section>
+      ) : (
       <form
         onSubmit={handlePassword}
         className="mt-6 space-y-4 rounded-lg border border-border bg-card p-6"
@@ -87,6 +99,7 @@ export function ProfiloPage() {
           {savingPwd ? 'Aggiornamento…' : 'Aggiorna password'}
         </Button>
       </form>
+      )}
     </div>
   )
 }
