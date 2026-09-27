@@ -1135,11 +1135,19 @@ un errore della build. Versione giusta, che esce SOLO con 0 o 1:
 
 ```sh
 P="$VERCEL_GIT_PREVIOUS_SHA"; [ -n "$P" ] || exit 1
+[ "$P" = "$VERCEL_GIT_COMMIT_SHA" ] && exit 1
 git cat-file -e "$P^{commit}" 2>/dev/null || git fetch --quiet --depth=1 origin "$P" 2>/dev/null || exit 1
 git diff --quiet "$P" HEAD -- . && exit 0 || exit 1
 ```
 Nel dubbio si compila: un rilascio in più è meglio di uno in meno.
 
-**VERIFICATO** — 2026-09-27: provata in locale sui quattro casi (variabile vuota → 1,
-cartella cambiata → 1, nessuna modifica → 0, commit inesistente → 1), poi sui due
-progetti Vercel al rilascio seguente.
+⚠️ Terza trappola, la riga `[ "$P" = "$VERCEL_GIT_COMMIT_SHA" ]`: senza, un rilascio
+richiesto apposta sullo **stesso commit** (per esempio dopo aver cambiato le variabili
+d'ambiente) veniva annullato, perché «dal commit dell'ultimo rilascio non è cambiato
+niente». Le variabili però sì. Rilasciare lo stesso commit è sempre una scelta voluta,
+quindi si compila; un push normale porta sempre un commit nuovo e resta filtrato.
+
+**VERIFICATO** — 2026-09-27: provata in locale (variabile vuota → 1, cartella cambiata
+→ 1, nessuna modifica su commit nuovo → 0, stesso commit → 1, commit inesistente → 1).
+Sul campo: la prima versione ha dato ERRORE sulla landing, la seconda ha annullato i
+rilasci con le variabili della demo pubblica, la terza è quella qui sopra.
