@@ -1125,9 +1125,21 @@ l'ultimo toccava solo `flowcrm/`, quindi la landing ha deciso di non compilare, 
 se commit precedenti dello stesso push l'avevano cambiata. Legisboard aveva lo stesso
 difetto («il filtro delle build saltava anche le ridistribuzioni volute»).
 
-**RIMEDIO** — Confrontare con l'ultimo rilascio riuscito:
-`test -n "$VERCEL_GIT_PREVIOUS_SHA" && git diff --quiet "$VERCEL_GIT_PREVIOUS_SHA" HEAD -- .`
-Se la variabile manca o il commit non è nel clone, il comando fallisce e si compila:
-nel dubbio, un rilascio in più è meglio di uno in meno.
+**RIMEDIO** — Confrontare con l'ultimo rilascio riuscito (`$VERCEL_GIT_PREVIOUS_SHA`).
 
-**VERIFICATO** — 2026-09-27: vedi il rilascio successivo a questa voce.
+⚠️ La prima versione (`test -n "$P" && git diff --quiet "$P" HEAD -- .`) ha mandato la
+build della landing in **ERRORE**: il clone di Vercel è superficiale, il commit
+dell'ultimo rilascio non c'è, e `git diff` esce con **128**. Vercel non legge ogni
+codice diverso da 0 come «compila»: conosce solo 0 (salta) e 1 (compila), il resto è
+un errore della build. Versione giusta, che esce SOLO con 0 o 1:
+
+```sh
+P="$VERCEL_GIT_PREVIOUS_SHA"; [ -n "$P" ] || exit 1
+git cat-file -e "$P^{commit}" 2>/dev/null || git fetch --quiet --depth=1 origin "$P" 2>/dev/null || exit 1
+git diff --quiet "$P" HEAD -- . && exit 0 || exit 1
+```
+Nel dubbio si compila: un rilascio in più è meglio di uno in meno.
+
+**VERIFICATO** — 2026-09-27: provata in locale sui quattro casi (variabile vuota → 1,
+cartella cambiata → 1, nessuna modifica → 0, commit inesistente → 1), poi sui due
+progetti Vercel al rilascio seguente.
