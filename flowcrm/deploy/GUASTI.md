@@ -1110,3 +1110,24 @@ al sito.
 
 **VERIFICATO** — 2026-09-27: codice e versione della libreria controllati; prova con
 tre browser insieme nel collaudo dell'accensione.
+
+---
+
+## G-41 · La landing non si è ridistribuita dopo la fusione
+
+**SINTOMO** — Dopo la fusione della PR #7 (più commit, fra cui uno sulla landing) il
+rilascio di `pmiflow-landing` risulta CANCELED: le modifiche alla privacy e al
+pulsante della demo non sono andate online.
+
+**CAUSA** — L'`ignoreCommand` era `git diff --quiet HEAD^ HEAD -- .`: confronta solo
+l'ultimo commit con il suo genitore. Una fusione porta più commit in un solo push;
+l'ultimo toccava solo `flowcrm/`, quindi la landing ha deciso di non compilare, anche
+se commit precedenti dello stesso push l'avevano cambiata. Legisboard aveva lo stesso
+difetto («il filtro delle build saltava anche le ridistribuzioni volute»).
+
+**RIMEDIO** — Confrontare con l'ultimo rilascio riuscito:
+`test -n "$VERCEL_GIT_PREVIOUS_SHA" && git diff --quiet "$VERCEL_GIT_PREVIOUS_SHA" HEAD -- .`
+Se la variabile manca o il commit non è nel clone, il comando fallisce e si compila:
+nel dubbio, un rilascio in più è meglio di uno in meno.
+
+**VERIFICATO** — 2026-09-27: vedi il rilascio successivo a questa voce.

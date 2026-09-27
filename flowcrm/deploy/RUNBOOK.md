@@ -413,8 +413,12 @@ progetto separato, e un suo difetto non tocca la demo, né viceversa.
 | token | `~/.config/flotta/vercel.env` → `VERCEL_TOKEN`; `~/.config/flotta/hostinger.env` → `HOSTINGER_API_TOKEN` |
 | vincolo | **nessun prezzo**, in nessuna pagina (decisione del committente, 24/09/2026) |
 
-Entrambi i `vercel.json` hanno `ignoreCommand: git diff --quiet HEAD^ HEAD -- .`,
-quindi un push che tocca solo una cartella non ricompila l'altro progetto.
+Entrambi i `vercel.json` hanno un `ignoreCommand` che confronta la cartella con
+**l'ultimo rilascio riuscito** (`$VERCEL_GIT_PREVIOUS_SHA`), quindi un push che tocca
+solo una cartella non ricompila l'altro progetto. Nel dubbio (variabile assente,
+commit non presente nel clone) il comando fallisce e **si compila**. Il confronto
+con il solo commit precedente (`HEAD^`) saltava le modifiche portate da una fusione
+di più commit: vedi GUASTI G-41.
 
 ### Rilascio
 
