@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PaginaTesto } from "@/componenti/PaginaTesto";
-import { CONTATTI_ATTIVI, IMPRESA, LEGALI_AGGIORNATI_AL } from "@/lib/sito";
+import { CONTATTI_ATTIVI, DEMO_ATTIVA, IMPRESA, LEGALI_AGGIORNATI_AL } from "@/lib/sito";
 
 export const metadata: Metadata = {
   title: "Informativa sulla privacy",
@@ -55,12 +55,30 @@ export default function Privacy() {
         </>
       )}
 
+      {DEMO_ATTIVA && (
+        <>
+          <h2>Se entri nella demo</h2>
+          <p>
+            La demo si apre senza registrazione, con un account dimostrativo condiviso: non ti chiediamo nome né email. Il
+            servizio che la ospita registra, come ogni accesso, indirizzo IP e data, per sicurezza e per limitare gli
+            abusi. Base giuridica: legittimo interesse (art. 6.1.f GDPR). I dati che inserisci nella demo sono visibili
+            agli altri visitatori e vengono cancellati ogni notte: non inserire dati reali.
+          </p>
+        </>
+      )}
+
       <h2>Chi tratta i dati per nostro conto</h2>
       <ul>
         <li>
           <strong>Vercel Inc.</strong> (Stati Uniti), che ospita il sito. Il trasferimento è coperto dal Data Privacy
           Framework UE-USA e dalle clausole contrattuali standard.
         </li>
+        {DEMO_ATTIVA && (
+          <li>
+            <strong>Supabase</strong>, con il database della demo nell&apos;Unione Europea (Francoforte): registra gli
+            accessi alla demo.
+          </li>
+        )}
         {CONTATTI_ATTIVI && (
           <li>
             <strong>Il servizio di invio email</strong> che recapita le richieste del modulo.
