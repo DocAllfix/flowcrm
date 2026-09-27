@@ -37,7 +37,7 @@ Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`.
 9. **DNS**: `<cliente>.flowcrm.com` → A/CNAME verso il server (wildcard
    `*.flowcrm.com` sul dominio principale).
 10. **Backup**: `pg_dump` notturno + copia off-site; test di restore documentato.
-11. **Seed demo** (solo istanze dimostrative): `seed_demo_moduli.sql` per i moduli, poi `demo-dati-dimostrativi.sql` per CRM, amministrazione e cantiere. Il secondo INSTALLA la demo pubblica: fotografia delle anagrafiche in `demo_seme`, funzione `ripristina_demo()` e job pg_cron notturno (2:00 UTC). Ripristino immediato a mano: `SELECT public.ripristina_demo();`. Prerequisito: l'account ospite `visita@pmiflow.eu`.
+11. **Seed demo** (solo istanze dimostrative): `seed_demo_moduli.sql` per i moduli, poi `demo-dati-dimostrativi.sql` per CRM, amministrazione e cantiere. Il secondo INSTALLA la demo pubblica: fotografia delle anagrafiche in `demo_seme`, funzione `ripristina_demo()` e job pg_cron notturno (2:00 UTC). Ripristino immediato a mano: `SELECT public.ripristina_demo();`. Prerequisito: l'account ospite, descritto in testa al file.
 
 ## Checklist di consegna (da eseguire a ogni installazione)
 
