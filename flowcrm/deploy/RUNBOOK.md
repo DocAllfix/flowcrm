@@ -463,3 +463,44 @@ Procedura usata, da ripetere identica per un nuovo dominio:
    è stato emesso: chiederlo con `POST /v8/certs` e `{"cns":["<dominio>","www.<dominio>"]}`.
    Vedi GUASTI G-37.
 7. `curl -sI https://pmiflow.eu` → 200 con HSTS; `https://pmiflow.it` e `www` → 308.
+
+---
+
+## Demo pubblica (demo.pmiflow.eu/demo)
+
+Ingresso con un clic dalla landing, senza credenziali: il visitatore entra come
+**ospite** (`visita@pmiflow.eu`, «Giulia Martini», admin, `ospite_demo = true`) e
+prova davvero. Ogni notte i dati tornano come nuovi. Modello preso da Legisboard.
+
+| | |
+|---|---|
+| cosa può l'ospite | inserire e modificare aziende, contatti, trattative, attività, commesse, fatture, incassi, scadenze fiscali, cantiere e SAL |
+| cosa non può | cancellare, caricare file, creare utenti, cambiare credenziali/metadati, toccare pipeline, profili, moduli, impostazioni; il Copilot vero (è simulato) |
+| dove sta la regola | nel database: `scrittura_demo_rifiutata()`, `scrittura_file_consentita()`, blocco credenziali; più `crea-utente` e `copilot` |
+| ripristino | `SELECT public.ripristina_demo();` — ogni notte alle 2:00 UTC (pg_cron, job `ripristino-demo`) |
+| installazione/aggiornamento del ripristino | lanciare `flowcrm/provisioning/demo-dati-dimostrativi.sql` sul database della demo |
+| credenziali dell'ospite | `~/.config/flotta/pmiflow-demo-pubblica.env`, e nelle variabili `VITE_DEMO_PUBBLICA_EMAIL/PASSWORD` del progetto Vercel `pmiflow-demo` |
+
+Le credenziali sono leggibili nel bundle: è voluto. Ogni permesso dell'ospite sta
+nel database, quindi chi le usa da script ha gli stessi limiti dell'interfaccia.
+Prova ripetibile: la prova di vandalismo (22 operazioni, permesse e rifiutate)
+descritta in GUASTI G-38.
+
+### Il ripristino
+- Anagrafiche, ruoli, cantiere e SAL tornano alla **fotografia** in `demo_seme`
+  (schema non esposto all'API), per identificativo, mai per nome.
+- Tutto il resto (trattative, commesse, fatture, incassi, tasse, attività) si
+  ricrea con date relative a oggi.
+- Via le righe create dai visitatori, e le sessioni dell'ospite più vecchie di un giorno.
+- Verificare che giri: `select * from cron.job_run_details where jobid =
+  (select jobid from cron.job where jobname = 'ripristino-demo') order by start_time desc limit 3;`
+- Rifare la fotografia (per esempio dopo aver cambiato il seme):
+  `DROP SCHEMA demo_seme CASCADE;` e rilanciare il file di provisioning **a demo pulita**.
+
+### Spegnerla in un minuto
+1. Landing: togliere `NEXT_PUBLIC_DEMO_ATTIVA` dal progetto `pmiflow-landing` e ridistribuire
+   (i pulsanti spariscono).
+2. Demo: togliere `VITE_DEMO_PUBBLICA_EMAIL/PASSWORD` da `pmiflow-demo` e ridistribuire
+   (`/demo` smette di esistere).
+3. Se le credenziali sono state abusate: cambiare la password dell'ospite **da SQL**
+   (il blocco credenziali vale per GoTrue) e aggiornare il file in `~/.config/flotta/`.

@@ -1052,3 +1052,61 @@ Trappola collegata: il PC risolveva ancora `pmiflow.eu` su 127.0.0.1 per la
 cache DNS di Windows. `Clear-DnsClientCache` e si allinea.
 
 **VERIFICATO** — 2026-09-24: certificati emessi per `.eu` e `.it` (scadenza 23/12/2026); `https://pmiflow.eu` 200 con HSTS, `www` e `.it` in 308, gate SEO verde sul dominio vero.
+
+---
+
+## G-38 · La sola lettura della demo non copriva i file
+
+**SINTOMO** — Analizzando la demo pubblica: un utente della demo in sola lettura
+poteva **caricare file** nel bucket `allegati` (fino a 50 MB, nella sua cartella) e,
+se amministratore, **cancellare tutti gli allegati**.
+
+**CAUSA** — Il blocco di sola lettura è un trigger sulle tabelle di `public`; i file
+stanno in `storage.objects`, con regole proprie che non lo conoscevano. E la funzione
+esistente `puo_scrivere()` non sarebbe bastata: esenta le sessioni che non passano da
+PostgREST, e lo storage si collega al database come `supabase_storage_admin`.
+
+**RIMEDIO** — `scrittura_file_consentita()` (interruttore d'istanza + `manutentore` di
+`auth.uid()`, nessuna esenzione per sessione) nelle regole INSERT e DELETE del bucket.
+Migrazione `20260927000001_demo_ospite.sql`.
+
+**VERIFICATO** — 2026-09-27: prova di vandalismo con le credenziali dell'ospite da
+script: caricamento file rifiutato (403 della regola). Nella stessa prova, 22 operazioni:
+11 permesse passano, 11 vietate sono rifiutate con il messaggio giusto; dopo
+`ripristina_demo()` lo stato è identico al seme, campo per campo, senza residui.
+
+---
+
+## G-39 · Chiunque entrasse in demo come admin poteva creare utenti
+
+**SINTOMO** — La funzione `crea-utente` creava account veri anche sull'istanza in sola lettura.
+
+**CAUSA** — Controllava solo il ruolo del chiamante. L'utente si crea con la chiave di
+servizio, che scavalca il blocco del database.
+
+**RIMEDIO** — In sola lettura, 403 «Nella demo non si creano utenti» per chi non è
+manutentore; nel dubbio (lettura fallita) 503. Stessa guardia nel `copilot`, che costa
+(Azure OpenAI), più il rifiuto se il controllo quota non risponde (prima procedeva).
+Da `puo_scrivere()` non si può leggere: per l'ospite risponde sì, serve all'interfaccia.
+
+**VERIFICATO** — 2026-09-27: dalla prova di vandalismo, `crea-utente` 403 e `copilot`
+403, senza chiamate ad Azure.
+
+---
+
+## G-40 · «Esci» avrebbe buttato fuori tutti i visitatori
+
+**SINTOMO** — Segnalato dalla sessione di Legisboard e confermato: con l'account
+condiviso della demo pubblica, un visitatore che esce scollega tutti gli altri.
+
+**CAUSA** — `signOut()` di supabase-js (2.110) revoca per impostazione **tutte** le
+sessioni dell'utente (`scope: 'global'`, auth-js). L'app lo chiamava in tre punti, due
+dei quali automatici in caso d'errore sul profilo.
+
+**RIMEDIO** — `signOut({ scope: 'local' })` nei tre punti. In più, con la demo pubblica
+attiva, una sessione caduta riporta a `/demo`, che rientra da solo: anche una revoca
+globale fatta apposta da uno script diventa invisibile. L'ospite che esce apposta torna
+al sito.
+
+**VERIFICATO** — 2026-09-27: codice e versione della libreria controllati; prova con
+tre browser insieme nel collaudo dell'accensione.
