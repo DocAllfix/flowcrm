@@ -1147,7 +1147,12 @@ d'ambiente) veniva annullato, perché «dal commit dell'ultimo rilascio non è c
 niente». Le variabili però sì. Rilasciare lo stesso commit è sempre una scelta voluta,
 quindi si compila; un push normale porta sempre un commit nuovo e resta filtrato.
 
-**VERIFICATO** — 2026-09-27: provata in locale (variabile vuota → 1, cartella cambiata
+⚠️ Quarta: `ignoreCommand` nel `vercel.json` non può superare **256 caratteri**
+(errore di validazione dello schema, build in ERRORE su tutti e due i progetti). La
+logica sta quindi in `scripts/vercel-salta-build.sh`, e i due `vercel.json` dicono solo
+`"ignoreCommand": "sh ../scripts/vercel-salta-build.sh"`.
+
+**VERIFICATO** — 2026-09-27: provato in locale (variabile vuota → 1, cartella cambiata
 → 1, nessuna modifica su commit nuovo → 0, stesso commit → 1, commit inesistente → 1).
-Sul campo: la prima versione ha dato ERRORE sulla landing, la seconda ha annullato i
-rilasci con le variabili della demo pubblica, la terza è quella qui sopra.
+Sul campo, quattro giri: ERRORE per il clone superficiale, rilasci annullati dopo il
+cambio delle variabili, ERRORE per i 256 caratteri, poi lo script.
