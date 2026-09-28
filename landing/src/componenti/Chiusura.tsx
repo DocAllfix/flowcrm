@@ -1,4 +1,4 @@
-import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO, IMPRESA, LEGALI_AGGIORNATI_AL } from "@/lib/sito";
+import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO, IMPRESA, LEGALI_AGGIORNATI_AL, datiImpresa, hrefTelefono } from "@/lib/sito";
 import { Freccia } from "./Freccia";
 import { Logotipo } from "./Intestazione";
 
@@ -39,13 +39,14 @@ const COLONNE = [
 ] as const;
 
 /**
- * Il piede. Ragione sociale, partita IVA e sede sono obbligatorie su un sito
- * commerciale italiano: si stampano quando esistono, e finché mancano
- * `verifica-seo.mjs` lo segnala invece di lasciar passare un piede vuoto.
+ * Il piede, su ogni pagina: è qui che stanno i dati legali dell'impresa (art. 7 d.lgs.
+ * 70/2003, P. IVA in home per l'art. 35 DPR 633/1972; vedi `IMPRESA` in lib/sito.ts).
+ * Si stampano quando esistono, e finché mancano `verifica-seo.mjs` lo segnala invece
+ * di lasciar passare un piede vuoto.
  */
 export function Piede() {
   const anno = LEGALI_AGGIORNATI_AL.slice(0, 4);
-  const legali = [IMPRESA.ragioneSociale, IMPRESA.sede, IMPRESA.partitaIva && `P. IVA ${IMPRESA.partitaIva}`].filter(Boolean);
+  const legali = datiImpresa();
   return (
     <footer className="sezione-notte bg-notte text-tenue-notte">
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_2fr]">
@@ -71,16 +72,28 @@ export function Piede() {
         </nav>
       </div>
       <div className="border-t border-filo-notte">
-        <p className="mx-auto w-full max-w-6xl px-4 py-6 text-[0.8125rem] sm:px-6">
-          © {anno} {legali.length ? legali.join(" · ") : "PMIFlow"}
-          {IMPRESA.email && (
-            <>
+        <p className="mx-auto w-full max-w-6xl px-4 py-6 text-[0.8125rem] leading-relaxed sm:px-6">
+          © {anno} PMIFlow
+          {legali.map(([etichetta, valore]) => (
+            <span key={etichetta}>
               {" · "}
-              <a href={`mailto:${IMPRESA.email}`} className="hover:text-carta">
-                {IMPRESA.email}
-              </a>
-            </>
-          )}
+              {etichetta === "Titolare" || etichetta === "Sede" ? (
+                valore
+              ) : etichetta === "Tel." ? (
+                <a href={hrefTelefono(valore)} className="whitespace-nowrap hover:text-carta">
+                  Tel. {valore}
+                </a>
+              ) : (
+                <span className="whitespace-nowrap">
+                  {etichetta} {valore}
+                </span>
+              )}
+            </span>
+          ))}
+          {" · "}
+          <a href={`mailto:${IMPRESA.email}`} className="hover:text-carta">
+            {IMPRESA.email}
+          </a>
         </p>
       </div>
     </footer>

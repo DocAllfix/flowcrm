@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PaginaTesto } from "@/componenti/PaginaTesto";
-import { LEGALI_AGGIORNATI_AL } from "@/lib/sito";
+import { IMPRESA, LEGALI_AGGIORNATI_AL, datiImpresa, hrefTelefono } from "@/lib/sito";
 
 export const metadata: Metadata = {
   title: "Termini di utilizzo del sito",
@@ -16,6 +16,18 @@ export default function Termini() {
         Questo sito presenta il servizio PMIFlow. Le informazioni pubblicate hanno scopo descrittivo e non costituiscono
         un&apos;offerta contrattuale: le condizioni del servizio sono quelle del contratto firmato con ciascun cliente.
       </p>
+      <h2>Chi gestisce il sito</h2>
+      <ul>
+        {datiImpresa().map(([etichetta, valore]) => (
+          <li key={etichetta}>
+            <strong>{etichetta === "Tel." ? "Telefono" : etichetta}:</strong>{" "}
+            {etichetta === "Tel." ? <a href={hrefTelefono(valore)}>{valore}</a> : valore}
+          </li>
+        ))}
+        <li>
+          <strong>Email:</strong> <a href={`mailto:${IMPRESA.email}`}>{IMPRESA.email}</a>
+        </li>
+      </ul>
       <h2>Proprietà dei contenuti</h2>
       <p>
         Testi, marchio PMIFlow e grafica del sito appartengono ai rispettivi titolari. Puoi citarli con indicazione della
