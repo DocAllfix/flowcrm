@@ -9,6 +9,7 @@ import { VistaModuloProvider } from '@/components/layout/VistaModuloContext'
 import { CommandPalette } from '@/components/CommandPalette'
 import { Spinner } from '@/components/ui/spinner'
 import { CopilotWidget } from '@/components/CopilotWidget'
+import { InvitoContatto } from '@/components/InvitoContatto'
 import { TourAutoStarter } from '@/lib/onboarding/TourAutoStarter'
 import { demoPubblicaAttiva } from '@/lib/demo'
 
@@ -89,6 +90,7 @@ export function AppLayout() {
         </div>
         <CommandPalette />
         <CopilotWidget />
+        <InvitoContatto />
         <TourAutoStarter />
       </div>
     </VistaModuloProvider>

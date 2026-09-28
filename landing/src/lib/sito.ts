@@ -21,10 +21,21 @@ export const URL_DEMO = process.env.NEXT_PUBLIC_URL_DEMO ?? "https://demo.pmiflo
 export const DEMO_ATTIVA = process.env.NEXT_PUBLIC_DEMO_ATTIVA === "1";
 
 /**
- * Il modulo contatti si mostra solo se c'è chi riceve. Letto al BUILD: la pagina resta
- * statica. Un modulo che dice «inviato» senza che niente parta è peggio di nessun modulo.
+ * Titolare del trattamento: una PERSONA FISICA (decisione del committente, 28/09/2026).
+ * L'art. 13 GDPR vuole identità e recapito del titolare AL MOMENTO della raccolta:
+ * senza il nome il modulo non si accende, anche se l'interruttore dice di sì.
  */
-export const CONTATTI_ATTIVI = process.env.NEXT_PUBLIC_CONTATTI_ATTIVI === "1";
+export const TITOLARE = process.env.NEXT_PUBLIC_TITOLARE ?? "";
+
+/** Casella che riceve le richieste di sito e demo, e recapito del titolare. */
+export const EMAIL_CONTATTI = process.env.NEXT_PUBLIC_EMAIL_CONTATTI ?? "contatti@pmiflow.eu";
+
+/**
+ * Il modulo contatti si mostra solo se c'è chi riceve e c'è un titolare da nominare.
+ * Letto al BUILD: la pagina resta statica. Un modulo che dice «inviato» senza che niente
+ * parta è peggio di nessun modulo.
+ */
+export const CONTATTI_ATTIVI = process.env.NEXT_PUBLIC_CONTATTI_ATTIVI === "1" && TITOLARE !== "";
 
 /**
  * Dati dell'impresa per il piede e per `Organization`. Obbligatori per legge su un sito
@@ -39,7 +50,7 @@ export const IMPRESA = {
 };
 
 /** Data vera dell'ultima revisione dei testi legali: la stessa stampata in pagina. */
-export const LEGALI_AGGIORNATI_AL = "2026-09-24";
+export const LEGALI_AGGIORNATI_AL = "2026-09-28";
 
 /**
  * JSON dentro `<script type="application/ld+json">`. Si neutralizzano `<` e `>` perché

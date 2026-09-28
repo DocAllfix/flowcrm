@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
-import { DEMO_PUBBLICA } from '@/lib/demo'
+import { DEMO_PUBBLICA, LEGALI_DEMO } from '@/lib/demo'
 import { MarchioCliente } from '@/components/layout/MarchioCliente'
 import { Spinner } from '@/components/ui/spinner'
 
@@ -55,6 +55,14 @@ export function DemoPubblicaPage() {
             <p className="text-sm text-muted-foreground">Apertura della demo…</p>
           </div>
         )}
+        <p className="mt-10 space-x-3 text-xs text-muted-foreground">
+          <a href={LEGALI_DEMO.privacy} className="hover:underline">
+            Privacy
+          </a>
+          <a href={LEGALI_DEMO.cookie} className="hover:underline">
+            Cookie
+          </a>
+        </p>
       </div>
     </main>
   )
