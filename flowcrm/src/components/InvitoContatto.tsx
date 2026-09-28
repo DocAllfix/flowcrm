@@ -57,10 +57,20 @@ export function InvitoContatto() {
   const memoria = useRef<Memoria | null>(null)
   const apertoIl = useRef(0)
 
+  const attesa = useRef(0)
   const mostra = useCallback(() => {
     if (memoria.current?.chiuso) return
+    // ⚠️ Durante il giro guidato l'overlay di driver.js copre la pagina e l'invito
+    // non sarebbe cliccabile: si aspetta che il giro finisca.
+    if (document.body.classList.contains('driver-active')) {
+      window.clearTimeout(attesa.current)
+      attesa.current = window.setTimeout(mostra, 2000)
+      return
+    }
     setFase((f) => (f === 'nascosto' ? 'invito' : f))
   }, [])
+
+  useEffect(() => () => window.clearTimeout(attesa.current), [])
 
   // Tempo: parte dal primo ingresso nella sessione, non da ogni ricarica.
   useEffect(() => {

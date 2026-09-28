@@ -1156,3 +1156,20 @@ logica sta quindi in `scripts/vercel-salta-build.sh`, e i due `vercel.json` dico
 → 1, nessuna modifica su commit nuovo → 0, stesso commit → 1, commit inesistente → 1).
 Sul campo, quattro giri: ERRORE per il clone superficiale, rilasci annullati dopo il
 cambio delle variabili, ERRORE per i 256 caratteri, poi lo script.
+
+---
+
+## G-42 · L'invito al contatto compariva sotto il giro guidato
+
+**SINTOMO** — Nella demo pubblica, visitando 5 pagine mentre il giro guidato è ancora
+aperto, la carta «Ti sta piacendo?» compare ma non si può cliccare: l'overlay di
+driver.js (`body.driver-active`) intercetta i clic.
+
+**CAUSA** — `InvitoContatto` contava solo tempo e pagine, senza sapere del giro.
+
+**RIMEDIO** — Se `body` ha la classe `driver-active`, l'invito riprova ogni 2 secondi
+e compare solo a giro chiuso.
+
+**VERIFICATO** — 2026-09-28: trovato dalla prova reale in produzione (Playwright). Con
+il giro chiuso l'invito spedisce: la mail `[demo]` arriva in contatti@pmiflow.eu con
+SPF, DKIM e DMARC «pass».
