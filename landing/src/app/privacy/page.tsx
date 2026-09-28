@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PaginaTesto } from "@/componenti/PaginaTesto";
-import { CONTATTI_ATTIVI, DEMO_ATTIVA, EMAIL_CONTATTI, LEGALI_AGGIORNATI_AL, TITOLARE } from "@/lib/sito";
+import { CONTATTI_ATTIVI, DEMO_ATTIVA, EMAIL_CONTATTI, IMPRESA, LEGALI_AGGIORNATI_AL, TITOLARE, hrefTelefono } from "@/lib/sito";
 
 export const metadata: Metadata = {
   title: "Informativa sulla privacy",
@@ -43,7 +43,14 @@ export default function Privacy() {
       <h2>Titolare del trattamento</h2>
       {TITOLARE ? (
         <p>
-          <strong>{TITOLARE}</strong>. Per qualsiasi richiesta sui tuoi dati: {recapito}.
+          <strong>{TITOLARE}</strong>
+          {IMPRESA.sede && <>, {IMPRESA.sede}</>}. Per qualsiasi richiesta sui tuoi dati: {recapito}
+          {IMPRESA.telefono && (
+            <>
+              {" "}o <a href={hrefTelefono(IMPRESA.telefono)}>{IMPRESA.telefono}</a>
+            </>
+          )}
+          .
         </p>
       ) : (
         <p>Il nome del titolare viene pubblicato qui prima dell&apos;apertura del modulo contatti.</p>

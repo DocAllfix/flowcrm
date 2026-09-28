@@ -55,8 +55,10 @@ const ORGANIZZAZIONE = {
   brand: { "@type": "Brand", name: NOME },
   url: URL_CANONICO,
   logo: `${URL_CANONICO}/icon-512.png`,
-  ...(IMPRESA.email ? { email: IMPRESA.email } : {}),
+  email: IMPRESA.email,
+  ...(IMPRESA.telefono ? { telephone: IMPRESA.telefono } : {}),
   ...(IMPRESA.partitaIva ? { vatID: IMPRESA.partitaIva } : {}),
+  ...(IMPRESA.codiceFiscale ? { taxID: IMPRESA.codiceFiscale } : {}),
   ...(IMPRESA.sede ? { address: IMPRESA.sede } : {}),
 };
 

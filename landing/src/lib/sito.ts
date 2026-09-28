@@ -38,16 +38,45 @@ export const EMAIL_CONTATTI = process.env.NEXT_PUBLIC_EMAIL_CONTATTI ?? "contatt
 export const CONTATTI_ATTIVI = process.env.NEXT_PUBLIC_CONTATTI_ATTIVI === "1" && TITOLARE !== "";
 
 /**
- * Dati dell'impresa per il piede e per `Organization`. Obbligatori per legge su un sito
- * commerciale italiano (art. 2250 c.c., art. 7 d.lgs. 70/2003). Finché mancano, il piede
- * non inventa niente e `verifica-seo.mjs` lo segnala.
+ * Dati dell'impresa (DITTA INDIVIDUALE del titolare) per il piede, la pagina Termini e
+ * `Organization`. Obbligatori su un sito commerciale italiano:
+ *  - art. 7 d.lgs. 70/2003: nome, domicilio o sede, recapiti (email compresa), REA, P. IVA;
+ *  - art. 35 DPR 633/1972: partita IVA nella home page;
+ *  - art. 2199 c.c.: la ditta (il nome dell'impresa) deve contenere il cognome del titolare.
+ * Codice fiscale facoltativo (lo stampiamo se c'è); PEC NON obbligatoria, e non la
+ * pubblichiamo: sarebbe solo un bersaglio per lo spam (indicazione del committente, 28/09/2026).
+ *
+ * Tutto da variabili d'ambiente di Vercel: nel repository non entra nessun dato personale.
+ * Finché mancano, il piede non inventa niente e `verifica-seo.mjs` lo segnala.
  */
 export const IMPRESA = {
-  ragioneSociale: process.env.NEXT_PUBLIC_RAGIONE_SOCIALE ?? "",
+  /** La ditta. Per una ditta individuale, di norma nome e cognome del titolare. */
+  ragioneSociale: process.env.NEXT_PUBLIC_RAGIONE_SOCIALE || TITOLARE,
   partitaIva: process.env.NEXT_PUBLIC_PARTITA_IVA ?? "",
+  codiceFiscale: process.env.NEXT_PUBLIC_CODICE_FISCALE ?? "",
+  /** Numero REA con la sigla della provincia, es. «RM-1234567». */
+  rea: process.env.NEXT_PUBLIC_REA ?? "",
+  /** Domicilio o sede legale, indirizzo completo in una riga. */
   sede: process.env.NEXT_PUBLIC_SEDE ?? "",
-  email: process.env.NEXT_PUBLIC_EMAIL_CONTATTO ?? "",
+  telefono: process.env.NEXT_PUBLIC_TELEFONO ?? "",
+  email: process.env.NEXT_PUBLIC_EMAIL_CONTATTO || EMAIL_CONTATTI,
 };
+
+/** Le voci legali in ordine di stampa, senza quelle che mancano. */
+export function datiImpresa(): [string, string][] {
+  const v: [string, string | false][] = [
+    ["Titolare", IMPRESA.ragioneSociale],
+    ["Sede", IMPRESA.sede],
+    ["P. IVA", IMPRESA.partitaIva],
+    ["C.F.", IMPRESA.codiceFiscale],
+    ["REA", IMPRESA.rea],
+    ["Tel.", IMPRESA.telefono],
+  ];
+  return v.filter((x): x is [string, string] => Boolean(x[1]));
+}
+
+/** `tel:` vuole solo cifre e il più iniziale. */
+export const hrefTelefono = (t: string) => `tel:${t.replace(/[^\d+]/g, "")}`;
 
 /** Data vera dell'ultima revisione dei testi legali: la stessa stampata in pagina. */
 export const LEGALI_AGGIORNATI_AL = "2026-09-28";
