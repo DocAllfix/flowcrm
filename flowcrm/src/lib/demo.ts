@@ -30,3 +30,18 @@ export const DEMO_PUBBLICA = {
 export function demoPubblicaAttiva(): boolean {
   return Boolean(DEMO_PUBBLICA.email && DEMO_PUBBLICA.password)
 }
+
+/**
+ * Dove l'invito al contatto della demo spedisce le richieste (`pmiflow.eu/api/contatti`).
+ * Senza questa variabile l'invito non compare: istanze clienti comprese.
+ */
+export const CONTATTI_DEMO = (import.meta.env.VITE_DEMO_PUBBLICA_CONTATTI as string | undefined) ?? ''
+
+/** Informativa e cookie stanno sul sito: la demo è un suo pezzo, non ha testi suoi. */
+export const LEGALI_DEMO = {
+  privacy: `${DEMO_PUBBLICA.sito}/privacy`,
+  cookie: `${DEMO_PUBBLICA.sito}/cookie`,
+} as const
+
+/** La fascia della demo apre l'invito al contatto con questo evento. */
+export const EVENTO_APRI_INVITO = 'pmiflow:apri-invito'

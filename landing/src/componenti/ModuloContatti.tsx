@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { MODULI } from "@/contenuti/moduli";
-import { IMPRESA } from "@/lib/sito";
+import { EMAIL_CONTATTI, TITOLARE } from "@/lib/sito";
 
 const MOTIVI = [
   ["presentazione", "Una presentazione"],
@@ -42,6 +42,7 @@ export function ModuloContatti() {
       moduli: dati.getAll("moduli"),
       motivo: dati.get("motivo"),
       messaggio: dati.get("messaggio"),
+      origine: "sito",
       sito: dati.get("sito"),
       trascorsi: Date.now() - inizio.current,
     };
@@ -137,8 +138,8 @@ export function ModuloContatti() {
 
       {/* Informativa art. 13 GDPR AL MOMENTO della raccolta, con il titolare nominato. */}
       <p className="prosa text-[0.875rem] leading-relaxed text-tenue">
-        Usiamo questi dati solo per risponderti. Titolare del trattamento: {IMPRESA.ragioneSociale}. Non li salviamo in un
-        archivio: arrivano come email e restano nella corrispondenza. Dettagli e diritti nell&apos;
+        Usiamo questi dati solo per risponderti. Titolare del trattamento: {TITOLARE} ({EMAIL_CONTATTI}).
+        Non li salviamo in un archivio: arrivano come email e restano nella corrispondenza. Dettagli e diritti nell&apos;
         <a href="/privacy" className="underline underline-offset-2">
           informativa sulla privacy
         </a>
