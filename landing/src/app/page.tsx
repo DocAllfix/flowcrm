@@ -58,7 +58,7 @@ export default function Pagina() {
       {DATI.map((d, i) => (
         <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(d) }} />
       ))}
-      <Intestazione />
+      <Intestazione contatti="#contatti" />
       <main id="contenuto">
         <Eroe />
         <Prove />
@@ -67,7 +67,7 @@ export default function Pagina() {
         <Anteprima />
         <ComeSiParte />
         <Domande />
-        <ChiamataFinale />
+        <ChiamataFinale contatti="#contatti" />
       </main>
       <Piede />
     </>

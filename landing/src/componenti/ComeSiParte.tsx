@@ -1,6 +1,5 @@
 import { INCLUSO, PASSI } from "@/contenuti/partenza";
-import { CONTATTI_ATTIVI } from "@/lib/sito";
-import { ModuloContatti } from "./ModuloContatti";
+import { BloccoContatti } from "./BloccoContatti";
 import { Rivela } from "./Rivela";
 
 /**
@@ -99,17 +98,7 @@ export function ComeSiParte() {
           </ul>
         </div>
 
-        {CONTATTI_ATTIVI && (
-          <div id="contatti" className="mt-24 grid gap-12 rounded-lg bg-carta px-6 py-12 text-inchiostro sm:px-10 md:grid-cols-[0.8fr_1.2fr] md:gap-16 md:px-12">
-            <div>
-              <h3 className="titolo-sezione text-[clamp(1.5rem,1.2rem+1.2vw,2.125rem)]">Raccontaci come lavorate.</h3>
-              <p className="prosa mt-4 text-tenue">
-                Ti scriviamo per fissare la presentazione. Niente telefonate a sorpresa: decidi tu quando.
-              </p>
-            </div>
-            <ModuloContatti />
-          </div>
-        )}
+        <BloccoContatti className="mt-24" />
       </div>
     </section>
   );

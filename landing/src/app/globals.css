@@ -248,7 +248,7 @@
     transition: opacity 180ms var(--ease-uscita), border-color 180ms var(--ease-uscita), background-color 180ms var(--ease-uscita);
   }
   /* Il bordo acceso sotto il puntatore è nel componente (fuori dai layer, vedi EVIDENZA). */
-  .sezione-moduli .modulo-settore { cursor: default; outline: none; }
+  .sezione-moduli .modulo-settore { outline: none; }
   .sezione-moduli .modulo-settore:focus-visible { box-shadow: 0 0 0 2px var(--color-cotto-notte); }
   @supports selector(:has(*)) {
     .sezione-moduli:has(.modulo-settore:is(:hover, :focus-visible)) .gruppo-nucleo { opacity: 0.4; }

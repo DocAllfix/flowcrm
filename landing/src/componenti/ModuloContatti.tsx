@@ -18,7 +18,7 @@ const MOTIVI = [
  * di frequenza sulla rotta. Il motivo arriva già scelto da `?motivo=`, così un pulsante
  * «Fissa un appuntamento» dentro la demo porta qui senza un passaggio in più.
  */
-export function ModuloContatti() {
+export function ModuloContatti({ modulo }: { modulo?: string } = {}) {
   const [stato, setStato] = useState<"pronto" | "invio" | "errore">("pronto");
   const [errore, setErrore] = useState("");
   const [motivo, setMotivo] = useState<string>("presentazione");
@@ -116,7 +116,7 @@ export function ModuloContatti() {
         <div className="mt-3 flex flex-wrap gap-x-6 gap-y-3">
           {MODULI.map((m) => (
             <label key={m.nome} className="flex items-center gap-2 text-[0.9375rem]">
-              <input type="checkbox" name="moduli" value={m.nome} className="size-4 accent-[var(--color-cotto)]" />
+              <input type="checkbox" name="moduli" value={m.nome} defaultChecked={m.nome === modulo} className="size-4 accent-[var(--color-cotto)]" />
               {m.nome}
             </label>
           ))}
