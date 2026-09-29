@@ -1,7 +1,6 @@
 import { PROMESSA } from "@/contenuti/promessa";
 import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO } from "@/lib/sito";
 import { FinestraProdotto } from "./FinestraProdotto";
-import { Freccia } from "./Freccia";
 
 /**
  * L'hero: promessa a sinistra, il programma vero a destra (in una finestra da
@@ -27,22 +26,29 @@ export function Eroe() {
             <span className="block text-cotto">{PROMESSA.titolo[1]}</span>
           </h1>
           <p className="prosa mt-6 max-w-[34rem] text-[1.0625rem] text-tenue md:text-[1.125rem]">{PROMESSA.sottotitolo}</p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            {CONTATTI_ATTIVI ? (
-              <a href="#contatti" className="bottone bottone-primario">
-                Richiedi una presentazione <Freccia />
+          {/* Un pulsante e un collegamento (vedi `.bottone-due-righe` in globals.css). La
+              demo è il primo passo perché costa un clic; la presentazione resta a portata,
+              ed è anche il pulsante fisso dell'intestazione. */}
+          <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
+            {DEMO_ATTIVA ? (
+              <a href={URL_DEMO} className="bottone bottone-due-righe bottone-inchiostro">
+                Entra nella demo
+                {" "}
+                <span className="sotto">Un clic, senza registrazione</span>
               </a>
             ) : (
-              <a href="#anteprima" className="bottone bottone-primario">
-                Guarda come si lavora <Freccia />
+              <a href="#anteprima" className="bottone bottone-due-righe bottone-inchiostro">
+                Guarda come si lavora
+                {" "}
+                <span className="sotto">Il programma, schermata per schermata</span>
               </a>
             )}
-            {DEMO_ATTIVA ? (
-              <a href={URL_DEMO} className="bottone bottone-secondario">
-                Prova la demo
+            {CONTATTI_ATTIVI ? (
+              <a href="#contatti" className="collegamento-cta">
+                Richiedi una presentazione
               </a>
             ) : (
-              <a href="#come-si-parte" className="bottone bottone-secondario">
+              <a href="#come-si-parte" className="collegamento-cta">
                 Come si parte
               </a>
             )}

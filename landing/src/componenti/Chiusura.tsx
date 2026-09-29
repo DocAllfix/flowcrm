@@ -1,5 +1,4 @@
 import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO, IMPRESA, LEGALI_AGGIORNATI_AL, datiImpresa, hrefTelefono } from "@/lib/sito";
-import { Freccia } from "./Freccia";
 import { Logotipo } from "./Intestazione";
 
 /**
@@ -15,15 +14,27 @@ export function ChiamataFinale() {
         <h2 id="titolo-finale" className="titolo-sezione max-w-2xl">
           Mezz&apos;ora per capire se fa per voi.
         </h2>
-        <div className="flex flex-wrap gap-4">
-          {CONTATTI_ATTIVI && (
-            <a href="#contatti" className="bottone bg-carta text-inchiostro hover:bg-foglio">
-              Richiedi una presentazione <Freccia />
-            </a>
-          )}
-          {DEMO_ATTIVA && (
-            <a href={URL_DEMO} className="bottone text-carta shadow-[inset_0_0_0_1px_currentColor] hover:bg-cotto-scuro">
-              Prova la demo
+        {/* Qui il pulsante è la presentazione (la sezione parla di quella) e la demo è
+            il collegamento: l'inverso dell'hero, stesso schema. */}
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
+          {CONTATTI_ATTIVI ? (
+            <>
+              <a href="#contatti" className="bottone bottone-due-righe bg-carta text-inchiostro hover:bg-foglio">
+                Richiedi una presentazione
+                {" "}
+                <span className="sotto">Ti scriviamo noi per fissarla</span>
+              </a>
+              {DEMO_ATTIVA && (
+                <a href={URL_DEMO} className="collegamento-cta decoration-carta/55 hover:decoration-carta">
+                  oppure entra nella demo
+                </a>
+              )}
+            </>
+          ) : (
+            <a href={URL_DEMO} className="bottone bottone-due-righe bg-carta text-inchiostro hover:bg-foglio">
+              Entra nella demo
+              {" "}
+              <span className="sotto">Un clic, senza registrazione</span>
             </a>
           )}
         </div>
