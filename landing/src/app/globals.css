@@ -331,3 +331,60 @@
     mask-image: linear-gradient(to bottom, black 55%, transparent);
   }
 }
+
+/* Articoli del blog (app/blog/[slug]). Costruito sulla stessa scala di .testo-lungo:
+   gerarchia per peso, ritmo sulla griglia da 8 pt, colonna da 68 caratteri. I riquadri
+   hanno un filo in cotto IN ALTO: la barra colorata laterale è vietata da DESIGN.md. */
+@layer components {
+  .articolo { max-width: 68ch; font-size: 1.0625rem; line-height: 1.75; color: var(--color-tenue); }
+  .articolo > * + * { margin-top: 1.25rem; }
+  .articolo :where(p, li) { text-wrap: pretty; }
+  .articolo strong { color: var(--color-inchiostro); font-weight: 650; }
+  .articolo h2 {
+    margin-top: 3.5rem;
+    scroll-margin-top: 2rem;
+    color: var(--color-inchiostro);
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-stretch: 106%;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    text-wrap: balance;
+  }
+  .articolo h3 {
+    margin-top: 2.5rem;
+    scroll-margin-top: 2rem;
+    color: var(--color-inchiostro);
+    font-size: 1.1875rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  .articolo h2 + *, .articolo h3 + * { margin-top: 0.75rem; }
+  .articolo a { color: var(--color-inchiostro); text-decoration: underline; text-decoration-color: var(--color-cotto); text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .articolo a:hover { text-decoration-color: currentColor; }
+  .articolo ul, .articolo ol { padding-left: 1.25rem; }
+  .articolo ul { list-style: none; padding-left: 0; }
+  .articolo ul > li { position: relative; padding-left: 1.25rem; }
+  .articolo ul > li::before { content: ""; position: absolute; left: 0.125rem; top: 0.72em; width: 0.375rem; height: 0.375rem; border-radius: 9999px; background: var(--color-cotto); }
+  .articolo ol { list-style: decimal; }
+  .articolo ol > li::marker { color: var(--color-cotto); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .articolo li + li { margin-top: 0.5rem; }
+  .articolo blockquote { border-top: 1px solid var(--color-filo); border-bottom: 1px solid var(--color-filo); padding: 1rem 0; color: var(--color-inchiostro); font-size: 1.1875rem; line-height: 1.55; font-weight: 500; }
+  .articolo .riquadro { position: relative; border-radius: var(--radius-md, 0.5rem); background: var(--color-carta-2); padding: 1.25rem 1.5rem 1.25rem; border-top: 2px solid var(--color-cotto); color: var(--color-inchiostro); font-size: 1rem; line-height: 1.65; }
+  .articolo .riquadro::before { content: attr(data-tipo); display: block; margin-bottom: 0.375rem; color: var(--color-cotto-scuro); font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .articolo .riquadro > * + * { margin-top: 0.75rem; }
+  .articolo .riquadro-attenzione { border-top-color: var(--color-inchiostro); }
+  .articolo .riquadro-attenzione::before { color: var(--color-inchiostro); }
+  .articolo figure { margin-top: 2rem; margin-bottom: 2rem; }
+  .articolo figure img { width: 100%; height: auto; border-radius: var(--radius-md, 0.5rem); border: 1px solid var(--color-filo); }
+  .articolo figcaption { margin-top: 0.625rem; font-size: 0.875rem; color: var(--color-tenue); }
+  .articolo table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5; display: block; overflow-x: auto; }
+  .articolo th { text-align: left; color: var(--color-inchiostro); font-weight: 650; border-bottom: 1px solid var(--color-inchiostro); padding: 0.5rem 1rem 0.5rem 0; white-space: nowrap; }
+  .articolo td { border-bottom: 1px solid var(--color-filo); padding: 0.625rem 1rem 0.625rem 0; vertical-align: top; }
+  .articolo code { font-family: var(--font-mono, ui-monospace, monospace); font-size: 0.875em; background: var(--color-carta-2); border-radius: 0.25rem; padding: 0.1em 0.35em; }
+  .articolo hr { border: 0; border-top: 1px solid var(--color-filo); margin: 3rem 0; }
+
+  /* Indice a lato dell'articolo, solo da desktop: un elenco sobrio, niente strisce. */
+  .indice-articolo a { display: block; padding: 0.375rem 0; color: var(--color-tenue); font-size: 0.875rem; line-height: 1.4; text-wrap: pretty; }
+  .indice-articolo a:hover { color: var(--color-inchiostro); text-decoration: underline; text-decoration-color: var(--color-cotto); text-underline-offset: 3px; }
+}

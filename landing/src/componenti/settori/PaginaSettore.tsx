@@ -1,6 +1,8 @@
 import { MODULI, NUCLEO } from "@/contenuti/moduli";
 import { PAGINE_SETTORE, type IdSettore } from "@/contenuti/settori";
+import { articoliDelSettore } from "@/lib/blog";
 import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO } from "@/lib/sito";
+import { Righe } from "../blog/Elenco";
 import { BloccoContatti } from "../BloccoContatti";
 import { ChiamataFinale, Piede } from "../Chiusura";
 import { Domande } from "../Domande";
@@ -23,6 +25,7 @@ export function PaginaSettore({ id }: { id: IdSettore }) {
   const p = PAGINE_SETTORE[id];
   const a = ANTEPRIME_SETTORE[id];
   const altri = MODULI.filter((x) => x.id !== id);
+  const dalBlog = articoliDelSettore(id).slice(0, 3);
   const linkDemo = `${URL_DEMO}?vai=${encodeURIComponent(p.percorsoDemo)}`;
 
   return (
@@ -152,6 +155,25 @@ export function PaginaSettore({ id }: { id: IdSettore }) {
         </section>
 
         <Domande domande={p.domande} occhiello={`Domande sul modulo ${m.nome}`} titolo="Quello che ci chiedono su questo modulo." />
+
+        {/* Dal blog: compare solo quando il settore ha articoli */}
+        {dalBlog.length > 0 && (
+          <section aria-labelledby="titolo-dal-blog" className="border-b border-filo">
+            <div className="mx-auto w-full max-w-6xl px-4 py-20 sm:px-6">
+              <div className="flex flex-wrap items-baseline justify-between gap-4">
+                <h2 id="titolo-dal-blog" className="text-[1.25rem] font-bold [font-stretch:106%]">
+                  Dal blog, per chi lavora in questo settore
+                </h2>
+                <a href={`/blog/settore/${id}`} className="collegamento-cta">
+                  Tutti gli articoli
+                </a>
+              </div>
+              <div className="mt-8">
+                <Righe articoli={dalBlog} />
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Gli altri moduli */}
         <section aria-labelledby="titolo-altri" className="border-b border-filo">

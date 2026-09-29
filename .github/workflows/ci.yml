@@ -256,6 +256,10 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Tipi
         run: npx tsc --noEmit
+      # Articoli del blog: intestazione, prezzi, collegamenti, immagini, lunghezza.
+      # Una PR di un articolo automatico con questo passo rosso non si unisce da sola.
+      - name: Controllo editoriale del blog
+        run: npm run verifica-articoli
       - name: Build
         run: npx next build
       - name: Gate SEO sulle pagine servite
