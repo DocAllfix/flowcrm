@@ -29,7 +29,7 @@ const STORIA = [
 
 /*
  * Le quattro tessere sotto continuano la STESSA storia della scheda di Autotrasporti
- * Bassi (offerta 41 trascinata verso «Vinta», fattura 97 incassata il 3 settembre) e
+ * Bassi (offerta 41 in evidenza fra le trattative, fattura 97 incassata il 3 settembre) e
  * dello stesso studio: la trattativa, la commessa nata da una trattativa vinta, le
  * scadenze, chi può vedere cosa. Così le sei tessere si leggono come un giro di lavoro,
  * non come sei funzioni slegate.
@@ -75,12 +75,12 @@ function AnteprimaTrattative() {
             <p className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-tenue">{c.fase}</p>
             <div className="space-y-2">
               {c.carte.map(([nome, valore]) => {
-                const inMano = nome === "Autotrasporti Bassi";
+                const inEvidenza = nome === "Autotrasporti Bassi";
                 return (
                   <div
                     key={nome}
                     className={`rounded-sm border bg-foglio px-2.5 py-2 ${
-                      inMano ? "-rotate-2 border-cotto shadow-[0_6px_16px_-8px_oklch(0.3_0.05_40/0.45)]" : "border-filo"
+                      inEvidenza ? "border-cotto" : "border-filo"
                     }`}
                   >
                     <p className="truncate text-[0.75rem] font-semibold leading-tight">{nome}</p>

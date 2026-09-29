@@ -44,7 +44,10 @@ function classiVoceNav(attiva: boolean, compressa: boolean): string {
   return cn(
     'relative flex items-center gap-3 rounded-md py-2 text-sm transition-colors',
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-ring',
-    compressa ? 'justify-center px-2' : 'px-3',
+    // Compressa: un quadrato da 40px centrato, come le barre a icone dei
+    // programmi desktop. Prima era una riga piena alta 36px con l'icona in
+    // mezzo: icone ammassate e fuori centro appena compariva lo scorrimento.
+    compressa ? 'mx-auto size-10 justify-center p-0' : 'px-3',
     attiva
       ? [
           'bg-sidebar-accent font-semibold text-sidebar-accent-foreground',
@@ -105,14 +108,21 @@ export function Sidebar({
         onClick={onClose}
         className={({ isActive }) => classiVoceNav(isActive, compressa)}
       >
-        <Icona className="size-4 shrink-0" aria-hidden />
+        <Icona className={cn('shrink-0', compressa ? 'size-[1.125rem]' : 'size-4')} aria-hidden />
         {compressa ? <span className="sr-only">{label}</span> : <span>{label}</span>}
       </NavLink>
     )
     if (!compressa) return link
+    // ⚠️ Il suggerimento NON va messo direttamente sul NavLink: `asChild` di Radix
+    // fonde le classi come stringhe, e la funzione `className={({ isActive }) => …}`
+    // del NavLink finiva scritta per esteso nell'attributo class. Da compressa le
+    // voci non avevano nessuno stile (niente misure, centratura, voce attiva).
+    // Il suggerimento avvolge un contenitore; il focus del link risale a lui.
     return (
       <Tooltip key={path}>
-        <TooltipTrigger asChild>{link}</TooltipTrigger>
+        <TooltipTrigger asChild>
+          <span className="flex">{link}</span>
+        </TooltipTrigger>
         <TooltipContent side="right">{label}</TooltipContent>
       </Tooltip>
     )
@@ -137,7 +147,7 @@ export function Sidebar({
           // La larghezza è una proprietà di disposizione: animarla fa
           // ricalcolare il layout a ogni fotogramma. Cambia di scatto, e
           // l'unica cosa animata è lo scorrimento fuori schermo su mobile.
-          compressa ? 'w-[4.25rem]' : 'w-64',
+          compressa ? 'w-[4.75rem]' : 'w-64',
           'motion-safe:transition-transform',
           open ? 'translate-x-0' : '-translate-x-full',
         )}
@@ -167,14 +177,23 @@ export function Sidebar({
         </div>
 
         {/* Navigazione */}
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        {/* Compressa, niente barra di scorrimento visibile: su 76px ne ruba 8 e
+            sposta le icone fuori centro. Si scorre lo stesso, con rotella e tocco. */}
+        <nav
+          className={cn(
+            'flex-1 overflow-y-auto',
+            compressa
+              ? 'px-2 py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+              : 'space-y-1 p-3',
+          )}
+        >
           {sections.map((section, i) => (
-            <div key={section.title ?? i}>
+            <div key={section.title ?? i} className={cn(compressa && 'flex flex-col gap-1')}>
               {section.title &&
                 (compressa ? (
                   // Compressa, l'etichetta di sezione diventa un filo: il
                   // raggruppamento resta visibile senza il testo.
-                  <hr className="my-3 border-sidebar-border" />
+                  <hr className="mx-auto my-2.5 w-6 border-sidebar-border" />
                 ) : (
                   <p className="mb-2 px-3 pt-4 text-label uppercase text-muted-foreground">
                     {section.title}
@@ -188,7 +207,12 @@ export function Sidebar({
         </nav>
 
         {/* Account */}
-        <div className="space-y-1 border-t border-sidebar-border p-3">
+        <div
+          className={cn(
+            'border-t border-sidebar-border',
+            compressa ? 'flex flex-col gap-1 px-2 py-3' : 'space-y-1 p-3',
+          )}
+        >
           {voce('/profilo', 'Il mio profilo', User)}
           {isAdmin && voce('/utenti', 'Gestione utenti', Users)}
         </div>
@@ -202,7 +226,7 @@ export function Sidebar({
             )}
           >
             <div className="flex min-w-0 items-center gap-3">
-              <Avatar className="size-10 shrink-0">
+              <Avatar className={cn('shrink-0', compressa ? 'size-9' : 'size-10')}>
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               {!compressa && (
@@ -231,7 +255,7 @@ export function Sidebar({
               'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors',
               'hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground',
               'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sidebar-ring',
-              compressa && 'justify-center px-2',
+              compressa && 'mx-auto size-10 justify-center p-0',
             )}
           >
             {compressa ? (
