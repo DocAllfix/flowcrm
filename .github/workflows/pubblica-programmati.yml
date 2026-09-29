@@ -1,0 +1,44 @@
+name: Pubblica gli articoli programmati
+
+# Un articolo con `data` futura è già su main ma non è online: il blog si genera al
+# build. Ogni mattina, SE su main c'è un articolo con la data di oggi (ora di Roma),
+# si chiama il Deploy Hook di Vercel della landing e il sito si ricompila.
+# Nessun articolo del giorno = nessun rilascio inutile.
+# (Il filtro `scripts/vercel-salta-build.sh` compila anche lo stesso commit: G-41.)
+
+on:
+  schedule:
+    - cron: "30 4 * * *" # ogni giorno, 04:30 UTC = 06:30 a Roma d'estate, 05:30 d'inverno
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pubblica:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Dipendenze
+        working-directory: landing
+        run: npm ci --no-audit --no-fund
+
+      - name: Articoli di oggi
+        id: oggi
+        working-directory: landing
+        run: echo "quanti=$(node scripts/redazione.mjs oggi)" >> "$GITHUB_OUTPUT"
+
+      - name: Rilascio
+        if: steps.oggi.outputs.quanti != '0'
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK_LANDING }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "::error::segreto VERCEL_DEPLOY_HOOK_LANDING mancante"; exit 1; fi
+          curl -fsS -X POST "$HOOK" > /dev/null
+          echo "${{ steps.oggi.outputs.quanti }} articolo/i di oggi: rilascio avviato" >> "$GITHUB_STEP_SUMMARY"

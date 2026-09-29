@@ -1,0 +1,130 @@
+name: Redazione del blog
+
+# L'agente di redazione scrive un articolo dal piano editoriale (skill
+# `.claude/skills/redazione-pmiflow`) e apre una PR con l'etichetta `articolo-automatico`.
+# La PR si unisce da sola dopo 48 ore se non ha l'etichetta `fermo`
+# (articoli-automerge.yml); l'articolo esce alla sua data (pubblica-programmati.yml).
+#
+# ⚠️ L'agente NON usa git né gh: scrive solo i file del blog. Commit, PR e mail li fa
+# questo flusso, con l'identità DocAllfix e senza coautori (regola del titolare).
+# ⚠️ Le PR create con GITHUB_TOKEN non fanno partire la CI: controllo editoriale e build
+# si fanno qui, prima di aprire la PR, e si ripetono prima dell'unione automatica.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1,4" # lunedì e giovedì, 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      simulazione:
+        description: "Solo scrittura e controlli: niente PR, niente mail"
+        type: boolean
+        default: true
+
+concurrency:
+  group: redazione
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  scrivi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Dipendenze
+        working-directory: landing
+        run: npm ci --no-audit --no-fund
+
+      # Argomenti e date delle PR di articoli ancora aperte (anche quelle fermate):
+      # senza, l'agente riscriverebbe lo stesso tema o userebbe la stessa data.
+      - name: Articoli già in corso
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          IN_CORSO=$(gh pr list --label articolo-automatico --state open --json headRefName,title \
+            --jq '[.[] | (.headRefName | sub("^articolo/"; "")) + "@" + (([.title | capture("esce il (?<d>[0-9-]{10})").d] | first) // "")] | join(",")')
+          echo "REDAZIONE_IN_CORSO=$IN_CORSO" >> "$GITHUB_ENV"
+          echo "in corso: ${IN_CORSO:-nessuno}"
+
+      - name: Scrittura
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: "/redazione-pmiflow scrivi"
+          settings: '{"includeCoAuthoredBy": false}'
+          claude_args: >-
+            --max-turns 90
+            --allowedTools "Read,Glob,Grep,Skill,WebSearch,WebFetch,Edit(landing/src/contenuti/blog/**),Write(landing/src/contenuti/blog/**),Edit(landing/public/blog/**),Write(landing/public/blog/**),Bash(cd landing),Bash(cd:*),Bash(node scripts/redazione.mjs:*),Bash(npm run verifica-articoli:*),Bash(rm src/contenuti/blog/:*)"
+
+      # Solo ciò che l'agente poteva toccare: un articolo nuovo (più eventuali immagini) e
+      # il piano. Qualunque altra modifica ferma tutto.
+      - name: Cosa è stato scritto
+        id: esito
+        run: |
+          git add -A
+          CAMBIATI=$(git diff --cached --name-only)
+          echo "$CAMBIATI"
+          FUORI=$(echo "$CAMBIATI" | grep -vE '^landing/src/contenuti/blog/[a-z0-9-]+\.md$|^landing/public/blog/|^landing/redazione/piano\.yaml$' || true)
+          if [ -n "$FUORI" ]; then echo "::error::file fuori dal perimetro dell'agente: $FUORI"; exit 1; fi
+          NUOVI=$(git diff --cached --name-only --diff-filter=A -- 'landing/src/contenuti/blog/*.md')
+          if [ -z "$NUOVI" ]; then echo "nessun articolo scritto"; echo "slug=" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$(echo "$NUOVI" | wc -l)" -ne 1 ]; then echo "::error::più di un articolo nuovo: $NUOVI"; exit 1; fi
+          echo "slug=$(basename "$NUOVI" .md)" >> "$GITHUB_OUTPUT"
+
+      - name: Controllo editoriale e build
+        if: steps.esito.outputs.slug != ''
+        working-directory: landing
+        env:
+          BLOG_ANTEPRIMA: "1"
+        run: |
+          npm run verifica-articoli
+          npx next build
+
+      - name: Anteprima del testo (simulazione)
+        if: steps.esito.outputs.slug != '' && github.event_name == 'workflow_dispatch' && inputs.simulazione
+        run: cat "landing/src/contenuti/blog/${{ steps.esito.outputs.slug }}.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit e PR
+        id: pr
+        if: steps.esito.outputs.slug != '' && !(github.event_name == 'workflow_dispatch' && inputs.simulazione)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLUG: ${{ steps.esito.outputs.slug }}
+        run: |
+          FILE="landing/src/contenuti/blog/$SLUG.md"
+          TITOLO=$(sed -n 's/^titolo: *"\(.*\)"$/\1/p' "$FILE" | head -1)
+          DATA=$(sed -n 's/^data: *\([0-9-]*\).*/\1/p' "$FILE" | head -1)
+          git config user.name "DocAllfix"
+          git config user.email "alessiokenan@gmail.com"
+          git checkout -b "articolo/$SLUG"
+          git commit -q -m "Blog: $TITOLO"
+          git push -q origin "articolo/$SLUG"
+          CORPO=$(printf '%s\n' \
+            "Articolo scritto dall'agente di redazione, **firmato Alessandro Di Lonardo**." \
+            "" \
+            "- **Esce il $DATA**, da solo, se questa PR si unisce: succede in automatico dopo 48 ore." \
+            "- **Per fermarlo**: etichetta \`fermo\`, oppure chiudi la PR." \
+            "- **Per correggerlo**: modifica \`$FILE\` in questa PR." \
+            "- **Anteprima**: nel commento di Vercel qui sotto, alla pagina \`/blog/$SLUG\`." \
+            "" \
+            "Controllo editoriale e build superati prima dell'apertura.")
+          URL=$(gh pr create --base main --head "articolo/$SLUG" --title "Blog (esce il $DATA): $TITOLO" --body "$CORPO" --label articolo-automatico)
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "PR: $URL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Mail al titolare
+        if: steps.pr.outputs.url != ''
+        working-directory: landing
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: node scripts/avvisa-articolo.mjs "${{ steps.esito.outputs.slug }}" "${{ steps.pr.outputs.url }}"

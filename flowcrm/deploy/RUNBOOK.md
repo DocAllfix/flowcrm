@@ -508,3 +508,31 @@ descritta in GUASTI G-38.
    (`/demo` smette di esistere).
 3. Se le credenziali sono state abusate: cambiare la password dell'ospite **da SQL**
    (il blocco credenziali vale per GoTrue) e aggiornare il file in `~/.config/flotta/`.
+
+---
+
+## Blog di pmiflow.eu e redazione automatica
+
+**Dove:** articoli in `landing/src/contenuti/blog/<slug>.md` (formato in `_LEGGIMI.md`),
+materiale della redazione in `landing/redazione/` (`FATTI.md`, `STILE.md`, `piano.yaml`),
+procedura dell'agente in `.claude/skills/redazione-pmiflow/SKILL.md`.
+
+**Il giro automatico** (tutti gli articoli firmati Alessandro Di Lonardo):
+
+| Flusso | Quando | Cosa fa |
+|---|---|---|
+| `redazione.yml` | lun e gio, 06:00 UTC | l'agente scrive la prima voce «da-scrivere» del piano, con data a +3 giorni; controllo e build; PR con etichetta `articolo-automatico`; mail a contatti@ |
+| `articoli-automerge.yml` | ogni giorno, 05:00 UTC | unisce le PR con più di 48 ore, senza `fermo`, con controllo, build e anteprima Vercel verdi |
+| `pubblica-programmati.yml` | ogni giorno, 04:30 UTC | se su main c'è un articolo con la data di oggi, chiama il Deploy Hook di Vercel |
+
+**Fermare un articolo:** etichetta `fermo` sulla PR, oppure chiuderla. **Correggerlo:**
+modificare il file nella PR. **Provare l'agente senza pubblicare:** Actions → «Redazione
+del blog» → Run workflow con `simulazione` spuntato (il testo finisce nel riepilogo).
+
+**Segreti GitHub:** `CLAUDE_CODE_OAUTH_TOKEN` (abbonamento Claude del titolare, da
+`claude setup-token`), `SMTP_USER`/`SMTP_PASS` (casella contatti@), `VERCEL_DEPLOY_HOOK_LANDING`
+(hook «pubblica-programmati» del progetto pmiflow-landing, ramo main).
+**Vercel:** `BLOG_ANTEPRIMA=1` solo sulle anteprime, per leggere gli articoli programmati.
+
+**Quando il prodotto cambia:** aggiornare `landing/redazione/FATTI.md` nella stessa PR,
+altrimenti l'agente continua a descrivere il prodotto di prima.
