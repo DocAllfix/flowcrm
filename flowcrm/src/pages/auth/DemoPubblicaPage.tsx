@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { DEMO_PUBBLICA, LEGALI_DEMO } from '@/lib/demo'
+import { destinazioneDemo } from '@/lib/destinazioneDemo'
 import { MarchioCliente } from '@/components/layout/MarchioCliente'
 import { Spinner } from '@/components/ui/spinner'
 
@@ -13,9 +14,14 @@ import { Spinner } from '@/components/ui/spinner'
  *
  * La rotta esiste solo se l'istanza ha le credenziali dell'ospite (vedi App.tsx e
  * `lib/demo.ts`): su un'istanza cliente `/demo` è una pagina non trovata.
+ *
+ * `?vai=/cantieri` porta dritti a un modulo (le pagine di settore del sito): solo
+ * percorsi del menu, vedi `destinazioneDemo`.
  */
 export function DemoPubblicaPage() {
   const { user, isLoading } = useAuth()
+  const [parametri] = useSearchParams()
+  const destinazione = destinazioneDemo(parametri.get('vai'))
   const [errore, setErrore] = useState(false)
   // In sviluppo React esegue gli effetti due volte: un solo tentativo di accesso.
   const avviato = useRef(false)
@@ -32,7 +38,7 @@ export function DemoPubblicaPage() {
       })
   }, [isLoading, user])
 
-  if (!isLoading && user) return <Navigate to="/" replace />
+  if (!isLoading && user) return <Navigate to={destinazione} replace />
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
