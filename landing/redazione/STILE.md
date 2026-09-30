@@ -70,4 +70,7 @@ Niente blog di terzi, forum o siti di concorrenti come fonte.
   una cosa precisa. Bene: «SAL di cantiere: cos'è, come si calcola e chi lo approva».
   Male: «Tutto quello che devi sapere sul SAL».
 - **Descrizione** (120–160 caratteri): cosa trova chi apre l'articolo, con la parola
-  chiave. Niente punti esclamativi.
+  chiave. È una frase naturale: non comincia ripetendo la parola chiave così com'è
+  («Obbligo pneumatici invernali mezzi aziendali: …» no; «Quando scatta l'obbligo delle
+  gomme invernali per i mezzi aziendali e come organizzarsi» sì). Niente punti
+  esclamativi.
