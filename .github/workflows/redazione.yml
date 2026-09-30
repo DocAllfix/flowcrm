@@ -19,6 +19,10 @@ on:
         description: "Solo scrittura e controlli: niente PR, niente mail"
         type: boolean
         default: true
+      dettagli:
+        description: "Mostra nei log tutto quello che fa l'agente (solo per capire un problema)"
+        type: boolean
+        default: false
 
 concurrency:
   group: redazione
@@ -61,9 +65,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: "/redazione-pmiflow scrivi"
           settings: '{"includeCoAuthoredBy": false}'
+          show_full_output: ${{ github.event_name == 'workflow_dispatch' && inputs.dettagli }}
           claude_args: >-
             --max-turns 90
-            --allowedTools "Read,Glob,Grep,Skill,WebSearch,WebFetch,Edit(landing/src/contenuti/blog/**),Write(landing/src/contenuti/blog/**),Edit(landing/public/blog/**),Write(landing/public/blog/**),Bash(cd landing),Bash(cd:*),Bash(node scripts/redazione.mjs:*),Bash(npm run verifica-articoli:*),Bash(rm src/contenuti/blog/:*)"
+            --allowedTools "Read,Glob,Grep,Skill,WebSearch,WebFetch,Edit(landing/src/contenuti/blog/**),Write(landing/src/contenuti/blog/**),Edit(landing/public/blog/**),Write(landing/public/blog/**),Bash(node landing/scripts/redazione.mjs:*),Bash(npm --prefix landing run verifica-articoli:*),Bash(rm landing/src/contenuti/blog/:*),Bash(ls:*)"
 
       # Solo ciò che l'agente poteva toccare: un articolo nuovo (più eventuali immagini) e
       # il piano. Qualunque altra modifica ferma tutto.
