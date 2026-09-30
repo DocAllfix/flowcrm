@@ -1,5 +1,6 @@
 import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO, IMPRESA, LEGALI_AGGIORNATI_AL, datiImpresa, hrefTelefono } from "@/lib/sito";
 import { MODULI } from "@/contenuti/moduli";
+import { blogNelMenu } from "@/lib/blog";
 import { Logotipo } from "./Intestazione";
 
 /**
@@ -69,7 +70,7 @@ export function Piede() {
           <p className="prosa mt-4 max-w-xs text-[0.9375rem]">CRM e gestione per le piccole imprese italiane, un server per ogni azienda.</p>
         </div>
         <nav aria-label="Piede" className="grid grid-cols-2 gap-8 lg:grid-cols-4">
-          {COLONNE.map(([titolo, voci]) => (
+          {COLONNE.map(([titolo, voci]) => [titolo, titolo === "Fiducia" && blogNelMenu() ? [...voci, ["Blog", "/blog"] as const] : voci] as const).map(([titolo, voci]) => (
             <div key={titolo}>
               <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-carta">{titolo}</h2>
               <ul className="mt-4 space-y-3 text-[0.9375rem]">

@@ -1,6 +1,7 @@
 import { PROMESSA } from "@/contenuti/promessa";
 import { FUNZIONI } from "@/contenuti/funzioni";
 import { MODULI } from "@/contenuti/moduli";
+import { articoli } from "@/lib/blog";
 import { URL_CANONICO } from "@/lib/sito";
 
 export const dynamic = "force-static";
@@ -28,6 +29,9 @@ export function GET() {
     `- [Moduli di settore](${URL_CANONICO}/moduli): il nucleo e i cinque moduli, con una pagina per ciascuno`,
     `- [Sicurezza e dati](${URL_CANONICO}/sicurezza): dove stanno i dati, permessi, backup, sub-responsabili`,
     "",
+    ...(articoli().length
+      ? ["## Dal blog", ...articoli().slice(0, 20).map((a) => `- [${a.intestazione.titolo}](${URL_CANONICO}/blog/${a.slug}): ${a.intestazione.descrizione}`), ""]
+      : []),
     "## Prezzi",
     "Il costo dipende dal numero di utenti e dai moduli, e si definisce dopo una presentazione. Non esiste un listino pubblico.",
     "",

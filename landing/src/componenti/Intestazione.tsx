@@ -1,3 +1,4 @@
+import { blogNelMenu } from "@/lib/blog";
 import { NOME, CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO } from "@/lib/sito";
 
 const VOCI = [
@@ -40,7 +41,7 @@ export function Intestazione({ contatti = "/#contatti" }: { contatti?: string } 
         </a>
         <nav aria-label="Principale" className="hidden md:block">
           <ul className="flex items-center gap-8 text-[0.9375rem] text-tenue">
-            {VOCI.map(([etichetta, href]) => (
+            {[...VOCI, ...(blogNelMenu() ? ([["Blog", "/blog"]] as const) : [])].map(([etichetta, href]) => (
               <li key={href}>
                 <a href={href} className="hover:text-inchiostro">
                   {etichetta}
