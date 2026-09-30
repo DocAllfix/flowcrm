@@ -1,4 +1,10 @@
 # Gestionale privato: nessuna pagina va indicizzata, né sulla demo né sulle istanze clienti.
 # La pagina pubblica del prodotto è https://pmiflow.eu
+#
+# ⚠️ Qui si PERMETTE la scansione di proposito. Il divieto di indicizzazione sta nella
+# pagina (`<meta name="robots" content="noindex">` in index.html) e, sulla demo, anche
+# nell'intestazione X-Robots-Tag. Con `Disallow: /` Google non poteva leggerlo, e un
+# indirizzo collegato da fuori (demo.pmiflow.eu/demo, dalla landing) poteva finire nei
+# risultati senza descrizione.
 User-agent: *
-Disallow: /
+Allow: /
