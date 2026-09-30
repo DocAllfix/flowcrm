@@ -3,17 +3,27 @@ import { DOMANDE } from "@/contenuti/domande";
 /**
  * `<details>` nativo: zero JavaScript, accessibile da tastiera senza fare niente,
  * e il testo della risposta è nell'HTML anche chiuso, quindi i motori lo leggono.
+ *
+ * Senza prop sono le domande della home; le pagine di settore passano le loro.
  */
-export function Domande() {
+export function Domande({
+  domande = DOMANDE,
+  titolo = "Quello che ci chiedono prima di tutto.",
+  occhiello = "Domande",
+}: {
+  domande?: ReadonlyArray<readonly [string, string]>;
+  titolo?: string;
+  occhiello?: string;
+}) {
   return (
     <section id="domande" aria-labelledby="titolo-domande" className="border-b border-filo">
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-24 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:gap-16 md:py-32">
         <div>
-          <p className="occhiello">Domande</p>
-          <h2 id="titolo-domande" className="titolo-sezione mt-6">Quello che ci chiedono prima di tutto.</h2>
+          <p className="occhiello">{occhiello}</p>
+          <h2 id="titolo-domande" className="titolo-sezione mt-6">{titolo}</h2>
         </div>
         <div className="border-t border-filo">
-          {DOMANDE.map(([d, r]) => (
+          {domande.map(([d, r]) => (
             <details key={d} className="group border-b border-filo">
               <summary className="flex cursor-pointer list-none items-start justify-between gap-6 py-6 text-[1.0625rem] font-semibold [&::-webkit-details-marker]:hidden">
                 {d}

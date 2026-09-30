@@ -1,5 +1,5 @@
 import { FUNZIONI } from "@/contenuti/funzioni";
-import { Rivela } from "./Rivela";
+import { Anteprima, GrigliaTessere } from "./Tessere";
 
 /**
  * Le sei funzioni come sei tessere che MOSTRANO invece di dire, come i passi del
@@ -56,15 +56,6 @@ const PERSONE = [
   { sigla: "LU", chi: "Luca", ruolo: "Agente", vede: "I suoi 14 clienti" },
   { sigla: "SA", chi: "Sara", ruolo: "Segreteria", vede: "Agenda e anagrafiche" },
 ] as const;
-
-/** Cornice comune delle anteprime (l'altezza la pareggia la subgrid di `Funzioni`). */
-function Anteprima({ children }: { children: React.ReactNode }) {
-  return (
-    <div aria-hidden="true" className="rounded-md border border-filo bg-carta p-4">
-      {children}
-    </div>
-  );
-}
 
 function AnteprimaTrattative() {
   return (
@@ -246,23 +237,6 @@ const VOCI = [
   [AnteprimaRuoli, RUOLI],
 ] as const;
 
-function Tessera({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <div className={`rounded-lg border border-filo bg-foglio p-6 sm:p-8 ${className}`}>{children}</div>;
-}
-
-function Testo({ f, n }: { f: (typeof FUNZIONI)[number]; n: number }) {
-  return (
-    <div className="grid grid-cols-[2.25rem_1fr] gap-x-3">
-      <span className="cifre pt-1 text-[0.8125rem] font-semibold text-cotto">{String(n).padStart(2, "0")}</span>
-      <div>
-        <h3 className="titolo-voce">{f.titolo}</h3>
-        <p className="prosa mt-2 text-tenue">{f.testo}</p>
-        <p className="mt-4 text-[0.8125rem] font-semibold">{f.dettaglio}</p>
-      </div>
-    </div>
-  );
-}
-
 export function Funzioni() {
   return (
     <section id="funzioni" aria-labelledby="titolo-funzioni" className="border-b border-filo">
@@ -274,19 +248,7 @@ export function Funzioni() {
           </h2>
         </div>
 
-        {/* Una sola griglia a due colonne uguali, e ogni tessera è una SUBGRID di due
-            righe (anteprima, testo): le anteprime affiancate hanno la stessa altezza e i
-            titoli partono alla stessa riga, qualunque sia il contenuto. */}
-        <div className="mt-16 grid gap-6 md:grid-cols-2">
-          {VOCI.map(([Vista, f], i) => (
-            <Rivela key={f.titolo} className="row-span-2 grid grid-rows-subgrid">
-              <Tessera className="row-span-2 grid grid-rows-subgrid gap-y-8">
-                <Vista />
-                <Testo f={f} n={i + 1} />
-              </Tessera>
-            </Rivela>
-          ))}
-        </div>
+        <GrigliaTessere voci={VOCI} className="mt-16" />
       </div>
     </section>
   );

@@ -1,10 +1,10 @@
 import { NOME, CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO } from "@/lib/sito";
 
 const VOCI = [
-  ["Funzioni", "#funzioni"],
-  ["Moduli", "#moduli"],
+  ["Funzioni", "/#funzioni"],
+  ["Moduli", "/moduli"],
   ["Sicurezza", "/sicurezza"],
-  ["Domande", "#domande"],
+  ["Domande", "/#domande"],
 ] as const;
 
 /**
@@ -27,7 +27,11 @@ export function Logotipo({ altezza = 28, suScuro = false }: { altezza?: number; 
   );
 }
 
-export function Intestazione() {
+/**
+ * `contatti`: dove porta «Richiedi una presentazione». Il modulo sta nella home e nelle
+ * pagine di settore (`BloccoContatti`): lì si resta sulla pagina, altrove si torna alla home.
+ */
+export function Intestazione({ contatti = "/#contatti" }: { contatti?: string } = {}) {
   return (
     <header className="border-b border-filo">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
@@ -52,7 +56,7 @@ export function Intestazione() {
             </a>
           )}
           {CONTATTI_ATTIVI && (
-            <a href="#contatti" className="bottone bottone-primario min-h-10 px-4 text-[0.875rem]">
+            <a href={contatti} className="bottone bottone-primario min-h-10 px-4 text-[0.875rem]">
               Richiedi una presentazione
             </a>
           )}

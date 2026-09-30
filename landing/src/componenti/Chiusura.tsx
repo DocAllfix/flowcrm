@@ -1,4 +1,5 @@
 import { CONTATTI_ATTIVI, DEMO_ATTIVA, URL_DEMO, IMPRESA, LEGALI_AGGIORNATI_AL, datiImpresa, hrefTelefono } from "@/lib/sito";
+import { MODULI } from "@/contenuti/moduli";
 import { Logotipo } from "./Intestazione";
 
 /**
@@ -6,7 +7,8 @@ import { Logotipo } from "./Intestazione";
  * copre la fascia intera una volta sola, ed è per questo che si nota. Testo in carta:
  * contrasto 5.2:1 (AA).
  */
-export function ChiamataFinale() {
+/** `contatti`: dove sta il modulo. Nella home è sulla pagina; altrove si torna alla home. */
+export function ChiamataFinale({ contatti = "/#contatti" }: { contatti?: string } = {}) {
   if (!CONTATTI_ATTIVI && !DEMO_ATTIVA) return null;
   return (
     <section aria-labelledby="titolo-finale" className="bg-cotto text-carta">
@@ -19,7 +21,7 @@ export function ChiamataFinale() {
         <div className="flex flex-wrap items-center gap-x-8 gap-y-5">
           {CONTATTI_ATTIVI ? (
             <>
-              <a href="#contatti" className="bottone bottone-due-righe bg-carta text-inchiostro hover:bg-foglio">
+              <a href={contatti} className="bottone bottone-due-righe bg-carta text-inchiostro hover:bg-foglio">
                 Richiedi una presentazione
                 {" "}
                 <span className="sotto">Ti scriviamo noi per fissarla</span>
@@ -45,6 +47,7 @@ export function ChiamataFinale() {
 
 const COLONNE = [
   ["Prodotto", [["Funzioni", "/#funzioni"], ["Moduli di settore", "/#moduli"], ["Come si parte", "/#come-si-parte"], ["Domande", "/#domande"]]],
+  ["Moduli", [["Tutti i moduli", "/moduli"], ...MODULI.map((m) => [m.nome, `/moduli/${m.id}`] as const)]],
   ["Fiducia", [["Sicurezza e dati", "/sicurezza"]]],
   ["Legale", [["Privacy", "/privacy"], ["Cookie", "/cookie"], ["Termini", "/termini"]]],
 ] as const;
@@ -65,7 +68,7 @@ export function Piede() {
           <Logotipo altezza={24} suScuro />
           <p className="prosa mt-4 max-w-xs text-[0.9375rem]">CRM e gestione per le piccole imprese italiane, un server per ogni azienda.</p>
         </div>
-        <nav aria-label="Piede" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+        <nav aria-label="Piede" className="grid grid-cols-2 gap-8 lg:grid-cols-4">
           {COLONNE.map(([titolo, voci]) => (
             <div key={titolo}>
               <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-carta">{titolo}</h2>

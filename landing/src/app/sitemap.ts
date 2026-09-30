@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { MODULI } from "@/contenuti/moduli";
 import { URL_CANONICO, LEGALI_AGGIORNATI_AL } from "@/lib/sito";
 
 /**
@@ -11,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const legali = new Date(LEGALI_AGGIORNATI_AL);
   return [
     { url: `${URL_CANONICO}/`, changeFrequency: "weekly", priority: 1 },
+    { url: `${URL_CANONICO}/moduli`, changeFrequency: "monthly", priority: 0.9 },
+    ...MODULI.map((m) => ({ url: `${URL_CANONICO}/moduli/${m.id}`, changeFrequency: "monthly" as const, priority: 0.9 })),
     { url: `${URL_CANONICO}/sicurezza`, changeFrequency: "monthly", priority: 0.8 },
     { url: `${URL_CANONICO}/privacy`, lastModified: legali, changeFrequency: "yearly", priority: 0.2 },
     { url: `${URL_CANONICO}/cookie`, lastModified: legali, changeFrequency: "yearly", priority: 0.2 },

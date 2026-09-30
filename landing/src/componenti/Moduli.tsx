@@ -6,6 +6,8 @@ import { Rivela } from "./Rivela";
  * istanza ha (quattro aree, con le voci vere del menu), sotto i cinque moduli appesi
  * con un filo. Ogni modulo dice cosa AGGIUNGE e a quali aree del nucleo si AGGANCIA.
  *
+ * Ogni scheda è il collegamento alla pagina del modulo (`/moduli/<id>`).
+ *
  * Passando su un modulo (o raggiungendolo da tastiera) le aree a cui si aggancia si
  * accendono e le altre si spengono: si vede che il cantiere usa commesse e fatture
  * senza doverlo leggere. Zero JavaScript: `:has()` più una regola per modulo, generata
@@ -92,8 +94,8 @@ export function Moduli() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {MODULI.map((m, i) => (
             <Rivela key={m.id} ritardo={i * 50} className="row-span-3 grid grid-rows-subgrid">
-              <article
-                tabIndex={0}
+              <a
+                href={`/moduli/${m.id}`}
                 data-modulo={m.id}
                 aria-labelledby={`modulo-${m.id}`}
                 className="modulo-settore relative row-span-3 grid grid-rows-subgrid gap-y-6 rounded-lg border border-filo-notte p-5 lg:before:absolute lg:before:-top-6 lg:before:left-1/2 lg:before:h-6 lg:before:w-px lg:before:bg-filo-notte"
@@ -129,8 +131,11 @@ export function Moduli() {
                     ))}
                   </p>
                   <p className="mt-3 text-[0.8125rem] leading-relaxed text-pretty text-tenue-notte">{m.ponte}</p>
+                  <p className="mt-4 text-[0.8125rem] font-semibold text-cotto-notte">
+                    Scopri il modulo <span aria-hidden="true">→</span>
+                  </p>
                 </div>
-              </article>
+              </a>
             </Rivela>
           ))}
         </div>
