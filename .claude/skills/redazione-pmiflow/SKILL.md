@@ -58,9 +58,17 @@ scrivi come se non dovesse correggere niente.
    - ogni numero di articolo di legge è verificato sulla fonte?
    - c'è qualcosa che un titolare esperto troverebbe ovvio o sbagliato?
    - le prime due frasi rispondono davvero al titolo?
+   - la grammatica è pulita? (apostrofo di «un'» solo davanti a parole femminili: «un
+     indirizzo», «un'ordinanza»; accenti; concordanze)
+   - la descrizione è una frase naturale, e non comincia ripetendo la parola chiave così
+     com'è?
 6. **Segna** la voce: `node landing/scripts/redazione.mjs segna <slug> <data>`.
-7. **Non** usare git, non creare branch o PR, non toccare altri file: ci pensa il flusso
-   che ti ha lanciato. Chiudi con un riassunto di tre righe: titolo, data, fonti usate.
+7. **Resoconto finale.** Il titolare lo legge nella PR e nella mail prima che l'articolo
+   esca con il suo nome: elenca le fonti citate e **dichiara ogni fonte che non sei
+   riuscito ad aprire o a verificare**, con cosa hai scritto al suo posto. Se hai un dubbio
+   su un'affermazione, scrivilo qui.
+8. **Non** usare git, non creare branch o PR, non toccare altri file: ci pensa il flusso
+   che ti ha lanciato.
 
 ## Modalità `pianifica`
 

@@ -59,6 +59,7 @@ jobs:
           echo "in corso: ${IN_CORSO:-nessuno}"
 
       - name: Scrittura
+        id: scrittura
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
@@ -94,6 +95,18 @@ jobs:
           npm run verifica-articoli
           npx next build
 
+      # Il resoconto finale dell'agente (fonti non verificate, dubbi) e lo stato dei
+      # collegamenti esterni finiscono nella PR e nella mail: il titolare li legge prima
+      # che l'articolo esca con il suo nome.
+      - name: Resoconto e collegamenti
+        if: steps.esito.outputs.slug != ''
+        env:
+          ESECUZIONE: ${{ steps.scrittura.outputs.execution_file }}
+          SLUG: ${{ steps.esito.outputs.slug }}
+        run: |
+          node landing/scripts/resoconto-agente.mjs "$ESECUZIONE" "landing/src/contenuti/blog/$SLUG.md" > "$RUNNER_TEMP/resoconto.md"
+          cat "$RUNNER_TEMP/resoconto.md" >> "$GITHUB_STEP_SUMMARY"
+
       - name: Anteprima del testo (simulazione)
         if: steps.esito.outputs.slug != '' && github.event_name == 'workflow_dispatch' && inputs.simulazione
         run: cat "landing/src/contenuti/blog/${{ steps.esito.outputs.slug }}.md" >> "$GITHUB_STEP_SUMMARY"
@@ -121,7 +134,9 @@ jobs:
             "- **Per correggerlo**: modifica \`$FILE\` in questa PR." \
             "- **Anteprima**: nel commento di Vercel qui sotto, alla pagina \`/blog/$SLUG\`." \
             "" \
-            "Controllo editoriale e build superati prima dell'apertura.")
+            "Controllo editoriale e build superati prima dell'apertura." \
+            "" \
+            "$(cat "$RUNNER_TEMP/resoconto.md")")
           URL=$(gh pr create --base main --head "articolo/$SLUG" --title "Blog (esce il $DATA): $TITOLO" --body "$CORPO" --label articolo-automatico)
           echo "url=$URL" >> "$GITHUB_OUTPUT"
           echo "PR: $URL" >> "$GITHUB_STEP_SUMMARY"
@@ -132,4 +147,5 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          RESOCONTO_FILE: ${{ runner.temp }}/resoconto.md
         run: node scripts/avvisa-articolo.mjs "${{ steps.esito.outputs.slug }}" "${{ steps.pr.outputs.url }}"

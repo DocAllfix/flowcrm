@@ -6,7 +6,7 @@
  *
  * Spedisce con la stessa casella del modulo contatti, a sé stessa.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import nodemailer from "nodemailer";
@@ -42,6 +42,10 @@ const testo = [
   ``,
   `Per fermarlo: nella PR metti l'etichetta «fermo», oppure chiudi la PR.`,
   `Per correggerlo: modifica il file nella PR, i controlli ripartono da soli.`,
+  // Il resoconto dell'agente (fonti non verificate, collegamenti) senza i segni Markdown.
+  ...(process.env.RESOCONTO_FILE && existsSync(process.env.RESOCONTO_FILE)
+    ? ["", "----", "", readFileSync(process.env.RESOCONTO_FILE, "utf8").replace(/[*#>_]/g, "").trim()]
+    : []),
 ].join("\n");
 
 await nodemailer
