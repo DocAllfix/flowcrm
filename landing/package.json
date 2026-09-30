@@ -9,7 +9,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "verifica-seo": "node scripts/verifica-seo.mjs",
-    "verifica-articoli": "node scripts/verifica-articoli.mjs"
+    "verifica-articoli": "node scripts/verifica-articoli.mjs",
+    "redazione": "node scripts/redazione.mjs"
   },
   "engines": {
     "node": ">=22"

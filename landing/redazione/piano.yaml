@@ -1,0 +1,452 @@
+# Piano editoriale del blog di PMIFlow.
+#
+# L'agente di redazione (skill `redazione-pmiflow`, modalità `scrivi`) prende la PRIMA
+# voce con `stato: da-scrivere`, la scrive, e la segna `scritto` con lo slug e la data.
+# L'ordine è la priorità: settori alternati, argomenti stagionali prima della stagione.
+#
+# Parole chiave dalle ricerche reali (autocompletamento di Google, 29/09/2026). Niente
+# volumi: servirebbero strumenti a pagamento. Da novembre 2026 il piano si aggiorna ogni
+# mese con i dati di Search Console (modalità `pianifica`).
+#
+# Regole: una parola chiave per articolo, mai la stessa due volte (il controllo lo
+# impedisce); ogni settore ha almeno 4 articoli che portano alla sua pagina /moduli/<id>.
+#
+# Campi: slug, settore, titolo (provvisorio, l'agente può migliorarlo), parolaChiave,
+# correlate (da usare nel testo), intento (informativo | pratico | scelta), angolo (cosa
+# deve avere l'articolo per essere migliore di quello che c'è già), stato, data.
+
+voci:
+  - slug: sal-cantiere-cosa-e-come-si-calcola
+    settore: cantiere
+    titolo: "SAL di cantiere: cos'è, come si calcola e chi lo approva"
+    parolaChiave: "SAL cantiere"
+    correlate: ["stato avanzamento lavori", "sal cantiere esempio", "sal cantiere edile"]
+    intento: informativo
+    angolo: "Definizione in due frasi, esempio numerico in percentuali e quantità (niente euro), chi lo firma, il legame con libretto delle misure e fattura."
+    stato: scritto
+    data: 2026-09-30
+
+  - slug: decidere-se-partecipare-gara-appalto
+    settore: gare
+    titolo: "Partecipare o no a una gara d'appalto: il metodo go/no-go"
+    parolaChiave: "decidere se partecipare a una gara d'appalto"
+    correlate: ["come partecipare a gare d'appalto", "come vincere gare d'appalto"]
+    intento: pratico
+    angolo: "Criteri con punteggio (requisiti, margine, capacità, rapporto con l'ente, concorrenza), soglia di decisione, esempio compilato; errori di chi partecipa a tutto."
+    stato: scritto
+    data: 2026-10-01
+
+  - slug: scadenzario-mezzi-aziendali
+    settore: automezzi
+    titolo: "Scadenzario dei mezzi aziendali: revisione, bollo, assicurazione"
+    parolaChiave: "scadenzario mezzi aziendali"
+    correlate: ["scadenzario manutenzione mezzi", "scadenza revisione", "gestione flotta aziendale"]
+    intento: pratico
+    angolo: "Tabella delle scadenze per tipo di mezzo con periodicità (revisione dalle fonti MIT), come impostare i promemoria, chi è responsabile."
+    stato: scritto
+    data: 2026-10-02
+
+  - slug: pneumatici-invernali-mezzi-aziendali
+    settore: automezzi
+    titolo: "Pneumatici invernali sui mezzi aziendali: obblighi e cambio"
+    parolaChiave: "obbligo pneumatici invernali mezzi aziendali"
+    correlate: ["gomme invernali furgoni", "cambio gomme flotta"]
+    intento: pratico
+    angolo: "Periodo di obbligo e deroghe regionali (fonti ufficiali), come pianificare il cambio su più mezzi senza fermarli, deposito e registro. Uscire entro metà ottobre."
+    stato: da-scrivere
+
+  - slug: provvigioni-agenti-come-calcolarle
+    settore: agenti
+    titolo: "Provvigioni degli agenti di commercio: come si calcolano"
+    parolaChiave: "calcolo provvigioni agenti di commercio"
+    correlate: ["percentuale provvigioni agenti di commercio", "pagamento provvigioni agenti di commercio"]
+    intento: informativo
+    angolo: "Base di calcolo, piani provvigionali a scaglioni con esempio in percentuali, quando si liquidano, cosa mettere nel mandato."
+    stato: da-scrivere
+
+  - slug: ridurre-no-show-ambulatorio
+    settore: poliambulatori
+    titolo: "Pazienti che non si presentano: come ridurre i no show"
+    parolaChiave: "no show pazienti"
+    correlate: ["disdette appuntamenti studio medico", "promemoria appuntamenti"]
+    intento: pratico
+    angolo: "Perché succede, promemoria e conferme, politica di disdetta, lista d'attesa, misurare il tasso di no show per professionista."
+    stato: da-scrivere
+
+  - slug: rapportino-giornaliero-cantiere
+    settore: cantiere
+    titolo: "Rapportino giornaliero di cantiere: cosa scriverci e un modello"
+    parolaChiave: "rapportino giornaliero di cantiere"
+    correlate: ["rapportino di cantiere", "rapportino di cantiere fac simile"]
+    intento: pratico
+    angolo: "I campi indispensabili in una tabella da copiare, esempio compilato, chi lo scrive e chi lo legge, perché serve anche per SAL e contestazioni."
+    stato: da-scrivere
+
+  - slug: cauzione-provvisoria-definitiva
+    settore: gare
+    titolo: "Cauzione provvisoria e definitiva negli appalti pubblici"
+    parolaChiave: "cauzione provvisoria e definitiva"
+    correlate: ["garanzia provvisoria d.lgs. 36/2023", "cauzione provvisoria nuovo codice appalti"]
+    intento: informativo
+    angolo: "Differenza, quando si chiedono, percentuali e riduzioni secondo il D.Lgs. 36/2023 (artt. 106 e 117, verificare su normattiva), svincolo e restituzione: come non dimenticarle."
+    stato: da-scrivere
+
+  - slug: crm-per-piccole-imprese
+    settore: nucleo
+    titolo: "CRM per piccole imprese: cos'è e quando serve davvero"
+    parolaChiave: "CRM per piccole imprese"
+    correlate: ["gestionale piccole imprese", "gestione clienti"]
+    intento: scelta
+    angolo: "Segnali che servono (clienti persi, offerte dimenticate), cosa deve fare il minimo, errori tipici nell'adozione, dove stanno i dati."
+    stato: da-scrivere
+
+  - slug: verifica-durc-subappaltatori
+    settore: cantiere
+    titolo: "DURC dei subappaltatori: verifica, scadenze e responsabilità"
+    parolaChiave: "verifica DURC subappaltatori"
+    correlate: ["durc congruità subappaltatori", "obbligo durc subappaltatori"]
+    intento: informativo
+    angolo: "Chi deve verificarlo e quando (fonti INPS/INAIL), validità, DURC di congruità, cosa succede se è irregolare, come tenerlo in scadenza."
+    stato: da-scrivere
+
+  - slug: rapporto-di-visita-cliente
+    settore: agenti
+    titolo: "Il rapporto di visita al cliente: cosa scrivere e un modello"
+    parolaChiave: "rapporto di visita cliente"
+    correlate: ["report visita commerciale", "gestione rete vendita"]
+    intento: pratico
+    angolo: "Campi del rapporto (esito, referenti, opportunità, criticità, prossimo passo), esempio compilato, come la direzione lo legge."
+    stato: da-scrivere
+
+  - slug: gestionale-studio-medico-come-scegliere
+    settore: poliambulatori
+    titolo: "Gestionale per studio medico: cosa deve fare e come sceglierlo"
+    parolaChiave: "gestionale studio medico"
+    correlate: ["software gestionale per studio medico", "gestionale appuntamenti studio medico"]
+    intento: scelta
+    angolo: "Requisiti: agenda, pazienti, referti, riservatezza e accessi, dove stanno i dati (GDPR), domande da fare al fornitore."
+    stato: da-scrivere
+
+  - slug: come-partecipare-gare-appalto
+    settore: gare
+    titolo: "Come partecipare alle gare d'appalto: guida per piccole imprese"
+    parolaChiave: "come partecipare a gare d'appalto"
+    correlate: ["gare d'appalto come funziona", "come trovare gare d'appalto"]
+    intento: informativo
+    angolo: "Passi dalla registrazione alle piattaforme all'aggiudicazione, requisiti generali e speciali, documenti ricorrenti, calendario tipo."
+    stato: da-scrivere
+
+  - slug: costo-chilometrico-mezzi-aziendali
+    settore: automezzi
+    titolo: "Costo al chilometro dei mezzi aziendali: come si calcola"
+    parolaChiave: "costo chilometrico mezzi aziendali"
+    correlate: ["costo chilometrico auto", "gestione flotta aziendale"]
+    intento: pratico
+    angolo: "Voci fisse e variabili, formula spiegata a parole e con quantità (litri, km, ore di fermo), perché confrontare i mezzi fra loro; tabelle ACI citate come riferimento senza cifre."
+    stato: da-scrivere
+
+  - slug: cronoprogramma-lavori-edili
+    settore: cantiere
+    titolo: "Cronoprogramma dei lavori edili: come farlo e tenerlo aggiornato"
+    parolaChiave: "cronoprogramma lavori edili"
+    correlate: ["cronoprogramma lavori esempio", "cronoprogramma lavori excel"]
+    intento: pratico
+    angolo: "Fasi, durate, dipendenze, esempio di una ristrutturazione in tabella, come aggiornarlo con i rapportini, limiti del foglio Excel."
+    stato: da-scrivere
+
+  - slug: fatture-da-incassare-solleciti
+    settore: nucleo
+    titolo: "Fatture da incassare: come organizzare i solleciti"
+    parolaChiave: "sollecito fatture da incassare"
+    correlate: ["fatture da incassare", "incassi previsti"]
+    intento: pratico
+    angolo: "Scadenzario degli incassi, sequenza di solleciti con testi di esempio, chi se ne occupa, quando passare a vie formali."
+    stato: da-scrivere
+
+  - slug: maturazione-provvigioni-agenti
+    settore: agenti
+    titolo: "Quando matura la provvigione dell'agente di commercio"
+    parolaChiave: "maturazione provvigioni agenti di commercio"
+    correlate: ["storno provvigioni agenti", "pagamento provvigioni"]
+    intento: informativo
+    angolo: "Diritto alla provvigione secondo il Codice civile (art. 1748, fonte normattiva) e gli accordi economici, casi pratici, storni."
+    stato: da-scrivere
+
+  - slug: consenso-informato-conservazione
+    settore: poliambulatori
+    titolo: "Consenso informato nello studio medico: come conservarlo"
+    parolaChiave: "consenso informato conservazione"
+    correlate: ["gdpr studio medico", "consenso informato legge"]
+    intento: informativo
+    angolo: "Differenza tra consenso informato al trattamento sanitario (Legge 219/2017) e informativa privacy, dove e come conservarli, accessi; fonti Garante e normattiva."
+    stato: da-scrivere
+
+  - slug: soccorso-istruttorio-appalti
+    settore: gare
+    titolo: "Soccorso istruttorio negli appalti: cos'è e quando si usa"
+    parolaChiave: "soccorso istruttorio appalti"
+    correlate: ["soccorso istruttorio 36/2023", "soccorso istruttorio termini"]
+    intento: informativo
+    angolo: "Cosa si può sanare e cosa no secondo l'art. 101 del D.Lgs. 36/2023 (verificare su normattiva), termini, come prevenirlo con una checklist documenti."
+    stato: da-scrivere
+
+  - slug: libretto-delle-misure
+    settore: cantiere
+    titolo: "Libretto delle misure: cos'è, chi lo compila, un esempio"
+    parolaChiave: "libretto delle misure"
+    correlate: ["libretto delle misure esempio", "libretto delle misure e registro di contabilità"]
+    intento: informativo
+    angolo: "Ruolo nella contabilità dei lavori, voci di misura con esempio in tabella (quantità e unità), collegamento con il SAL."
+    stato: da-scrivere
+
+  - slug: registro-utilizzo-mezzi-aziendali
+    settore: automezzi
+    titolo: "Registro di utilizzo dei mezzi aziendali: perché tenerlo e come"
+    parolaChiave: "registro utilizzo auto aziendale"
+    correlate: ["auto aziendale uso promiscuo", "assegnazione auto aziendale"]
+    intento: pratico
+    angolo: "Campi (conducente, km, destinazione, anomalie), a cosa serve per costi, multe e sinistri, regolamento interno di esempio."
+    stato: da-scrivere
+
+  - slug: pipeline-vendite-cos-e
+    settore: nucleo
+    titolo: "Pipeline delle vendite: cos'è e come si legge il valore pesato"
+    parolaChiave: "pipeline vendite"
+    correlate: ["pipeline vendite significato", "valore pesato trattative"]
+    intento: informativo
+    angolo: "Fasi tipiche per una piccola impresa, probabilità per fase, esempio di valore pesato in percentuali, cosa guardare ogni settimana."
+    stato: da-scrivere
+
+  - slug: obiettivi-commerciali-agenti
+    settore: agenti
+    titolo: "Obiettivi commerciali per gli agenti: come fissarli e seguirli"
+    parolaChiave: "obiettivi commerciali agenti"
+    correlate: ["gestione rete vendita", "obiettivi commerciali"]
+    intento: pratico
+    angolo: "Obiettivi di fatturato, clienti nuovi e visite; come ripartirli per zona; revisione trimestrale; esempio in percentuali."
+    stato: da-scrivere
+
+  - slug: agenda-ambulatorio-organizzare
+    settore: poliambulatori
+    titolo: "Agenda dell'ambulatorio: organizzarla tra sale e professionisti"
+    parolaChiave: "agenda ambulatorio"
+    correlate: ["gestionale appuntamenti studio medico", "organizzazione poliambulatorio"]
+    intento: pratico
+    angolo: "Slot per prestazione, sale e apparecchiature condivise, tempi tecnici, urgenze, stati dell'appuntamento."
+    stato: da-scrivere
+
+  - slug: offerta-economicamente-piu-vantaggiosa
+    settore: gare
+    titolo: "Offerta economicamente più vantaggiosa o minor prezzo"
+    parolaChiave: "offerta economicamente più vantaggiosa"
+    correlate: ["oepv 36/2023", "criterio del minor prezzo"]
+    intento: informativo
+    angolo: "Criteri secondo l'art. 108 del D.Lgs. 36/2023 (verificare), come si legge una griglia di valutazione tecnica, come preparare l'offerta tecnica."
+    stato: da-scrivere
+
+  - slug: gestionale-cantiere-edile-come-sceglierlo
+    settore: cantiere
+    titolo: "Gestionale per cantiere edile: cosa deve fare, come sceglierlo"
+    parolaChiave: "gestionale cantiere edile"
+    correlate: ["software gestionale cantiere", "gestionale per cantiere edile"]
+    intento: scelta
+    angolo: "Checklist dei requisiti (SAL, subappaltatori, scadenze, rapportini, telefono), domande al fornitore, dove stanno i dati. Nessun concorrente citato."
+    stato: da-scrivere
+
+  - slug: multe-auto-aziendale-chi-paga
+    settore: automezzi
+    titolo: "Multe con l'auto aziendale: chi paga e come gestirle"
+    parolaChiave: "multe auto aziendale chi paga"
+    correlate: ["multe dipendente auto aziendale", "comunicazione dati conducente"]
+    intento: informativo
+    angolo: "Comunicazione dei dati del conducente (Codice della strada, art. 126-bis, fonte normattiva), regolamento aziendale, registro per risalire al conducente."
+    stato: da-scrivere
+
+  - slug: gestione-commesse-piccola-impresa
+    settore: nucleo
+    titolo: "Gestione delle commesse: dalla trattativa vinta alla fattura"
+    parolaChiave: "gestione commesse"
+    correlate: ["commessa di lavoro", "controllo di commessa"]
+    intento: pratico
+    angolo: "Cosa passa dalla trattativa alla commessa, budget e avanzamento, documenti, chiusura; esempio di una piccola impresa di servizi."
+    stato: da-scrivere
+
+  - slug: referti-validazione-flusso
+    settore: poliambulatori
+    titolo: "Referti medici: il flusso dalla bozza alla consegna al paziente"
+    parolaChiave: "validazione referti"
+    correlate: ["referto medico", "consegna referti"]
+    intento: pratico
+    angolo: "Stati del referto, chi valida, tempi, consegna e privacy (fonti Garante), errori da evitare."
+    stato: da-scrivere
+
+  - slug: gestione-rete-vendita-pmi
+    settore: agenti
+    titolo: "Gestire una rete vendita in una piccola impresa"
+    parolaChiave: "gestione rete vendita"
+    correlate: ["direzione commerciale", "agenti di commercio"]
+    intento: pratico
+    angolo: "Zone, portafogli, riunioni, rapporti di visita, provvigioni e obiettivi: un sistema minimo che regge con 3-10 agenti."
+    stato: da-scrivere
+
+  - slug: requisiti-partecipazione-gara
+    settore: gare
+    titolo: "Requisiti di partecipazione alle gare: generali e speciali"
+    parolaChiave: "requisiti di partecipazione gara d'appalto"
+    correlate: ["requisiti speciali", "attestazione SOA"]
+    intento: informativo
+    angolo: "Requisiti generali (cause di esclusione) e speciali (capacità economica, tecnica, SOA) secondo il D.Lgs. 36/2023, checklist da tenere aggiornata."
+    stato: da-scrivere
+
+  - slug: controllo-costi-di-cantiere
+    settore: cantiere
+    titolo: "Controllo dei costi di cantiere: preventivo contro consuntivo"
+    parolaChiave: "controllo costi di cantiere"
+    correlate: ["costi di cantiere", "margine di commessa edile"]
+    intento: pratico
+    angolo: "Voci di costo, rilevazione settimanale, scostamenti in percentuale, quando intervenire; esempio senza importi."
+    stato: da-scrivere
+
+  - slug: manutenzione-programmata-mezzi
+    settore: automezzi
+    titolo: "Manutenzione programmata dei mezzi aziendali: un piano semplice"
+    parolaChiave: "manutenzione programmata mezzi aziendali"
+    correlate: ["registro manutenzioni automezzi", "tagliando furgone"]
+    intento: pratico
+    angolo: "Intervalli per km e per tempo, registro, ore di fermo, officine; come ridurre i fermi improvvisi."
+    stato: da-scrivere
+
+  - slug: gdpr-studio-medico
+    settore: poliambulatori
+    titolo: "GDPR nello studio medico: le cose da fare davvero"
+    parolaChiave: "GDPR studio medico"
+    correlate: ["privacy studio medico", "dati sanitari"]
+    intento: informativo
+    angolo: "Informativa, registro dei trattamenti, accessi ai dati clinici, fornitori e server, violazioni; fonti Garante. Nessuna promessa di conformità."
+    stato: da-scrivere
+
+  - slug: scadenzario-fiscale-azienda
+    settore: nucleo
+    titolo: "Scadenzario fiscale aziendale: come organizzarlo"
+    parolaChiave: "scadenzario fiscale aziendale"
+    correlate: ["scadenzario fiscale", "promemoria scadenze fiscali"]
+    intento: pratico
+    angolo: "Chi fa cosa tra azienda e commercialista, calendario ricorrente (F24, IVA, dichiarazioni) con rimando al calendario ufficiale dell'Agenzia delle Entrate, promemoria."
+    stato: da-scrivere
+
+  - slug: avvalimento-appalti
+    settore: gare
+    titolo: "Avvalimento negli appalti: cos'è e quando conviene"
+    parolaChiave: "avvalimento appalti"
+    correlate: ["avvalimento soa", "avvalimento premiale"]
+    intento: informativo
+    angolo: "Definizione secondo l'art. 104 del D.Lgs. 36/2023 (verificare), contratto di avvalimento, rischi e responsabilità, quando ha senso per una piccola impresa."
+    stato: da-scrivere
+
+  - slug: storno-provvigioni-agenti
+    settore: agenti
+    titolo: "Storno delle provvigioni: quando si può fare e come gestirlo"
+    parolaChiave: "storno provvigioni agenti"
+    correlate: ["provvigioni non pagate", "insoluti e provvigioni"]
+    intento: informativo
+    angolo: "Casi (mancato pagamento del cliente, resi), cosa dice il contratto, registrazione e comunicazione all'agente."
+    stato: da-scrivere
+
+  - slug: registro-rifiuti-cantiere-fir
+    settore: cantiere
+    titolo: "Rifiuti di cantiere: formulario FIR e registro, cosa fare"
+    parolaChiave: "formulario rifiuti cantiere"
+    correlate: ["FIR cantiere", "rifiuti da demolizione"]
+    intento: informativo
+    angolo: "Chi è il produttore, FIR e RENTRI (fonti ufficiali), cosa annotare per ogni conferimento, errori comuni."
+    stato: da-scrivere
+
+  - slug: manutenzione-apparecchiature-elettromedicali
+    settore: poliambulatori
+    titolo: "Manutenzione delle apparecchiature elettromedicali: il calendario"
+    parolaChiave: "manutenzione apparecchiature elettromedicali"
+    correlate: ["verifiche di sicurezza elettrica", "taratura apparecchiature"]
+    intento: pratico
+    angolo: "Manutenzione, verifiche e tarature, registro per apparecchio, fermo e sostituzione in agenda."
+    stato: da-scrivere
+
+  - slug: gestione-flotta-aziendale-excel
+    settore: automezzi
+    titolo: "Gestire la flotta aziendale con Excel: fin dove regge"
+    parolaChiave: "gestione flotta aziendale excel"
+    correlate: ["software gestione flotta aziendale", "gestione flotta aziendale"]
+    intento: scelta
+    angolo: "Il foglio minimo (colonne), i limiti quando crescono mezzi e persone, i segnali che è ora di passare a uno strumento."
+    stato: da-scrivere
+
+  - slug: gestionale-piccole-imprese-come-scegliere
+    settore: nucleo
+    titolo: "Gestionale per piccole imprese: come scegliere senza sbagliare"
+    parolaChiave: "gestionale per piccole imprese"
+    correlate: ["software gestionale piccole imprese", "gestionale aziendale piccole imprese"]
+    intento: scelta
+    angolo: "Domande da farsi prima, requisiti minimi, dove stanno i dati, esportazione, assistenza, prova sui propri dati."
+    stato: da-scrivere
+
+  - slug: agente-monomandatario-plurimandatario
+    settore: agenti
+    titolo: "Agente monomandatario o plurimandatario: cosa cambia"
+    parolaChiave: "agente monomandatario"
+    correlate: ["agente plurimandatario", "mandato di agenzia"]
+    intento: informativo
+    angolo: "Differenze nel mandato, esclusiva, zone, contributi (rimando a enasarco.it senza calcoli), cosa scegliere per una piccola impresa."
+    stato: da-scrivere
+
+  - slug: come-trovare-gare-appalto
+    settore: gare
+    titolo: "Come trovare le gare d'appalto giuste per la tua impresa"
+    parolaChiave: "come trovare gare d'appalto"
+    correlate: ["banche dati ANAC", "piattaforme di e-procurement"]
+    intento: pratico
+    angolo: "Fonti pubbliche (ANAC, piattaforme regionali, MEPA), filtri per CPV e territorio, routine settimanale. Dire che PMIFlow non scarica i bandi."
+    stato: da-scrivere
+
+  - slug: non-conformita-cantiere
+    settore: cantiere
+    titolo: "Non conformità in cantiere: come registrarle e chiuderle"
+    parolaChiave: "non conformità in cantiere"
+    correlate: ["controlli qualità cantiere", "piano di controllo qualità"]
+    intento: pratico
+    angolo: "Cosa è una non conformità, registrazione, azione correttiva, verifica di chiusura; esempio di massetto fuori tolleranza."
+    stato: da-scrivere
+
+  - slug: revisione-mezzi-aziendali
+    settore: automezzi
+    titolo: "Revisione dei mezzi aziendali: ogni quanto, per auto e furgoni"
+    parolaChiave: "revisione mezzi aziendali"
+    correlate: ["scadenza revisione furgone", "revisione autocarro"]
+    intento: informativo
+    angolo: "Periodicità per categoria dalle fonti MIT e Portale dell'automobilista, cosa succede se scade, come non farla scadere su più mezzi."
+    stato: da-scrivere
+
+  - slug: dove-stanno-i-dati-del-gestionale
+    settore: nucleo
+    titolo: "Dove stanno i dati del tuo gestionale, e perché conta"
+    parolaChiave: "dati gestionale server europa"
+    correlate: ["gdpr gestionale", "server dedicato"]
+    intento: informativo
+    angolo: "Differenza tra servizio condiviso e istanza dedicata, trasferimenti fuori UE, backup e ripristino, domande al fornitore."
+    stato: da-scrivere
+
+  - slug: portafoglio-clienti-agente-riassegnazione
+    settore: agenti
+    titolo: "Quando un agente se ne va: riassegnare il portafoglio clienti"
+    parolaChiave: "riassegnazione portafoglio clienti agente"
+    correlate: ["cessazione mandato agente", "passaggio clienti"]
+    intento: pratico
+    angolo: "Inventario dei clienti, storico delle visite, comunicazione ai clienti, provvigioni residue, errori che fanno perdere clienti."
+    stato: da-scrivere
+
+  - slug: richiesta-chiarimenti-gara
+    settore: gare
+    titolo: "Richiesta di chiarimenti in una gara: come scriverla"
+    parolaChiave: "richiesta di chiarimenti gara"
+    correlate: ["quesiti gara d'appalto", "chiarimenti stazione appaltante"]
+    intento: pratico
+    angolo: "Quando chiedere, termini, come formulare la domanda (esempi), come usare le risposte pubblicate."
+    stato: da-scrivere
