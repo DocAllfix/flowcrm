@@ -53,7 +53,8 @@ voci:
     correlate: ["gomme invernali furgoni", "cambio gomme flotta"]
     intento: pratico
     angolo: "Periodo di obbligo e deroghe regionali (fonti ufficiali), come pianificare il cambio su più mezzi senza fermarli, deposito e registro. Uscire entro metà ottobre."
-    stato: da-scrivere
+    stato: scritto
+    data: 2026-10-04
 
   - slug: provvigioni-agenti-come-calcolarle
     settore: agenti
