@@ -93,7 +93,7 @@ export function CassaSezione({ modulo }: { modulo: string }) {
 function SessioneCassa({ modulo }: { modulo: string }) {
   const { data: sessioni = [] } = useElenco<Sessione>('cassa_sessioni', { filtri: { modulo, stato: 'aperta' } })
   const apri = useInserisci('cassa_sessioni')
-  const chiudi = useAzione<{ p_sessione: string; p_contanti_contati: number }, number>('chiudi_sessione_cassa', ['cassa_sessioni'])
+  const chiudi = useAzione('chiudi_sessione_cassa', ['cassa_sessioni'])
   const [fondo, setFondo] = useState('100')
   const [contati, setContati] = useState('')
   const s = sessioni[0]
@@ -151,9 +151,9 @@ function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; cont
   const paga = useInserisci('conti_pagamenti', TABELLE)
   const salvaConto = useSalva('conti', TABELLE)
   const salvaRiga = useSalva('conti_righe', TABELLE)
-  const chiudi = useAzione<{ p_conto: string }>('chiudi_conto', TABELLE)
-  const sposta = useAzione<{ p_righe: string[]; p_destinazione: string }, number>('sposta_righe_conto', TABELLE)
-  const coupon = useAzione<{ p_conto: string; p_codice: string }, number>('applica_coupon', TABELLE)
+  const chiudi = useAzione('chiudi_conto', TABELLE)
+  const sposta = useAzione('sposta_righe_conto', TABELLE)
+  const coupon = useAzione('applica_coupon', TABELLE)
 
   const [metodo, setMetodo] = useState<Metodo>('contanti')
   const [importo, setImporto] = useState('')

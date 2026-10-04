@@ -153,14 +153,20 @@ export function useElimina(tabella: NomeTabella, altreTabelle: readonly string[]
   })
 }
 
-/** Funzione del database che modifica dati (chiudi conto, marcia, rifai…). */
-export function useAzione<A extends Record<string, unknown>, R = unknown>(fn: NomeFunzione, tabelle: readonly string[]) {
+type Funzioni = Database['public']['Functions']
+
+/**
+ * Funzione del database che modifica dati (chiudi conto, marcia, rifai…).
+ * Argomenti e risultato sono quelli dichiarati nel database: un parametro
+ * con il nome sbagliato non compila.
+ */
+export function useAzione<F extends NomeFunzione>(fn: F, tabelle: readonly string[]) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: async (args: A): Promise<R> => {
+    mutationFn: async (args: Funzioni[F]['Args']): Promise<Funzioni[F]['Returns']> => {
       const { data, error } = await supabase.rpc(fn as 'chiudi_conto', args as never)
       if (error) throw error
-      return data as unknown as R
+      return data as Funzioni[F]['Returns']
     },
     onSuccess: () => invalida(qc, tabelle),
   })

@@ -14,6 +14,13 @@ const ComandaPage = pagina(() => import('@/modules/fb/pages/ComandaPage'), 'Coma
 const CucinaPage = pagina(() => import('@/modules/fb/pages/CucinaPage'), 'CucinaPage')
 const CassaPage = pagina(() => import('@/modules/fb/pages/CassaPage'), 'CassaPage')
 const CatalogoPage = pagina(() => import('@/modules/fb/pages/CatalogoPage'), 'CatalogoPage')
+const CantinaPage = pagina(() => import('@/modules/fb/pages/CantinaPage'), 'CantinaPage')
+const ClientiPage = pagina(() => import('@/modules/fb/pages/ClientiPage'), 'ClientiPage')
+const AnalisiPage = pagina(() => import('@/modules/fb/pages/AnalisiPage'), 'AnalisiPage')
+const MagazzinoFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'MagazzinoFbPage')
+const ControlliFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'ControlliFbPage')
+const PersonaleFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'PersonaleFbPage')
+const EventiFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'EventiFbPage')
 
 function Ristorante({ children }: { children: ReactNode }) {
   return (
@@ -38,6 +45,13 @@ export function ristoranteRoutes() {
       <Route path="/ristorante/cucina" element={<Ristorante><CucinaPage /></Ristorante>} />
       <Route path="/ristorante/cassa" element={<Ristorante><CassaPage /></Ristorante>} />
       <Route path="/ristorante/catalogo" element={<Ristorante><CatalogoPage /></Ristorante>} />
+      <Route path="/ristorante/cantina" element={<Ristorante><CantinaPage /></Ristorante>} />
+      <Route path="/ristorante/magazzino" element={<Ristorante><MagazzinoFbPage /></Ristorante>} />
+      <Route path="/ristorante/controlli" element={<Ristorante><ControlliFbPage /></Ristorante>} />
+      <Route path="/ristorante/personale" element={<Ristorante><PersonaleFbPage /></Ristorante>} />
+      <Route path="/ristorante/eventi" element={<Ristorante><EventiFbPage /></Ristorante>} />
+      <Route path="/ristorante/clienti" element={<Ristorante><ClientiPage /></Ristorante>} />
+      <Route path="/ristorante/analisi" element={<Ristorante><AnalisiPage /></Ristorante>} />
     </>
   )
 }

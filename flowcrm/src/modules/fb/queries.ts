@@ -79,13 +79,13 @@ export function useSaldoConto(contoId: string | null | undefined) {
 }
 
 export function useMarciaUscita() {
-  return useAzione<{ p_comanda: string; p_uscita: number }, number>('fb_marcia_uscita', TABELLE_SERVIZIO)
+  return useAzione('fb_marcia_uscita', TABELLE_SERVIZIO)
 }
 export function useRifaiRiga() {
-  return useAzione<{ p_riga: string; p_motivo: string }, string>('fb_rifai_riga', TABELLE_SERVIZIO)
+  return useAzione('fb_rifai_riga', TABELLE_SERVIZIO)
 }
 export function useImpostaDisponibilita() {
-  return useAzione<{ p_prodotto: string; p_stato: string }>('fb_imposta_disponibilita', ['fb_prodotti'])
+  return useAzione('fb_imposta_disponibilita', ['fb_prodotti'])
 }
 
 export interface Cruscotto {

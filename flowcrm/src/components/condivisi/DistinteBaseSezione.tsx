@@ -216,7 +216,7 @@ function EditorDistinta({ distinta, distinte, moduli, riepilogo, tipi, etichetta
           <dl className="flex gap-6 text-right text-sm">
             <div><dt className="text-muted-foreground">Costo totale</dt><dd data-slot="kpi" className="text-title text-foreground">{euro(costoTot)}</dd></div>
             <div><dt className="text-muted-foreground">Per {testa.unita || 'porzione'}</dt><dd data-slot="kpi" className="text-title text-foreground">{euro(costoPorz)}</dd></div>
-            {prezzo > 0 && <div><dt className="text-muted-foreground">Food cost</dt><dd data-slot="kpi" className="text-title text-foreground">{((costoPorz / prezzo) * 100).toFixed(1)}%</dd></div>}
+            {prezzo > 0 && <div><dt className="text-muted-foreground">Food cost</dt><dd data-slot="kpi" className="text-title text-foreground">{new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1 }).format((costoPorz / prezzo) * 100)}%</dd></div>}
           </dl>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">

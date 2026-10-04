@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
 import { useElenco, useSalva, messaggioErrore } from '@/lib/queries/fondamenta'
 import { useFb } from '@/modules/fb/contesto'
-import { CercaContatto } from '@/modules/fb/componenti/CercaContatto'
+import { CercaContatto } from '@/components/condivisi/CercaContatto'
 import { ALLERGENI, CANALE_PRENOTAZIONE_LABEL, PRENOTAZIONE_STATO } from '@/modules/fb/stati'
 import type { Prenotazione, Sala, Tavolo } from '@/modules/fb/queries'
 

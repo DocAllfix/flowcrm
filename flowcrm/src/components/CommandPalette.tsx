@@ -1,9 +1,15 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, Building2, User, Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse } from 'lucide-react'
+import {
+  Search, Building2, User, Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, CalendarClock, PartyPopper,
+} from 'lucide-react'
+import { moduliAttivi } from '@/config/moduli.config'
 import { useRicercaGlobale } from '@/lib/queries/ricerca'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
+
+/** Il modulo food & beverage attivo (Ristorante prima del Bar) per i risultati del catalogo condiviso. */
+const baseFb = () => (moduliAttivi().some((m) => m.slug === 'ristorante') ? '/ristorante' : '/bar')
 
 /** Nome dell'evento con cui il resto dell'interfaccia chiede la palette. */
 const EVENTO_APERTURA = 'flowcrm:apri-palette'
@@ -73,6 +79,13 @@ export function CommandPalette() {
     else if (r.tipo === 'automezzo') navigate(`/automezzi/${r.id}`)
     else if (r.tipo === 'agente') navigate(`/agenti/${r.id}`)
     else if (r.tipo === 'paziente') navigate(`/pazienti/${r.id}`)
+    else if (r.tipo === 'prodotto_fb') navigate(`${baseFb()}/catalogo`)
+    else if (r.tipo === 'prenotazione_fb') navigate(`${baseFb()}/prenotazioni`)
+    else if (r.tipo === 'evento') {
+      // il sottotitolo comincia con il modulo dell'evento («ristorante · 14/11/2026»)
+      const modulo = (r.sottotitolo ?? '').split(' · ')[0]
+      navigate(modulo && modulo !== 'fb' ? `/${modulo}/eventi` : `${baseFb()}/eventi`)
+    }
     else navigate(`/contatti/${r.id}`)
   }
 
@@ -114,6 +127,9 @@ export function CommandPalette() {
                 : r.tipo === 'automezzo' ? Truck
                 : r.tipo === 'agente' ? BriefcaseBusiness
                 : r.tipo === 'paziente' ? HeartPulse
+                : r.tipo === 'prodotto_fb' ? UtensilsCrossed
+                : r.tipo === 'prenotazione_fb' ? CalendarClock
+                : r.tipo === 'evento' ? PartyPopper
                 : User
               return (
                 <button
@@ -137,6 +153,9 @@ export function CommandPalette() {
                       : r.tipo === 'automezzo' ? 'Mezzo'
                       : r.tipo === 'agente' ? 'Agente'
                       : r.tipo === 'paziente' ? 'Paziente'
+                      : r.tipo === 'prodotto_fb' ? 'Piatto'
+                      : r.tipo === 'prenotazione_fb' ? 'Prenotazione'
+                      : r.tipo === 'evento' ? 'Evento'
                       : 'Contatto'}
                   </span>
                 </button>

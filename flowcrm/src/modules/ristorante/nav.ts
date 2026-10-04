@@ -28,7 +28,7 @@ export const RISTORANTE_NAV: NavSection[] = [
       { label: 'Personale e turni', path: '/ristorante/personale', icon: Users },
       { label: 'Eventi e banqueting', path: '/ristorante/eventi', icon: PartyPopper },
       { label: 'Clienti e fidelity', path: '/ristorante/clienti', icon: HeartHandshake },
-      { label: 'Analisi', path: '/ristorante/analisi', icon: ChartPie },
+      { label: 'Analisi', path: '/ristorante/analisi', icon: ChartPie, managerOnly: true },
     ],
   },
 ]

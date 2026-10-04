@@ -28,7 +28,7 @@ import type { Database } from '@/types/database.types'
 import { useFb } from '@/modules/fb/contesto'
 import { ConLocale, SelettoreLocale } from '@/modules/fb/componenti/SelettoreLocale'
 import { ProdottoDialog } from '@/modules/fb/dialogs/ProdottoDialog'
-import { MENU_TIPO_LABEL, PROMO_TIPO_LABEL, CANALE_LABEL, etichettaAllergene, etichettaUscita, fmtEuro } from '@/modules/fb/stati'
+import { MENU_TIPO_LABEL, PROMO_TIPO_LABEL, CANALE_LABEL, etichettaAllergene, etichettaUscita, fmtEuro, fmtNumero } from '@/modules/fb/stati'
 import {
   useCatalogo, useImpostaDisponibilita, type Categoria, type Menu, type MenuVoce, type Prodotto, type Promozione, type Stazione,
 } from '@/modules/fb/queries'
@@ -136,7 +136,7 @@ function ProdottiTab({ prodotti, categorie }: { prodotti: Prodotto[]; categorie:
                     {isManager && <>
                       <TableCell numerica>{fmtEuro(e?.costo)}</TableCell>
                       <TableCell numerica>{fmtEuro(e?.margine)}</TableCell>
-                      <TableCell numerica>{e?.food_cost_pct != null ? <Badge tone={tonoFc(Number(e.food_cost_pct))}>{Number(e.food_cost_pct).toFixed(1)}%</Badge> : '—'}</TableCell>
+                      <TableCell numerica>{e?.food_cost_pct != null ? <Badge tone={tonoFc(Number(e.food_cost_pct))}>{fmtNumero(e.food_cost_pct, 1)}%</Badge> : '—'}</TableCell>
                     </>}
                     <TableCell className="max-w-48 text-xs text-muted-foreground">
                       {[...(e?.allergeni ?? []).map(etichettaAllergene), ...p.allergeni_potenziali.map((a) => `tracce di ${etichettaAllergene(a).toLowerCase()}`)].join(', ') || '—'}
