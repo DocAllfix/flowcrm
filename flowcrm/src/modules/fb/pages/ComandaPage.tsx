@@ -160,7 +160,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
       )}
       <ClienteComanda comandaId={c.id} contattoId={c.contatto_id} aperta={aperta} note={c.note} modulo={c.modulo} chiusa={c.stato === 'chiusa'} />
 
-      <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         {/* ── Scelta dei prodotti ── */}
         {aperta && (
           <section aria-label="Prodotti" className="space-y-3">
@@ -179,7 +179,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 2xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
               {visibili.map((p) => {
                 const pr = prezzi[p.id]
                 const esaurito = p.stato === 'esaurito'
@@ -216,7 +216,12 @@ function Comanda_({ comandaId }: { comandaId: string }) {
               <ul className="divide-y divide-border">
                 {bozza.map((b) => (
                   <li key={b.chiave} className="space-y-2 py-3 first:pt-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <span className="text-sm font-medium text-foreground">{b.prodotto.nome}</span>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" aria-label={`Togli ${b.prodotto.nome} dalla bozza`}
+                        onClick={() => setBozza((x) => x.filter((y) => y.chiave !== b.chiave))}><Trash2 className="h-3.5 w-3.5" /></Button>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
                       <div className="flex items-center rounded-md border border-border">
                         <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Uno in meno"
                           onClick={() => b.quantita > 1 ? aggiorna(b.chiave, { quantita: b.quantita - 1 }) : setBozza((x) => x.filter((y) => y.chiave !== b.chiave))}>
@@ -225,27 +230,20 @@ function Comanda_({ comandaId }: { comandaId: string }) {
                         <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Uno in più"
                           onClick={() => aggiorna(b.chiave, { quantita: b.quantita + 1 })}><Plus className="h-3.5 w-3.5" /></Button>
                       </div>
-                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">{b.prodotto.nome}</span>
                       <Select value={String(b.uscita)} onValueChange={(v) => aggiorna(b.chiave, { uscita: Number(v) })}>
                         <SelectTrigger className="h-8 w-32" aria-label="Uscita"><SelectValue /></SelectTrigger>
                         <SelectContent>{[0, 1, 2, 3, 4, 5].map((u) => <SelectItem key={u} value={String(u)}>{etichettaUscita(u)}</SelectItem>)}</SelectContent>
                       </Select>
-                      <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Togli dalla bozza"
-                        onClick={() => setBozza((x) => x.filter((y) => y.chiave !== b.chiave))}><Trash2 className="h-3.5 w-3.5" /></Button>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 pl-1">
-                      <Input value={b.personalizzazioni} onChange={(e) => aggiorna(b.chiave, { personalizzazioni: e.target.value })}
-                        placeholder="Personalizzazione: cottura media, senza rosmarino…" className="h-8 min-w-48 flex-1 text-sm" aria-label="Personalizzazione" />
                       <Select value="" onValueChange={(v) => aggiorna(b.chiave, { allergie: b.allergie.includes(v) ? b.allergie.filter((a) => a !== v) : [...b.allergie, v] })}>
                         <SelectTrigger className="h-8 w-40" aria-label="Allergie dichiarate">
                           <span className="truncate">{b.allergie.length ? b.allergie.map(etichettaAllergene).join(', ') : 'Allergie…'}</span>
                         </SelectTrigger>
                         <SelectContent>{ALLERGENI.map((a) => (
                           <SelectItem key={a.valore} value={a.valore}>
-                          <span className="flex items-center gap-1.5">
-                            {b.allergie.includes(a.valore) && <Check className="h-3.5 w-3.5" aria-label="selezionato" />}{a.label}
-                          </span>
-                        </SelectItem>
+                            <span className="flex items-center gap-1.5">
+                              {b.allergie.includes(a.valore) && <Check className="h-3.5 w-3.5" aria-label="selezionato" />}{a.label}
+                            </span>
+                          </SelectItem>
                         ))}</SelectContent>
                       </Select>
                       <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -253,6 +251,8 @@ function Comanda_({ comandaId }: { comandaId: string }) {
                         Aspetta la marcia
                       </label>
                     </div>
+                    <Input value={b.personalizzazioni} onChange={(e) => aggiorna(b.chiave, { personalizzazioni: e.target.value })}
+                      placeholder="Personalizzazione: cottura media, senza rosmarino…" className="h-8 text-sm" aria-label="Personalizzazione" />
                   </li>
                 ))}
               </ul>
@@ -262,6 +262,12 @@ function Comanda_({ comandaId }: { comandaId: string }) {
             </Card>
           )}
 
+          {aperta && bozza.length > 0 && (
+            <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-border bg-card px-4 py-3 shadow-sospeso lg:hidden">
+              <span className="text-sm text-foreground">{bozza.reduce((x, b) => x + b.quantita, 0)} da inviare · <span className="tabular-nums">{fmtEuro(totaleBozza)}</span></span>
+              <BottoneScrittura onClick={invia} disabled={invio}><Send className="h-4 w-4" /> Invia</BottoneScrittura>
+            </div>
+          )}
           {c.consegna && <SchedaConsegna consegnaId={c.consegna.id} />}
 
           {righe.length === 0 ? (

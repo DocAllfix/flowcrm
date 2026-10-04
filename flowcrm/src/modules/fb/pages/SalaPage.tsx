@@ -101,7 +101,7 @@ function Sala_() {
               <BottoneScrittura onClick={aggiungiSala}>Aggiungi</BottoneScrittura>
             </div>) : undefined} />
       ) : (
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-3">
             {isLoading ? (
               <Skeleton className="aspect-[10/7] w-full rounded-xl" />

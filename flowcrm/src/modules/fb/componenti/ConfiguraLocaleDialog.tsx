@@ -61,8 +61,10 @@ export function ConfiguraLocaleDialog({ open, onOpenChange }: Props) {
       for (const [i, s] of nomiSale.entries()) {
         const tipo = /terrazz/i.test(s) ? 'terrazza' : /dehor/i.test(s) ? 'dehor' : /banco/i.test(s) ? 'banco'
           : /privat/i.test(s) ? 'sala_privata' : 'sala'
+        const file = Math.ceil((tipo === 'banco' ? Math.min(tavoliPerSala, 6) : tavoliPerSala) / 5)
         const { data: sala, error: e2 } = await supabase.from('fb_sale')
-          .insert({ locale_id: locale.id, nome: s, tipo, ordine: i, created_by: io, modulo }).select().single()
+          .insert({ locale_id: locale.id, nome: s, tipo, ordine: i, created_by: io, modulo,
+            larghezza: 960, altezza: Math.max(360, 60 + file * 160 + 40) }).select().single()
         if (e2) throw e2
         const n = tipo === 'banco' ? Math.min(tavoliPerSala, 6) : tavoliPerSala
         const tavoli = Array.from({ length: n }, (_, k) => ({

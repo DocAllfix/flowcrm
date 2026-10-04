@@ -77,7 +77,7 @@ export function MappaSala({ sala, tavoli, selezionato, onSeleziona, disposizione
             aria-pressed={attivo}
             aria-label={`Tavolo ${t.numero}, ${st.label.toLowerCase()}, ${t.posti} posti${t.prenotazione_nome ? `, prenotato da ${t.prenotazione_nome} alle ${fmtOra(t.prenotazione_inizio)}` : ''}`}
             className={cn(
-              'absolute flex select-none flex-col items-center justify-center border-2 text-center transition-[box-shadow,border-color] duration-150',
+              '@container absolute flex select-none flex-col items-center justify-center overflow-hidden border-2 text-center transition-[box-shadow,border-color] duration-150',
               'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
               t.forma === 'rotondo' ? 'rounded-full' : 'rounded-lg',
               st.riempimento, st.bordo,
@@ -93,14 +93,14 @@ export function MappaSala({ sala, tavoli, selezionato, onSeleziona, disposizione
               zIndex: inMovimento ? 10 : undefined,
             }}>
             <span className="text-sm font-semibold leading-none text-foreground">{t.numero}</span>
-            <span className="mt-0.5 text-xs leading-tight text-muted-foreground">
+            <span className="mt-0.5 hidden text-xs leading-tight text-muted-foreground @min-[3.25rem]:block">
               {t.coperti ? `${t.coperti}/${t.posti}` : `${t.posti} p.`}
             </span>
             {!disposizione && t.stato === 'prenotato' && t.prenotazione_inizio && (
-              <span className="text-xs font-medium leading-tight text-info-testo">{fmtOra(t.prenotazione_inizio)}</span>
+              <span className="hidden text-xs font-medium leading-tight text-info-testo @min-[3.25rem]:block">{fmtOra(t.prenotazione_inizio)}</span>
             )}
             {!disposizione && minuti !== null && t.stato !== 'libero' && (
-              <span className="text-xs leading-tight text-muted-foreground">{minuti}′</span>
+              <span className="hidden text-xs leading-tight text-muted-foreground @min-[3.25rem]:block">{minuti}′</span>
             )}
           </button>
         )
