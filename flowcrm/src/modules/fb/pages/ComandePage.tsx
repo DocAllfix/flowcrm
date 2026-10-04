@@ -18,6 +18,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell, CollegamentoRiga } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
@@ -148,6 +149,8 @@ function NuovaComandaDialog({ tipo, onChiudi, onCreata, localeId, modulo }: {
   const [alle, setAlle] = useState('')
   const [rider, setRider] = useState('')
   const [costo, setCosto] = useState('')
+  const [origine, setOrigine] = useState('asporto')
+  const [piattaforma, setPiattaforma] = useState('')
   const [inCorso, setInCorso] = useState(false)
 
   const oggiAlle = (hhmm: string) => {
@@ -164,7 +167,8 @@ function NuovaComandaDialog({ tipo, onChiudi, onCreata, localeId, modulo }: {
     try {
       const { data: auth } = await supabase.auth.getUser()
       const { data: c, error } = await supabase.from('fb_comande').insert({
-        locale_id: localeId, modulo, canale: tipo!, cliente_nome: nome.trim() || null, cliente_telefono: telefono.trim() || null,
+        locale_id: localeId, modulo, canale: tipo === 'asporto' ? origine : tipo!, cliente_nome: nome.trim() || null, cliente_telefono: telefono.trim() || null,
+        piattaforma: piattaforma.trim() || null,
         ritiro_at: tipo === 'asporto' ? oggiAlle(ritiro) : null, created_by: auth.user!.id,
       }).select().single()
       if (error) throw error
@@ -172,7 +176,7 @@ function NuovaComandaDialog({ tipo, onChiudi, onCreata, localeId, modulo }: {
         const { error: e2 } = await supabase.from('fb_consegne').insert({
           comanda_id: c.id, locale_id: localeId, modulo, indirizzo: indirizzo.trim(), zona: zona.trim() || null,
           fascia_dalle: oggiAlle(dalle), fascia_alle: oggiAlle(alle), rider_esterno: rider.trim() || null,
-          costo_consegna: Number(costo.replace(',', '.')) || 0, created_by: auth.user!.id,
+          costo_consegna: Number(costo.replace(',', '.')) || 0, piattaforma: piattaforma.trim() || null, created_by: auth.user!.id,
         })
         if (e2) throw e2
       }
@@ -199,9 +203,21 @@ function NuovaComandaDialog({ tipo, onChiudi, onCreata, localeId, modulo }: {
             </div>
           </div>
           {tipo === 'asporto' && (
-            <div className="space-y-1.5">
-              <Label htmlFor="nc-ritiro">Orario di ritiro</Label>
-              <Input id="nc-ritiro" type="time" value={ritiro} onChange={(e) => setRitiro(e.target.value)} className="w-40" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label>Ordine arrivato</Label>
+                <Select value={origine} onValueChange={setOrigine}>
+                  <SelectTrigger aria-label="Da dove arriva l'ordine"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="asporto">Al banco</SelectItem><SelectItem value="telefono">Per telefono</SelectItem>
+                    <SelectItem value="online">Dal sito</SelectItem><SelectItem value="app">Dall'app</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="nc-ritiro">Orario di ritiro</Label>
+                <Input id="nc-ritiro" type="time" value={ritiro} onChange={(e) => setRitiro(e.target.value)} />
+              </div>
             </div>
           )}
           {tipo === 'delivery' && (
@@ -224,7 +240,9 @@ function NuovaComandaDialog({ tipo, onChiudi, onCreata, localeId, modulo }: {
                 <div className="space-y-1.5"><Label htmlFor="nc-costo">Costo di consegna (€)</Label>
                   <Input id="nc-costo" inputMode="decimal" value={costo} onChange={(e) => setCosto(e.target.value)} /></div>
               </div>
-              <p className="text-xs text-muted-foreground">Le piattaforme esterne di consegna si collegano su richiesta: per ora gli ordini si registrano qui.</p>
+              <div className="space-y-1.5"><Label htmlFor="nc-pf">Piattaforma (se l'ordine arriva da un servizio esterno)</Label>
+                <Input id="nc-pf" value={piattaforma} onChange={(e) => setPiattaforma(e.target.value)} placeholder="Deliveroo, Glovo, Just Eat…" /></div>
+              <p className="text-xs text-muted-foreground">Il collegamento automatico con le piattaforme di consegna si attiva su richiesta: per ora gli ordini si registrano qui.</p>
             </>
           )}
           <DialogFooter>

@@ -20,7 +20,7 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { cn } from '@/lib/utils'
 import type { Tables } from '@/lib/supabase'
-import { useElenco, useSalva, useInserisci, useElimina, messaggioErrore } from '@/lib/queries/fondamenta'
+import { useElenco, useSalva, useInserisci, useElimina, useAzione, messaggioErrore } from '@/lib/queries/fondamenta'
 import type { Database } from '@/types/database.types'
 
 type Distinta = Tables<'distinte_base'>
@@ -216,6 +216,7 @@ function EditorDistinta({ distinta, distinte, moduli, riepilogo, tipi, etichetta
           <dl className="flex gap-6 text-right text-sm">
             <div><dt className="text-muted-foreground">Costo totale</dt><dd data-slot="kpi" className="text-title text-foreground">{euro(costoTot)}</dd></div>
             <div><dt className="text-muted-foreground">Per {testa.unita || 'porzione'}</dt><dd data-slot="kpi" className="text-title text-foreground">{euro(costoPorz)}</dd></div>
+            {prezzo > 0 && <div><dt className="text-muted-foreground">Margine</dt><dd data-slot="kpi" className="text-title text-foreground">{euro(prezzo - costoPorz)}</dd></div>}
             {prezzo > 0 && <div><dt className="text-muted-foreground">Food cost</dt><dd data-slot="kpi" className="text-title text-foreground">{new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1 }).format((costoPorz / prezzo) * 100)}%</dd></div>}
           </dl>
         </div>
@@ -230,6 +231,7 @@ function EditorDistinta({ distinta, distinte, moduli, riepilogo, tipi, etichetta
           <div className="space-y-1.5"><Label htmlFor="ed-tempo">Tempo (min)</Label><Input id="ed-tempo" type="number" min={0} value={testa.tempo} onChange={(e) => setTesta({ ...testa, tempo: e.target.value })} onBlur={salvaTesta} /></div>
           <div className="space-y-1.5"><Label htmlFor="ed-prezzo">Prezzo di vendita (€, netto)</Label><Input id="ed-prezzo" inputMode="decimal" value={testa.prezzo} onChange={(e) => setTesta({ ...testa, prezzo: e.target.value })} onBlur={salvaTesta} /></div>
         </div>
+        <ProduzioneSemilavorato distinta={distinta} moduloArticoli={moduli[0]} />
         {usataIn.length > 0 && (
           <p className="mt-3 text-sm text-muted-foreground">Usata in: <span className="text-foreground">{usataIn.join(', ')}</span></p>
         )}
@@ -306,6 +308,49 @@ function EditorDistinta({ distinta, distinte, moduli, riepilogo, tipi, etichetta
           onChange={(e) => setTesta({ ...testa, procedimento: e.target.value })} onBlur={salvaTesta}
           placeholder="Preparazioni preliminari, passaggi, tempi, conservazione…" />
       </Card>
+    </div>
+  )
+}
+
+/**
+ * Preparazione fatta in anticipo e tenuta in magazzino (ragù, brodo,
+ * impasti): si collega a un articolo e si produce in lotti. La produzione
+ * scarica gli ingredienti e carica il lotto del semilavorato; i piatti poi
+ * scaricano il semilavorato.
+ */
+function ProduzioneSemilavorato({ distinta, moduloArticoli }: { distinta: Distinta; moduloArticoli: string }) {
+  const salvaDistinta = useSalva('distinte_base', ['distinte_base_riepilogo'])
+  const nuovoArticolo = useSalva('mag_articoli', ['mag_giacenze'])
+  const produci = useAzione('mag_produci_distinta', ['mag_giacenze', 'mag_lotti_stato', 'mag_movimenti', 'mag_articoli'])
+  const [quantita, setQuantita] = useState('')
+  const [scadenza, setScadenza] = useState('')
+  const [durata, setDurata] = useState('3')
+  if (distinta.tipo !== 'semilavorato') return null
+  if (!distinta.articolo_prodotto_id) {
+    return (
+      <div className="mt-3 flex flex-wrap items-end gap-2 rounded-lg border border-dashed border-border p-3 text-sm">
+        <p className="w-full text-muted-foreground">La prepari in anticipo e la conservi? Mettila a magazzino: si produce in lotti con la sua scadenza.</p>
+        <div className="w-36 space-y-1.5"><Label htmlFor="ps-d">Si conserva (giorni)</Label><Input id="ps-d" type="number" min={1} value={durata} onChange={(e) => setDurata(e.target.value)} /></div>
+        <BottoneScrittura variant="outline" onClick={async () => {
+          try {
+            const a = await nuovoArticolo.mutateAsync({ values: { modulo: moduloArticoli, descrizione: distinta.nome, unita_misura: distinta.unita_resa,
+              categoria: 'Semilavorati', deperibile: true, durata_giorni: Number(durata) || null } })
+            await salvaDistinta.mutateAsync({ id: distinta.id, values: { articolo_prodotto_id: a.id } })
+            toast.success('Preparazione messa a magazzino')
+          } catch (e) { toast.error(messaggioErrore(e)) }
+        }}>Metti a magazzino</BottoneScrittura>
+      </div>
+    )
+  }
+  return (
+    <div className="mt-3 flex flex-wrap items-end gap-2 rounded-lg bg-muted/40 p-3 text-sm">
+      <p className="w-full text-muted-foreground">Preparazione a magazzino: i piatti scaricano il semilavorato prodotto.</p>
+      <div className="w-32 space-y-1.5"><Label htmlFor="ps-q">Produci ({distinta.unita_resa})</Label><Input id="ps-q" inputMode="decimal" value={quantita} onChange={(e) => setQuantita(e.target.value)} /></div>
+      <div className="w-40 space-y-1.5"><Label htmlFor="ps-s">Scadenza (facoltativa)</Label><Input id="ps-s" type="date" value={scadenza} onChange={(e) => setScadenza(e.target.value)} /></div>
+      <BottoneScrittura disabled={!(Number(quantita.replace(',', '.')) > 0)} onClick={() => produci.mutate({ p_distinta: distinta.id,
+        p_quantita: Number(quantita.replace(',', '.')), p_scadenza: scadenza || undefined },
+        { onSuccess: () => { toast.success('Lotto prodotto: ingredienti scaricati, semilavorato caricato'); setQuantita('') }, onError: (e) => toast.error(messaggioErrore(e)) })}>
+        Produci il lotto</BottoneScrittura>
     </div>
   )
 }

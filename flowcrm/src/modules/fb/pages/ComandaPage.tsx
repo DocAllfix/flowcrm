@@ -27,8 +27,9 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { cn } from '@/lib/utils'
-import { supabase } from '@/lib/supabase'
-import { useSalva, useRiga, useDalVivo, fondKeys, messaggioErrore } from '@/lib/queries/fondamenta'
+import { supabase, type Tables } from '@/lib/supabase'
+import { CercaContatto } from '@/components/condivisi/CercaContatto'
+import { useSalva, useRiga, useElenco, useInserisci, useDalVivo, fondKeys, messaggioErrore } from '@/lib/queries/fondamenta'
 import { useQueryClient } from '@tanstack/react-query'
 import { useFb } from '@/modules/fb/contesto'
 import {
@@ -157,6 +158,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
           Comanda {c.stato === 'chiusa' ? 'chiusa' : 'annullata'}{c.chiusa_at ? ` alle ${fmtOra(c.chiusa_at)}` : ''}: si consulta soltanto.
         </div>
       )}
+      <ClienteComanda comandaId={c.id} contattoId={c.contatto_id} aperta={aperta} note={c.note} modulo={c.modulo} chiusa={c.stato === 'chiusa'} />
 
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         {/* ── Scelta dei prodotti ── */}
@@ -409,3 +411,51 @@ function SchedaConsegna({ consegnaId }: { consegnaId: string }) {
   )
 }
 
+/** Cliente al tavolo: chi è, cosa non può mangiare, cosa preferisce; a fine servizio il suo parere. */
+function ClienteComanda({ comandaId, contattoId, aperta, note, modulo, chiusa }: {
+  comandaId: string; contattoId: string | null; aperta: boolean; note: string | null; modulo: string; chiusa: boolean
+}) {
+  const salva = useSalva('fb_comande', TABELLE_SERVIZIO)
+  const parere = useInserisci('feedback')
+  const { data: contatti = [] } = useElenco<Pick<Tables<'contatti'>, 'id' | 'nome' | 'cognome'>>('contatti', {
+    filtri: { id: contattoId ?? undefined }, select: 'id, nome, cognome', abilitato: !!contattoId })
+  const { data: schede = [] } = useElenco<Tables<'fb_clienti'>>('fb_clienti', { filtri: { contatto_id: contattoId ?? undefined }, abilitato: !!contattoId })
+  const { data: pareri = [] } = useElenco<Pick<Tables<'feedback'>, 'id' | 'nps'>>('feedback', {
+    filtri: { entita_tipo: 'fb_comande', entita_id: comandaId }, select: 'id, nps', abilitato: chiusa })
+  const [nome, setNome] = useState('')
+  const cliente = contatti[0]
+  const scheda = schede[0]
+
+  return (
+    <Card className="mb-4 flex flex-wrap items-center gap-x-6 gap-y-3 p-4 text-sm">
+      {cliente ? (
+        <div className="min-w-56">
+          <span className="text-muted-foreground">Cliente </span><span className="font-medium text-foreground">{cliente.nome} {cliente.cognome ?? ''}</span>
+          {scheda && (scheda.allergie.length > 0 || scheda.intolleranze) && (
+            <p className="mt-0.5 font-medium text-destructive-testo">Allergie: {[...scheda.allergie.map(etichettaAllergene), scheda.intolleranze].filter(Boolean).join(', ')}</p>
+          )}
+          {scheda?.preferenze && <p className="text-xs text-muted-foreground">{scheda.preferenze}</p>}
+        </div>
+      ) : aperta ? (
+        <div className="w-72"><CercaContatto id="cm-cliente" valore={nome} contattoId={null} segnaposto="Collega il cliente (storico e allergie)…"
+          onTesto={setNome} onScegli={(k) => salva.mutate({ id: comandaId, values: { contatto_id: k.id } }, { onError: (e) => toast.error(messaggioErrore(e)) })} /></div>
+      ) : <span className="text-muted-foreground">Cliente non identificato</span>}
+      {aperta ? (
+        <div className="min-w-60 flex-1"><Input defaultValue={note ?? ''} key={comandaId} placeholder="Nota per la sala e la cucina (compleanno, fretta…)" aria-label="Nota della comanda"
+          onBlur={(e) => e.target.value !== (note ?? '') && salva.mutate({ id: comandaId, values: { note: e.target.value || null } })} /></div>
+      ) : note ? <span className="text-muted-foreground">Nota: {note}</span> : null}
+      {chiusa && (pareri.length ? (
+        <span className="text-muted-foreground">Parere registrato: {pareri[0].nps}/10</span>
+      ) : (
+        <div className="flex flex-wrap items-center gap-1" role="radiogroup" aria-label="Com'è andata? Voto da 0 a 10">
+          <span className="mr-1 text-muted-foreground">Com'è andata?</span>
+          {Array.from({ length: 11 }, (_, i) => (
+            <button key={i} type="button" onClick={() => parere.mutate({ modulo, tipo: 'nps', nps: i, contatto_id: contattoId, canale: 'sala',
+              entita_tipo: 'fb_comande', entita_id: comandaId }, { onSuccess: () => toast.success('Grazie, parere registrato'), onError: (e) => toast.error(messaggioErrore(e)) })}
+              className="size-8 rounded-md border border-border text-xs tabular-nums text-muted-foreground hover:border-input hover:text-foreground">{i}</button>
+          ))}
+        </div>
+      ))}
+    </Card>
+  )
+}

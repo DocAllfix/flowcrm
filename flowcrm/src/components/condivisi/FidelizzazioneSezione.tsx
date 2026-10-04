@@ -123,7 +123,7 @@ function Programmi({ modulo }: { modulo: string }) {
   const { isManager } = useAuth()
   const programmi = useProgrammi(modulo)
   const salva = useSalva('fid_programmi', ['fid_saldi'])
-  const [f, setF] = useState({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '' })
+  const [f, setF] = useState({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '' })
   async function crea(e: FormEvent) {
     e.preventDefault()
     if (!f.nome.trim()) return
@@ -131,8 +131,9 @@ function Programmi({ modulo }: { modulo: string }) {
       .map(([nome, soglia]) => ({ nome, soglia: Number(soglia) }))
     try {
       await salva.mutateAsync({ values: { modulo, nome: f.nome.trim(), punti_per_euro: n(f.puntiEuro) || 0, timbri_soglia: f.timbri ? Number(f.timbri) : null,
-        premio_timbri: f.premio || null, benvenuto_punti: Number(f.benvenuto) || 0, referral_punti: Number(f.referral) || 0, livelli } })
-      setF({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '' })
+        premio_timbri: f.premio || null, benvenuto_punti: Number(f.benvenuto) || 0, referral_punti: Number(f.referral) || 0, livelli,
+        valore_punto: f.valore ? n(f.valore) : null } })
+      setF({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '' })
       toast.success('Programma creato')
     } catch (err) { toast.error(messaggioErrore(err)) }
   }
@@ -147,6 +148,7 @@ function Programmi({ modulo }: { modulo: string }) {
             <div className="space-y-1.5"><Label htmlFor="pg-t">Timbri per un premio</Label><Input id="pg-t" type="number" min={1} value={f.timbri} onChange={(e) => setF({ ...f, timbri: e.target.value })} placeholder="10" /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-pr">Premio</Label><Input id="pg-pr" value={f.premio} onChange={(e) => setF({ ...f, premio: e.target.value })} placeholder="Caffè omaggio" /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-r">Punti per chi presenta un amico</Label><Input id="pg-r" type="number" min={0} value={f.referral} onChange={(e) => setF({ ...f, referral: e.target.value })} /></div>
+            <div className="space-y-1.5"><Label htmlFor="pg-v">Valore di un punto in cassa (€)</Label><Input id="pg-v" inputMode="decimal" value={f.valore} onChange={(e) => setF({ ...f, valore: e.target.value })} placeholder="0,01 = cashback" /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-l">Livelli (nome:punti)</Label><Input id="pg-l" value={f.livelli} onChange={(e) => setF({ ...f, livelli: e.target.value })} placeholder="Argento:500, Oro:1500" /></div>
             <div className="col-span-2 flex justify-end sm:col-span-4"><BottoneScrittura type="submit">Crea programma</BottoneScrittura></div>
           </form>
@@ -159,6 +161,7 @@ function Programmi({ modulo }: { modulo: string }) {
               <span className="min-w-48 flex-1 font-medium text-foreground">{p.nome}</span>
               <span className="text-muted-foreground">{[Number(p.punti_per_euro) > 0 && `${Number(p.punti_per_euro)} punti/€`, p.timbri_soglia && `${p.timbri_soglia} timbri → ${p.premio_timbri ?? 'premio'}`,
                 p.benvenuto_punti > 0 && `benvenuto ${p.benvenuto_punti}`, p.referral_punti > 0 && `presentazione ${p.referral_punti}`,
+                p.valore_punto && `cashback ${new Intl.NumberFormat('it-IT', { maximumFractionDigits: 2 }).format(Number(p.punti_per_euro) * Number(p.valore_punto) * 100)}%`,
                 (p.livelli as { nome: string; soglia: number }[]).map((l) => `${l.nome} da ${l.soglia}`).join(', ')].filter(Boolean).join(' · ')}</span>
               {isManager && <Switch checked={p.attivo} aria-label="Attivo" onCheckedChange={(v) => salva.mutate({ id: p.id, values: { attivo: v } })} />}
             </div>

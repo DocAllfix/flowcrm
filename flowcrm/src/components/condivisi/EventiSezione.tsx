@@ -5,6 +5,7 @@
  * e ricavo e margine solo per la direzione.
  */
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { CalendarHeart, Plus, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,8 +23,9 @@ import { AllegatiSection } from '@/components/allegati/AllegatiSection'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
-import type { Tables } from '@/lib/supabase'
+import { supabase, type Tables } from '@/lib/supabase'
 import { useElenco, useInserisci, useSalva, useElimina, useRpc, messaggioErrore } from '@/lib/queries/fondamenta'
+import { CercaContatto } from '@/components/condivisi/CercaContatto'
 import type { Database } from '@/types/database.types'
 
 type Evento = Tables<'eventi'>
@@ -141,6 +143,7 @@ function DettaglioEvento({ evento, modulo, etichettaAllergene, allergeni }: { ev
           <TabsTrigger value="documenti">Documenti</TabsTrigger>
         </TabsList>
         <TabsContent value="programma" className="space-y-3">
+          <ClienteEvento evento={evento} />
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div className="space-y-1.5"><Label htmlFor="ed-pp">Partecipanti previsti</Label>
               <Input id="ed-pp" type="number" defaultValue={evento.partecipanti_previsti ?? ''} key={`pp-${evento.id}`} onBlur={(e) => salva.mutate({ id: evento.id, values: { partecipanti_previsti: e.target.value ? Number(e.target.value) : null } })} /></div>
@@ -260,7 +263,8 @@ function Economia({ evento }: { evento: Evento }) {
   const togli = useElimina('eventi_voci', ['eventi_margini'])
   const p = prev[0]
   const m = margini[0]
-  const [v, setV] = useState({ categoria: 'menu', descrizione: '', quantita: '1', costo: '', prezzo: '' })
+  const [v, setV] = useState({ categoria: 'menu', descrizione: '', quantita: '1', costo: '', prezzo: '', fornitore: '' })
+  const aziende = useAziende()
   const campo = (k: keyof Preventivo, etichetta: string, tipo = 'decimal') => (
     <div className="space-y-1.5"><Label htmlFor={`pv-${k}`}>{etichetta}</Label>
       <Input id={`pv-${k}`} type={tipo === 'date' ? 'date' : 'text'} inputMode={tipo === 'date' ? undefined : 'decimal'} key={`${k}-${p?.id ?? 'nuovo'}`}
@@ -271,6 +275,7 @@ function Economia({ evento }: { evento: Evento }) {
   )
   return (
     <div className="space-y-4">
+      <ContoEvento evento={evento} preventivo={p} voci={voci} />
       {m && (
         <dl className="flex flex-wrap gap-8 rounded-lg bg-muted/50 px-4 py-3">
           <div><dt className="text-sm text-muted-foreground">Ricavi</dt><dd data-slot="kpi" className="text-title">{euro(m.ricavi)}</dd></div>
@@ -291,8 +296,12 @@ function Economia({ evento }: { evento: Evento }) {
           <Input className="w-20" inputMode="decimal" value={v.quantita} onChange={(e) => setV({ ...v, quantita: e.target.value })} aria-label="Quantità" />
           <Input className="w-28" inputMode="decimal" value={v.costo} onChange={(e) => setV({ ...v, costo: e.target.value })} placeholder="Costo €" aria-label="Costo unitario" />
           <Input className="w-28" inputMode="decimal" value={v.prezzo} onChange={(e) => setV({ ...v, prezzo: e.target.value })} placeholder="Prezzo €" aria-label="Prezzo unitario" />
+          <Select value={v.fornitore || 'nessuno'} onValueChange={(x) => setV({ ...v, fornitore: x === 'nessuno' ? '' : x })}>
+            <SelectTrigger className="w-44" aria-label="Fornitore"><SelectValue placeholder="Fornitore" /></SelectTrigger>
+            <SelectContent><SelectItem value="nessuno">Nessun fornitore</SelectItem>{aziende.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}</SelectContent>
+          </Select>
           <BottoneScrittura variant="outline" disabled={!v.descrizione.trim()} onClick={() => aggiungi.mutate({ evento_id: evento.id, modulo: evento.modulo, categoria: v.categoria as Voce['categoria'],
-            descrizione: v.descrizione.trim(), quantita: n(v.quantita) || 1, costo_unitario: n(v.costo) || 0, prezzo_unitario: n(v.prezzo) || 0 },
+            descrizione: v.descrizione.trim(), quantita: n(v.quantita) || 1, costo_unitario: n(v.costo) || 0, prezzo_unitario: n(v.prezzo) || 0, fornitore_id: v.fornitore || null },
             { onSuccess: () => setV({ ...v, descrizione: '', costo: '', prezzo: '' }), onError: (e) => toast.error(messaggioErrore(e)) })}>Aggiungi</BottoneScrittura>
         </div>
         {voci.length > 0 && (
@@ -301,7 +310,7 @@ function Economia({ evento }: { evento: Evento }) {
             <TableBody>
               {voci.map((x) => (
                 <TableRow key={x.id}>
-                  <TableCell><span className="text-foreground">{x.descrizione}</span><span className="block text-xs text-muted-foreground">{CATEGORIE_VOCE[x.categoria]}</span></TableCell>
+                  <TableCell><span className="text-foreground">{x.descrizione}</span><span className="block text-xs text-muted-foreground">{CATEGORIE_VOCE[x.categoria]}{x.fornitore_id ? ` · ${aziende.find((o) => o.id === x.fornitore_id)?.ragione_sociale ?? ''}` : ''}</span></TableCell>
                   <TableCell numerica>{Number(x.quantita)}</TableCell><TableCell numerica>{euro(x.costo)}</TableCell><TableCell numerica>{euro(x.ricavo)}</TableCell>
                   <TableCell numerica><Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Togli la voce" onClick={() => togli.mutate(x.id)}><Trash2 className="h-3.5 w-3.5" /></Button></TableCell>
                 </TableRow>
@@ -311,5 +320,71 @@ function Economia({ evento }: { evento: Evento }) {
         )}
       </div>
     </div>
+  )
+}
+
+function useAziende() {
+  return useElenco<Pick<Tables<'organizzazioni'>, 'id' | 'ragione_sociale'>>('organizzazioni', {
+    filtri: { attivo: true }, select: 'id, ragione_sociale', ordine: [{ colonna: 'ragione_sociale' }], limite: 1000 }).data ?? []
+}
+
+function ClienteEvento({ evento }: { evento: Evento }) {
+  const salva = useSalva('eventi')
+  const aziende = useAziende()
+  const { data: contatti = [] } = useElenco<Pick<Tables<'contatti'>, 'id' | 'nome' | 'cognome'>>('contatti', {
+    filtri: { id: evento.contatto_id ?? undefined }, select: 'id, nome, cognome', abilitato: !!evento.contatto_id })
+  const cliente = contatti[0]
+  const [nome, setNome] = useState('')
+  return (
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="space-y-1.5"><Label htmlFor="ev-cliente">Cliente</Label>
+        <CercaContatto id="ev-cliente" valore={cliente ? `${cliente.nome} ${cliente.cognome ?? ''}`.trim() : nome} contattoId={evento.contatto_id}
+          onTesto={(v) => { setNome(v); if (evento.contatto_id) salva.mutate({ id: evento.id, values: { contatto_id: null } }) }}
+          onScegli={(k) => salva.mutate({ id: evento.id, values: { contatto_id: k.id } })} /></div>
+      <div className="space-y-1.5"><Label>Azienda (per la fattura)</Label>
+        <Select value={evento.organizzazione_id ?? 'nessuna'} onValueChange={(v) => salva.mutate({ id: evento.id, values: { organizzazione_id: v === 'nessuna' ? null : v } })}>
+          <SelectTrigger aria-label="Azienda"><SelectValue /></SelectTrigger>
+          <SelectContent><SelectItem value="nessuna">Privato</SelectItem>{aziende.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}</SelectContent>
+        </Select></div>
+    </div>
+  )
+}
+
+/** Il conto dell'evento nasce dal preventivo: da lì si incassa (acconto e saldo) e si emette la fattura. */
+function ContoEvento({ evento, preventivo, voci }: { evento: Evento; preventivo?: Preventivo; voci: Voce[] }) {
+  const navigate = useNavigate()
+  const salva = useSalva('eventi')
+  const [inCorso, setInCorso] = useState(false)
+  const ALIQUOTA_22 = ['fiori', 'musica', 'noleggio', 'allestimento', 'trasporto', 'location']
+  async function crea() {
+    if (!preventivo) { toast.error('Compila prima il preventivo'); return }
+    setInCorso(true)
+    try {
+      const { data: auth } = await supabase.auth.getUser()
+      const io = auth.user!.id
+      const { data: conto, error } = await supabase.from('conti').insert({ modulo: evento.modulo, descrizione: `Evento: ${evento.titolo}`, riferimento_tipo: 'eventi',
+        riferimento_id: evento.id, contatto_id: evento.contatto_id, organizzazione_id: evento.organizzazione_id,
+        coperti: evento.partecipanti_confermati ?? evento.partecipanti_previsti, sconto_importo: Number(preventivo.sconto) || 0, created_by: io }).select('id').single()
+      if (error) throw error
+      const persone = evento.partecipanti_confermati ?? evento.partecipanti_previsti ?? 0
+      const righe = [
+        ...(preventivo.prezzo_forfait != null ? [{ descrizione: `${evento.titolo} (forfait)`, quantita: 1, prezzo_unitario: Number(preventivo.prezzo_forfait), aliquota_iva: 10 }]
+          : preventivo.prezzo_persona != null && persone > 0 ? [{ descrizione: `Menu ${evento.titolo}`, quantita: persone, prezzo_unitario: Number(preventivo.prezzo_persona), aliquota_iva: 10 }] : []),
+        ...voci.filter((x) => Number(x.prezzo_unitario) > 0).map((x) => ({ descrizione: x.descrizione, quantita: Number(x.quantita), prezzo_unitario: Number(x.prezzo_unitario),
+          aliquota_iva: ALIQUOTA_22.includes(x.categoria) ? 22 : 10 })),
+      ]
+      if (righe.length) {
+        const { error: e2 } = await supabase.from('conti_righe').insert(righe.map((r) => ({ ...r, conto_id: conto.id, modulo: evento.modulo,
+          riferimento_tipo: 'eventi', riferimento_id: evento.id, created_by: io })))
+        if (e2) throw e2
+      }
+      await salva.mutateAsync({ id: evento.id, values: { conto_id: conto.id } })
+      toast.success("Conto dell'evento creato: si incassa e si fattura dalla cassa")
+    } catch (e) { toast.error(messaggioErrore(e)) } finally { setInCorso(false) }
+  }
+  return evento.conto_id ? (
+    <Button variant="outline" onClick={() => navigate(`/${evento.modulo}/cassa?conto=${evento.conto_id}`)}>Apri il conto dell'evento (acconto, saldo, fattura)</Button>
+  ) : (
+    <BottoneScrittura variant="outline" onClick={crea} disabled={inCorso || !preventivo}>Crea il conto dell'evento dal preventivo</BottoneScrittura>
   )
 }

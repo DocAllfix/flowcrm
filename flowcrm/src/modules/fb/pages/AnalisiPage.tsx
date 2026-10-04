@@ -81,6 +81,7 @@ function Analisi_() {
           <TabsTrigger value="kpi">KPI</TabsTrigger>
           <TabsTrigger value="menu">Menu engineering</TabsTrigger>
           <TabsTrigger value="foodcost">Food cost</TabsTrigger>
+          <TabsTrigger value="tempi">Tempi di cucina</TabsTrigger>
           <TabsTrigger value="bevande">Bevande</TabsTrigger>
           <TabsTrigger value="sprechi">Sprechi</TabsTrigger>
         </TabsList>
@@ -121,6 +122,7 @@ function Analisi_() {
         </TabsContent>
         <TabsContent value="menu"><MenuEngineering dal={dal} al={al} /></TabsContent>
         <TabsContent value="foodcost"><FoodCost dal={dal} al={al} /></TabsContent>
+        <TabsContent value="tempi"><TempiCucina dal={dal} al={al} /></TabsContent>
         <TabsContent value="bevande"><Bevande modulo={modulo} dal={dal} al={al} /></TabsContent>
         <TabsContent value="sprechi"><SprechiAnalisi dal={dal} al={al} /></TabsContent>
       </Tabs>
@@ -215,7 +217,7 @@ function FoodCost({ dal, al }: { dal: string; al: string }) {
   const { localeId } = useFb()
   const [dimensione, setDimensione] = useState('categoria')
   const { data: righe = [] } = useRpc<Fc[]>('fb_food_cost', { p_locale: localeId, p_dal: dal, p_al: al, p_dimensione: dimensione }, { abilitato: !!localeId })
-  const DIM: Record<string, string> = { piatto: 'Piatto', categoria: 'Categoria', menu: 'Menu o listino', giorno: 'Giorno', chef: 'Chef', canale: 'Canale di vendita', area: 'Cucina e bevande' }
+  const DIM: Record<string, string> = { piatto: 'Piatto', categoria: 'Categoria', menu: 'Menu o listino', giorno: 'Giorno', chef: 'Chef', canale: 'Canale di vendita', area: 'Cucina e bevande', bevanda: 'Tipo di bevanda' }
   return (
     <div className="space-y-3">
       <div className="w-56 space-y-1.5"><Label>Per</Label><Select value={dimensione} onValueChange={setDimensione}><SelectTrigger aria-label="Dimensione"><SelectValue /></SelectTrigger>
@@ -276,6 +278,33 @@ function SprechiAnalisi({ dal, al }: { dal: string; al: string }) {
     <Card className="p-5">
       <p className="mb-3 text-sm text-muted-foreground">Costo complessivo degli sprechi: <span className="font-semibold text-foreground">{fmtEuro(totale)}</span></p>
       <Righe voci={righe.map((r) => [`${SPRECO_CAUSALE[r.causale] ?? r.causale} (${r.eventi})`, fmtEuro(r.costo)] as [string, string])} />
+    </Card>
+  )
+}
+
+interface Tempo { prodotto: string; stazione: string | null; piatti: number; tempo_medio_min: number; tempo_massimo_min: number
+  tempo_previsto_min: number | null; in_ritardo: number; attesa_servizio_min: number | null }
+
+function TempiCucina({ dal, al }: { dal: string; al: string }) {
+  const { localeId } = useFb()
+  const { data: righe = [] } = useRpc<Tempo[]>('fb_tempi_cucina', { p_locale: localeId, p_dal: dal, p_al: al }, { abilitato: !!localeId })
+  return righe.length === 0 ? <EmptyState compatto icon={ChartPie} title="Nessun piatto preparato nel periodo" description="I tempi si misurano dall'invio in cucina al piatto pronto." /> : (
+    <Card className="overflow-hidden">
+      <Table>
+        <TableHeader><TableRow><TableHead>Piatto</TableHead><TableHead>Postazione</TableHead><TableHead className="text-right">Preparati</TableHead><TableHead className="text-right">Tempo medio</TableHead>
+          <TableHead className="text-right">Massimo</TableHead><TableHead className="text-right">Previsto</TableHead><TableHead className="text-right">In ritardo</TableHead><TableHead className="text-right">Attesa al pass</TableHead></TableRow></TableHeader>
+        <TableBody>
+          {righe.map((r, i) => (
+            <TableRow key={`${r.prodotto}-${i}`}>
+              <TableCell className="text-foreground">{r.prodotto}</TableCell><TableCell className="text-muted-foreground">{r.stazione ?? '—'}</TableCell>
+              <TableCell numerica>{r.piatti}</TableCell><TableCell numerica>{fmtNumero(r.tempo_medio_min, 1)} min</TableCell>
+              <TableCell numerica>{fmtNumero(r.tempo_massimo_min, 1)} min</TableCell><TableCell numerica>{r.tempo_previsto_min != null ? `${r.tempo_previsto_min} min` : '—'}</TableCell>
+              <TableCell numerica>{r.in_ritardo > 0 ? <Badge tone="warning">{r.in_ritardo}</Badge> : 0}</TableCell>
+              <TableCell numerica>{r.attesa_servizio_min != null ? `${fmtNumero(r.attesa_servizio_min, 1)} min` : '—'}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </Card>
   )
 }

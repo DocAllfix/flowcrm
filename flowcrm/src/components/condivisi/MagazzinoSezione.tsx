@@ -81,7 +81,7 @@ export function MagazzinoSezione({ modulo, moduli, extra = [] }: Props) {
       <TabsContent value="ordini"><Ordini modulo={modulo} moduli={moduli} /></TabsContent>
       <TabsContent value="riordino"><RiordinoTab modulo={modulo} moduli={moduli} /></TabsContent>
       <TabsContent value="inventari"><Inventari modulo={modulo} moduli={moduli} /></TabsContent>
-      <TabsContent value="fornitori"><Fornitori modulo={modulo} /></TabsContent>
+      <TabsContent value="fornitori"><Fornitori modulo={modulo} /><Listini modulo={modulo} moduli={moduli} /></TabsContent>
       {extra.map((e) => <TabsContent key={e.valore} value={e.valore}>{e.contenuto}</TabsContent>)}
     </Tabs>
   )
@@ -513,5 +513,58 @@ function Fornitori({ modulo }: { modulo: string }) {
         </Card>
       )}
     </div>
+  )
+}
+
+type Listino = Tables<'fornitori_listini'>
+
+/** Listini: prezzo di ogni fornitore per articolo, lotto minimo, tempi di consegna, condizioni. */
+function Listini({ modulo, moduli }: { modulo: string; moduli: string[] }) {
+  const { isManager } = useAuth()
+  const articoli = useArticoli(moduli)
+  const fornitori = useOrganizzazioni()
+  const { data: listini = [] } = useElenco<Listino>('fornitori_listini', { filtri: { modulo: moduli }, ordine: [{ colonna: 'articolo_id' }, { colonna: 'prezzo' }] })
+  const salva = useSalva('fornitori_listini', ['fornitori_miglior_prezzo'])
+  const [f, setF] = useState({ fornitore: '', articolo: '', prezzo: '', minimo: '', giorni: '', condizioni: '' })
+  const nomeArt = (id: string) => articoli.find((a) => a.id === id)?.descrizione ?? '—'
+  const nomeForn = (id: string) => fornitori.find((o) => o.id === id)?.ragione_sociale ?? '—'
+  const migliore = (l: Listino) => !listini.some((x) => x.articolo_id === l.articolo_id && x.id !== l.id && Number(x.prezzo) < Number(l.prezzo))
+  return (
+    <Card className="mt-4 space-y-3 p-5">
+      <h2 className="text-title text-foreground">Listini e condizioni</h2>
+      {isManager && (
+        <div className="flex flex-wrap items-end gap-2">
+          <Select value={f.fornitore} onValueChange={(v) => setF({ ...f, fornitore: v })}><SelectTrigger className="w-52" aria-label="Fornitore"><SelectValue placeholder="Fornitore…" /></SelectTrigger>
+            <SelectContent>{fornitori.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}</SelectContent></Select>
+          <Select value={f.articolo} onValueChange={(v) => setF({ ...f, articolo: v })}><SelectTrigger className="w-52" aria-label="Articolo"><SelectValue placeholder="Articolo…" /></SelectTrigger>
+            <SelectContent>{articoli.map((a) => <SelectItem key={a.id} value={a.id}>{a.descrizione}</SelectItem>)}</SelectContent></Select>
+          <Input className="w-28" inputMode="decimal" placeholder="Prezzo €" aria-label="Prezzo" value={f.prezzo} onChange={(e) => setF({ ...f, prezzo: e.target.value })} />
+          <Input className="w-28" inputMode="decimal" placeholder="Minimo" aria-label="Lotto minimo" value={f.minimo} onChange={(e) => setF({ ...f, minimo: e.target.value })} />
+          <Input className="w-28" type="number" min={0} placeholder="Giorni" aria-label="Giorni di consegna" value={f.giorni} onChange={(e) => setF({ ...f, giorni: e.target.value })} />
+          <Input className="min-w-40 flex-1" placeholder="Condizioni (pagamento, resa…)" aria-label="Condizioni" value={f.condizioni} onChange={(e) => setF({ ...f, condizioni: e.target.value })} />
+          <BottoneScrittura variant="outline" disabled={!f.fornitore || !f.articolo || !(n(f.prezzo) >= 0) || f.prezzo === ''}
+            onClick={() => salva.mutate({ values: { modulo, fornitore_id: f.fornitore, articolo_id: f.articolo, prezzo: n(f.prezzo), minimo_ordine: f.minimo ? n(f.minimo) : null,
+              giorni_consegna: f.giorni ? Number(f.giorni) : null, condizioni: f.condizioni || null } },
+              { onSuccess: () => setF({ ...f, articolo: '', prezzo: '', minimo: '' }), onError: (e) => toast.error(messaggioErrore(e)) })}>Aggiungi</BottoneScrittura>
+        </div>
+      )}
+      {listini.length === 0 ? <p className="text-sm text-muted-foreground">Nessun listino: registra i prezzi dei fornitori per confrontarli.</p> : (
+        <Table>
+          <TableHeader><TableRow><TableHead>Articolo</TableHead><TableHead>Fornitore</TableHead><TableHead className="text-right">Prezzo</TableHead><TableHead className="text-right">Minimo</TableHead><TableHead className="text-right">Consegna</TableHead><TableHead>Condizioni</TableHead></TableRow></TableHeader>
+          <TableBody>
+            {listini.map((l) => (
+              <TableRow key={l.id}>
+                <TableCell className="text-foreground">{nomeArt(l.articolo_id)}</TableCell>
+                <TableCell>{nomeForn(l.fornitore_id)}{migliore(l) && <Badge tone="success" className="ml-2">Miglior prezzo</Badge>}</TableCell>
+                <TableCell numerica>{euro(l.prezzo)}</TableCell>
+                <TableCell numerica>{l.minimo_ordine ? fmt(l.minimo_ordine) : '—'}</TableCell>
+                <TableCell numerica>{l.giorni_consegna != null ? `${l.giorni_consegna} gg` : '—'}</TableCell>
+                <TableCell className="text-xs text-muted-foreground">{l.condizioni ?? '—'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </Card>
   )
 }

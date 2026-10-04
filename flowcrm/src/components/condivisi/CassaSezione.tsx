@@ -375,6 +375,7 @@ function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; cont
                   onError: (e) => toast.error(messaggioErrore(e)) })}>Applica</BottoneScrittura>
             </div>
           </div>
+          {conto.contatto_id && <PuntiTessera conto={conto} modulo={modulo} />}
           {isManager && (
             <div className="border-t border-border pt-4">
               <Label htmlFor="pg-sconto">Sconto o abbuono (€)</Label>
@@ -407,6 +408,28 @@ function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; cont
           </BottoneScrittura>
         </div>
       </Card>
+    </div>
+  )
+}
+
+/** Punti spendibili della tessera del cliente (cashback, sconti fedeltà). */
+function PuntiTessera({ conto, modulo }: { conto: Conto; modulo: string }) {
+  const { data: tessere = [] } = useElenco<Database['public']['Views']['fid_saldi']['Row']>('fid_saldi', { filtri: { contatto_id: conto.contatto_id ?? undefined, modulo } })
+  const { data: programmi = [] } = useElenco<Tables<'fid_programmi'>>('fid_programmi', { filtri: { modulo } })
+  const usa = useAzione('fid_usa_punti_su_conto', ['fid_saldi', 'conti', 'conti_saldi'])
+  const [punti, setPunti] = useState('')
+  const t = tessere.find((x) => programmi.find((p) => p.id === x.programma_id)?.valore_punto)
+  if (!t) return null
+  const valore = Number(programmi.find((p) => p.id === t.programma_id)?.valore_punto ?? 0)
+  return (
+    <div className="border-t border-border pt-4">
+      <h3 className="mb-1 text-title text-foreground">Punti della tessera</h3>
+      <p className="mb-2 text-sm text-muted-foreground">{t.codice}: {t.punti} punti, valgono {euro((t.punti ?? 0) * valore)}</p>
+      <div className="flex gap-2">
+        <Input inputMode="numeric" value={punti} onChange={(e) => setPunti(e.target.value)} placeholder="Punti da usare" aria-label="Punti da usare" />
+        <BottoneScrittura variant="outline" disabled={!(Number(punti) > 0)} onClick={() => usa.mutate({ p_tessera: t.tessera_id!, p_conto: conto.id, p_punti: Number(punti) },
+          { onSuccess: (s) => { toast.success(`Sconto di ${euro(s)} con i punti`); setPunti('') }, onError: (e) => toast.error(messaggioErrore(e)) })}>Usa</BottoneScrittura>
+      </div>
     </div>
   )
 }

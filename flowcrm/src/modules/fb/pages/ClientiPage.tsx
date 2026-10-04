@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { CercaContatto, type ContattoScelto } from '@/components/condivisi/CercaContatto'
@@ -26,7 +27,7 @@ import { useElenco, useRpc, useSalva, messaggioErrore } from '@/lib/queries/fond
 import type { Database } from '@/types/database.types'
 import { useFb } from '@/modules/fb/contesto'
 import { ConLocale } from '@/modules/fb/componenti/SelettoreLocale'
-import { ALLERGENI, etichettaAllergene, fmtData, fmtEuro } from '@/modules/fb/stati'
+import { ALLERGENI, PRENOTAZIONE_STATO, etichettaAllergene, fmtData, fmtEuro } from '@/modules/fb/stati'
 
 type Riepilogo = Database['public']['Views']['fb_clienti_riepilogo']['Row']
 type Contatto = Pick<Tables<'contatti'>, 'id' | 'nome' | 'cognome' | 'telefono' | 'email' | 'consenso_marketing'>
@@ -115,20 +116,29 @@ function SchedaCliente({ contattoId }: { contattoId: string }) {
   const { data: contatti = [] } = useElenco<Contatto>('contatti', { filtri: { id: contattoId }, select: 'id, nome, cognome, telefono, email, consenso_marketing' })
   const { data: schede = [] } = useElenco<ClienteFb>('fb_clienti', { filtri: { contatto_id: contattoId } })
   const salva = useSalva('fb_clienti', ['fond-rpc'])
+  const { localeId } = useFb()
+  const { data: tavoli = [] } = useElenco<Tables<'fb_tavoli'>>('fb_tavoli', { filtri: { locale_id: localeId ?? undefined, attivo: true }, ordine: [{ colonna: 'numero' }] })
+  const { data: visite = [] } = useElenco<Tables<'fb_comande'>>('fb_comande', { filtri: { contatto_id: contattoId, stato: 'chiusa' },
+    ordine: [{ colonna: 'chiusa_at', crescente: false }], limite: 6 })
+  const contiVisite = visite.map((v) => v.conto_id).filter(Boolean) as string[]
+  const { data: saldiVisite = [] } = useElenco<Database['public']['Views']['conti_saldi']['Row']>('conti_saldi', { filtri: { conto_id: contiVisite }, abilitato: contiVisite.length > 0 })
+  const { data: prenotazioni = [] } = useElenco<Tables<'fb_prenotazioni'>>('fb_prenotazioni', { filtri: { contatto_id: contattoId },
+    ordine: [{ colonna: 'inizio', crescente: false }], limite: 6 })
   const c = contatti[0]
   const s = schede[0]
-  const [f, setF] = useState({ preferenze: '', alimentari: '', intolleranze: '', compleanno: '', anniversario: '', note: '' })
+  const [f, setF] = useState({ preferenze: '', alimentari: '', intolleranze: '', compleanno: '', anniversario: '', note: '', tavolo: '' })
   const [allergie, setAllergie] = useState<string[]>([])
   useEffect(() => {
     setF({ preferenze: s?.preferenze ?? '', alimentari: s?.preferenze_alimentari ?? '', intolleranze: s?.intolleranze ?? '', compleanno: s?.compleanno ?? '',
-      anniversario: s?.anniversario ?? '', note: s?.note ?? '' })
+      anniversario: s?.anniversario ?? '', note: s?.note ?? '', tavolo: s?.tavolo_preferito_id ?? '' })
     setAllergie(s?.allergie ?? [])
   }, [s, contattoId])
 
   async function salvaPreferenze() {
     try {
       await salva.mutateAsync({ id: s?.id, values: { ...(s ? {} : { contatto_id: contattoId }), preferenze: f.preferenze || null, preferenze_alimentari: f.alimentari || null,
-        intolleranze: f.intolleranze || null, compleanno: f.compleanno || null, anniversario: f.anniversario || null, note: f.note || null, allergie } })
+        intolleranze: f.intolleranze || null, compleanno: f.compleanno || null, anniversario: f.anniversario || null, note: f.note || null, allergie,
+        tavolo_preferito_id: f.tavolo || null } })
       toast.success('Preferenze salvate')
     } catch (e) { toast.error(messaggioErrore(e)) }
   }
@@ -172,11 +182,32 @@ function SchedaCliente({ contattoId }: { contattoId: string }) {
           <div className="space-y-1.5 sm:col-span-2"><Label htmlFor="sc-pr">Preferenze</Label><Input id="sc-pr" value={f.preferenze} onChange={(e) => setF({ ...f, preferenze: e.target.value })} placeholder="Tavolo vicino alla finestra, acqua frizzante, caffè macchiato…" /></div>
           <div className="space-y-1.5"><Label htmlFor="sc-cp">Compleanno</Label><Input id="sc-cp" type="date" value={f.compleanno} onChange={(e) => setF({ ...f, compleanno: e.target.value })} /></div>
           <div className="space-y-1.5"><Label htmlFor="sc-an">Anniversario</Label><Input id="sc-an" type="date" value={f.anniversario} onChange={(e) => setF({ ...f, anniversario: e.target.value })} /></div>
-          <div className="space-y-1.5 sm:col-span-2"><Label htmlFor="sc-no">Note</Label><Input id="sc-no" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></div>
+          <div className="space-y-1.5"><Label>Tavolo preferito</Label>
+            <Select value={f.tavolo || 'nessuno'} onValueChange={(v) => setF({ ...f, tavolo: v === 'nessuno' ? '' : v })}>
+              <SelectTrigger aria-label="Tavolo preferito"><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="nessuno">Nessuno</SelectItem>{tavoli.map((t) => <SelectItem key={t.id} value={t.id}>Tavolo {t.numero}</SelectItem>)}</SelectContent>
+            </Select></div>
+          <div className="space-y-1.5"><Label htmlFor="sc-no">Note</Label><Input id="sc-no" value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></div>
         </div>
         <BottoneScrittura onClick={salvaPreferenze}>Salva</BottoneScrittura>
         {allergie.length > 0 && <p className="text-xs text-muted-foreground">Allergie: {allergie.map(etichettaAllergene).join(', ')} — compaiono al personale in prenotazione e in comanda.</p>}
       </div>
+      {(visite.length > 0 || prenotazioni.length > 0) && (
+        <div className="grid grid-cols-1 gap-4 border-t border-border pt-4 text-sm sm:grid-cols-2">
+          <div>
+            <h3 className="mb-1 text-label uppercase text-muted-foreground">Ultime visite</h3>
+            <ul className="space-y-0.5">{visite.map((v) => (
+              <li key={v.id} className="flex justify-between gap-2"><span>{fmtData(v.chiusa_at)}{v.coperti ? ` · ${v.coperti} coperti` : ''}</span>
+                <span className="tabular-nums">{fmtEuro(saldiVisite.find((x) => x.conto_id === v.conto_id)?.totale)}</span></li>))}</ul>
+          </div>
+          <div>
+            <h3 className="mb-1 text-label uppercase text-muted-foreground">Ultime prenotazioni</h3>
+            <ul className="space-y-0.5">{prenotazioni.map((p) => (
+              <li key={p.id} className="flex justify-between gap-2"><span>{fmtData(p.inizio)} · {p.persone} persone{p.occasione ? ` · ${p.occasione}` : ''}</span>
+                <Badge tone={(PRENOTAZIONE_STATO[p.stato] ?? PRENOTAZIONE_STATO.richiesta).tone}>{(PRENOTAZIONE_STATO[p.stato] ?? PRENOTAZIONE_STATO.richiesta).label}</Badge></li>))}</ul>
+          </div>
+        </div>
+      )}
       {profilo && profilo.feedback.length > 0 && (
         <div className="space-y-1 border-t border-border pt-4 text-sm">
           <h3 className="text-label uppercase text-muted-foreground">Recensioni e reclami</h3>

@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { useElenco, useRpc, useSalva, useDalVivo, fondKeys, messaggioErrore } from '@/lib/queries/fondamenta'
 import { useFb } from '@/modules/fb/contesto'
@@ -24,7 +25,7 @@ import { PrenotazioneDialog } from '@/modules/fb/dialogs/PrenotazioneDialog'
 import {
   ATTESA_STATO, PRENOTAZIONE_STATO, CANALE_PRENOTAZIONE_LABEL, etichettaAllergene, fmtOra, minutiDa, oggiIso,
 } from '@/modules/fb/stati'
-import { TABELLE_SERVIZIO, type Attesa, type Prenotazione, type Tavolo } from '@/modules/fb/queries'
+import { TABELLE_SERVIZIO, type Attesa, type Prenotazione, type Sala, type Tavolo } from '@/modules/fb/queries'
 
 export function PrenotazioniPage() {
   return <ConLocale><Prenotazioni_ /></ConLocale>
@@ -162,15 +163,16 @@ function ListaAttesa({ attesa }: { attesa: Attesa[] }) {
   const salva = useSalva('fb_attesa')
   const apriComanda = useSalva('fb_comande', TABELLE_SERVIZIO)
   const { data: candidati = [] } = useRpc<Candidato[]>('fb_attesa_candidati', { p_locale: localeId }, { abilitato: !!localeId, intervallo: 30_000 })
-  const [n, setN] = useState({ nome: '', persone: '2', telefono: '', note: '' })
+  const [n, setN] = useState({ nome: '', persone: '2', telefono: '', note: '', sala: '', priorita: '0' })
+  const { data: sale = [] } = useElenco<Sala>('fb_sale', { filtri: { locale_id: localeId ?? undefined, attiva: true }, ordine: [{ colonna: 'ordine' }] })
 
   async function aggiungi(e: FormEvent) {
     e.preventDefault()
     if (!n.nome.trim()) return
     try {
       await salva.mutateAsync({ values: { locale_id: localeId!, modulo, nome: n.nome.trim(), persone: Number(n.persone) || 1,
-        telefono: n.telefono.trim() || null, note: n.note.trim() || null } })
-      setN({ nome: '', persone: '2', telefono: '', note: '' })
+        telefono: n.telefono.trim() || null, note: n.note.trim() || null, sala_id: n.sala || null, priorita: Number(n.priorita) || 0 } })
+      setN({ nome: '', persone: '2', telefono: '', note: '', sala: '', priorita: '0' })
     } catch (err) { toast.error(messaggioErrore(err)) }
   }
   async function siedi(a: Attesa, tavoloId: string) {
@@ -192,6 +194,18 @@ function ListaAttesa({ attesa }: { attesa: Attesa[] }) {
             <Input id="la-persone" type="number" min={1} value={n.persone} onChange={(e) => setN({ ...n, persone: e.target.value })} /></div>
           <div className="w-40 space-y-1.5"><Label htmlFor="la-tel">Telefono</Label>
             <Input id="la-tel" value={n.telefono} onChange={(e) => setN({ ...n, telefono: e.target.value })} /></div>
+          {sale.length > 1 && (
+            <div className="w-40 space-y-1.5"><Label>Zona preferita</Label>
+              <Select value={n.sala || 'qualsiasi'} onValueChange={(v) => setN({ ...n, sala: v === 'qualsiasi' ? '' : v })}>
+                <SelectTrigger aria-label="Zona preferita"><SelectValue /></SelectTrigger>
+                <SelectContent><SelectItem value="qualsiasi">Qualsiasi</SelectItem>{sale.map((s) => <SelectItem key={s.id} value={s.id}>{s.nome}</SelectItem>)}</SelectContent>
+              </Select></div>
+          )}
+          <div className="w-36 space-y-1.5"><Label>Priorità</Label>
+            <Select value={n.priorita} onValueChange={(v) => setN({ ...n, priorita: v })}>
+              <SelectTrigger aria-label="Priorità"><SelectValue /></SelectTrigger>
+              <SelectContent><SelectItem value="0">Normale</SelectItem><SelectItem value="1">Cliente abituale</SelectItem><SelectItem value="2">Alta</SelectItem></SelectContent>
+            </Select></div>
           <div className="min-w-40 flex-1 space-y-1.5"><Label htmlFor="la-note">Preferenze</Label>
             <Input id="la-note" value={n.note} onChange={(e) => setN({ ...n, note: e.target.value })} placeholder="Fuori, vicino alla finestra…" /></div>
           <BottoneScrittura type="submit"><Plus className="h-4 w-4" /> In lista</BottoneScrittura>
@@ -209,7 +223,7 @@ function ListaAttesa({ attesa }: { attesa: Attesa[] }) {
                 <span className="w-16 text-sm tabular-nums text-muted-foreground">{minutiDa(a.ora_richiesta)} min</span>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium text-foreground">{a.nome} <span className="font-normal text-muted-foreground">· {a.persone} persone</span></p>
-                  <p className="text-xs text-muted-foreground">{[a.telefono, a.note].filter(Boolean).join(' · ') || '—'}</p>
+                  <p className="text-xs text-muted-foreground">{[a.telefono, sale.find((s) => s.id === a.sala_id)?.nome, a.priorita > 0 ? 'priorità' : null, a.note].filter(Boolean).join(' · ') || '—'}</p>
                 </div>
                 {cand ? <Badge tone="success">Tavolo {cand.tavolo} libero</Badge> : <span className="text-xs text-muted-foreground">Nessun tavolo adatto libero</span>}
                 <Badge tone={st.tone}>{st.label}</Badge>

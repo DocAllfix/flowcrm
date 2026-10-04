@@ -124,8 +124,16 @@ export function PrenotazioneDialog({ open, onOpenChange, prenotazione, giorno }:
               <Label htmlFor="pr-nome">Cliente *</Label>
               <CercaContatto id="pr-nome" valore={f.nome} contattoId={contattoId} segnaposto="Nome o telefono"
                 onTesto={(v) => { setF({ ...f, nome: v }); setContattoId(null) }}
-                onScegli={(c) => { setContattoId(c.id); setF({ ...f, nome: `${c.nome} ${c.cognome ?? ''}`.trim(),
-                  telefono: c.telefono ?? f.telefono, email: c.email ?? f.email }) }} />
+                onScegli={async (c) => {
+                  setContattoId(c.id); setF({ ...f, nome: `${c.nome} ${c.cognome ?? ''}`.trim(), telefono: c.telefono ?? f.telefono, email: c.email ?? f.email })
+                  // Il cliente che torna porta con sé allergie e intolleranze già dichiarate.
+                  const { data } = await supabase.from('fb_clienti').select('allergie, intolleranze').eq('contatto_id', c.id).maybeSingle()
+                  if (data) {
+                    setAllergie((a) => [...new Set([...a, ...data.allergie])])
+                    if (data.intolleranze) setF((x) => ({ ...x, intolleranze: x.intolleranze || data.intolleranze! }))
+                    if (data.allergie.length) toast.info('Allergie del cliente riportate dalla sua scheda')
+                  }
+                }} />
             </div>
             <div className="space-y-1.5"><Label htmlFor="pr-tel">Telefono</Label><Input id="pr-tel" value={f.telefono} onChange={set('telefono')} /></div>
             <div className="space-y-1.5"><Label htmlFor="pr-email">Email</Label><Input id="pr-email" type="email" value={f.email} onChange={set('email')} /></div>

@@ -49,6 +49,7 @@ export function TurniSezione({ modulo, reparti, extra }: { modulo: string; repar
   const { data: ore = [] } = useElenco<OreSettimana>('turni_ore_settimana', { filtri: { modulo, settimana: giorni[0] } })
   const salva = useSalva('turni', ['turni_ore_settimana', 'fond-rpc'])
   const [cella, setCella] = useState<{ persona: string; giorno: string } | null>(null)
+  const [sostituendo, setSostituendo] = useState<string | null>(null)
   const [nuovo, setNuovo] = useState({ modello: '', dalle: '09:00', alle: '15:00', reparto: reparti[0] ?? '', pausa: '30' })
 
   const sposta = (settimane: number) => { const d = new Date(inizioSett); d.setDate(d.getDate() + settimane * 7); setInizioSett(d); setCella(null) }
@@ -115,8 +116,16 @@ export function TurniSezione({ modulo, reparti, extra }: { modulo: string; repar
                                   <span className="mt-0.5 flex gap-1">
                                     <button type="button" className="underline-offset-2 hover:underline" onClick={() => salva.mutate({ id: t.id, values: { stato: 'svolto', inizio_effettivo: t.inizio, fine_effettivo: t.fine } })}>svolto</button>
                                     <button type="button" className="underline-offset-2 hover:underline" onClick={() => salva.mutate({ id: t.id, values: { stato: 'assente' } })}>assente</button>
+                                    <button type="button" className="underline-offset-2 hover:underline" onClick={() => setSostituendo(sostituendo === t.id ? null : t.id)}>sostituisci</button>
                                     <button type="button" className="underline-offset-2 hover:underline" onClick={() => salva.mutate({ id: t.id, values: { stato: 'annullato' } })}>togli</button>
                                   </span>
+                                )}
+                                {sostituendo === t.id && (
+                                  <Select onValueChange={(v) => salva.mutate({ id: t.id, values: { dipendente_id: v } }, {
+                                    onSuccess: () => { setSostituendo(null); toast.success('Sostituzione fatta') }, onError: (e) => toast.error(messaggioErrore(e)) })}>
+                                    <SelectTrigger className="mt-1 h-7 text-xs" aria-label="Chi sostituisce"><SelectValue placeholder="Chi lo sostituisce…" /></SelectTrigger>
+                                    <SelectContent>{persone.filter((x) => x.id !== t.dipendente_id).map((x) => <SelectItem key={x.id} value={x.id}>{x.nome} {x.cognome ?? ''}</SelectItem>)}</SelectContent>
+                                  </Select>
                                 )}
                               </div>
                             ))}

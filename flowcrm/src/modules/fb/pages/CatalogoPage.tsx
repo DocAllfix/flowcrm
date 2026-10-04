@@ -60,7 +60,7 @@ function Catalogo_() {
           <TabsTrigger value="ricette">Ricette</TabsTrigger>
           <TabsTrigger value="menu">Menu e listini</TabsTrigger>
           <TabsTrigger value="promozioni">Promozioni</TabsTrigger>
-          <TabsTrigger value="struttura">Categorie e postazioni</TabsTrigger>
+          <TabsTrigger value="struttura">Locale e postazioni</TabsTrigger>
           <TabsTrigger value="allergeni">Registro allergeni</TabsTrigger>
         </TabsList>
         <TabsContent value="prodotti"><ProdottiTab prodotti={prodotti} categorie={categorie} caricamento={caricamento} /></TabsContent>
@@ -360,6 +360,36 @@ function PromozioniTab({ prodotti, categorie }: { prodotti: Prodotto[]; categori
   )
 }
 
+function ImpostazioniLocale() {
+  const { locale } = useFb()
+  const { isManager } = useAuth()
+  const salva = useSalva('fb_locali')
+  if (!locale || !isManager) return null
+  const campo = (k: 'durata_tavolo_min' | 'anticipo_prenotato_min' | 'pausa_uscite_min' | 'coperti_per_cameriere' | 'coperti_per_cuoco' | 'costo_orario_medio',
+                 etichetta: string, aiuto: string) => (
+    <div className="space-y-1.5">
+      <Label htmlFor={`il-${k}`}>{etichetta}</Label>
+      <Input id={`il-${k}`} inputMode="decimal" key={`${k}-${locale.id}`} defaultValue={locale[k] ?? ''}
+        onBlur={(e) => { const v = e.target.value.trim() === '' ? null : Number(e.target.value.replace(',', '.'))
+          if (v !== (locale[k] ?? null)) salva.mutate({ id: locale.id, values: { [k]: v } }, { onSuccess: () => toast.success('Impostazione salvata'), onError: (err) => toast.error(messaggioErrore(err)) }) }} />
+      <p className="text-xs text-muted-foreground">{aiuto}</p>
+    </div>
+  )
+  return (
+    <Card className="p-5 xl:col-span-2">
+      <h2 className="mb-3 text-title text-foreground">Impostazioni di {locale.nome}</h2>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+        {campo('durata_tavolo_min', 'Durata del tavolo (min)', 'Quanto resta occupato un tavolo prenotato.')}
+        {campo('anticipo_prenotato_min', 'Prenotato da (min prima)', 'Da quando la mappa mostra il tavolo come prenotato.')}
+        {campo('pausa_uscite_min', 'Pausa tra le portate (min)', 'Con le uscite automatiche: attesa prima della portata successiva.')}
+        {campo('coperti_per_cameriere', 'Coperti per cameriere', 'Per il fabbisogno di personale in sala.')}
+        {campo('coperti_per_cuoco', 'Coperti per cuoco', 'Per il fabbisogno di personale in cucina.')}
+        {campo('costo_orario_medio', 'Costo orario medio (€)', 'Per il costo del personale nelle analisi.')}
+      </div>
+    </Card>
+  )
+}
+
 function StrutturaTab({ categorie }: { categorie: Categoria[] }) {
   const { localeId, modulo } = useFb()
   const { data: stazioni = [] } = useElenco<Stazione>('fb_stazioni', { filtri: { locale_id: localeId ?? undefined }, ordine: [{ colonna: 'ordine' }] })
@@ -370,6 +400,7 @@ function StrutturaTab({ categorie }: { categorie: Categoria[] }) {
 
   return (
     <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
+      <ImpostazioniLocale />
       <Card className="p-5">
         <h2 className="mb-3 text-title text-foreground">Categorie</h2>
         <ul className="divide-y divide-border">
