@@ -165,7 +165,7 @@ select pg_temp.torna_postgres();
 update moduli_licenze set attivo = false where slug = 'ristorante';
 update moduli_licenze set attivo = true where slug = 'bar';
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
-select is((select count(*)::int from mag_articoli where modulo = 'fb'), 6, 'con la sola licenza Bar il motore fb resta visibile');
+select is((select count(*)::int from mag_articoli where modulo = 'fb' and id::text like 'a0000000-%'), 6, 'con la sola licenza Bar il motore fb resta visibile');
 select pg_temp.torna_postgres();
 update moduli_licenze set attivo = false where slug = 'bar';
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');

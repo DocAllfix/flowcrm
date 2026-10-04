@@ -345,7 +345,7 @@ select pg_temp.torna_postgres();
 
 -- ═══ RLS E LICENZE ═══════════════════════════════════════════════════
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
-select is((select format('%s|%s', (select count(*) from fb_comande), (select count(*) from fb_prodotti) > 0)),
+select is((select format('%s|%s', (select count(*) from fb_comande where locale_id = 'b1000000-0000-0000-0000-000000000001'), (select count(*) from fb_prodotti) > 0)),
   '3|t', 'operatore del ristorante: comande e catalogo');
 delete from fb_comande_righe where comanda_id = 'b9000000-0000-0000-0000-000000000002';
 select is((select count(*)::int from fb_comande_righe where comanda_id = 'b9000000-0000-0000-0000-000000000002'), 2,

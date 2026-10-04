@@ -1,7 +1,6 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from 'react'
 import { Route } from 'react-router-dom'
 import { Spinner } from '@/components/ui/spinner'
-import { FbProvider } from '@/modules/fb/contesto'
 
 const pagina = <K extends string>(carica: () => Promise<Record<K, ComponentType>>, nome: K) =>
   lazy(() => carica().then((m) => ({ default: m[nome] })))
@@ -22,15 +21,13 @@ const ControlliFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'),
 const PersonaleFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'PersonaleFbPage')
 const EventiFbPage = pagina(() => import('@/modules/fb/pages/GestionePages'), 'EventiFbPage')
 
+const FbRadice = lazy(() => import('@/modules/fb/radice'))
+
 function Ristorante({ children }: { children: ReactNode }) {
   return (
-    <FbProvider modulo="ristorante">
-      <Suspense fallback={
-        <div className="flex justify-center py-20"><Spinner etichetta="Caricamento in corso" dimensione="lg" /></div>
-      }>
-        {children}
-      </Suspense>
-    </FbProvider>
+    <Suspense fallback={<div className="flex justify-center py-20"><Spinner etichetta="Caricamento in corso" dimensione="lg" /></div>}>
+      <FbRadice modulo="ristorante">{children}</FbRadice>
+    </Suspense>
   )
 }
 

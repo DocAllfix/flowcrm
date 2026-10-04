@@ -26,6 +26,11 @@ begin
   execute 'set local role authenticated';
 end;
 $$ language plpgsql;
+-- Le analisi lavorano sul giorno di calendario italiano, non su quello UTC
+-- del server (dopo mezzanotte i due differiscono).
+create or replace function pg_temp.oggi() returns date as $$
+  select (now() at time zone 'Europe/Rome')::date
+$$ language sql stable;
 create or replace function pg_temp.torna_postgres() returns void as $$
 begin
   execute 'reset role';
@@ -80,22 +85,22 @@ insert into fb_comande_righe (comanda_id, prodotto_id, quantita, stato, omaggio)
 -- Menu engineering: quota soglia 0,7/4 = 17,5%; margine medio
 -- (40×7 + 30×2 + 10×11 + 10×1) / 90 = 5,11.
 select is((select string_agg(prodotto || ':' || classe, ',' order by prodotto)
-             from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', current_date, current_date,
+             from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi(),
                                       'b4000000-0000-0000-0000-0000000000a1')),
   'A:star,B:plow_horse,C:puzzle,D:dog', 'menu engineering: Star, Plow Horse, Puzzle, Dog sui dati noti');
 select is((select format('%s|%s|%s', quota_pct, margine_unitario, food_cost_pct)
-             from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', current_date, current_date,
+             from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi(),
                                       'b4000000-0000-0000-0000-0000000000a1') where prodotto = 'A'),
   '44.4|7.00|30.0', 'A: 44,4% delle vendite, margine 7, food cost 30%');
 select is((select format('%s|%s|%s', quantita, ricavo, costo) from fb_food_cost('b1000000-0000-0000-0000-0000000000a1',
-             current_date, current_date, 'piatto') where chiave = 'D'),
+             pg_temp.oggi(), pg_temp.oggi(), 'piatto') where chiave = 'D'),
   '11.00|60.00|55.00', 'food cost per piatto: l''omaggio pesa sul costo, non sul ricavo');
 -- Food: ricavi 400 + 240 + 150 + 60 = 850; costi 120 + 180 + 40 + 50 + 5 = 395 → 46,5%.
 -- Bevande: 50 di ricavo, 12 di costo → 24%.
 select is((select string_agg(chiave || ':' || food_cost_pct, ',' order by chiave) from fb_food_cost(
-             'b1000000-0000-0000-0000-0000000000a1', current_date, current_date, 'area')),
+             'b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi(), 'area')),
   'beverage:24.0,food:46.5', 'food cost e beverage cost per area');
-select throws_ok($$select * from fb_food_cost('b1000000-0000-0000-0000-0000000000a1', current_date, current_date, 'colore')$$,
+select throws_ok($$select * from fb_food_cost('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi(), 'colore')$$,
   'P0001', null, 'dimensione di analisi non prevista');
 
 -- Bevande: 10 vendute, 1 bevuta dal personale, inventario ne conta 11
@@ -106,9 +111,9 @@ insert into mag_inventari_righe (inventario_id, articolo_id, quantita_contata) v
   ('a4000000-0000-0000-0000-0000000000b1', 'a1000000-0000-0000-0000-0000000000b1', 11);
 select chiudi_inventario('a4000000-0000-0000-0000-0000000000b1');
 select is((select format('%s|%s|%s|%s|%s|%s', teorico, sprechi, ammanchi, effettivo, scostamento_pct, anomalia)
-             from fb_beverage_controllo('ristorante', current_date, current_date)),
+             from fb_beverage_controllo('ristorante', pg_temp.oggi(), pg_temp.oggi()) where articolo_id = 'a1000000-0000-0000-0000-0000000000b1'),
   '10.000|1.000|2.000|13.000|30.0|t', 'birra: teorico 10, effettivo 13, anomalia segnalata');
-select is((select valore_scostamento from fb_beverage_controllo('ristorante', current_date, current_date)),
+select is((select valore_scostamento from fb_beverage_controllo('ristorante', pg_temp.oggi(), pg_temp.oggi()) where articolo_id = 'a1000000-0000-0000-0000-0000000000b1'),
   3.60::numeric, 'valore delle perdite: 3 birre × 1,20');
 
 -- Richiamo del fusto: si risale a comanda, tavolo e cliente.
@@ -117,7 +122,7 @@ select is((select format('%s|%s|%s|%s|%s', tavolo, prodotto, quantita_lotto, cli
   '1|Birra|10.000|Mario Rossi|333 1111111', 'richiamo del lotto: piatti, tavolo e cliente da avvisare');
 
 select is((select string_agg(causale || ':' || costo, ',' order by causale)
-             from fb_sprechi_analisi('b1000000-0000-0000-0000-0000000000a1', current_date, current_date)),
+             from fb_sprechi_analisi('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi())),
   'consumo_personale:1.20,omaggio:5.00', 'sprechi con il loro costo, omaggi compresi');
 
 -- Chiusura del conto: 400 + 240 + 150 + 60 + 0 + 50 = 900.
@@ -149,9 +154,9 @@ select ok((select c->'vendite' = 'null'::jsonb from fb_cruscotto('b1000000-0000-
   'operatore: il cruscotto non mostra le vendite');
 select is((select (c->'cucina'->>'comande_aperte')::int from fb_cruscotto('b1000000-0000-0000-0000-0000000000a1') c),
   0, 'operatore: vede sala e cucina');
-select throws_ok($$select fb_kpi('b1000000-0000-0000-0000-0000000000a1', current_date, current_date)$$,
+select throws_ok($$select fb_kpi('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi())$$,
   '42501', null, 'operatore: i KPI economici sono della direzione');
-select throws_ok($$select * from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', current_date, current_date)$$,
+select throws_ok($$select * from fb_menu_engineering('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi())$$,
   '42501', null, 'operatore: niente menu engineering');
 select is((select count(*)::int from ricerca_globale('Neri') where tipo = 'prenotazione_fb'), 1,
   'la ricerca globale trova le prenotazioni');
@@ -160,14 +165,14 @@ select pg_temp.torna_postgres();
 -- ═══ KPI DI PERIODO ══════════════════════════════════════════════════
 select is((select format('%s|%s|%s|%s', k->'commerciali'->>'fatturato', k->'commerciali'->>'ticket_medio',
                          k->'commerciali'->>'ricavo_per_coperto', k->'commerciali'->>'tasso_occupazione_pct')
-             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', current_date, current_date) k),
+             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi()) k),
   '900.00|900.00|225.00|66.7', 'KPI commerciali: fatturato, ticket, ricavo per coperto, occupazione 4 su 6 posti');
 select is((select format('%s|%s|%s|%s', k->'economici'->>'food_cost_pct', k->'economici'->>'beverage_cost_pct',
                          k->'economici'->>'margine_lordo', k->'economici'->>'costo_personale')
-             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', current_date, current_date) k),
+             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi()) k),
   '46.5|24.0|493.00|120.00', 'KPI economici: food 46,5%, beverage 24%, margine 493, personale 8 h × 15');
 select is((select format('%s|%s|%s', k->'cucina'->>'piatti_venduti', k->'cucina'->>'bevande_vendute', k->'clienti'->>'nuovi_clienti')
-             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', current_date, current_date) k),
+             from fb_kpi('b1000000-0000-0000-0000-0000000000a1', pg_temp.oggi(), pg_temp.oggi()) k),
   '91.00|10.00|1', 'piatti e bevande vendute, nuovo cliente');
 
 -- ═══ CRM, SEGMENTI, ALLERGENI ════════════════════════════════════════

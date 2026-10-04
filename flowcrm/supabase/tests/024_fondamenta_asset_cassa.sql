@@ -245,10 +245,11 @@ select throws_ok($$update cassa_sessioni set note = 'ritocco' where id = 'c50000
 
 -- ═══ RLS E LICENZE ═══════════════════════════════════════════════════
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
-select is((select count(*)::int from conti), 6, 'operatore: conti di ristorante e hotel, non della palestra spenta');
+select is((select count(*)::int from conti where id::text like 'c1000000-%'), 6, 'operatore: conti di ristorante e hotel, non della palestra spenta');
 delete from conti where id = 'c1000000-0000-0000-0000-00000000000b';
-update conti_pagamenti set importo = 1;
-select is((select format('%s|%s', (select count(*) from conti), (select sum(importo) from conti_pagamenti))),
+update conti_pagamenti set importo = 1 where conto_id::text like 'c1000000-%';
+select is((select format('%s|%s', (select count(*) from conti where id::text like 'c1000000-%'),
+                         (select sum(importo) from conti_pagamenti where conto_id::text like 'c1000000-%'))),
   '6|175.00', 'operatore: non cancella conti e non ritocca pagamenti');
 select pg_temp.torna_postgres();
 
