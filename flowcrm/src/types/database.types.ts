@@ -5119,6 +5119,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "conti_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "conti_righe_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
@@ -6080,11 +6087,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "distinte_base_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "distinte_base_righe_sotto_distinta_id_fkey"
             columns: ["sotto_distinta_id"]
             isOneToOne: false
             referencedRelation: "distinte_base"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_sotto_distinta_id_fkey"
+            columns: ["sotto_distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
           },
           {
             foreignKeyName: "distinte_base_righe_updated_by_fkey"
@@ -6616,6 +6637,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "eventi_voci_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "eventi_voci_evento_id_fkey"
             columns: ["evento_id"]
             isOneToOne: false
@@ -6723,6 +6751,1996 @@ export type Database = {
           },
           {
             foreignKeyName: "fatture_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_attesa: {
+        Row: {
+          attesa_stimata_min: number | null
+          avvisato_at: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          locale_id: string
+          modulo: string
+          nome: string
+          note: string | null
+          ora_richiesta: string
+          persone: number
+          priorita: number
+          sala_id: string | null
+          seduto_at: string | null
+          stato: string
+          tavolo_id: string | null
+          telefono: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attesa_stimata_min?: number | null
+          avvisato_at?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id: string
+          modulo: string
+          nome: string
+          note?: string | null
+          ora_richiesta?: string
+          persone: number
+          priorita?: number
+          sala_id?: string | null
+          seduto_at?: string | null
+          stato?: string
+          tavolo_id?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attesa_stimata_min?: number | null
+          avvisato_at?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          ora_richiesta?: string
+          persone?: number
+          priorita?: number
+          sala_id?: string | null
+          seduto_at?: string | null
+          stato?: string
+          tavolo_id?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_attesa_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "fb_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["tavolo_id"]
+          },
+          {
+            foreignKeyName: "fb_attesa_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_categorie: {
+        Row: {
+          area: string
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          ordine: number
+          updated_at: string
+          updated_by: string | null
+          uscita: number
+        }
+        Insert: {
+          area?: string
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+          uscita?: number
+        }
+        Update: {
+          area?: string
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+          uscita?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_categorie_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_categorie_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_clienti: {
+        Row: {
+          allergie: string[]
+          anniversario: string | null
+          compleanno: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          intolleranze: string | null
+          modulo: string
+          note: string | null
+          preferenze: string | null
+          preferenze_alimentari: string | null
+          ricorrenze: NonNullable<Json>
+          tavolo_preferito_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allergie?: string[]
+          anniversario?: string | null
+          compleanno?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          intolleranze?: string | null
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          preferenze_alimentari?: string | null
+          ricorrenze?: NonNullable<Json>
+          tavolo_preferito_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allergie?: string[]
+          anniversario?: string | null
+          compleanno?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          intolleranze?: string | null
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          preferenze_alimentari?: string | null
+          ricorrenze?: NonNullable<Json>
+          tavolo_preferito_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_clienti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_clienti_tavolo_preferito_id_fkey"
+            columns: ["tavolo_preferito_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_clienti_tavolo_preferito_id_fkey"
+            columns: ["tavolo_preferito_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["tavolo_id"]
+          },
+          {
+            foreignKeyName: "fb_clienti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_comande: {
+        Row: {
+          aperta_at: string
+          cameriere_id: string | null
+          canale: string
+          chiusa_at: string | null
+          cliente_nome: string | null
+          cliente_telefono: string | null
+          contatto_id: string | null
+          conto_id: string | null
+          conto_richiesto_at: string | null
+          coperti: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          locale_id: string
+          modulo: string
+          note: string | null
+          numero: number | null
+          piattaforma: string | null
+          piattaforma_ordine_id: string | null
+          prenotazione_id: string | null
+          priorita: string
+          ritiro_at: string | null
+          stato: Database["public"]["Enums"]["fb_comanda_stato"]
+          tavolo_id: string | null
+          tipologia_cliente: string | null
+          updated_at: string
+          updated_by: string | null
+          uscite_automatiche: boolean
+        }
+        Insert: {
+          aperta_at?: string
+          cameriere_id?: string | null
+          canale?: string
+          chiusa_at?: string | null
+          cliente_nome?: string | null
+          cliente_telefono?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          conto_richiesto_at?: string | null
+          coperti?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id: string
+          modulo: string
+          note?: string | null
+          numero?: number | null
+          piattaforma?: string | null
+          piattaforma_ordine_id?: string | null
+          prenotazione_id?: string | null
+          priorita?: string
+          ritiro_at?: string | null
+          stato?: Database["public"]["Enums"]["fb_comanda_stato"]
+          tavolo_id?: string | null
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uscite_automatiche?: boolean
+        }
+        Update: {
+          aperta_at?: string
+          cameriere_id?: string | null
+          canale?: string
+          chiusa_at?: string | null
+          cliente_nome?: string | null
+          cliente_telefono?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          conto_richiesto_at?: string | null
+          coperti?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id?: string
+          modulo?: string
+          note?: string | null
+          numero?: number | null
+          piattaforma?: string | null
+          piattaforma_ordine_id?: string | null
+          prenotazione_id?: string | null
+          priorita?: string
+          ritiro_at?: string | null
+          stato?: Database["public"]["Enums"]["fb_comanda_stato"]
+          tavolo_id?: string | null
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uscite_automatiche?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_cameriere_id_fkey"
+            columns: ["cameriere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["tavolo_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_comande_righe: {
+        Row: {
+          aliquota_iva: number | null
+          allergie: string[]
+          annullata_at: string | null
+          cameriere_id: string | null
+          comanda_id: string
+          conti_riga_id: string | null
+          costo_unitario: number | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          inviata_at: string | null
+          invio: string
+          locale_id: string
+          modulo: string
+          motivo_rifacimento: string | null
+          note: string | null
+          omaggio: boolean
+          ordinata_at: string
+          padre_id: string | null
+          personalizzazioni: string | null
+          preparata_da: string | null
+          preparazione_at: string | null
+          presa_at: string | null
+          prezzo_origine: string | null
+          prezzo_unitario: number | null
+          priorita: string
+          prodotto_id: string
+          promo_omaggi: number
+          promozione_id: string | null
+          pronta_at: string | null
+          quantita: number
+          rifacimento_di: string | null
+          scaricata: boolean
+          servita_at: string | null
+          stato: Database["public"]["Enums"]["fb_riga_stato"]
+          stazione_id: string | null
+          updated_at: string
+          updated_by: string | null
+          uscita: number | null
+          fb_riga_scarica: undefined | null
+        }
+        Insert: {
+          aliquota_iva?: number | null
+          allergie?: string[]
+          annullata_at?: string | null
+          cameriere_id?: string | null
+          comanda_id: string
+          conti_riga_id?: string | null
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          inviata_at?: string | null
+          invio?: string
+          locale_id: string
+          modulo: string
+          motivo_rifacimento?: string | null
+          note?: string | null
+          omaggio?: boolean
+          ordinata_at?: string
+          padre_id?: string | null
+          personalizzazioni?: string | null
+          preparata_da?: string | null
+          preparazione_at?: string | null
+          presa_at?: string | null
+          prezzo_origine?: string | null
+          prezzo_unitario?: number | null
+          priorita?: string
+          prodotto_id: string
+          promo_omaggi?: number
+          promozione_id?: string | null
+          pronta_at?: string | null
+          quantita?: number
+          rifacimento_di?: string | null
+          scaricata?: boolean
+          servita_at?: string | null
+          stato?: Database["public"]["Enums"]["fb_riga_stato"]
+          stazione_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uscita?: number | null
+        }
+        Update: {
+          aliquota_iva?: number | null
+          allergie?: string[]
+          annullata_at?: string | null
+          cameriere_id?: string | null
+          comanda_id?: string
+          conti_riga_id?: string | null
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          inviata_at?: string | null
+          invio?: string
+          locale_id?: string
+          modulo?: string
+          motivo_rifacimento?: string | null
+          note?: string | null
+          omaggio?: boolean
+          ordinata_at?: string
+          padre_id?: string | null
+          personalizzazioni?: string | null
+          preparata_da?: string | null
+          preparazione_at?: string | null
+          presa_at?: string | null
+          prezzo_origine?: string | null
+          prezzo_unitario?: number | null
+          priorita?: string
+          prodotto_id?: string
+          promo_omaggi?: number
+          promozione_id?: string | null
+          pronta_at?: string | null
+          quantita?: number
+          rifacimento_di?: string | null
+          scaricata?: boolean
+          servita_at?: string | null
+          stato?: Database["public"]["Enums"]["fb_riga_stato"]
+          stazione_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          uscita?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_righe_cameriere_id_fkey"
+            columns: ["cameriere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_comande"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["comanda_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_conti_riga_id_fkey"
+            columns: ["conti_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_comande_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_kds"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_vendite"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_preparata_da_fkey"
+            columns: ["preparata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_promozione_id_fkey"
+            columns: ["promozione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_promozioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_comande_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_kds"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_vendite"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_stazione_id_fkey"
+            columns: ["stazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_stazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_consegne: {
+        Row: {
+          citta: string | null
+          comanda_id: string
+          consegnata_at: string | null
+          conti_riga_id: string | null
+          costo_consegna: number
+          created_at: string
+          created_by: string | null
+          fascia_alle: string | null
+          fascia_dalle: string | null
+          id: string
+          indirizzo: string
+          locale_id: string
+          modulo: string
+          note: string | null
+          partita_at: string | null
+          piattaforma: string | null
+          piattaforma_ordine_id: string | null
+          rider_esterno: string | null
+          rider_id: string | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+          zona: string | null
+        }
+        Insert: {
+          citta?: string | null
+          comanda_id: string
+          consegnata_at?: string | null
+          conti_riga_id?: string | null
+          costo_consegna?: number
+          created_at?: string
+          created_by?: string | null
+          fascia_alle?: string | null
+          fascia_dalle?: string | null
+          id?: string
+          indirizzo: string
+          locale_id: string
+          modulo: string
+          note?: string | null
+          partita_at?: string | null
+          piattaforma?: string | null
+          piattaforma_ordine_id?: string | null
+          rider_esterno?: string | null
+          rider_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Update: {
+          citta?: string | null
+          comanda_id?: string
+          consegnata_at?: string | null
+          conti_riga_id?: string | null
+          costo_consegna?: number
+          created_at?: string
+          created_by?: string | null
+          fascia_alle?: string | null
+          fascia_dalle?: string | null
+          id?: string
+          indirizzo?: string
+          locale_id?: string
+          modulo?: string
+          note?: string | null
+          partita_at?: string | null
+          piattaforma?: string | null
+          piattaforma_ordine_id?: string | null
+          rider_esterno?: string | null
+          rider_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_consegne_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: true
+            referencedRelation: "fb_comande"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_consegne_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: true
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["comanda_id"]
+          },
+          {
+            foreignKeyName: "fb_consegne_conti_riga_id_fkey"
+            columns: ["conti_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_consegne_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_consegne_rider_id_fkey"
+            columns: ["rider_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_consegne_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_locali: {
+        Row: {
+          anticipo_prenotato_min: number
+          attivo: boolean
+          coperti_per_cameriere: number
+          coperti_per_cuoco: number
+          costo_orario_medio: number | null
+          created_at: string
+          created_by: string | null
+          durata_tavolo_min: number
+          id: string
+          indirizzo: string | null
+          modulo: string
+          nome: string
+          note: string | null
+          pausa_uscite_min: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          anticipo_prenotato_min?: number
+          attivo?: boolean
+          coperti_per_cameriere?: number
+          coperti_per_cuoco?: number
+          costo_orario_medio?: number | null
+          created_at?: string
+          created_by?: string | null
+          durata_tavolo_min?: number
+          id?: string
+          indirizzo?: string | null
+          modulo: string
+          nome: string
+          note?: string | null
+          pausa_uscite_min?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          anticipo_prenotato_min?: number
+          attivo?: boolean
+          coperti_per_cameriere?: number
+          coperti_per_cuoco?: number
+          costo_orario_medio?: number | null
+          created_at?: string
+          created_by?: string | null
+          durata_tavolo_min?: number
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          nome?: string
+          note?: string | null
+          pausa_uscite_min?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_locali_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_locali_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_menu: {
+        Row: {
+          attivo: boolean
+          canale: string
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          giorni: number[]
+          id: string
+          locale_id: string
+          modulo: string
+          nome: string
+          ora_fine: string | null
+          ora_inizio: string | null
+          prezzo_fisso: number | null
+          priorita: number
+          tipo: string
+          tipologia_cliente: string | null
+          updated_at: string
+          updated_by: string | null
+          valido_al: string | null
+          valido_dal: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          canale?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          giorni?: number[]
+          id?: string
+          locale_id: string
+          modulo: string
+          nome: string
+          ora_fine?: string | null
+          ora_inizio?: string | null
+          prezzo_fisso?: number | null
+          priorita?: number
+          tipo?: string
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          canale?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          giorni?: number[]
+          id?: string
+          locale_id?: string
+          modulo?: string
+          nome?: string
+          ora_fine?: string | null
+          ora_inizio?: string | null
+          prezzo_fisso?: number | null
+          priorita?: number
+          tipo?: string
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_menu_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_menu_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_menu_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_menu_voci: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          disponibile: boolean
+          id: string
+          menu_id: string
+          modulo: string
+          ordine: number
+          prezzo: number | null
+          prodotto_id: string
+          sezione: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          disponibile?: boolean
+          id?: string
+          menu_id: string
+          modulo: string
+          ordine?: number
+          prezzo?: number | null
+          prodotto_id: string
+          sezione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          disponibile?: boolean
+          id?: string
+          menu_id?: string
+          modulo?: string
+          ordine?: number
+          prezzo?: number | null
+          prodotto_id?: string
+          sezione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_menu_voci_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_menu_voci_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "fb_menu"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_menu_voci_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_menu_voci_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
+            foreignKeyName: "fb_menu_voci_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_prenotazioni: {
+        Row: {
+          allergie: string[]
+          arrivata_at: string | null
+          canale: string
+          conclusa_at: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          durata_min: number | null
+          email: string | null
+          evento_id: string | null
+          fine: string | null
+          id: string
+          inizio: string
+          intolleranze: string | null
+          locale_id: string
+          modulo: string
+          nome: string
+          note: string | null
+          occasione: string | null
+          persone: number
+          piattaforma_id: string | null
+          ricerca: unknown
+          richieste_speciali: string | null
+          sala_id: string | null
+          stato: Database["public"]["Enums"]["fb_prenotazione_stato"]
+          tavoli: string[]
+          telefono: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allergie?: string[]
+          arrivata_at?: string | null
+          canale?: string
+          conclusa_at?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number | null
+          email?: string | null
+          evento_id?: string | null
+          fine?: string | null
+          id?: string
+          inizio: string
+          intolleranze?: string | null
+          locale_id: string
+          modulo: string
+          nome: string
+          note?: string | null
+          occasione?: string | null
+          persone: number
+          piattaforma_id?: string | null
+          ricerca?: never
+          richieste_speciali?: string | null
+          sala_id?: string | null
+          stato?: Database["public"]["Enums"]["fb_prenotazione_stato"]
+          tavoli?: string[]
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allergie?: string[]
+          arrivata_at?: string | null
+          canale?: string
+          conclusa_at?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number | null
+          email?: string | null
+          evento_id?: string | null
+          fine?: string | null
+          id?: string
+          inizio?: string
+          intolleranze?: string | null
+          locale_id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          occasione?: string | null
+          persone?: number
+          piattaforma_id?: string | null
+          ricerca?: never
+          richieste_speciali?: string | null
+          sala_id?: string | null
+          stato?: Database["public"]["Enums"]["fb_prenotazione_stato"]
+          tavoli?: string[]
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "fb_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_prenotazioni_tavoli: {
+        Row: {
+          attiva: boolean
+          id: string
+          modulo: string
+          periodo: unknown
+          prenotazione_id: string
+          tavolo_id: string
+        }
+        Insert: {
+          attiva?: boolean
+          id?: string
+          modulo: string
+          periodo: unknown
+          prenotazione_id: string
+          tavolo_id: string
+        }
+        Update: {
+          attiva?: boolean
+          id?: string
+          modulo?: string
+          periodo?: unknown
+          prenotazione_id?: string
+          tavolo_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_prenotazioni_tavoli_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_tavoli_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_tavoli_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_tavoli_tavolo_id_fkey"
+            columns: ["tavolo_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["tavolo_id"]
+          },
+        ]
+      }
+      fb_prodotti: {
+        Row: {
+          aliquota_iva: number
+          allergeni_potenziali: string[]
+          articolo_id: string | null
+          articolo_quantita: number
+          attributi: NonNullable<Json>
+          beverage_tipo: string | null
+          canali: string[]
+          categoria_id: string
+          codice: string | null
+          componenti: string[]
+          contaminazioni: string | null
+          costo_manuale: number | null
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          distinta_id: string | null
+          fornitore_id: string | null
+          foto_path: string | null
+          id: string
+          ingredienti_sostituibili: string | null
+          mescita: boolean
+          mesi_disponibili: number[]
+          modulo: string
+          nome: string
+          note_operative: string | null
+          prezzo: number
+          ricerca: unknown
+          stato: string
+          tempo_preparazione_min: number | null
+          unita_vendita: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          allergeni_potenziali?: string[]
+          articolo_id?: string | null
+          articolo_quantita?: number
+          attributi?: NonNullable<Json>
+          beverage_tipo?: string | null
+          canali?: string[]
+          categoria_id: string
+          codice?: string | null
+          componenti?: string[]
+          contaminazioni?: string | null
+          costo_manuale?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          distinta_id?: string | null
+          fornitore_id?: string | null
+          foto_path?: string | null
+          id?: string
+          ingredienti_sostituibili?: string | null
+          mescita?: boolean
+          mesi_disponibili?: number[]
+          modulo?: string
+          nome: string
+          note_operative?: string | null
+          prezzo?: number
+          ricerca?: never
+          stato?: string
+          tempo_preparazione_min?: number | null
+          unita_vendita?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          allergeni_potenziali?: string[]
+          articolo_id?: string | null
+          articolo_quantita?: number
+          attributi?: NonNullable<Json>
+          beverage_tipo?: string | null
+          canali?: string[]
+          categoria_id?: string
+          codice?: string | null
+          componenti?: string[]
+          contaminazioni?: string | null
+          costo_manuale?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          distinta_id?: string | null
+          fornitore_id?: string | null
+          foto_path?: string | null
+          id?: string
+          ingredienti_sostituibili?: string | null
+          mescita?: boolean
+          mesi_disponibili?: number[]
+          modulo?: string
+          nome?: string
+          note_operative?: string | null
+          prezzo?: number
+          ricerca?: never
+          stato?: string
+          tempo_preparazione_min?: number | null
+          unita_vendita?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_prodotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "fb_categorie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_promozioni: {
+        Row: {
+          attiva: boolean
+          canali: string[]
+          categorie: string[]
+          created_at: string
+          created_by: string | null
+          giorni: number[]
+          id: string
+          locale_id: string | null
+          modulo: string
+          nome: string
+          ora_fine: string | null
+          ora_inizio: string | null
+          prezzo: number | null
+          prodotti: string[]
+          quantita_x: number | null
+          quantita_y: number | null
+          sconto_percentuale: number | null
+          tipo: string
+          tipologia_cliente: string | null
+          updated_at: string
+          updated_by: string | null
+          valido_al: string | null
+          valido_dal: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          canali?: string[]
+          categorie?: string[]
+          created_at?: string
+          created_by?: string | null
+          giorni?: number[]
+          id?: string
+          locale_id?: string | null
+          modulo?: string
+          nome: string
+          ora_fine?: string | null
+          ora_inizio?: string | null
+          prezzo?: number | null
+          prodotti?: string[]
+          quantita_x?: number | null
+          quantita_y?: number | null
+          sconto_percentuale?: number | null
+          tipo: string
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          canali?: string[]
+          categorie?: string[]
+          created_at?: string
+          created_by?: string | null
+          giorni?: number[]
+          id?: string
+          locale_id?: string | null
+          modulo?: string
+          nome?: string
+          ora_fine?: string | null
+          ora_inizio?: string | null
+          prezzo?: number | null
+          prodotti?: string[]
+          quantita_x?: number | null
+          quantita_y?: number | null
+          sconto_percentuale?: number | null
+          tipo?: string
+          tipologia_cliente?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_promozioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_promozioni_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_promozioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_sale: {
+        Row: {
+          altezza: number
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          larghezza: number
+          locale_id: string
+          modulo: string
+          nome: string
+          ordine: number
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          altezza?: number
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          larghezza?: number
+          locale_id: string
+          modulo: string
+          nome: string
+          ordine?: number
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          altezza?: number
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          larghezza?: number
+          locale_id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_sale_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sale_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sale_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_sprechi: {
+        Row: {
+          articolo_id: string | null
+          causale: string
+          costo: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          locale_id: string | null
+          lotto_id: string | null
+          modulo: string
+          note: string | null
+          prodotto_id: string | null
+          quantita: number
+          registrato_at: string
+        }
+        Insert: {
+          articolo_id?: string | null
+          causale: string
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id?: string | null
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          prodotto_id?: string | null
+          quantita: number
+          registrato_at?: string
+        }
+        Update: {
+          articolo_id?: string | null
+          causale?: string
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id?: string | null
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          prodotto_id?: string | null
+          quantita?: number
+          registrato_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_sprechi_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_sprechi_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+        ]
+      }
+      fb_stazioni: {
+        Row: {
+          attiva: boolean
+          categorie: string[]
+          created_at: string
+          created_by: string | null
+          id: string
+          locale_id: string
+          modulo: string
+          nome: string
+          ordine: number
+          predefinita: boolean
+          prodotti: string[]
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          categorie?: string[]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id: string
+          modulo: string
+          nome: string
+          ordine?: number
+          predefinita?: boolean
+          prodotti?: string[]
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          categorie?: string[]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          locale_id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          predefinita?: boolean
+          prodotti?: string[]
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_stazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_stazioni_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_stazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_tavoli: {
+        Row: {
+          altezza: number
+          attivo: boolean
+          cameriere_id: string | null
+          created_at: string
+          created_by: string | null
+          forma: string
+          fuori_servizio: boolean
+          id: string
+          larghezza: number
+          locale_id: string
+          modulo: string
+          numero: string
+          posti: number
+          posti_max: number | null
+          rotazione: number
+          sala_id: string
+          updated_at: string
+          updated_by: string | null
+          x: number
+          y: number
+        }
+        Insert: {
+          altezza?: number
+          attivo?: boolean
+          cameriere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          forma?: string
+          fuori_servizio?: boolean
+          id?: string
+          larghezza?: number
+          locale_id: string
+          modulo: string
+          numero: string
+          posti: number
+          posti_max?: number | null
+          rotazione?: number
+          sala_id: string
+          updated_at?: string
+          updated_by?: string | null
+          x?: number
+          y?: number
+        }
+        Update: {
+          altezza?: number
+          attivo?: boolean
+          cameriere_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          forma?: string
+          fuori_servizio?: boolean
+          id?: string
+          larghezza?: number
+          locale_id?: string
+          modulo?: string
+          numero?: string
+          posti?: number
+          posti_max?: number | null
+          rotazione?: number
+          sala_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          x?: number
+          y?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_tavoli_cameriere_id_fkey"
+            columns: ["cameriere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_tavoli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_tavoli_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "fb_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_tavoli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_vini: {
+        Row: {
+          abbinamenti: string | null
+          annata: number | null
+          articolo_id: string
+          cantina: string | null
+          created_at: string
+          created_by: string | null
+          denominazione: string | null
+          descrizione: string | null
+          formato: string
+          id: string
+          in_carta: boolean
+          modulo: string
+          ordine: number
+          prodotto_bottiglia_id: string | null
+          prodotto_calice_id: string | null
+          produttore: string | null
+          regione: string | null
+          temperatura_servizio: string | null
+          tipologia: string | null
+          updated_at: string
+          updated_by: string | null
+          vitigno: string | null
+        }
+        Insert: {
+          abbinamenti?: string | null
+          annata?: number | null
+          articolo_id: string
+          cantina?: string | null
+          created_at?: string
+          created_by?: string | null
+          denominazione?: string | null
+          descrizione?: string | null
+          formato?: string
+          id?: string
+          in_carta?: boolean
+          modulo?: string
+          ordine?: number
+          prodotto_bottiglia_id?: string | null
+          prodotto_calice_id?: string | null
+          produttore?: string | null
+          regione?: string | null
+          temperatura_servizio?: string | null
+          tipologia?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vitigno?: string | null
+        }
+        Update: {
+          abbinamenti?: string | null
+          annata?: number | null
+          articolo_id?: string
+          cantina?: string | null
+          created_at?: string
+          created_by?: string | null
+          denominazione?: string | null
+          descrizione?: string | null
+          formato?: string
+          id?: string
+          in_carta?: boolean
+          modulo?: string
+          ordine?: number
+          prodotto_bottiglia_id?: string | null
+          prodotto_calice_id?: string | null
+          produttore?: string | null
+          regione?: string | null
+          temperatura_servizio?: string | null
+          tipologia?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vitigno?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_vini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: true
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_vini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: true
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fb_vini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_vini_prodotto_bottiglia_id_fkey"
+            columns: ["prodotto_bottiglia_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_vini_prodotto_bottiglia_id_fkey"
+            columns: ["prodotto_bottiglia_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
+            foreignKeyName: "fb_vini_prodotto_calice_id_fkey"
+            columns: ["prodotto_calice_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_vini_prodotto_calice_id_fkey"
+            columns: ["prodotto_calice_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
+            foreignKeyName: "fb_vini_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -6913,6 +8931,7 @@ export type Database = {
           timbri_soglia: number | null
           updated_at: string
           updated_by: string | null
+          valore_punto: number | null
         }
         Insert: {
           attivo?: boolean
@@ -6931,6 +8950,7 @@ export type Database = {
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
+          valore_punto?: number | null
         }
         Update: {
           attivo?: boolean
@@ -6949,6 +8969,7 @@ export type Database = {
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
+          valore_punto?: number | null
         }
         Relationships: [
           {
@@ -7115,6 +9136,99 @@ export type Database = {
           },
           {
             foreignKeyName: "formazione_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fornitori_listini: {
+        Row: {
+          articolo_id: string
+          codice_fornitore: string | null
+          condizioni: string | null
+          created_at: string
+          created_by: string | null
+          fornitore_id: string
+          giorni_consegna: number | null
+          id: string
+          minimo_ordine: number | null
+          modulo: string
+          prezzo: number
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+          valido_al: string | null
+          valido_dal: string
+        }
+        Insert: {
+          articolo_id: string
+          codice_fornitore?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          fornitore_id: string
+          giorni_consegna?: number | null
+          id?: string
+          minimo_ordine?: number | null
+          modulo: string
+          prezzo: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string
+        }
+        Update: {
+          articolo_id?: string
+          codice_fornitore?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          fornitore_id?: string
+          giorni_consegna?: number | null
+          id?: string
+          minimo_ordine?: number | null
+          modulo?: string
+          prezzo?: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -10515,6 +12629,51 @@ export type Database = {
           },
         ]
       }
+      distinte_base_riepilogo: {
+        Row: {
+          allergeni: string[] | null
+          codice: string | null
+          componenti: number | null
+          costo_totale: number | null
+          costo_unitario: number | null
+          distinta_id: string | null
+          modulo: string | null
+          nome: string | null
+          resa: number | null
+          tipo: string | null
+          unita_resa: string | null
+          usata_in: number | null
+        }
+        Insert: {
+          allergeni?: never
+          codice?: string | null
+          componenti?: never
+          costo_totale?: never
+          costo_unitario?: never
+          distinta_id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          resa?: number | null
+          tipo?: string | null
+          unita_resa?: string | null
+          usata_in?: never
+        }
+        Update: {
+          allergeni?: never
+          codice?: string | null
+          componenti?: never
+          costo_totale?: never
+          costo_unitario?: never
+          distinta_id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          resa?: number | null
+          tipo?: string | null
+          unita_resa?: string | null
+          usata_in?: never
+        }
+        Relationships: []
+      }
       eventi_allergeni: {
         Row: {
           allergene: string | null
@@ -10546,6 +12705,278 @@ export type Database = {
             columns: ["evento_id"]
             isOneToOne: true
             referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_clienti_riepilogo: {
+        Row: {
+          contatto_id: string | null
+          modulo: string | null
+          spesa_totale: number | null
+          ticket_medio: number | null
+          ultima_visita: string | null
+          visite: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_kds: {
+        Row: {
+          allergie: string[] | null
+          canale: string | null
+          comanda_id: string | null
+          comanda_numero: number | null
+          coperti: number | null
+          descrizione: string | null
+          in_ritardo: boolean | null
+          inviata_at: string | null
+          locale_id: string | null
+          minuti: number | null
+          modulo: string | null
+          note: string | null
+          padre_id: string | null
+          personalizzazioni: string | null
+          piatti_uscita: number | null
+          preparazione_at: string | null
+          presa_at: string | null
+          priorita: string | null
+          pronta_at: string | null
+          pronti_uscita: number | null
+          quantita: number | null
+          rifacimento_di: string | null
+          riga_id: string | null
+          ritiro_at: string | null
+          stato: Database["public"]["Enums"]["fb_riga_stato"] | null
+          stazione_id: string | null
+          tavolo: string | null
+          tempo_preparazione_min: number | null
+          uscita: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_comande"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["comanda_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_comande_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_kds"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "fb_vendite"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_comande_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_kds"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_rifacimento_di_fkey"
+            columns: ["rifacimento_di"]
+            isOneToOne: false
+            referencedRelation: "fb_vendite"
+            referencedColumns: ["riga_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_stazione_id_fkey"
+            columns: ["stazione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_stazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_prodotti_economia: {
+        Row: {
+          allergeni: string[] | null
+          costo: number | null
+          food_cost_pct: number | null
+          margine: number | null
+          modulo: string | null
+          prezzo_netto: number | null
+          prodotto_id: string | null
+        }
+        Relationships: []
+      }
+      fb_tavoli_stato: {
+        Row: {
+          altezza: number | null
+          aperta_at: string | null
+          cameriere_id: string | null
+          comanda_id: string | null
+          conto_id: string | null
+          conto_richiesto_at: string | null
+          coperti: number | null
+          forma: string | null
+          larghezza: number | null
+          locale_id: string | null
+          modulo: string | null
+          numero: string | null
+          posti: number | null
+          posti_max: number | null
+          prenotazione_id: string | null
+          prenotazione_inizio: string | null
+          prenotazione_nome: string | null
+          prenotazione_persone: number | null
+          rotazione: number | null
+          sala_id: string | null
+          stato: string | null
+          tavolo_id: string | null
+          x: number | null
+          y: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fb_tavoli_cameriere_id_fkey"
+            columns: ["cameriere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_tavoli_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "fb_sale"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fb_vendite: {
+        Row: {
+          area: string | null
+          beverage_tipo: string | null
+          cameriere_id: string | null
+          canale: string | null
+          categoria: string | null
+          categoria_id: string | null
+          chef_id: string | null
+          comanda_id: string | null
+          costo: number | null
+          giorno: string | null
+          locale_id: string | null
+          menu: string | null
+          modulo: string | null
+          omaggio: boolean | null
+          ora: number | null
+          ordinata_at: string | null
+          prodotto: string | null
+          prodotto_id: string | null
+          promozione_id: string | null
+          quantita: number | null
+          ricavo: number | null
+          ricavo_lordo: number | null
+          riga_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fb_comande_righe_cameriere_id_fkey"
+            columns: ["cameriere_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_comande"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_comanda_id_fkey"
+            columns: ["comanda_id"]
+            isOneToOne: false
+            referencedRelation: "fb_tavoli_stato"
+            referencedColumns: ["comanda_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_preparata_da_fkey"
+            columns: ["chef_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_promozione_id_fkey"
+            columns: ["promozione_id"]
+            isOneToOne: false
+            referencedRelation: "fb_promozioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prodotti_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "fb_categorie"
             referencedColumns: ["id"]
           },
         ]
@@ -10591,6 +13022,39 @@ export type Database = {
             columns: ["programma_id"]
             isOneToOne: false
             referencedRelation: "fid_programmi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fornitori_miglior_prezzo: {
+        Row: {
+          articolo_id: string | null
+          fornitore_id: string | null
+          giorni_consegna: number | null
+          minimo_ordine: number | null
+          modulo: string | null
+          prezzo: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
             referencedColumns: ["id"]
           },
         ]
@@ -10994,6 +13458,230 @@ export type Database = {
           quantita: number
         }[]
       }
+      fb_allergeni_prodotto: { Args: { p_prodotto: string }; Returns: string[] }
+      fb_attesa_candidati: {
+        Args: { p_locale: string }
+        Returns: {
+          attesa_id: string
+          minuti_attesa: number
+          nome: string
+          persone: number
+          tavolo: string
+          tavolo_id: string
+        }[]
+      }
+      fb_beverage_controllo: {
+        Args: {
+          p_al: string
+          p_dal: string
+          p_modulo: string
+          p_soglia_pct?: number
+        }
+        Returns: {
+          ammanchi: number
+          anomalia: boolean
+          articolo: string
+          articolo_id: string
+          effettivo: number
+          scostamento_pct: number
+          sprechi: number
+          teorico: number
+          unita: string
+          valore_scostamento: number
+        }[]
+      }
+      fb_carta_vini: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          abbinamenti: string
+          annata: number
+          denominazione: string
+          descrizione: string
+          formato: string
+          nome: string
+          prezzo_bottiglia: number
+          prezzo_calice: number
+          produttore: string
+          regione: string
+          tipologia: string
+          vitigno: string
+        }[]
+      }
+      fb_cliente_profilo: { Args: { p_contatto: string }; Returns: Json }
+      fb_conto_comanda: { Args: { p_comanda: string }; Returns: string }
+      fb_costo_prodotto: { Args: { p_prodotto: string }; Returns: number }
+      fb_cruscotto: {
+        Args: { p_giorno?: string; p_locale: string }
+        Returns: Json
+      }
+      fb_fabbisogno_personale: {
+        Args: { p_giorno: string; p_locale: string }
+        Returns: {
+          coperti_previsti: number
+          differenza: number
+          persone_pianificate: number
+          persone_suggerite: number
+          reparto: string
+        }[]
+      }
+      fb_food_cost: {
+        Args: {
+          p_al: string
+          p_dal: string
+          p_dimensione?: string
+          p_locale: string
+        }
+        Returns: {
+          chiave: string
+          costo: number
+          food_cost_pct: number
+          margine: number
+          quantita: number
+          ricavo: number
+        }[]
+      }
+      fb_imposta_disponibilita: {
+        Args: { p_prodotto: string; p_stato: string }
+        Returns: undefined
+      }
+      fb_in_fascia: {
+        Args: {
+          p_al: string
+          p_alle: string
+          p_dal: string
+          p_dalle: string
+          p_giorni: number[]
+          p_istante: string
+        }
+        Returns: boolean
+      }
+      fb_kpi: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: Json
+      }
+      fb_listino_attuale: {
+        Args: { p_canale?: string; p_locale: string; p_tipologia?: string }
+        Returns: {
+          origine: string
+          prezzo: number
+          prodotto_id: string
+          promozione_id: string
+        }[]
+      }
+      fb_marcia_automatica: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      fb_marcia_uscita: {
+        Args: { p_comanda: string; p_uscita: number }
+        Returns: number
+      }
+      fb_menu_engineering: {
+        Args: {
+          p_al: string
+          p_categoria?: string
+          p_dal: string
+          p_locale: string
+        }
+        Returns: {
+          categoria: string
+          classe: string
+          costo_unitario: number
+          food_cost_pct: number
+          margine_totale: number
+          margine_unitario: number
+          popolare: boolean
+          prezzo_medio: number
+          prodotto: string
+          prodotto_id: string
+          quota_pct: number
+          redditizio: boolean
+          venduti: number
+        }[]
+      }
+      fb_prezzo: {
+        Args: {
+          p_canale?: string
+          p_istante?: string
+          p_locale: string
+          p_prodotto: string
+          p_tipologia?: string
+        }
+        Returns: {
+          origine: string
+          prezzo: number
+          promozione_id: string
+        }[]
+      }
+      fb_registro_allergeni: {
+        Args: { p_locale: string }
+        Returns: {
+          allergeni: string[]
+          categoria: string
+          contaminazioni: string
+          ingredienti_sostituibili: string
+          note_operative: string
+          possibili_tracce: string[]
+          prodotto: string
+        }[]
+      }
+      fb_richiamo_lotto: {
+        Args: { p_lotto: string }
+        Returns: {
+          canale: string
+          cliente: string
+          comanda_id: string
+          comanda_numero: number
+          locale: string
+          prodotto: string
+          quantita_lotto: number
+          recapito: string
+          riga_id: string
+          servito_at: string
+          tavolo: string
+        }[]
+      }
+      fb_richiede_direzione: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      fb_rifai_riga: {
+        Args: { p_motivo: string; p_riga: string }
+        Returns: string
+      }
+      fb_riga_rango: {
+        Args: { s: Database["public"]["Enums"]["fb_riga_stato"] }
+        Returns: number
+      }
+      fb_riga_scarica: {
+        Args: { r: Database["public"]["Tables"]["fb_comande_righe"]["Row"] }
+        Returns: undefined
+      }
+      fb_sprechi_analisi: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: {
+          causale: string
+          costo: number
+          eventi: number
+        }[]
+      }
+      fb_stazione_per: {
+        Args: { p_locale: string; p_prodotto: string }
+        Returns: string
+      }
+      fb_tempi_cucina: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: {
+          attesa_servizio_min: number
+          in_ritardo: number
+          piatti: number
+          prodotto: string
+          stazione: string
+          tempo_massimo_min: number
+          tempo_medio_min: number
+          tempo_previsto_min: number
+        }[]
+      }
       fid_registra_acquisto: {
         Args: {
           p_importo: number
@@ -11006,6 +13694,10 @@ export type Database = {
       fid_riscatta_premio: {
         Args: { p_rif_id?: string; p_rif_tipo?: string; p_tessera: string }
         Returns: string
+      }
+      fid_usa_punti_su_conto: {
+        Args: { p_conto: string; p_punti: number; p_tessera: string }
+        Returns: number
       }
       genera_codice: { Args: { p_prefisso: string }; Returns: string }
       genera_codice_gift_card: {
@@ -11025,6 +13717,15 @@ export type Database = {
       invia_campagne_programmate: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      mag_produci_distinta: {
+        Args: {
+          p_codice_lotto?: string
+          p_distinta: string
+          p_quantita: number
+          p_scadenza?: string
+        }
+        Returns: string
       }
       mag_proposta_riordino: {
         Args: { p_modulo: string }
@@ -11058,6 +13759,7 @@ export type Database = {
           titolo: string
         }[]
       }
+      moduli_fb: { Args: Record<PropertyKey, never>; Returns: string[] }
       moduli_fondamenta: { Args: Record<PropertyKey, never>; Returns: string[] }
       modulo_attivo: { Args: { p_slug: string }; Returns: boolean }
       modulo_licenziato: { Args: { p_slug: string }; Returns: boolean }
@@ -11139,6 +13841,18 @@ export type Database = {
         Returns: boolean
       }
       seg_detrattori: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fb_abituali: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fb_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fb_ricorrenze: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
@@ -11328,6 +14042,23 @@ export type Database = {
         | "altro"
       fattura_direzione: "attiva" | "passiva"
       fattura_stato: "da_pagare" | "pagata" | "scaduta" | "parziale"
+      fb_comanda_stato: "aperta" | "chiusa" | "annullata"
+      fb_prenotazione_stato:
+        | "richiesta"
+        | "confermata"
+        | "arrivata"
+        | "servita"
+        | "conclusa"
+        | "no_show"
+        | "annullata"
+      fb_riga_stato:
+        | "in_attesa"
+        | "da_preparare"
+        | "presa_in_carico"
+        | "in_preparazione"
+        | "pronta"
+        | "servita"
+        | "annullata"
       feedback_stato: "ricevuto" | "in_gestione" | "risolto" | "chiuso"
       feedback_tipo:
         "nps" | "questionario" | "recensione" | "reclamo" | "suggerimento"
@@ -12344,6 +15075,25 @@ export const Constants = {
       ],
       fattura_direzione: ["attiva", "passiva"],
       fattura_stato: ["da_pagare", "pagata", "scaduta", "parziale"],
+      fb_comanda_stato: ["aperta", "chiusa", "annullata"],
+      fb_prenotazione_stato: [
+        "richiesta",
+        "confermata",
+        "arrivata",
+        "servita",
+        "conclusa",
+        "no_show",
+        "annullata",
+      ],
+      fb_riga_stato: [
+        "in_attesa",
+        "da_preparare",
+        "presa_in_carico",
+        "in_preparazione",
+        "pronta",
+        "servita",
+        "annullata",
+      ],
       feedback_stato: ["ricevuto", "in_gestione", "risolto", "chiuso"],
       feedback_tipo: [
         "nps",
