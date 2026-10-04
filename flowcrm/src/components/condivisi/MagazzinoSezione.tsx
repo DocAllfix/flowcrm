@@ -169,7 +169,10 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
           </form>
         )}
       </Card>
-      {giacenze.length === 0 ? <EmptyState icon={PackagePlus} title="Magazzino vuoto" description="Crea gli articoli e registra i primi carichi." /> : (
+      {giacenze.length === 0 ? (
+        <EmptyState icon={PackagePlus} title="Magazzino vuoto" description="Crea gli articoli e registra i primi carichi."
+          action={!aperto ? <Button variant="outline" onClick={() => setAperto(true)}><PackagePlus className="h-4 w-4" /> Nuovo articolo</Button> : undefined} />
+      ) : (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader><TableRow>

@@ -7,7 +7,7 @@
  */
 import { useMemo, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
-import { Printer, Wine } from 'lucide-react'
+import { Plus, Printer, Wine } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -41,6 +41,7 @@ export function CantinaPage() {
 }
 
 function Cantina_() {
+  const [scheda, setScheda] = useState('cantina')
   const { isManager } = useAuth()
   const { prodotti } = useCatalogo()
   const { data: vini = [] } = useElenco<Vino>('fb_vini', { ordine: [{ colonna: 'tipologia' }, { colonna: 'ordine' }] })
@@ -65,10 +66,14 @@ function Cantina_() {
           { etichetta: 'bottiglie in cantina', valore: fmtNumero(bottiglie) },
           ...(isManager ? [{ etichetta: 'valore della cantina', valore: fmtEuro(valore, 0) }] : []),
         ]} />
-      <Tabs defaultValue="cantina">
+      <Tabs value={scheda} onValueChange={setScheda}>
         <TabsList className="mb-4"><TabsTrigger value="cantina">Cantina</TabsTrigger><TabsTrigger value="carta">Carta vini</TabsTrigger>{isManager && <TabsTrigger value="nuovo">Nuovo vino</TabsTrigger>}</TabsList>
         <TabsContent value="cantina">
-          {vini.length === 0 ? <EmptyState icon={Wine} title="Cantina vuota" description="Aggiungi i vini: scheda, costo, prezzo a bottiglia e a calice." /> : (
+          {vini.length === 0 ? (
+            <EmptyState icon={Wine} title="Cantina vuota"
+              description={isManager ? 'Aggiungi i vini: scheda, costo, prezzo a bottiglia e a calice.' : 'I vini li inserisce la direzione: qui compariranno con giacenze e prezzi.'}
+              action={isManager ? <Button variant="outline" onClick={() => setScheda('nuovo')}><Plus className="h-4 w-4" /> Aggiungi un vino</Button> : undefined} />
+          ) : (
             <Card className="overflow-hidden">
               <Table>
                 <TableHeader><TableRow>

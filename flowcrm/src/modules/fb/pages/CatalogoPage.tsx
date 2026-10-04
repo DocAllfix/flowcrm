@@ -6,6 +6,7 @@
  * stampabile.
  */
 import { useMemo, useState, type FormEvent } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Plus, Printer, Search, Trash2, UtensilsCrossed } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
@@ -44,6 +45,7 @@ export function CatalogoPage() {
 function Catalogo_() {
   const { modulo } = useFb()
   const { prodotti, categorie, caricamento } = useCatalogo()
+  const [parametri] = useSearchParams()
   return (
     <div>
       <PageHeader title="Menu e ricette" description="Prodotti, ricette e costi, listini per fascia e canale, promozioni, allergeni."
@@ -54,7 +56,7 @@ function Catalogo_() {
           { etichetta: 'categorie', valore: categorie.length },
         ]}
         actions={<SelettoreLocale />} />
-      <Tabs defaultValue="prodotti">
+      <Tabs defaultValue={parametri.get('scheda') ?? 'prodotti'}>
         <TabsList className="mb-4 flex-wrap">
           <TabsTrigger value="prodotti">Prodotti</TabsTrigger>
           <TabsTrigger value="ricette">Ricette</TabsTrigger>
@@ -343,7 +345,10 @@ function PromozioniTab({ prodotti, categorie }: { prodotti: Prodotto[]; categori
         </form>
         <p className="mt-2 text-xs text-muted-foreground">Prodotto + fascia oraria + prezzo: il prezzo cambia da solo all'inizio e alla fine della fascia (anche a cavallo della mezzanotte).</p>
       </Card>
-      {promo.length === 0 ? <EmptyState compatto icon={UtensilsCrossed} title="Nessuna promozione" description="Happy hour, 2×1, sconti a fascia oraria." /> : (
+      {promo.length === 0 ? (
+        <EmptyState compatto icon={UtensilsCrossed} title="Nessuna promozione" description="Happy hour, 2×1, sconti a fascia oraria."
+          action={<Button variant="outline" onClick={() => document.getElementById('pm-nome')?.focus()}><Plus className="h-4 w-4" /> Crea la prima</Button>} />
+      ) : (
         <Card className="divide-y divide-border">
           {promo.map((p) => (
             <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm">

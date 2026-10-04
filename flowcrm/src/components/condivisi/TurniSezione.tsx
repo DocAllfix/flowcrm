@@ -6,6 +6,7 @@
  * impedisce il database. L'anagrafica dei dipendenti resta riservata.
  */
 import { useMemo, useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { AlertTriangle, ChevronLeft, ChevronRight, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -80,7 +81,8 @@ export function TurniSezione({ modulo, reparti, extra }: { modulo: string; repar
       </div>
 
       {persone.length === 0 ? (
-        <EmptyState icon={Plus} title="Nessun dipendente" description="I dipendenti si registrano in Amministrazione → Personale; qui si pianificano i loro turni." />
+        <EmptyState icon={Plus} title="Nessun dipendente" description="I dipendenti si registrano in Amministrazione → Personale; qui si pianificano i loro turni."
+          action={isManager ? <Button asChild variant="outline"><Link to="/personale">Vai al personale</Link></Button> : undefined} />
       ) : (
         <Card className="overflow-x-auto">
           <table className="w-full min-w-[900px] text-sm">

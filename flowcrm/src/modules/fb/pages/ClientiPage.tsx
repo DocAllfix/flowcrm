@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { ExternalLink, HeartHandshake, Search } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
@@ -60,7 +61,7 @@ export function ClientiPage() {
 }
 
 function Clienti() {
-  const { modulo } = useFb()
+  const { modulo, base } = useFb()
   const { data: riepilogo = [] } = useElenco<Riepilogo>('fb_clienti_riepilogo', { filtri: { modulo }, ordine: [{ colonna: 'ultima_visita', crescente: false }], limite: 500 })
   const ids = riepilogo.map((r) => r.contatto_id).filter(Boolean) as string[]
   const { data: contatti = [] } = useElenco<Contatto>('contatti', { filtri: { id: ids }, select: 'id, nome, cognome, telefono, email, consenso_marketing', abilitato: ids.length > 0 })
@@ -84,7 +85,8 @@ function Clienti() {
           <div className="min-w-56 flex-1"><CercaContatto id="cl-cerca" valore={nome} contattoId={trovato?.id ?? null} segnaposto="Apri un cliente dall'anagrafica…"
             onTesto={(v) => { setNome(v); setTrovato(null) }} onScegli={(c) => { setTrovato(c); setNome(`${c.nome} ${c.cognome ?? ''}`.trim()); setSceltoId(c.id) }} /></div>
         </div>
-        {elenco.length === 0 ? <EmptyState icon={HeartHandshake} title="Ancora nessun cliente identificato" description="Collega il cliente alla prenotazione o al conto: qui comparirà con visite e spesa." /> : (
+        {elenco.length === 0 ? <EmptyState icon={HeartHandshake} title="Ancora nessun cliente identificato" description="Collega il cliente alla prenotazione o al conto: qui comparirà con visite e spesa."
+          action={<Button asChild variant="outline"><Link to={`${base}/prenotazioni`}>Vai alle prenotazioni</Link></Button>} /> : (
           <Card className="overflow-hidden">
             <Table>
               <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead className="text-right">Visite</TableHead><TableHead className="text-right">Ultima</TableHead><TableHead className="text-right">Spesa</TableHead><TableHead className="text-right">Ticket medio</TableHead></TableRow></TableHeader>

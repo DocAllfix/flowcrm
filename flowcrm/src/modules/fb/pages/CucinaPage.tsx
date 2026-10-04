@@ -7,9 +7,11 @@
  * stessa uscita del tavolo sono pronti, per farli uscire insieme.
  */
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { AlertTriangle, ChefHat, RotateCcw, Timer } from 'lucide-react'
 import { PageHeader } from '@/components/ui/page-header'
+import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -33,7 +35,7 @@ export function CucinaPage() {
 }
 
 function Cucina_() {
-  const { localeId, modulo } = useFb()
+  const { localeId, modulo, base } = useFb()
   const ora = useOra()
   const { data: stazioni = [] } = useElenco<Stazione>('fb_stazioni', {
     filtri: { locale_id: localeId ?? undefined, attiva: true }, ordine: [{ colonna: 'ordine' }], abilitato: !!localeId,
@@ -94,7 +96,8 @@ function Cucina_() {
       )}
 
       {stazioni.length === 0 ? (
-        <EmptyState icon={ChefHat} title="Nessuna postazione" description="Crea le postazioni (cucina, griglia, pizzeria, banco) dal catalogo." />
+        <EmptyState icon={ChefHat} title="Nessuna postazione" description="Crea le postazioni (cucina, griglia, pizzeria, banco) dal catalogo."
+          action={<Button asChild variant="outline"><Link to={`${base}/catalogo?scheda=struttura`}>Crea le postazioni</Link></Button>} />
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           {colonne.map((col) => (

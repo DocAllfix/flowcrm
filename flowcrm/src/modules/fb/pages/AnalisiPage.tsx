@@ -164,7 +164,7 @@ function MenuEngineering({ dal, al }: { dal: string; al: string }) {
     const q = righe.reduce((s, r) => s + Number(r.venduti), 0)
     return q ? righe.reduce((s, r) => s + Number(r.margine_totale), 0) / q : 0
   }, [righe])
-  if (!righe.length) return <EmptyState icon={ChartPie} title="Nessuna vendita nel periodo" description="Il menu engineering si calcola sui piatti venduti." />
+  if (!righe.length) return <EmptyState icon={ChartPie} filtrato title="Nessuna vendita nel periodo" description="Il menu engineering si calcola sui piatti venduti: allarga il periodo." />
   return (
     <div className="space-y-4">
       <Card className="p-5">
@@ -222,7 +222,7 @@ function FoodCost({ dal, al }: { dal: string; al: string }) {
     <div className="space-y-3">
       <div className="w-56 space-y-1.5"><Label>Per</Label><Select value={dimensione} onValueChange={setDimensione}><SelectTrigger aria-label="Dimensione"><SelectValue /></SelectTrigger>
         <SelectContent>{Object.entries(DIM).map(([k2, l]) => <SelectItem key={k2} value={k2}>{l}</SelectItem>)}</SelectContent></Select></div>
-      {righe.length === 0 ? <EmptyState compatto icon={ChartPie} title="Nessuna vendita nel periodo" description="Allarga il periodo." /> : (
+      {righe.length === 0 ? <EmptyState compatto filtrato icon={ChartPie} title="Nessuna vendita nel periodo" description="Allarga il periodo." /> : (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader><TableRow><TableHead>{DIM[dimensione]}</TableHead><TableHead className="text-right">Quantità</TableHead><TableHead className="text-right">Ricavo netto</TableHead>

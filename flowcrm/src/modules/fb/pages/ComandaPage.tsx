@@ -167,7 +167,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
             <div className="flex flex-wrap gap-2">
               <div className="relative min-w-48 flex-1">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input value={cerca} onChange={(e) => setCerca(e.target.value)} placeholder="Cerca un piatto o una bevanda…" className="pl-9" aria-label="Cerca prodotto" />
+                <Input value={cerca} onChange={(e) => setCerca(e.target.value)} placeholder="Cerca un piatto o una bevanda…" className="pl-9" aria-label="Cerca prodotto" id="cm-cerca" />
               </div>
             </div>
             <div className="flex gap-1.5 overflow-x-auto pb-1" role="tablist" aria-label="Categorie">
@@ -270,10 +270,17 @@ function Comanda_({ comandaId }: { comandaId: string }) {
           )}
           {c.consegna && <SchedaConsegna consegnaId={c.consegna.id} />}
 
-          {righe.length === 0 ? (
+          {righe.length === 0 ? (bozza.length > 0 ? null : (
             <EmptyState compatto icon={ChefHat} title="Ancora nulla in comanda"
-              description={aperta ? 'Tocca i prodotti a sinistra per comporre l\'ordine.' : 'La comanda è stata chiusa senza ordini.'} />
-          ) : uscite.map((u) => {
+              description={aperta ? 'Tocca i prodotti per comporre l\'ordine.' : 'La comanda è stata chiusa senza ordini.'}
+              action={aperta
+                ? <Button variant="outline" onClick={() => {
+                    const campo = document.getElementById('cm-cerca')
+                    campo?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                    campo?.focus({ preventScroll: true })
+                  }}><Search className="h-4 w-4" /> Cerca un prodotto</Button>
+                : <Button asChild variant="outline"><Link to={`${base}/comande`}>Torna alle comande</Link></Button>} />
+          )) : uscite.map((u) => {
             const gruppo = righe.filter((r) => (r.uscita ?? 1) === u)
             const trattenute = gruppo.filter((r) => r.stato === 'in_attesa').length
             return (
