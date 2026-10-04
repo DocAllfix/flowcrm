@@ -5119,6 +5119,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "conti_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "conti_righe_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
@@ -6080,11 +6087,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "distinte_base_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "distinte_base_righe_sotto_distinta_id_fkey"
             columns: ["sotto_distinta_id"]
             isOneToOne: false
             referencedRelation: "distinte_base"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_sotto_distinta_id_fkey"
+            columns: ["sotto_distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
           },
           {
             foreignKeyName: "distinte_base_righe_updated_by_fkey"
@@ -6614,6 +6635,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "distinte_base"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_voci_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
           },
           {
             foreignKeyName: "eventi_voci_evento_id_fkey"
@@ -7370,6 +7398,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
             foreignKeyName: "fb_comande_righe_promozione_id_fkey"
             columns: ["promozione_id"]
             isOneToOne: false
@@ -7763,6 +7798,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_menu_voci_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
             foreignKeyName: "fb_menu_voci_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
@@ -8106,6 +8148,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_prodotti_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
             foreignKeyName: "fb_prodotti_fornitore_id_fkey"
             columns: ["fornitore_id"]
             isOneToOne: false
@@ -8387,6 +8436,13 @@ export type Database = {
             referencedRelation: "fb_prodotti"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fb_sprechi_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
         ]
       }
       fb_stazioni: {
@@ -8663,11 +8719,25 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_vini_prodotto_bottiglia_id_fkey"
+            columns: ["prodotto_bottiglia_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
+          },
+          {
             foreignKeyName: "fb_vini_prodotto_calice_id_fkey"
             columns: ["prodotto_calice_id"]
             isOneToOne: false
             referencedRelation: "fb_prodotti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_vini_prodotto_calice_id_fkey"
+            columns: ["prodotto_calice_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
           },
           {
             foreignKeyName: "fb_vini_updated_by_fkey"
@@ -12463,6 +12533,51 @@ export type Database = {
           },
         ]
       }
+      distinte_base_riepilogo: {
+        Row: {
+          allergeni: string[] | null
+          codice: string | null
+          componenti: number | null
+          costo_totale: number | null
+          costo_unitario: number | null
+          distinta_id: string | null
+          modulo: string | null
+          nome: string | null
+          resa: number | null
+          tipo: string | null
+          unita_resa: string | null
+          usata_in: number | null
+        }
+        Insert: {
+          allergeni?: never
+          codice?: string | null
+          componenti?: never
+          costo_totale?: never
+          costo_unitario?: never
+          distinta_id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          resa?: number | null
+          tipo?: string | null
+          unita_resa?: string | null
+          usata_in?: never
+        }
+        Update: {
+          allergeni?: never
+          codice?: string | null
+          componenti?: never
+          costo_totale?: never
+          costo_unitario?: never
+          distinta_id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          resa?: number | null
+          tipo?: string | null
+          unita_resa?: string | null
+          usata_in?: never
+        }
+        Relationships: []
+      }
       eventi_allergeni: {
         Row: {
           allergene: string | null
@@ -12615,6 +12730,18 @@ export type Database = {
           },
         ]
       }
+      fb_prodotti_economia: {
+        Row: {
+          allergeni: string[] | null
+          costo: number | null
+          food_cost_pct: number | null
+          margine: number | null
+          modulo: string | null
+          prezzo_netto: number | null
+          prodotto_id: string | null
+        }
+        Relationships: []
+      }
       fb_tavoli_stato: {
         Row: {
           altezza: number | null
@@ -12734,6 +12861,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "fb_prodotti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_righe_prodotto_id_fkey"
+            columns: ["prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "fb_prodotti_economia"
+            referencedColumns: ["prodotto_id"]
           },
           {
             foreignKeyName: "fb_comande_righe_promozione_id_fkey"
@@ -13295,6 +13429,15 @@ export type Database = {
       fb_kpi: {
         Args: { p_al: string; p_dal: string; p_locale: string }
         Returns: Json
+      }
+      fb_listino_attuale: {
+        Args: { p_canale?: string; p_locale: string; p_tipologia?: string }
+        Returns: {
+          origine: string
+          prezzo: number
+          prodotto_id: string
+          promozione_id: string
+        }[]
       }
       fb_marcia_automatica: {
         Args: Record<PropertyKey, never>
