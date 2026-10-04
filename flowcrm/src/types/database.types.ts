@@ -90,7 +90,7 @@ export type Database = {
           piva?: string | null
           ragione_sociale?: string | null
           referente_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           settori?: string | null
           stato?: Database["public"]["Enums"]["agente_stato"]
           telefono?: string | null
@@ -120,7 +120,7 @@ export type Database = {
           piva?: string | null
           ragione_sociale?: string | null
           referente_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           settori?: string | null
           stato?: Database["public"]["Enums"]["agente_stato"]
           telefono?: string | null
@@ -1169,7 +1169,7 @@ export type Database = {
           approvatore_id: string | null
           azione_url: string | null
           created_at: string
-          dati: Json
+          dati: NonNullable<Json>
           decisa_at: string | null
           descrizione: string
           entita: string
@@ -1186,7 +1186,7 @@ export type Database = {
           approvatore_id?: string | null
           azione_url?: string | null
           created_at?: string
-          dati?: Json
+          dati?: NonNullable<Json>
           decisa_at?: string | null
           descrizione: string
           entita: string
@@ -1203,7 +1203,7 @@ export type Database = {
           approvatore_id?: string | null
           azione_url?: string | null
           created_at?: string
-          dati?: Json
+          dati?: NonNullable<Json>
           decisa_at?: string | null
           descrizione?: string
           entita?: string
@@ -1397,6 +1397,327 @@ export type Database = {
           },
           {
             foreignKeyName: "assenze_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset: {
+        Row: {
+          ambito_id: string | null
+          ambito_tipo: string | null
+          assistenza_fornitore_id: string | null
+          assistenza_scadenza: string | null
+          attributi: NonNullable<Json>
+          categoria: string | null
+          codice: string | null
+          costo_acquisto: number | null
+          created_at: string
+          created_by: string | null
+          data_acquisto: string | null
+          descrizione: string
+          dismesso_il: string | null
+          fornitore_id: string | null
+          garanzia_scadenza: string | null
+          id: string
+          marca: string | null
+          matricola: string | null
+          modello: string | null
+          modulo: string
+          note: string | null
+          ricerca: unknown
+          stato: Database["public"]["Enums"]["asset_stato"]
+          ubicazione: string | null
+          updated_at: string
+          updated_by: string | null
+          vita_utile_anni: number | null
+        }
+        Insert: {
+          ambito_id?: string | null
+          ambito_tipo?: string | null
+          assistenza_fornitore_id?: string | null
+          assistenza_scadenza?: string | null
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          costo_acquisto?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_acquisto?: string | null
+          descrizione: string
+          dismesso_il?: string | null
+          fornitore_id?: string | null
+          garanzia_scadenza?: string | null
+          id?: string
+          marca?: string | null
+          matricola?: string | null
+          modello?: string | null
+          modulo: string
+          note?: string | null
+          ricerca?: never
+          stato?: Database["public"]["Enums"]["asset_stato"]
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vita_utile_anni?: number | null
+        }
+        Update: {
+          ambito_id?: string | null
+          ambito_tipo?: string | null
+          assistenza_fornitore_id?: string | null
+          assistenza_scadenza?: string | null
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          costo_acquisto?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_acquisto?: string | null
+          descrizione?: string
+          dismesso_il?: string | null
+          fornitore_id?: string | null
+          garanzia_scadenza?: string | null
+          id?: string
+          marca?: string | null
+          matricola?: string | null
+          modello?: string | null
+          modulo?: string
+          note?: string | null
+          ricerca?: never
+          stato?: Database["public"]["Enums"]["asset_stato"]
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vita_utile_anni?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_assistenza_fornitore_id_fkey"
+            columns: ["assistenza_fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_interventi: {
+        Row: {
+          asset_id: string
+          costo_manodopera: number | null
+          costo_ricambi: number | null
+          created_at: string
+          created_by: string | null
+          data_intervento: string | null
+          data_pianificata: string | null
+          descrizione: string
+          esito: string | null
+          fornitore_id: string | null
+          id: string
+          modulo: string
+          ore_fermo: number | null
+          piano_id: string | null
+          priorita: Database["public"]["Enums"]["asset_priorita"]
+          ricambi: string | null
+          segnalato_at: string
+          segnalato_da: string | null
+          stato: Database["public"]["Enums"]["asset_intervento_stato"]
+          tecnico: string | null
+          tipo: Database["public"]["Enums"]["asset_intervento_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id: string
+          costo_manodopera?: number | null
+          costo_ricambi?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_intervento?: string | null
+          data_pianificata?: string | null
+          descrizione: string
+          esito?: string | null
+          fornitore_id?: string | null
+          id?: string
+          modulo: string
+          ore_fermo?: number | null
+          piano_id?: string | null
+          priorita?: Database["public"]["Enums"]["asset_priorita"]
+          ricambi?: string | null
+          segnalato_at?: string
+          segnalato_da?: string | null
+          stato?: Database["public"]["Enums"]["asset_intervento_stato"]
+          tecnico?: string | null
+          tipo?: Database["public"]["Enums"]["asset_intervento_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: string
+          costo_manodopera?: number | null
+          costo_ricambi?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_intervento?: string | null
+          data_pianificata?: string | null
+          descrizione?: string
+          esito?: string | null
+          fornitore_id?: string | null
+          id?: string
+          modulo?: string
+          ore_fermo?: number | null
+          piano_id?: string | null
+          priorita?: Database["public"]["Enums"]["asset_priorita"]
+          ricambi?: string | null
+          segnalato_at?: string
+          segnalato_da?: string | null
+          stato?: Database["public"]["Enums"]["asset_intervento_stato"]
+          tecnico?: string | null
+          tipo?: Database["public"]["Enums"]["asset_intervento_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_interventi_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_piano_id_fkey"
+            columns: ["piano_id"]
+            isOneToOne: false
+            referencedRelation: "asset_piani"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_segnalato_da_fkey"
+            columns: ["segnalato_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_interventi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      asset_piani: {
+        Row: {
+          asset_id: string
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          modulo: string
+          note: string | null
+          ogni_giorni: number
+          prossima_data: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id: string
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          modulo: string
+          note?: string | null
+          ogni_giorni: number
+          prossima_data: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: string
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          ogni_giorni?: number
+          prossima_data?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_piani_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_piani_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "asset_piani_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "asset_piani_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -1615,7 +1936,7 @@ export type Database = {
         Row: {
           azione: string
           created_at: string
-          diff: Json
+          diff: NonNullable<Json>
           entita: string
           entita_id: string
           eseguito_da: string | null
@@ -1624,7 +1945,7 @@ export type Database = {
         Insert: {
           azione: string
           created_at?: string
-          diff?: Json
+          diff?: NonNullable<Json>
           entita: string
           entita_id: string
           eseguito_da?: string | null
@@ -1633,7 +1954,7 @@ export type Database = {
         Update: {
           azione?: string
           created_at?: string
-          diff?: Json
+          diff?: NonNullable<Json>
           entita?: string
           entita_id?: string
           eseguito_da?: string | null
@@ -1653,8 +1974,7 @@ export type Database = {
         Row: {
           acquisizione: Database["public"]["Enums"]["automezzo_acquisizione"]
           alimentazione:
-            | Database["public"]["Enums"]["automezzo_alimentazione"]
-            | null
+            Database["public"]["Enums"]["automezzo_alimentazione"] | null
           anno_immatricolazione: number | null
           attivo: boolean
           cantiere_id: string | null
@@ -1668,8 +1988,7 @@ export type Database = {
           dismesso_il: string | null
           dismissione_note: string | null
           dismissione_tipo:
-            | Database["public"]["Enums"]["automezzo_dismissione"]
-            | null
+            Database["public"]["Enums"]["automezzo_dismissione"] | null
           dismissione_valore: number | null
           id: string
           km_attuali: number
@@ -1689,8 +2008,7 @@ export type Database = {
         Insert: {
           acquisizione?: Database["public"]["Enums"]["automezzo_acquisizione"]
           alimentazione?:
-            | Database["public"]["Enums"]["automezzo_alimentazione"]
-            | null
+            Database["public"]["Enums"]["automezzo_alimentazione"] | null
           anno_immatricolazione?: number | null
           attivo?: boolean
           cantiere_id?: string | null
@@ -1704,8 +2022,7 @@ export type Database = {
           dismesso_il?: string | null
           dismissione_note?: string | null
           dismissione_tipo?:
-            | Database["public"]["Enums"]["automezzo_dismissione"]
-            | null
+            Database["public"]["Enums"]["automezzo_dismissione"] | null
           dismissione_valore?: number | null
           id?: string
           km_attuali?: number
@@ -1713,7 +2030,7 @@ export type Database = {
           modello: string
           note?: string | null
           proprietario?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sede?: string | null
           stato?: Database["public"]["Enums"]["automezzo_stato"]
           targa?: string | null
@@ -1725,8 +2042,7 @@ export type Database = {
         Update: {
           acquisizione?: Database["public"]["Enums"]["automezzo_acquisizione"]
           alimentazione?:
-            | Database["public"]["Enums"]["automezzo_alimentazione"]
-            | null
+            Database["public"]["Enums"]["automezzo_alimentazione"] | null
           anno_immatricolazione?: number | null
           attivo?: boolean
           cantiere_id?: string | null
@@ -1740,8 +2056,7 @@ export type Database = {
           dismesso_il?: string | null
           dismissione_note?: string | null
           dismissione_tipo?:
-            | Database["public"]["Enums"]["automezzo_dismissione"]
-            | null
+            Database["public"]["Enums"]["automezzo_dismissione"] | null
           dismissione_valore?: number | null
           id?: string
           km_attuali?: number
@@ -1749,7 +2064,7 @@ export type Database = {
           modello?: string
           note?: string | null
           proprietario?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sede?: string | null
           stato?: Database["public"]["Enums"]["automezzo_stato"]
           targa?: string | null
@@ -2706,6 +3021,179 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      campagne: {
+        Row: {
+          canale: Database["public"]["Enums"]["campagna_canale"]
+          codice: string | null
+          corpo: string
+          created_at: string
+          created_by: string | null
+          id: string
+          inviata_at: string | null
+          modulo: string
+          nome: string
+          oggetto: string | null
+          parametri: NonNullable<Json>
+          programmata_at: string | null
+          segmento: string
+          stato: Database["public"]["Enums"]["campagna_stato"]
+          updated_at: string
+          updated_by: string | null
+          url_base: string | null
+        }
+        Insert: {
+          canale?: Database["public"]["Enums"]["campagna_canale"]
+          codice?: string | null
+          corpo: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inviata_at?: string | null
+          modulo: string
+          nome: string
+          oggetto?: string | null
+          parametri?: NonNullable<Json>
+          programmata_at?: string | null
+          segmento: string
+          stato?: Database["public"]["Enums"]["campagna_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          url_base?: string | null
+        }
+        Update: {
+          canale?: Database["public"]["Enums"]["campagna_canale"]
+          codice?: string | null
+          corpo?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          inviata_at?: string | null
+          modulo?: string
+          nome?: string
+          oggetto?: string | null
+          parametri?: NonNullable<Json>
+          programmata_at?: string | null
+          segmento?: string
+          stato?: Database["public"]["Enums"]["campagna_stato"]
+          updated_at?: string
+          updated_by?: string | null
+          url_base?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campagne_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campagne_segmento_fkey"
+            columns: ["segmento"]
+            isOneToOne: false
+            referencedRelation: "campagne_segmenti"
+            referencedColumns: ["slug"]
+          },
+          {
+            foreignKeyName: "campagne_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campagne_destinatari: {
+        Row: {
+          campagna_id: string
+          contatto_id: string
+          created_at: string
+          id: string
+          indirizzo: string | null
+          inviato_at: string | null
+          mail_id: string | null
+          modulo: string
+          motivo_esclusione: string | null
+          stato: Database["public"]["Enums"]["campagna_destinatario_stato"]
+          token: string
+        }
+        Insert: {
+          campagna_id: string
+          contatto_id: string
+          created_at?: string
+          id?: string
+          indirizzo?: string | null
+          inviato_at?: string | null
+          mail_id?: string | null
+          modulo: string
+          motivo_esclusione?: string | null
+          stato?: Database["public"]["Enums"]["campagna_destinatario_stato"]
+          token?: string
+        }
+        Update: {
+          campagna_id?: string
+          contatto_id?: string
+          created_at?: string
+          id?: string
+          indirizzo?: string | null
+          inviato_at?: string | null
+          mail_id?: string | null
+          modulo?: string
+          motivo_esclusione?: string | null
+          stato?: Database["public"]["Enums"]["campagna_destinatario_stato"]
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campagne_destinatari_campagna_id_fkey"
+            columns: ["campagna_id"]
+            isOneToOne: false
+            referencedRelation: "campagne"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campagne_destinatari_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campagne_destinatari_mail_id_fkey"
+            columns: ["mail_id"]
+            isOneToOne: false
+            referencedRelation: "mail_outbox"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campagne_segmenti: {
+        Row: {
+          descrizione: string | null
+          etichetta: string
+          funzione: string
+          modulo: string | null
+          parametri: NonNullable<Json>
+          slug: string
+        }
+        Insert: {
+          descrizione?: string | null
+          etichetta: string
+          funzione: string
+          modulo?: string | null
+          parametri?: NonNullable<Json>
+          slug: string
+        }
+        Update: {
+          descrizione?: string | null
+          etichetta?: string
+          funzione?: string
+          modulo?: string | null
+          parametri?: NonNullable<Json>
+          slug?: string
+        }
+        Relationships: []
       }
       cantiere_controlli_qualita: {
         Row: {
@@ -3918,7 +4406,7 @@ export type Database = {
           note?: string | null
           responsabile_interno_id?: string | null
           responsabile_sicurezza?: string | null
-          ricerca?: unknown
+          ricerca?: never
           rup?: string | null
           stato?: Database["public"]["Enums"]["cantiere_stato"]
           stazione_appaltante_id?: string | null
@@ -3954,7 +4442,7 @@ export type Database = {
           note?: string | null
           responsabile_interno_id?: string | null
           responsabile_sicurezza?: string | null
-          ricerca?: unknown
+          ricerca?: never
           rup?: string | null
           stato?: Database["public"]["Enums"]["cantiere_stato"]
           stazione_appaltante_id?: string | null
@@ -4020,6 +4508,85 @@ export type Database = {
           },
           {
             foreignKeyName: "cantieri_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cassa_sessioni: {
+        Row: {
+          aperta_at: string
+          chiusa_at: string | null
+          chiusa_da: string | null
+          contanti_attesi: number | null
+          contanti_contati: number | null
+          created_at: string
+          created_by: string | null
+          differenza: number | null
+          fondo_iniziale: number
+          id: string
+          modulo: string
+          note: string | null
+          postazione: string
+          stato: Database["public"]["Enums"]["cassa_sessione_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aperta_at?: string
+          chiusa_at?: string | null
+          chiusa_da?: string | null
+          contanti_attesi?: number | null
+          contanti_contati?: number | null
+          created_at?: string
+          created_by?: string | null
+          differenza?: number | null
+          fondo_iniziale?: number
+          id?: string
+          modulo: string
+          note?: string | null
+          postazione?: string
+          stato?: Database["public"]["Enums"]["cassa_sessione_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aperta_at?: string
+          chiusa_at?: string | null
+          chiusa_da?: string | null
+          contanti_attesi?: number | null
+          contanti_contati?: number | null
+          created_at?: string
+          created_by?: string | null
+          differenza?: number | null
+          fondo_iniziale?: number
+          id?: string
+          modulo?: string
+          note?: string | null
+          postazione?: string
+          stato?: Database["public"]["Enums"]["cassa_sessione_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cassa_sessioni_chiusa_da_fkey"
+            columns: ["chiusa_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cassa_sessioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cassa_sessioni_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -4139,6 +4706,9 @@ export type Database = {
         Row: {
           attivo: boolean
           cognome: string | null
+          consenso_marketing: boolean
+          consenso_marketing_at: string | null
+          consenso_marketing_fonte: string | null
           created_at: string
           created_by: string | null
           email: string | null
@@ -4155,6 +4725,9 @@ export type Database = {
         Insert: {
           attivo?: boolean
           cognome?: string | null
+          consenso_marketing?: boolean
+          consenso_marketing_at?: string | null
+          consenso_marketing_fonte?: string | null
           created_at?: string
           created_by?: string | null
           email?: string | null
@@ -4162,7 +4735,7 @@ export type Database = {
           nome: string
           note?: string | null
           organizzazione_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           ruolo_aziendale?: string | null
           telefono?: string | null
           updated_at?: string
@@ -4171,6 +4744,9 @@ export type Database = {
         Update: {
           attivo?: boolean
           cognome?: string | null
+          consenso_marketing?: boolean
+          consenso_marketing_at?: string | null
+          consenso_marketing_fonte?: string | null
           created_at?: string
           created_by?: string | null
           email?: string | null
@@ -4178,7 +4754,7 @@ export type Database = {
           nome?: string
           note?: string | null
           organizzazione_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           ruolo_aziendale?: string | null
           telefono?: string | null
           updated_at?: string
@@ -4205,6 +4781,545 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      conti: {
+        Row: {
+          aperto_at: string
+          chiuso_at: string | null
+          codice: string | null
+          contatto_id: string | null
+          conto_padre_id: string | null
+          coperti: number | null
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          fattura_id: string | null
+          id: string
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          riferimento_id: string | null
+          riferimento_tipo: string | null
+          rt_riferimento: string | null
+          sconto_importo: number
+          sessione_id: string | null
+          stato: Database["public"]["Enums"]["conto_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aperto_at?: string
+          chiuso_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          conto_padre_id?: string | null
+          coperti?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          fattura_id?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          organizzazione_id?: string | null
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          rt_riferimento?: string | null
+          sconto_importo?: number
+          sessione_id?: string | null
+          stato?: Database["public"]["Enums"]["conto_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aperto_at?: string
+          chiuso_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          conto_padre_id?: string | null
+          coperti?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          fattura_id?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          rt_riferimento?: string | null
+          sconto_importo?: number
+          sessione_id?: string | null
+          stato?: Database["public"]["Enums"]["conto_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_conto_padre_id_fkey"
+            columns: ["conto_padre_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_conto_padre_id_fkey"
+            columns: ["conto_padre_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_sessione_id_fkey"
+            columns: ["sessione_id"]
+            isOneToOne: false
+            referencedRelation: "cassa_sessioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conti_pagamenti: {
+        Row: {
+          conto_destinazione_id: string | null
+          conto_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number
+          metodo: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo: string
+          organizzazione_id: string | null
+          pagato_at: string
+          riferimento: string | null
+          sessione_id: string | null
+        }
+        Insert: {
+          conto_destinazione_id?: string | null
+          conto_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo: number
+          metodo: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo: string
+          organizzazione_id?: string | null
+          pagato_at?: string
+          riferimento?: string | null
+          sessione_id?: string | null
+        }
+        Update: {
+          conto_destinazione_id?: string | null
+          conto_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          metodo?: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo?: string
+          organizzazione_id?: string | null
+          pagato_at?: string
+          riferimento?: string | null
+          sessione_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conti_pagamenti_conto_destinazione_id_fkey"
+            columns: ["conto_destinazione_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_conto_destinazione_id_fkey"
+            columns: ["conto_destinazione_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_sessione_id_fkey"
+            columns: ["sessione_id"]
+            isOneToOne: false
+            referencedRelation: "cassa_sessioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conti_righe: {
+        Row: {
+          aliquota_iva: number
+          articolo_id: string | null
+          conto_id: string
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          distinta_id: string | null
+          id: string
+          importo: number | null
+          modulo: string
+          persona: number | null
+          prezzo_unitario: number
+          quantita: number
+          riferimento_id: string | null
+          riferimento_tipo: string | null
+          sconto_percentuale: number
+          stornata: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          articolo_id?: string | null
+          conto_id: string
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          distinta_id?: string | null
+          id?: string
+          importo?: never
+          modulo: string
+          persona?: number | null
+          prezzo_unitario: number
+          quantita?: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          sconto_percentuale?: number
+          stornata?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          articolo_id?: string | null
+          conto_id?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          distinta_id?: string | null
+          id?: string
+          importo?: never
+          modulo?: string
+          persona?: number | null
+          prezzo_unitario?: number
+          quantita?: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          sconto_percentuale?: number
+          stornata?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conti_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "conti_righe_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_righe_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      controlli_punti: {
+        Row: {
+          asset_id: string | null
+          attivo: boolean
+          checklist: NonNullable<Json>
+          created_at: string
+          created_by: string | null
+          id: string
+          istruzioni: string | null
+          modulo: string
+          nome: string
+          ogni_ore: number | null
+          responsabile_id: string | null
+          soglia_max: number | null
+          soglia_min: number | null
+          tipo: Database["public"]["Enums"]["controllo_tipo"]
+          ubicazione: string | null
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          attivo?: boolean
+          checklist?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          istruzioni?: string | null
+          modulo: string
+          nome: string
+          ogni_ore?: number | null
+          responsabile_id?: string | null
+          soglia_max?: number | null
+          soglia_min?: number | null
+          tipo: Database["public"]["Enums"]["controllo_tipo"]
+          ubicazione?: string | null
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          attivo?: boolean
+          checklist?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          istruzioni?: string | null
+          modulo?: string
+          nome?: string
+          ogni_ore?: number | null
+          responsabile_id?: string | null
+          soglia_max?: number | null
+          soglia_min?: number | null
+          tipo?: Database["public"]["Enums"]["controllo_tipo"]
+          ubicazione?: string | null
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "controlli_punti_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_punti_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "controlli_punti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_punti_responsabile_id_fkey"
+            columns: ["responsabile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_punti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      controlli_registrazioni: {
+        Row: {
+          azione_correttiva: string | null
+          azione_registrata_at: string | null
+          azione_verificata_at: string | null
+          azione_verificata_da: string | null
+          checklist: NonNullable<Json>
+          created_at: string
+          created_by: string | null
+          eseguito_at: string
+          esito: Database["public"]["Enums"]["controllo_esito"] | null
+          id: string
+          lotto_id: string | null
+          modulo: string
+          note: string | null
+          punto_id: string
+          valore: number | null
+        }
+        Insert: {
+          azione_correttiva?: string | null
+          azione_registrata_at?: string | null
+          azione_verificata_at?: string | null
+          azione_verificata_da?: string | null
+          checklist?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          esito?: Database["public"]["Enums"]["controllo_esito"] | null
+          id?: string
+          lotto_id?: string | null
+          modulo: string
+          note?: string | null
+          punto_id: string
+          valore?: number | null
+        }
+        Update: {
+          azione_correttiva?: string | null
+          azione_registrata_at?: string | null
+          azione_verificata_at?: string | null
+          azione_verificata_da?: string | null
+          checklist?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          esito?: Database["public"]["Enums"]["controllo_esito"] | null
+          id?: string
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          punto_id?: string
+          valore?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "controlli_registrazioni_azione_verificata_da_fkey"
+            columns: ["azione_verificata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_registrazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_registrazioni_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_registrazioni_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+          {
+            foreignKeyName: "controlli_registrazioni_punto_id_fkey"
+            columns: ["punto_id"]
+            isOneToOne: false
+            referencedRelation: "controlli_punti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "controlli_registrazioni_punto_id_fkey"
+            columns: ["punto_id"]
+            isOneToOne: false
+            referencedRelation: "controlli_stato"
+            referencedColumns: ["punto_id"]
           },
         ]
       }
@@ -4279,6 +5394,147 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      coupon: {
+        Row: {
+          attivo: boolean
+          codice: string
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          id: string
+          modulo: string
+          spesa_minima: number
+          tipo: Database["public"]["Enums"]["coupon_tipo"]
+          updated_at: string
+          updated_by: string | null
+          usi_massimi: number | null
+          usi_per_cliente: number | null
+          valido_al: string | null
+          valido_dal: string | null
+          valore: number
+        }
+        Insert: {
+          attivo?: boolean
+          codice: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          modulo: string
+          spesa_minima?: number
+          tipo: Database["public"]["Enums"]["coupon_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          usi_massimi?: number | null
+          usi_per_cliente?: number | null
+          valido_al?: string | null
+          valido_dal?: string | null
+          valore: number
+        }
+        Update: {
+          attivo?: boolean
+          codice?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          modulo?: string
+          spesa_minima?: number
+          tipo?: Database["public"]["Enums"]["coupon_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          usi_massimi?: number | null
+          usi_per_cliente?: number | null
+          valido_al?: string | null
+          valido_dal?: string | null
+          valore?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coupon_utilizzi: {
+        Row: {
+          contatto_id: string | null
+          conto_id: string
+          coupon_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          sconto: number
+        }
+        Insert: {
+          contatto_id?: string | null
+          conto_id: string
+          coupon_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo: string
+          sconto: number
+        }
+        Update: {
+          contatto_id?: string | null
+          conto_id?: string
+          coupon_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          sconto?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_utilizzi_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupon"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       deal_stage_history: {
         Row: {
@@ -4389,7 +5645,7 @@ export type Database = {
           organizzazione_id?: string | null
           pipeline_id: string
           responsabile_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           stage_id: string
           updated_at?: string
           updated_by?: string | null
@@ -4411,7 +5667,7 @@ export type Database = {
           organizzazione_id?: string | null
           pipeline_id?: string
           responsabile_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           stage_id?: string
           updated_at?: string
           updated_by?: string | null
@@ -4489,6 +5745,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      demo_tabelle_ospite: {
+        Row: {
+          cancella: boolean
+          inserisce: boolean
+          messaggio_rifiuto: string | null
+          modifica: boolean
+          nota: string | null
+          tabella: string
+        }
+        Insert: {
+          cancella?: boolean
+          inserisce?: boolean
+          messaggio_rifiuto?: string | null
+          modifica?: boolean
+          nota?: string | null
+          tabella: string
+        }
+        Update: {
+          cancella?: boolean
+          inserisce?: boolean
+          messaggio_rifiuto?: string | null
+          modifica?: boolean
+          nota?: string | null
+          tabella?: string
+        }
+        Relationships: []
       }
       dipendenti: {
         Row: {
@@ -4623,6 +5906,579 @@ export type Database = {
           },
         ]
       }
+      distinte_base: {
+        Row: {
+          articolo_prodotto_id: string | null
+          attivo: boolean
+          attributi: NonNullable<Json>
+          categoria: string | null
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          note: string | null
+          prezzo_vendita: number | null
+          procedimento: string | null
+          resa: number
+          tempo_preparazione_min: number | null
+          tipo: string
+          unita_resa: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_prodotto_id?: string | null
+          attivo?: boolean
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo: string
+          nome: string
+          note?: string | null
+          prezzo_vendita?: number | null
+          procedimento?: string | null
+          resa?: number
+          tempo_preparazione_min?: number | null
+          tipo?: string
+          unita_resa?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_prodotto_id?: string | null
+          attivo?: boolean
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          prezzo_vendita?: number | null
+          procedimento?: string | null
+          resa?: number
+          tempo_preparazione_min?: number | null
+          tipo?: string
+          unita_resa?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distinte_base_articolo_prodotto_id_fkey"
+            columns: ["articolo_prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_articolo_prodotto_id_fkey"
+            columns: ["articolo_prodotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "distinte_base_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      distinte_base_righe: {
+        Row: {
+          articolo_id: string | null
+          created_at: string
+          created_by: string | null
+          distinta_id: string
+          id: string
+          modulo: string
+          note: string | null
+          ordine: number
+          quantita: number
+          scarto_percentuale: number
+          sostituibile: boolean
+          sotto_distinta_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          distinta_id: string
+          id?: string
+          modulo: string
+          note?: string | null
+          ordine?: number
+          quantita: number
+          scarto_percentuale?: number
+          sostituibile?: boolean
+          sotto_distinta_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          distinta_id?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          ordine?: number
+          quantita?: number
+          scarto_percentuale?: number
+          sostituibile?: boolean
+          sotto_distinta_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "distinte_base_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_sotto_distinta_id_fkey"
+            columns: ["sotto_distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "distinte_base_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi: {
+        Row: {
+          attributi: NonNullable<Json>
+          codice: string | null
+          contatto_id: string | null
+          conto_id: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          fine: string
+          id: string
+          inizio: string
+          luogo: string | null
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          partecipanti_confermati: number | null
+          partecipanti_previsti: number | null
+          programma: string | null
+          referente_id: string | null
+          ricerca: unknown
+          sala_id: string | null
+          sala_tipo: string | null
+          stato: Database["public"]["Enums"]["evento_stato"]
+          tipo: string | null
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attributi?: NonNullable<Json>
+          codice?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          fine: string
+          id?: string
+          inizio: string
+          luogo?: string | null
+          modulo: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partecipanti_confermati?: number | null
+          partecipanti_previsti?: number | null
+          programma?: string | null
+          referente_id?: string | null
+          ricerca?: never
+          sala_id?: string | null
+          sala_tipo?: string | null
+          stato?: Database["public"]["Enums"]["evento_stato"]
+          tipo?: string | null
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attributi?: NonNullable<Json>
+          codice?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          fine?: string
+          id?: string
+          inizio?: string
+          luogo?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partecipanti_confermati?: number | null
+          partecipanti_previsti?: number | null
+          programma?: string | null
+          referente_id?: string | null
+          ricerca?: never
+          sala_id?: string | null
+          sala_tipo?: string | null
+          stato?: Database["public"]["Enums"]["evento_stato"]
+          tipo?: string | null
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "eventi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_partecipanti: {
+        Row: {
+          allergeni: string[]
+          confermato: boolean
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          esigenze_alimentari: string | null
+          evento_id: string
+          gruppo: string | null
+          id: string
+          modulo: string
+          nome: string
+          note: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allergeni?: string[]
+          confermato?: boolean
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          esigenze_alimentari?: string | null
+          evento_id: string
+          gruppo?: string | null
+          id?: string
+          modulo: string
+          nome: string
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allergeni?: string[]
+          confermato?: boolean
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          esigenze_alimentari?: string | null
+          evento_id?: string
+          gruppo?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_partecipanti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_partecipanti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_partecipanti_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_partecipanti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_personale: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dipendente_id: string
+          evento_id: string
+          fine: string
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          ruolo: string | null
+          turno_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id: string
+          evento_id: string
+          fine: string
+          id?: string
+          inizio: string
+          modulo: string
+          note?: string | null
+          ruolo?: string | null
+          turno_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string
+          evento_id?: string
+          fine?: string
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          ruolo?: string | null
+          turno_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_personale_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_personale_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_personale_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_personale_turno_id_fkey"
+            columns: ["turno_id"]
+            isOneToOne: false
+            referencedRelation: "turni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_personale_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_preventivi: {
+        Row: {
+          acconto: number | null
+          acconto_pagato_at: string | null
+          acconto_scadenza: string | null
+          budget_cliente: number | null
+          condizioni: string | null
+          created_at: string
+          created_by: string | null
+          evento_id: string
+          id: string
+          modulo: string
+          prezzo_forfait: number | null
+          prezzo_persona: number | null
+          sconto: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          acconto?: number | null
+          acconto_pagato_at?: string | null
+          acconto_scadenza?: string | null
+          budget_cliente?: number | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          evento_id: string
+          id?: string
+          modulo: string
+          prezzo_forfait?: number | null
+          prezzo_persona?: number | null
+          sconto?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          acconto?: number | null
+          acconto_pagato_at?: string | null
+          acconto_scadenza?: string | null
+          budget_cliente?: number | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          evento_id?: string
+          id?: string
+          modulo?: string
+          prezzo_forfait?: number | null
+          prezzo_persona?: number | null
+          sconto?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_preventivi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_preventivi_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: true
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_preventivi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       eventi_qualita: {
         Row: {
           azioni: string | null
@@ -4676,6 +6532,105 @@ export type Database = {
           },
           {
             foreignKeyName: "eventi_qualita_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_voci: {
+        Row: {
+          categoria: Database["public"]["Enums"]["evento_voce_categoria"]
+          confermata: boolean
+          costo: number | null
+          costo_unitario: number
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          distinta_id: string | null
+          evento_id: string
+          fornitore_id: string | null
+          id: string
+          modulo: string
+          note: string | null
+          prezzo_unitario: number
+          quantita: number
+          ricavo: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          categoria?: Database["public"]["Enums"]["evento_voce_categoria"]
+          confermata?: boolean
+          costo?: never
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          distinta_id?: string | null
+          evento_id: string
+          fornitore_id?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          prezzo_unitario?: number
+          quantita?: number
+          ricavo?: never
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          categoria?: Database["public"]["Enums"]["evento_voce_categoria"]
+          confermata?: boolean
+          costo?: never
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          distinta_id?: string | null
+          evento_id?: string
+          fornitore_id?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          prezzo_unitario?: number
+          quantita?: number
+          ricavo?: never
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_voci_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_voci_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_voci_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_voci_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_voci_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -4775,6 +6730,334 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          assegnato_a: string | null
+          canale: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          entita_id: string | null
+          entita_tipo: string | null
+          id: string
+          modulo: string
+          nps: number | null
+          ricevuto_at: string
+          risolto_at: string | null
+          risposta: string | null
+          risposte: NonNullable<Json>
+          stato: Database["public"]["Enums"]["feedback_stato"]
+          testo: string | null
+          tipo: Database["public"]["Enums"]["feedback_tipo"]
+          updated_at: string
+          updated_by: string | null
+          valutazione: number | null
+        }
+        Insert: {
+          assegnato_a?: string | null
+          canale?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          entita_id?: string | null
+          entita_tipo?: string | null
+          id?: string
+          modulo: string
+          nps?: number | null
+          ricevuto_at?: string
+          risolto_at?: string | null
+          risposta?: string | null
+          risposte?: NonNullable<Json>
+          stato?: Database["public"]["Enums"]["feedback_stato"]
+          testo?: string | null
+          tipo: Database["public"]["Enums"]["feedback_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          valutazione?: number | null
+        }
+        Update: {
+          assegnato_a?: string | null
+          canale?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          entita_id?: string | null
+          entita_tipo?: string | null
+          id?: string
+          modulo?: string
+          nps?: number | null
+          ricevuto_at?: string
+          risolto_at?: string | null
+          risposta?: string | null
+          risposte?: NonNullable<Json>
+          stato?: Database["public"]["Enums"]["feedback_stato"]
+          testo?: string | null
+          tipo?: Database["public"]["Enums"]["feedback_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          valutazione?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_assegnato_a_fkey"
+            columns: ["assegnato_a"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "feedback_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fid_movimenti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number | null
+          modulo: string
+          note: string | null
+          punti: number
+          riferimento_id: string | null
+          riferimento_tipo: string | null
+          tessera_id: string
+          timbri: number
+          tipo: Database["public"]["Enums"]["fid_movimento_tipo"]
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number | null
+          modulo: string
+          note?: string | null
+          punti?: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          tessera_id: string
+          timbri?: number
+          tipo: Database["public"]["Enums"]["fid_movimento_tipo"]
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number | null
+          modulo?: string
+          note?: string | null
+          punti?: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          tessera_id?: string
+          timbri?: number
+          tipo?: Database["public"]["Enums"]["fid_movimento_tipo"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fid_movimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_movimenti_tessera_id_fkey"
+            columns: ["tessera_id"]
+            isOneToOne: false
+            referencedRelation: "fid_saldi"
+            referencedColumns: ["tessera_id"]
+          },
+          {
+            foreignKeyName: "fid_movimenti_tessera_id_fkey"
+            columns: ["tessera_id"]
+            isOneToOne: false
+            referencedRelation: "fid_tessere"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fid_programmi: {
+        Row: {
+          attivo: boolean
+          benvenuto_punti: number
+          created_at: string
+          created_by: string | null
+          id: string
+          livelli: NonNullable<Json>
+          modulo: string
+          nome: string
+          premio_timbri: string | null
+          punti_per_euro: number
+          punti_validita_mesi: number | null
+          referral_punti: number
+          regolamento: string | null
+          timbri_soglia: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          benvenuto_punti?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          livelli?: NonNullable<Json>
+          modulo: string
+          nome: string
+          premio_timbri?: string | null
+          punti_per_euro?: number
+          punti_validita_mesi?: number | null
+          referral_punti?: number
+          regolamento?: string | null
+          timbri_soglia?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          benvenuto_punti?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          livelli?: NonNullable<Json>
+          modulo?: string
+          nome?: string
+          premio_timbri?: string | null
+          punti_per_euro?: number
+          punti_validita_mesi?: number | null
+          referral_punti?: number
+          regolamento?: string | null
+          timbri_soglia?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fid_programmi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_programmi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fid_tessere: {
+        Row: {
+          attiva: boolean
+          codice: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          emessa_il: string
+          id: string
+          modulo: string
+          note: string | null
+          presentata_da: string | null
+          programma_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          codice?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          emessa_il?: string
+          id?: string
+          modulo: string
+          note?: string | null
+          presentata_da?: string | null
+          programma_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          codice?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          emessa_il?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          presentata_da?: string | null
+          programma_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fid_tessere_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_presentata_da_fkey"
+            columns: ["presentata_da"]
+            isOneToOne: false
+            referencedRelation: "fid_saldi"
+            referencedColumns: ["tessera_id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_presentata_da_fkey"
+            columns: ["presentata_da"]
+            isOneToOne: false
+            referencedRelation: "fid_tessere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_programma_id_fkey"
+            columns: ["programma_id"]
+            isOneToOne: false
+            referencedRelation: "fid_programmi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       formazione: {
         Row: {
           completato: boolean
@@ -4832,6 +7115,92 @@ export type Database = {
           },
           {
             foreignKeyName: "formazione_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fornitori_valutazioni: {
+        Row: {
+          completezza: number | null
+          continuita: number | null
+          created_at: string
+          created_by: string | null
+          data: string
+          fornitore_id: string
+          id: string
+          modulo: string
+          non_conformita: string | null
+          note: string | null
+          ordine_id: string | null
+          prezzo: number | null
+          puntualita: number | null
+          qualita: number | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          completezza?: number | null
+          continuita?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fornitore_id: string
+          id?: string
+          modulo: string
+          non_conformita?: string | null
+          note?: string | null
+          ordine_id?: string | null
+          prezzo?: number | null
+          puntualita?: number | null
+          qualita?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          completezza?: number | null
+          continuita?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fornitore_id?: string
+          id?: string
+          modulo?: string
+          non_conformita?: string | null
+          note?: string | null
+          ordine_id?: string | null
+          prezzo?: number | null
+          puntualita?: number | null
+          qualita?: number | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_valutazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_valutazioni_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_valutazioni_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "mag_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_valutazioni_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -4919,7 +7288,7 @@ export type Database = {
           procedura?: Database["public"]["Enums"]["gara_procedura"]
           protocollo_invio?: string | null
           responsabile_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           ricorso?: boolean
           rup?: string | null
           settore?: string | null
@@ -4965,7 +7334,7 @@ export type Database = {
           procedura?: Database["public"]["Enums"]["gara_procedura"]
           protocollo_invio?: string | null
           responsabile_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           ricorso?: boolean
           rup?: string | null
           settore?: string | null
@@ -5463,6 +7832,158 @@ export type Database = {
           },
         ]
       }
+      gift_card: {
+        Row: {
+          acquirente_id: string | null
+          beneficiario: string | null
+          codice: string
+          conto_vendita_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          importo_iniziale: number
+          messaggio: string | null
+          modulo: string
+          note: string | null
+          scadenza: string | null
+          stato: Database["public"]["Enums"]["gift_card_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          acquirente_id?: string | null
+          beneficiario?: string | null
+          codice?: string
+          conto_vendita_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_iniziale: number
+          messaggio?: string | null
+          modulo: string
+          note?: string | null
+          scadenza?: string | null
+          stato?: Database["public"]["Enums"]["gift_card_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          acquirente_id?: string | null
+          beneficiario?: string | null
+          codice?: string
+          conto_vendita_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_iniziale?: number
+          messaggio?: string | null
+          modulo?: string
+          note?: string | null
+          scadenza?: string | null
+          stato?: Database["public"]["Enums"]["gift_card_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_card_acquirente_id_fkey"
+            columns: ["acquirente_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_conto_vendita_id_fkey"
+            columns: ["conto_vendita_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_conto_vendita_id_fkey"
+            columns: ["conto_vendita_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gift_card_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gift_card_movimenti: {
+        Row: {
+          conti_pagamento_id: string | null
+          created_at: string
+          created_by: string | null
+          gift_card_id: string
+          id: string
+          importo: number
+          modulo: string
+          note: string | null
+        }
+        Insert: {
+          conti_pagamento_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          gift_card_id: string
+          id?: string
+          importo: number
+          modulo: string
+          note?: string | null
+        }
+        Update: {
+          conti_pagamento_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          gift_card_id?: string
+          id?: string
+          importo?: number
+          modulo?: string
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_card_movimenti_conti_pagamento_id_fkey"
+            columns: ["conti_pagamento_id"]
+            isOneToOne: false
+            referencedRelation: "conti_pagamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_movimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_movimenti_gift_card_id_fkey"
+            columns: ["gift_card_id"]
+            isOneToOne: false
+            referencedRelation: "gift_card"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gift_card_movimenti_gift_card_id_fkey"
+            columns: ["gift_card_id"]
+            isOneToOne: false
+            referencedRelation: "gift_card_saldi"
+            referencedColumns: ["gift_card_id"]
+          },
+        ]
+      }
       impostazioni_istanza: {
         Row: {
           id: boolean
@@ -5507,6 +8028,620 @@ export type Database = {
           titolo?: string
         }
         Relationships: []
+      }
+      mag_articoli: {
+        Row: {
+          aliquota_iva: number
+          allergeni: string[]
+          attivo: boolean
+          attributi: NonNullable<Json>
+          categoria: string | null
+          codice: string | null
+          costo_unitario: number
+          created_at: string
+          created_by: string | null
+          deperibile: boolean
+          descrizione: string
+          durata_giorni: number | null
+          fornitore_id: string | null
+          id: string
+          modulo: string
+          note: string | null
+          prezzo_vendita: number | null
+          ricerca: unknown
+          scorta_minima: number
+          sottocategoria: string | null
+          stagionalita: string | null
+          unita_misura: string
+          updated_at: string
+          updated_by: string | null
+          vendibile: boolean
+        }
+        Insert: {
+          aliquota_iva?: number
+          allergeni?: string[]
+          attivo?: boolean
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          deperibile?: boolean
+          descrizione: string
+          durata_giorni?: number | null
+          fornitore_id?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          prezzo_vendita?: number | null
+          ricerca?: never
+          scorta_minima?: number
+          sottocategoria?: string | null
+          stagionalita?: string | null
+          unita_misura?: string
+          updated_at?: string
+          updated_by?: string | null
+          vendibile?: boolean
+        }
+        Update: {
+          aliquota_iva?: number
+          allergeni?: string[]
+          attivo?: boolean
+          attributi?: NonNullable<Json>
+          categoria?: string | null
+          codice?: string | null
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          deperibile?: boolean
+          descrizione?: string
+          durata_giorni?: number | null
+          fornitore_id?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          prezzo_vendita?: number | null
+          ricerca?: never
+          scorta_minima?: number
+          sottocategoria?: string | null
+          stagionalita?: string | null
+          unita_misura?: string
+          updated_at?: string
+          updated_by?: string | null
+          vendibile?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_articoli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_articoli_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_articoli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mag_inventari: {
+        Row: {
+          chiuso_at: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string | null
+          id: string
+          modulo: string
+          note: string | null
+          stato: Database["public"]["Enums"]["mag_inventario_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["mag_inventario_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          chiuso_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["mag_inventario_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_inventari_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mag_inventari_righe: {
+        Row: {
+          articolo_id: string
+          created_at: string
+          created_by: string | null
+          differenza: number | null
+          giacenza_teorica: number | null
+          id: string
+          inventario_id: string
+          lotto_id: string | null
+          modulo: string
+          note: string | null
+          quantita_contata: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id: string
+          created_at?: string
+          created_by?: string | null
+          differenza?: number | null
+          giacenza_teorica?: number | null
+          id?: string
+          inventario_id: string
+          lotto_id?: string | null
+          modulo: string
+          note?: string | null
+          quantita_contata: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string
+          created_at?: string
+          created_by?: string | null
+          differenza?: number | null
+          giacenza_teorica?: number | null
+          id?: string
+          inventario_id?: string
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          quantita_contata?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_inventari_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_inventario_id_fkey"
+            columns: ["inventario_id"]
+            isOneToOne: false
+            referencedRelation: "mag_inventari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+          {
+            foreignKeyName: "mag_inventari_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mag_lotti: {
+        Row: {
+          articolo_id: string
+          codice_lotto: string | null
+          created_at: string
+          created_by: string | null
+          data_apertura: string | null
+          data_inserimento: string | null
+          data_ricevimento: string
+          data_scadenza: string | null
+          data_smaltimento: string | null
+          fornitore_id: string | null
+          id: string
+          modulo: string
+          note: string | null
+          ordine_riga_id: string | null
+          provenienza: string | null
+          stato_conservazione: string | null
+          temperatura_ricevimento: number | null
+          ubicazione: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id: string
+          codice_lotto?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_apertura?: string | null
+          data_inserimento?: string | null
+          data_ricevimento?: string
+          data_scadenza?: string | null
+          data_smaltimento?: string | null
+          fornitore_id?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          ordine_riga_id?: string | null
+          provenienza?: string | null
+          stato_conservazione?: string | null
+          temperatura_ricevimento?: number | null
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string
+          codice_lotto?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_apertura?: string | null
+          data_inserimento?: string | null
+          data_ricevimento?: string
+          data_scadenza?: string | null
+          data_smaltimento?: string | null
+          fornitore_id?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          ordine_riga_id?: string | null
+          provenienza?: string | null
+          stato_conservazione?: string | null
+          temperatura_ricevimento?: number | null
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_lotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_ordine_riga_fk"
+            columns: ["ordine_riga_id"]
+            isOneToOne: false
+            referencedRelation: "mag_ordini_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mag_movimenti: {
+        Row: {
+          articolo_id: string
+          costo_unitario: number | null
+          created_at: string
+          created_by: string | null
+          eseguito_at: string
+          id: string
+          lotto_id: string | null
+          modulo: string
+          note: string | null
+          quantita: number
+          riferimento_id: string | null
+          riferimento_tipo: string | null
+          tipo: Database["public"]["Enums"]["mag_movimento_tipo"]
+        }
+        Insert: {
+          articolo_id: string
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          id?: string
+          lotto_id?: string | null
+          modulo: string
+          note?: string | null
+          quantita: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          tipo: Database["public"]["Enums"]["mag_movimento_tipo"]
+        }
+        Update: {
+          articolo_id?: string
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          id?: string
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          quantita?: number
+          riferimento_id?: string | null
+          riferimento_tipo?: string | null
+          tipo?: Database["public"]["Enums"]["mag_movimento_tipo"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_movimenti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_movimenti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "mag_movimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_movimenti_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_movimenti_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+        ]
+      }
+      mag_ordini: {
+        Row: {
+          codice: string | null
+          condizioni: string | null
+          created_at: string
+          created_by: string | null
+          data_consegna_prevista: string | null
+          data_ordine: string
+          ddt_data: string | null
+          ddt_numero: string | null
+          fornitore_id: string
+          id: string
+          modulo: string
+          note: string | null
+          stato: Database["public"]["Enums"]["mag_ordine_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          codice?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_consegna_prevista?: string | null
+          data_ordine?: string
+          ddt_data?: string | null
+          ddt_numero?: string | null
+          fornitore_id: string
+          id?: string
+          modulo: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["mag_ordine_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          codice?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_consegna_prevista?: string | null
+          data_ordine?: string
+          ddt_data?: string | null
+          ddt_numero?: string | null
+          fornitore_id?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          stato?: Database["public"]["Enums"]["mag_ordine_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_ordini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mag_ordini_righe: {
+        Row: {
+          articolo_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          note: string | null
+          ordine_id: string
+          prezzo_unitario: number | null
+          quantita_ordinata: number
+          quantita_ricevuta: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo: string
+          note?: string | null
+          ordine_id: string
+          prezzo_unitario?: number | null
+          quantita_ordinata: number
+          quantita_ricevuta?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          ordine_id?: string
+          prezzo_unitario?: number | null
+          quantita_ordinata?: number
+          quantita_ricevuta?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_ordini_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_righe_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "mag_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_ordini_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       magazzino_sanitario: {
         Row: {
@@ -5570,6 +8705,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      mail_outbox: {
+        Row: {
+          corpo_html: string | null
+          corpo_testo: string
+          created_at: string
+          destinatario: string
+          id: string
+          inviata_at: string | null
+          oggetto: string
+          tentativi: number
+          ultimo_errore: string | null
+        }
+        Insert: {
+          corpo_html?: string | null
+          corpo_testo: string
+          created_at?: string
+          destinatario: string
+          id?: string
+          inviata_at?: string | null
+          oggetto: string
+          tentativi?: number
+          ultimo_errore?: string | null
+        }
+        Update: {
+          corpo_html?: string | null
+          corpo_testo?: string
+          created_at?: string
+          destinatario?: string
+          id?: string
+          inviata_at?: string | null
+          oggetto?: string
+          tentativi?: number
+          ultimo_errore?: string | null
+        }
+        Relationships: []
       }
       messaggi: {
         Row: {
@@ -5828,7 +8999,7 @@ export type Database = {
           provincia?: string | null
           ragione_sociale: string
           referente_principale_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sdi_codice?: string | null
           settore?: string | null
           telefono?: string | null
@@ -5859,7 +9030,7 @@ export type Database = {
           provincia?: string | null
           ragione_sociale?: string
           referente_principale_id?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sdi_codice?: string | null
           settore?: string | null
           telefono?: string | null
@@ -5962,7 +9133,7 @@ export type Database = {
           nome: string
           note_amministrative?: string | null
           residenza?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sesso?: Database["public"]["Enums"]["paziente_sesso"] | null
           telefono?: string | null
           updated_at?: string
@@ -5987,7 +9158,7 @@ export type Database = {
           nome?: string
           note_amministrative?: string | null
           residenza?: string | null
-          ricerca?: unknown
+          ricerca?: never
           sesso?: Database["public"]["Enums"]["paziente_sesso"] | null
           telefono?: string | null
           updated_at?: string
@@ -6830,6 +10001,339 @@ export type Database = {
           },
         ]
       }
+      segnalazioni_sicurezza: {
+        Row: {
+          asset_id: string | null
+          avvenuta_at: string
+          azioni_correttive: string | null
+          azioni_immediate: string | null
+          chiusa_at: string | null
+          codice: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          dipendente_id: string | null
+          gravita: Database["public"]["Enums"]["segnalazione_gravita"]
+          id: string
+          luogo: string | null
+          modulo: string
+          persone_coinvolte: string | null
+          primo_soccorso: boolean
+          soccorso_esterno: string | null
+          stato: Database["public"]["Enums"]["segnalazione_stato"]
+          tipo: Database["public"]["Enums"]["segnalazione_tipo"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          avvenuta_at?: string
+          azioni_correttive?: string | null
+          azioni_immediate?: string | null
+          chiusa_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          dipendente_id?: string | null
+          gravita?: Database["public"]["Enums"]["segnalazione_gravita"]
+          id?: string
+          luogo?: string | null
+          modulo: string
+          persone_coinvolte?: string | null
+          primo_soccorso?: boolean
+          soccorso_esterno?: string | null
+          stato?: Database["public"]["Enums"]["segnalazione_stato"]
+          tipo: Database["public"]["Enums"]["segnalazione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          avvenuta_at?: string
+          azioni_correttive?: string | null
+          azioni_immediate?: string | null
+          chiusa_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          dipendente_id?: string | null
+          gravita?: Database["public"]["Enums"]["segnalazione_gravita"]
+          id?: string
+          luogo?: string | null
+          modulo?: string
+          persone_coinvolte?: string | null
+          primo_soccorso?: boolean
+          soccorso_esterno?: string | null
+          stato?: Database["public"]["Enums"]["segnalazione_stato"]
+          tipo?: Database["public"]["Enums"]["segnalazione_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "segnalazioni_sicurezza_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      turni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dipendente_id: string
+          fine: string
+          fine_effettivo: string | null
+          id: string
+          inizio: string
+          inizio_effettivo: string | null
+          mansione: string | null
+          modello_id: string | null
+          modulo: string
+          note: string | null
+          ore_effettive: number | null
+          ore_previste: number | null
+          pausa_minuti: number
+          reparto: string | null
+          stato: Database["public"]["Enums"]["turno_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id: string
+          fine: string
+          fine_effettivo?: string | null
+          id?: string
+          inizio: string
+          inizio_effettivo?: string | null
+          mansione?: string | null
+          modello_id?: string | null
+          modulo: string
+          note?: string | null
+          ore_effettive?: number | null
+          ore_previste?: never
+          pausa_minuti?: number
+          reparto?: string | null
+          stato?: Database["public"]["Enums"]["turno_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string
+          fine?: string
+          fine_effettivo?: string | null
+          id?: string
+          inizio?: string
+          inizio_effettivo?: string | null
+          mansione?: string | null
+          modello_id?: string | null
+          modulo?: string
+          note?: string | null
+          ore_effettive?: number | null
+          ore_previste?: never
+          pausa_minuti?: number
+          reparto?: string | null
+          stato?: Database["public"]["Enums"]["turno_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turni_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turni_modello_id_fkey"
+            columns: ["modello_id"]
+            isOneToOne: false
+            referencedRelation: "turni_modelli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      turni_fabbisogno: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          giorno_settimana: number
+          id: string
+          modulo: string
+          ora_fine: string
+          ora_inizio: string
+          persone_minime: number
+          reparto: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          giorno_settimana: number
+          id?: string
+          modulo: string
+          ora_fine: string
+          ora_inizio: string
+          persone_minime: number
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          giorno_settimana?: number
+          id?: string
+          modulo?: string
+          ora_fine?: string
+          ora_inizio?: string
+          persone_minime?: number
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turni_fabbisogno_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turni_fabbisogno_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      turni_modelli: {
+        Row: {
+          attivo: boolean
+          colore: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          ora_fine: string
+          ora_inizio: string
+          pausa_minuti: number
+          reparto: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo: string
+          nome: string
+          ora_fine: string
+          ora_inizio: string
+          pausa_minuti?: number
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          ora_fine?: string
+          ora_inizio?: string
+          pausa_minuti?: number
+          reparto?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turni_modelli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "turni_modelli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_profiles: {
         Row: {
           attivo: boolean
@@ -6838,8 +10342,8 @@ export type Database = {
           created_at: string
           id: string
           manutentore: boolean
-          ospite_demo: boolean
           nome: string
+          ospite_demo: boolean
           ruolo: Database["public"]["Enums"]["user_role"]
         }
         Insert: {
@@ -6849,8 +10353,8 @@ export type Database = {
           created_at?: string
           id: string
           manutentore?: boolean
-          ospite_demo?: boolean
           nome: string
+          ospite_demo?: boolean
           ruolo?: Database["public"]["Enums"]["user_role"]
         }
         Update: {
@@ -6860,8 +10364,8 @@ export type Database = {
           created_at?: string
           id?: string
           manutentore?: boolean
-          ospite_demo?: boolean
           nome?: string
+          ospite_demo?: boolean
           ruolo?: Database["public"]["Enums"]["user_role"]
         }
         Relationships: []
@@ -6961,6 +10465,238 @@ export type Database = {
       }
     }
     Views: {
+      asset_indicatori: {
+        Row: {
+          asset_id: string | null
+          costo_interventi: number | null
+          guasti: number | null
+          interventi_aperti: number | null
+          modulo: string | null
+          mtbf_giorni: number | null
+          ore_fermo: number | null
+        }
+        Relationships: []
+      }
+      conti_saldi: {
+        Row: {
+          codice: string | null
+          conto_id: string | null
+          descrizione: string | null
+          modulo: string | null
+          pagato: number | null
+          residuo: number | null
+          stato: Database["public"]["Enums"]["conto_stato"] | null
+          totale: number | null
+        }
+        Relationships: []
+      }
+      controlli_stato: {
+        Row: {
+          in_ritardo: boolean | null
+          modulo: string | null
+          nome: string | null
+          non_conformita_aperte: number | null
+          ogni_ore: number | null
+          prossimo_atteso: string | null
+          punto_id: string | null
+          responsabile_id: string | null
+          tipo: Database["public"]["Enums"]["controllo_tipo"] | null
+          ubicazione: string | null
+          ultimo_controllo: string | null
+          ultimo_esito: Database["public"]["Enums"]["controllo_esito"] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "controlli_punti_responsabile_id_fkey"
+            columns: ["responsabile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_allergeni: {
+        Row: {
+          allergene: string | null
+          evento_id: string | null
+          modulo: string | null
+          persone: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_partecipanti_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      eventi_margini: {
+        Row: {
+          costi: number | null
+          evento_id: string | null
+          margine: number | null
+          modulo: string | null
+          ricavi: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "eventi_preventivi_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: true
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      feedback_nps: {
+        Row: {
+          detrattori: number | null
+          mese: string | null
+          modulo: string | null
+          nps: number | null
+          passivi: number | null
+          promotori: number | null
+          risposte: number | null
+          valutazione_media: number | null
+        }
+        Relationships: []
+      }
+      fid_saldi: {
+        Row: {
+          attiva: boolean | null
+          codice: string | null
+          contatto_id: string | null
+          livello: string | null
+          modulo: string | null
+          premi_disponibili: number | null
+          programma_id: string | null
+          punti: number | null
+          punti_accumulati: number | null
+          tessera_id: string | null
+          timbri: number | null
+          ultimo_movimento: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fid_tessere_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fid_tessere_programma_id_fkey"
+            columns: ["programma_id"]
+            isOneToOne: false
+            referencedRelation: "fid_programmi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fornitori_rating: {
+        Row: {
+          completezza: number | null
+          continuita: number | null
+          fornitore_id: string | null
+          modulo: string | null
+          non_conformita: number | null
+          prezzo: number | null
+          punteggio: number | null
+          puntualita: number | null
+          qualita: number | null
+          valutazioni: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_valutazioni_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gift_card_saldi: {
+        Row: {
+          codice: string | null
+          gift_card_id: string | null
+          importo_iniziale: number | null
+          modulo: string | null
+          residuo: number | null
+          scadenza: string | null
+          stato: string | null
+        }
+        Relationships: []
+      }
+      mag_giacenze: {
+        Row: {
+          anomalia_negativa: boolean | null
+          articolo_id: string | null
+          categoria: string | null
+          codice: string | null
+          costo_unitario: number | null
+          descrizione: string | null
+          giacenza: number | null
+          modulo: string | null
+          scorta_minima: number | null
+          sotto_scorta: boolean | null
+          unita_misura: string | null
+          valore: number | null
+        }
+        Relationships: []
+      }
+      mag_lotti_stato: {
+        Row: {
+          articolo_id: string | null
+          codice_lotto: string | null
+          data_ricevimento: string | null
+          data_scadenza: string | null
+          descrizione: string | null
+          fine_vita: string | null
+          giorni_residui: number | null
+          lotto_id: string | null
+          modulo: string | null
+          residuo: number | null
+          ubicazione: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mag_lotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mag_lotti_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+        ]
+      }
+      turni_ore_settimana: {
+        Row: {
+          assenze: number | null
+          dipendente_id: string | null
+          modulo: string | null
+          ore_effettive: number | null
+          ore_previste: number | null
+          settimana: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "turni_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vw_agenti_kpi: {
         Row: {
           agente: string | null
@@ -7183,15 +10919,54 @@ export type Database = {
       }
     }
     Functions: {
-      agente_corrente: { Args: never; Returns: string }
+      agente_corrente: { Args: Record<PropertyKey, never>; Returns: string }
       allegato_riservato: { Args: { p_path: string }; Returns: boolean }
+      allergeni_distinta: { Args: { p_distinta: string }; Returns: string[] }
+      allergeni_ue: { Args: Record<PropertyKey, never>; Returns: string[] }
+      applica_coupon: {
+        Args: { p_codice: string; p_conto: string }
+        Returns: number
+      }
+      applica_protezioni_tabelle: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       calcola_provvigioni: {
         Args: { p_agente: string; p_periodo: string }
         Returns: number
       }
-      copilot_rate_check: {
-        Args: { per_giorno?: number; per_minuto?: number }
-        Returns: Json
+      campagna_invia_interna: { Args: { p_campagna: string }; Returns: number }
+      campagna_prepara_interna: {
+        Args: { p_campagna: string }
+        Returns: number
+      }
+      campagna_riepilogo: {
+        Args: { p_campagna: string }
+        Returns: {
+          consegnati_al_relay: number
+          esclusi: number
+          falliti: number
+          in_coda: number
+          inviati: number
+        }[]
+      }
+      chiudi_conto: { Args: { p_conto: string }; Returns: undefined }
+      chiudi_inventario: { Args: { p_inventario: string }; Returns: number }
+      chiudi_sessione_cassa: {
+        Args: { p_contanti_contati: number; p_sessione: string }
+        Returns: number
+      }
+      conto_per_aliquota: {
+        Args: { p_conto: string }
+        Returns: {
+          aliquota_iva: number
+          importo: number
+        }[]
+      }
+      copilot_rate_check: { Args: Record<PropertyKey, never>; Returns: Json }
+      costo_distinta: {
+        Args: { p_distinta: string; p_profondita?: number }
+        Returns: number
       }
       crea_notifica: {
         Args: {
@@ -7204,10 +10979,76 @@ export type Database = {
         }
         Returns: string
       }
+      credenziali_modificabili: {
+        Args: { p_sessione: string; p_utente: string }
+        Returns: boolean
+      }
+      dividi_conto_in_parti: {
+        Args: { p_conto: string; p_parti: number }
+        Returns: number[]
+      }
+      esplodi_distinta: {
+        Args: { p_distinta: string; p_unita?: number }
+        Returns: {
+          articolo_id: string
+          quantita: number
+        }[]
+      }
+      fid_registra_acquisto: {
+        Args: {
+          p_importo: number
+          p_rif_id?: string
+          p_rif_tipo?: string
+          p_tessera: string
+        }
+        Returns: Json
+      }
+      fid_riscatta_premio: {
+        Args: { p_rif_id?: string; p_rif_tipo?: string; p_tessera: string }
+        Returns: string
+      }
       genera_codice: { Args: { p_prefisso: string }; Returns: string }
+      genera_codice_gift_card: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      genera_fattura_da_conto: {
+        Args: { p_conto: string; p_numero: string; p_scadenza?: string }
+        Returns: string
+      }
       get_user_role: {
-        Args: never
+        Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["user_role"]
+      }
+      html_escape: { Args: { p: string }; Returns: string }
+      invia_campagna: { Args: { p_campagna: string }; Returns: number }
+      invia_campagne_programmate: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      mag_proposta_riordino: {
+        Args: { p_modulo: string }
+        Returns: {
+          articolo_id: string
+          consumo_medio_giorno: number
+          descrizione: string
+          fornitore_id: string
+          giacenza: number
+          quantita_proposta: number
+          scorta_minima: number
+          unita_misura: string
+        }[]
+      }
+      mag_scarica: {
+        Args: {
+          p_articolo: string
+          p_note?: string
+          p_quantita: number
+          p_riferimento_id?: string
+          p_riferimento_tipo?: string
+          p_tipo: Database["public"]["Enums"]["mag_movimento_tipo"]
+        }
+        Returns: number
       }
       match_kb_guida: {
         Args: { match_count?: number; query_embedding: string; soglia?: number }
@@ -7217,13 +11058,43 @@ export type Database = {
           titolo: string
         }[]
       }
+      moduli_fondamenta: { Args: Record<PropertyKey, never>; Returns: string[] }
+      modulo_attivo: { Args: { p_slug: string }; Returns: boolean }
       modulo_licenziato: { Args: { p_slug: string }; Returns: boolean }
       notifica_deal_a_rischio: { Args: { giorni?: number }; Returns: number }
-      processa_scadenze: { Args: never; Returns: number }
-      processa_scadenze_moduli: { Args: never; Returns: number }
-      puo_amministrazione: { Args: never; Returns: boolean }
-      puo_clinica: { Args: never; Returns: boolean }
-      puo_scrivere: { Args: never; Returns: boolean }
+      preleva_mail_da_inviare: {
+        Args: { quante?: number }
+        Returns: {
+          corpo_html: string | null
+          corpo_testo: string
+          created_at: string
+          destinatario: string
+          id: string
+          inviata_at: string | null
+          oggetto: string
+          tentativi: number
+          ultimo_errore: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "mail_outbox"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      prepara_campagna: { Args: { p_campagna: string }; Returns: number }
+      processa_scadenze: { Args: Record<PropertyKey, never>; Returns: number }
+      processa_scadenze_moduli: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      puo_amministrazione: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      puo_clinica: { Args: Record<PropertyKey, never>; Returns: boolean }
+      puo_scrivere: { Args: Record<PropertyKey, never>; Returns: boolean }
+      revoca_consenso_marketing: { Args: { p_token: string }; Returns: boolean }
       ricerca_globale: {
         Args: { q: string }
         Returns: {
@@ -7233,14 +11104,99 @@ export type Database = {
           titolo: string
         }[]
       }
+      ricevi_riga_ordine: {
+        Args: {
+          p_codice_lotto?: string
+          p_quantita: number
+          p_riga: string
+          p_scadenza?: string
+          p_temperatura?: number
+          p_ubicazione?: string
+        }
+        Returns: string
+      }
+      scarica_distinta: {
+        Args: {
+          p_distinta: string
+          p_riferimento_id?: string
+          p_riferimento_tipo?: string
+          p_tipo?: Database["public"]["Enums"]["mag_movimento_tipo"]
+          p_unita: number
+        }
+        Returns: number
+      }
+      scrittura_demo_rifiutata: {
+        Args: {
+          p_operazione: string
+          p_sessione: string
+          p_tabella: string
+          p_utente: string
+        }
+        Returns: string
+      }
+      scrittura_file_consentita: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      seg_detrattori: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_promotori: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_tesserati: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_tesserati_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_tutti_i_contatti: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      segna_mail_fallita: {
+        Args: { errore: string; mail_id: string }
+        Returns: undefined
+      }
+      segna_mail_inviata: { Args: { mail_id: string }; Returns: undefined }
+      send_email_hook: { Args: { event: Json }; Returns: Json }
+      sposta_righe_conto: {
+        Args: { p_destinazione: string; p_righe: string[] }
+        Returns: number
+      }
+      tabelle_di_servizio: {
+        Args: Record<PropertyKey, never>
+        Returns: string[]
+      }
+      turni_carenze: {
+        Args: { p_al: string; p_dal: string; p_modulo: string }
+        Returns: {
+          coperte: number
+          data: string
+          ora_fine: string
+          ora_inizio: string
+          reparto: string
+          richieste: number
+        }[]
+      }
+      turni_persone: {
+        Args: { p_modulo: string }
+        Returns: {
+          cognome: string
+          id: string
+          nome: string
+          qualifica: string
+        }[]
+      }
     }
     Enums: {
       agente_stato: "attivo" | "sospeso" | "cessato"
       agente_tipologia:
-        | "monomandatario"
-        | "plurimandatario"
-        | "procacciatore"
-        | "dipendente"
+        "monomandatario" | "plurimandatario" | "procacciatore" | "dipendente"
       apparecchiatura_stato: "operativa" | "in_manutenzione" | "fuori_servizio"
       approvazione_stato: "richiesta" | "approvata" | "rifiutata" | "annullata"
       appuntamento_stato:
@@ -7253,16 +11209,18 @@ export type Database = {
       articolo_sanitario_tipo: "farmaco" | "dispositivo" | "consumo"
       assenza_stato: "richiesta" | "approvata" | "rifiutata"
       assenza_tipo: "ferie" | "permesso" | "malattia"
+      asset_intervento_stato:
+        "segnalato" | "pianificato" | "in_corso" | "chiuso" | "annullato"
+      asset_intervento_tipo:
+        "preventiva" | "ordinaria" | "straordinaria" | "guasto"
+      asset_priorita: "bassa" | "media" | "alta" | "urgente"
+      asset_stato:
+        "in_uso" | "in_manutenzione" | "guasto" | "fuori_servizio" | "dismesso"
       attivita_stato: "da_fare" | "in_corso" | "completata" | "annullata"
       attivita_tipo: "task" | "chiamata" | "email" | "riunione" | "nota"
       automezzo_acquisizione: "acquisto" | "leasing" | "noleggio"
       automezzo_alimentazione:
-        | "benzina"
-        | "diesel"
-        | "gpl"
-        | "metano"
-        | "ibrida"
-        | "elettrica"
+        "benzina" | "diesel" | "gpl" | "metano" | "ibrida" | "elettrica"
       automezzo_categoria:
         | "autovettura"
         | "furgone"
@@ -7289,18 +11247,13 @@ export type Database = {
         | "in_manutenzione"
         | "fuori_servizio"
         | "dismesso"
+      campagna_canale: "email" | "sms" | "whatsapp" | "push"
+      campagna_destinatario_stato: "in_coda" | "inviato" | "escluso"
+      campagna_stato: "bozza" | "programmata" | "inviata" | "annullata"
       cantiere_ambiente_tipo:
-        | "rifiuti"
-        | "emissioni"
-        | "scarichi"
-        | "terre_rocce"
-        | "rumore"
+        "rifiuti" | "emissioni" | "scarichi" | "terre_rocce" | "rumore"
       cantiere_costo_tipo:
-        | "personale"
-        | "materiali"
-        | "mezzi"
-        | "subappalti"
-        | "altro"
+        "personale" | "materiali" | "mezzi" | "subappalti" | "altro"
       cantiere_meteo: "sereno" | "nuvoloso" | "pioggia" | "neve" | "vento_forte"
       cantiere_mezzo_tipo:
         | "macchina_operatrice"
@@ -7313,10 +11266,7 @@ export type Database = {
       cantiere_movimento_tipo: "ordine" | "consegna" | "consumo" | "reso"
       cantiere_qualita_esito: "in_attesa" | "conforme" | "non_conforme"
       cantiere_qualita_tipo:
-        | "accettazione"
-        | "corso_opera"
-        | "collaudo"
-        | "prova"
+        "accettazione" | "corso_opera" | "collaudo" | "prova"
       cantiere_sal_stato: "bozza" | "emesso" | "fatturato" | "pagato"
       cantiere_sicurezza_tipo:
         | "sopralluogo"
@@ -7331,19 +11281,11 @@ export type Database = {
         | "riunione_coordinamento"
         | "controllo_giornaliero"
       cantiere_stato:
-        | "pianificato"
-        | "in_apertura"
-        | "attivo"
-        | "sospeso"
-        | "chiuso"
+        "pianificato" | "in_apertura" | "attivo" | "sospeso" | "chiuso"
+      cassa_sessione_stato: "aperta" | "chiusa"
       commessa_stato: "attiva" | "in_pausa" | "completata" | "annullata"
       comunicazione_canale:
-        | "email"
-        | "sms"
-        | "pec"
-        | "telefono"
-        | "whatsapp"
-        | "notifica"
+        "email" | "sms" | "pec" | "telefono" | "whatsapp" | "notifica"
       condizione_tipo:
         | "patologia"
         | "allergia"
@@ -7352,19 +11294,54 @@ export type Database = {
         | "farmaco"
         | "vaccinazione"
       consenso_tipo: "privacy" | "informato" | "marketing"
+      conto_stato: "aperto" | "chiuso" | "annullato"
+      controllo_esito: "conforme" | "non_conforme"
+      controllo_tipo:
+        | "temperatura"
+        | "ricevimento"
+        | "sanificazione"
+        | "pulizia"
+        | "infestanti"
+        | "olio_frittura"
+        | "verifica"
+        | "altro"
+      coupon_tipo: "percentuale" | "importo"
       evento_qualita_tipo:
-        | "reclamo"
-        | "non_conformita"
-        | "evento_avverso"
-        | "audit"
+        "reclamo" | "non_conformita" | "evento_avverso" | "audit"
+      evento_stato:
+        | "richiesta"
+        | "preventivo"
+        | "confermato"
+        | "in_corso"
+        | "concluso"
+        | "annullato"
+      evento_voce_categoria:
+        | "menu"
+        | "bevande"
+        | "allestimento"
+        | "personale"
+        | "fiori"
+        | "musica"
+        | "noleggio"
+        | "location"
+        | "trasporto"
+        | "altro"
       fattura_direzione: "attiva" | "passiva"
       fattura_stato: "da_pagare" | "pagata" | "scaduta" | "parziale"
+      feedback_stato: "ricevuto" | "in_gestione" | "risolto" | "chiuso"
+      feedback_tipo:
+        "nps" | "questionario" | "recensione" | "reclamo" | "suggerimento"
+      fid_movimento_tipo:
+        | "accumulo"
+        | "bonus"
+        | "referral"
+        | "riscatto"
+        | "premio"
+        | "scadenza"
+        | "rettifica"
       gara_ati_ruolo: "mandataria" | "mandante" | "consorziata"
       gara_cauzione_tipo:
-        | "provvisoria"
-        | "definitiva"
-        | "fideiussione"
-        | "polizza_assicurativa"
+        "provvisoria" | "definitiva" | "fideiussione" | "polizza_assicurativa"
       gara_procedura:
         | "aperta"
         | "ristretta"
@@ -7391,7 +11368,25 @@ export type Database = {
         | "non_aggiudicata"
         | "annullata"
       gara_tipologia: "lavori" | "servizi" | "forniture"
+      gift_card_stato: "attiva" | "annullata"
       lead_fonte: "fiera" | "referral" | "linkedin" | "web" | "evento" | "altro"
+      mag_inventario_stato: "aperto" | "chiuso"
+      mag_movimento_tipo:
+        | "carico"
+        | "reso_cliente"
+        | "scarico"
+        | "vendita"
+        | "consumo"
+        | "sfrido"
+        | "deterioramento"
+        | "rottura"
+        | "omaggio"
+        | "consumo_interno"
+        | "reso_fornitore"
+        | "inventario"
+        | "trasferimento"
+      mag_ordine_stato:
+        "bozza" | "inviato" | "ricevuto_parziale" | "ricevuto" | "annullato"
       manutenzione_tipo: "ordinaria" | "straordinaria"
       nota_spese_stato: "presentata" | "approvata" | "rifiutata" | "rimborsata"
       nota_spese_tipo:
@@ -7412,11 +11407,19 @@ export type Database = {
         | "fatturato"
         | "annullato"
       org_ruolo:
-        | "cliente"
-        | "fornitore"
-        | "partner"
-        | "potenziale_partner"
-        | "prospect"
+        "cliente" | "fornitore" | "partner" | "potenziale_partner" | "prospect"
+      pagamento_metodo:
+        | "contanti"
+        | "pos"
+        | "carta"
+        | "bonifico"
+        | "online"
+        | "buono"
+        | "gift_card"
+        | "coupon"
+        | "addebito_conto"
+        | "conto_aziendale"
+        | "altro"
       pagamento_stato: "da_incassare" | "incassato" | "in_ritardo" | "parziale"
       partner_tipo: "rivenditore" | "tecnologico" | "strategico" | "commerciale"
       patente_tipo:
@@ -7431,11 +11434,7 @@ export type Database = {
         | "altro"
       paziente_sesso: "m" | "f" | "altro"
       prestazione_tipo:
-        | "visita"
-        | "esame"
-        | "infermieristica"
-        | "terapia"
-        | "pacchetto"
+        "visita" | "esame" | "infermieristica" | "terapia" | "pacchetto"
       priorita_type: "bassa" | "media" | "alta" | "critica"
       progetto_stato:
         | "pianificazione"
@@ -7454,6 +11453,15 @@ export type Database = {
         | "consegnata"
         | "scartata"
         | "mancata_consegna"
+      segnalazione_gravita: "bassa" | "media" | "alta" | "critica"
+      segnalazione_stato: "aperta" | "in_gestione" | "chiusa"
+      segnalazione_tipo:
+        | "incidente"
+        | "infortunio"
+        | "quasi_incidente"
+        | "emergenza"
+        | "pericolo"
+        | "danno"
       sinistro_stato: "aperto" | "in_lavorazione" | "liquidato" | "chiuso"
       tassa_stato: "da_pagare" | "pagata" | "scaduta"
       tipo_contratto:
@@ -7463,6 +11471,8 @@ export type Database = {
         | "collaborazione"
         | "stage"
         | "partita_iva"
+      turno_stato:
+        "pianificato" | "confermato" | "svolto" | "assente" | "annullato"
       user_role: "admin" | "manager" | "operatore"
       visita_esito: "positivo" | "neutro" | "negativo" | "da_ricontattare"
     }
@@ -7565,6 +11575,101 @@ export type Database = {
         }
         Relationships: []
       }
+      iceberg_namespaces: {
+        Row: {
+          bucket_name: string
+          catalog_id: string
+          created_at: string
+          id: string
+          metadata: NonNullable<Json>
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          bucket_name: string
+          catalog_id: string
+          created_at?: string
+          id?: string
+          metadata?: NonNullable<Json>
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          bucket_name?: string
+          catalog_id?: string
+          created_at?: string
+          id?: string
+          metadata?: NonNullable<Json>
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "iceberg_namespaces_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "buckets_analytics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      iceberg_tables: {
+        Row: {
+          bucket_name: string
+          catalog_id: string
+          created_at: string
+          id: string
+          location: string
+          name: string
+          namespace_id: string
+          remote_table_id: string | null
+          shard_id: string | null
+          shard_key: string | null
+          updated_at: string
+        }
+        Insert: {
+          bucket_name: string
+          catalog_id: string
+          created_at?: string
+          id?: string
+          location: string
+          name: string
+          namespace_id: string
+          remote_table_id?: string | null
+          shard_id?: string | null
+          shard_key?: string | null
+          updated_at?: string
+        }
+        Update: {
+          bucket_name?: string
+          catalog_id?: string
+          created_at?: string
+          id?: string
+          location?: string
+          name?: string
+          namespace_id?: string
+          remote_table_id?: string | null
+          shard_id?: string | null
+          shard_key?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "iceberg_tables_catalog_id_fkey"
+            columns: ["catalog_id"]
+            isOneToOne: false
+            referencedRelation: "buckets_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "iceberg_tables_namespace_id_fkey"
+            columns: ["namespace_id"]
+            isOneToOne: false
+            referencedRelation: "iceberg_namespaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       migrations: {
         Row: {
           executed_at: string | null
@@ -7610,7 +11715,7 @@ export type Database = {
           name?: string | null
           owner?: string | null
           owner_id?: string | null
-          path_tokens?: string[] | null
+          path_tokens?: never
           updated_at?: string | null
           user_metadata?: Json | null
           version?: string | null
@@ -7624,7 +11729,7 @@ export type Database = {
           name?: string | null
           owner?: string | null
           owner_id?: string | null
-          path_tokens?: string[] | null
+          path_tokens?: never
           updated_at?: string | null
           user_metadata?: Json | null
           version?: string | null
@@ -7809,7 +11914,7 @@ export type Database = {
         Returns: string
       }
       get_size_by_bucket: {
-        Args: never
+        Args: Record<PropertyKey, never>
         Returns: {
           bucket_id: string
           size: number
@@ -7849,7 +11954,7 @@ export type Database = {
           updated_at: string
         }[]
       }
-      operation: { Args: never; Returns: string }
+      operation: { Args: Record<PropertyKey, never>; Returns: string }
       search: {
         Args: {
           bucketname: string
@@ -7930,12 +12035,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -7957,13 +12062,12 @@ export type Tables<
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -7982,13 +12086,12 @@ export type TablesInsert<
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+    keyof DefaultSchema["Tables"] | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -8007,13 +12110,12 @@ export type TablesUpdate<
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    keyof DefaultSchema["Enums"] | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -8026,11 +12128,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -8065,6 +12167,27 @@ export const Constants = {
       articolo_sanitario_tipo: ["farmaco", "dispositivo", "consumo"],
       assenza_stato: ["richiesta", "approvata", "rifiutata"],
       assenza_tipo: ["ferie", "permesso", "malattia"],
+      asset_intervento_stato: [
+        "segnalato",
+        "pianificato",
+        "in_corso",
+        "chiuso",
+        "annullato",
+      ],
+      asset_intervento_tipo: [
+        "preventiva",
+        "ordinaria",
+        "straordinaria",
+        "guasto",
+      ],
+      asset_priorita: ["bassa", "media", "alta", "urgente"],
+      asset_stato: [
+        "in_uso",
+        "in_manutenzione",
+        "guasto",
+        "fuori_servizio",
+        "dismesso",
+      ],
       attivita_stato: ["da_fare", "in_corso", "completata", "annullata"],
       attivita_tipo: ["task", "chiamata", "email", "riunione", "nota"],
       automezzo_acquisizione: ["acquisto", "leasing", "noleggio"],
@@ -8105,6 +12228,9 @@ export const Constants = {
         "fuori_servizio",
         "dismesso",
       ],
+      campagna_canale: ["email", "sms", "whatsapp", "push"],
+      campagna_destinatario_stato: ["in_coda", "inviato", "escluso"],
+      campagna_stato: ["bozza", "programmata", "inviata", "annullata"],
       cantiere_ambiente_tipo: [
         "rifiuti",
         "emissioni",
@@ -8158,6 +12284,7 @@ export const Constants = {
         "sospeso",
         "chiuso",
       ],
+      cassa_sessione_stato: ["aperta", "chiusa"],
       commessa_stato: ["attiva", "in_pausa", "completata", "annullata"],
       comunicazione_canale: [
         "email",
@@ -8176,14 +12303,64 @@ export const Constants = {
         "vaccinazione",
       ],
       consenso_tipo: ["privacy", "informato", "marketing"],
+      conto_stato: ["aperto", "chiuso", "annullato"],
+      controllo_esito: ["conforme", "non_conforme"],
+      controllo_tipo: [
+        "temperatura",
+        "ricevimento",
+        "sanificazione",
+        "pulizia",
+        "infestanti",
+        "olio_frittura",
+        "verifica",
+        "altro",
+      ],
+      coupon_tipo: ["percentuale", "importo"],
       evento_qualita_tipo: [
         "reclamo",
         "non_conformita",
         "evento_avverso",
         "audit",
       ],
+      evento_stato: [
+        "richiesta",
+        "preventivo",
+        "confermato",
+        "in_corso",
+        "concluso",
+        "annullato",
+      ],
+      evento_voce_categoria: [
+        "menu",
+        "bevande",
+        "allestimento",
+        "personale",
+        "fiori",
+        "musica",
+        "noleggio",
+        "location",
+        "trasporto",
+        "altro",
+      ],
       fattura_direzione: ["attiva", "passiva"],
       fattura_stato: ["da_pagare", "pagata", "scaduta", "parziale"],
+      feedback_stato: ["ricevuto", "in_gestione", "risolto", "chiuso"],
+      feedback_tipo: [
+        "nps",
+        "questionario",
+        "recensione",
+        "reclamo",
+        "suggerimento",
+      ],
+      fid_movimento_tipo: [
+        "accumulo",
+        "bonus",
+        "referral",
+        "riscatto",
+        "premio",
+        "scadenza",
+        "rettifica",
+      ],
       gara_ati_ruolo: ["mandataria", "mandante", "consorziata"],
       gara_cauzione_tipo: [
         "provvisoria",
@@ -8220,7 +12397,31 @@ export const Constants = {
         "annullata",
       ],
       gara_tipologia: ["lavori", "servizi", "forniture"],
+      gift_card_stato: ["attiva", "annullata"],
       lead_fonte: ["fiera", "referral", "linkedin", "web", "evento", "altro"],
+      mag_inventario_stato: ["aperto", "chiuso"],
+      mag_movimento_tipo: [
+        "carico",
+        "reso_cliente",
+        "scarico",
+        "vendita",
+        "consumo",
+        "sfrido",
+        "deterioramento",
+        "rottura",
+        "omaggio",
+        "consumo_interno",
+        "reso_fornitore",
+        "inventario",
+        "trasferimento",
+      ],
+      mag_ordine_stato: [
+        "bozza",
+        "inviato",
+        "ricevuto_parziale",
+        "ricevuto",
+        "annullato",
+      ],
       manutenzione_tipo: ["ordinaria", "straordinaria"],
       nota_spese_stato: ["presentata", "approvata", "rifiutata", "rimborsata"],
       nota_spese_tipo: [
@@ -8248,6 +12449,19 @@ export const Constants = {
         "partner",
         "potenziale_partner",
         "prospect",
+      ],
+      pagamento_metodo: [
+        "contanti",
+        "pos",
+        "carta",
+        "bonifico",
+        "online",
+        "buono",
+        "gift_card",
+        "coupon",
+        "addebito_conto",
+        "conto_aziendale",
+        "altro",
       ],
       pagamento_stato: ["da_incassare", "incassato", "in_ritardo", "parziale"],
       partner_tipo: ["rivenditore", "tecnologico", "strategico", "commerciale"],
@@ -8290,6 +12504,16 @@ export const Constants = {
         "scartata",
         "mancata_consegna",
       ],
+      segnalazione_gravita: ["bassa", "media", "alta", "critica"],
+      segnalazione_stato: ["aperta", "in_gestione", "chiusa"],
+      segnalazione_tipo: [
+        "incidente",
+        "infortunio",
+        "quasi_incidente",
+        "emergenza",
+        "pericolo",
+        "danno",
+      ],
       sinistro_stato: ["aperto", "in_lavorazione", "liquidato", "chiuso"],
       tassa_stato: ["da_pagare", "pagata", "scaduta"],
       tipo_contratto: [
@@ -8299,6 +12523,13 @@ export const Constants = {
         "collaborazione",
         "stage",
         "partita_iva",
+      ],
+      turno_stato: [
+        "pianificato",
+        "confermato",
+        "svolto",
+        "assente",
+        "annullato",
       ],
       user_role: ["admin", "manager", "operatore"],
       visita_esito: ["positivo", "neutro", "negativo", "da_ricontattare"],
