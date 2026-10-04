@@ -8931,6 +8931,7 @@ export type Database = {
           timbri_soglia: number | null
           updated_at: string
           updated_by: string | null
+          valore_punto: number | null
         }
         Insert: {
           attivo?: boolean
@@ -8949,6 +8950,7 @@ export type Database = {
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
+          valore_punto?: number | null
         }
         Update: {
           attivo?: boolean
@@ -8967,6 +8969,7 @@ export type Database = {
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
+          valore_punto?: number | null
         }
         Relationships: [
           {
@@ -9133,6 +9136,99 @@ export type Database = {
           },
           {
             foreignKeyName: "formazione_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fornitori_listini: {
+        Row: {
+          articolo_id: string
+          codice_fornitore: string | null
+          condizioni: string | null
+          created_at: string
+          created_by: string | null
+          fornitore_id: string
+          giorni_consegna: number | null
+          id: string
+          minimo_ordine: number | null
+          modulo: string
+          prezzo: number
+          unita: string | null
+          updated_at: string
+          updated_by: string | null
+          valido_al: string | null
+          valido_dal: string
+        }
+        Insert: {
+          articolo_id: string
+          codice_fornitore?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          fornitore_id: string
+          giorni_consegna?: number | null
+          id?: string
+          minimo_ordine?: number | null
+          modulo: string
+          prezzo: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string
+        }
+        Update: {
+          articolo_id?: string
+          codice_fornitore?: string | null
+          condizioni?: string | null
+          created_at?: string
+          created_by?: string | null
+          fornitore_id?: string
+          giorni_consegna?: number | null
+          id?: string
+          minimo_ordine?: number | null
+          modulo?: string
+          prezzo?: number
+          unita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -12930,6 +13026,39 @@ export type Database = {
           },
         ]
       }
+      fornitori_miglior_prezzo: {
+        Row: {
+          articolo_id: string | null
+          fornitore_id: string | null
+          giorni_consegna: number | null
+          minimo_ordine: number | null
+          modulo: string | null
+          prezzo: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fornitori_listini_fornitore_id_fkey"
+            columns: ["fornitore_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       fornitori_rating: {
         Row: {
           completezza: number | null
@@ -13540,6 +13669,19 @@ export type Database = {
         Args: { p_locale: string; p_prodotto: string }
         Returns: string
       }
+      fb_tempi_cucina: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: {
+          attesa_servizio_min: number
+          in_ritardo: number
+          piatti: number
+          prodotto: string
+          stazione: string
+          tempo_massimo_min: number
+          tempo_medio_min: number
+          tempo_previsto_min: number
+        }[]
+      }
       fid_registra_acquisto: {
         Args: {
           p_importo: number
@@ -13552,6 +13694,10 @@ export type Database = {
       fid_riscatta_premio: {
         Args: { p_rif_id?: string; p_rif_tipo?: string; p_tessera: string }
         Returns: string
+      }
+      fid_usa_punti_su_conto: {
+        Args: { p_conto: string; p_punti: number; p_tessera: string }
+        Returns: number
       }
       genera_codice: { Args: { p_prefisso: string }; Returns: string }
       genera_codice_gift_card: {
@@ -13571,6 +13717,15 @@ export type Database = {
       invia_campagne_programmate: {
         Args: Record<PropertyKey, never>
         Returns: number
+      }
+      mag_produci_distinta: {
+        Args: {
+          p_codice_lotto?: string
+          p_distinta: string
+          p_quantita: number
+          p_scadenza?: string
+        }
+        Returns: string
       }
       mag_proposta_riordino: {
         Args: { p_modulo: string }
