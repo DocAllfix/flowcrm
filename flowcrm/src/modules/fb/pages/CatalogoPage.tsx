@@ -20,6 +20,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { SkeletonTabella } from '@/components/ui/skeleton'
 import { DistinteBaseSezione } from '@/components/condivisi/DistinteBaseSezione'
 import { useAuth } from '@/hooks/useAuth'
 import { cn } from '@/lib/utils'
@@ -42,7 +43,7 @@ export function CatalogoPage() {
 
 function Catalogo_() {
   const { modulo } = useFb()
-  const { prodotti, categorie } = useCatalogo()
+  const { prodotti, categorie, caricamento } = useCatalogo()
   return (
     <div>
       <PageHeader title="Menu e ricette" description="Prodotti, ricette e costi, listini per fascia e canale, promozioni, allergeni."
@@ -62,7 +63,7 @@ function Catalogo_() {
           <TabsTrigger value="struttura">Categorie e postazioni</TabsTrigger>
           <TabsTrigger value="allergeni">Registro allergeni</TabsTrigger>
         </TabsList>
-        <TabsContent value="prodotti"><ProdottiTab prodotti={prodotti} categorie={categorie} /></TabsContent>
+        <TabsContent value="prodotti"><ProdottiTab prodotti={prodotti} categorie={categorie} caricamento={caricamento} /></TabsContent>
         <TabsContent value="ricette">
           <DistinteBaseSezione modulo="fb" moduli={['fb', modulo]} etichetta={{ singolare: 'ricetta', plurale: 'ricette' }}
             etichettaAllergene={etichettaAllergene}
@@ -78,7 +79,7 @@ function Catalogo_() {
   )
 }
 
-function ProdottiTab({ prodotti, categorie }: { prodotti: Prodotto[]; categorie: Categoria[] }) {
+function ProdottiTab({ prodotti, categorie, caricamento }: { prodotti: Prodotto[]; categorie: Categoria[]; caricamento: boolean }) {
   const { isManager } = useAuth()
   const { data: economia = [] } = useElenco<Economia>('fb_prodotti_economia')
   const disponibilita = useImpostaDisponibilita()
@@ -105,7 +106,7 @@ function ProdottiTab({ prodotti, categorie }: { prodotti: Prodotto[]; categorie:
         {isManager && <BottoneScrittura className="ml-auto" onClick={() => setDialog({ aperto: true })} disabled={!categorie.length}>
           <Plus className="h-4 w-4" /> Nuovo prodotto</BottoneScrittura>}
       </div>
-      {elenco.length === 0 ? (
+      {caricamento ? <SkeletonTabella righe={6} colonne={isManager ? 8 : 5} /> : elenco.length === 0 ? (
         <EmptyState icon={UtensilsCrossed} title="Nessun prodotto" filtrato={prodotti.length > 0}
           description={prodotti.length ? 'Cambia categoria o ricerca.' : 'Crea i piatti e le bevande: prezzo, ricetta e allergeni.'}
           action={isManager && !prodotti.length ? <BottoneScrittura onClick={() => setDialog({ aperto: true })}>Nuovo prodotto</BottoneScrittura> : undefined} />

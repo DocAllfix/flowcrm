@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Skeleton } from '@/components/ui/skeleton'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { useAuth } from '@/hooks/useAuth'
 import { useElenco, useSalva, useDalVivo, fondKeys, messaggioErrore } from '@/lib/queries/fondamenta'
@@ -102,7 +103,9 @@ function Sala_() {
       ) : (
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-3">
-            {tavoliSala.length === 0 && !disposizione ? (
+            {isLoading ? (
+              <Skeleton className="aspect-[10/7] w-full rounded-xl" />
+            ) : tavoliSala.length === 0 && !disposizione ? (
               <EmptyState icon={LayoutGrid} title="Sala senza tavoli" description="Entra in disposizione e aggiungi i tavoli."
                 action={isManager ? <Button onClick={() => setDisposizione(true)}>Disponi i tavoli</Button> : undefined} />
             ) : (
