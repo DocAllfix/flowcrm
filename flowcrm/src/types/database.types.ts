@@ -3022,6 +3022,450 @@ export type Database = {
           },
         ]
       }
+      bar_convenzioni: {
+        Row: {
+          attiva: boolean
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          fatturazione: string
+          giorni_pagamento: number
+          id: string
+          limite_giornaliero_dipendente: number | null
+          limite_mensile_azienda: number | null
+          limite_mensile_dipendente: number | null
+          locale_id: string
+          menu_id: string | null
+          modulo: string
+          note: string | null
+          organizzazione_id: string
+          referente_id: string | null
+          updated_at: string
+          updated_by: string | null
+          valida_al: string | null
+          valida_dal: string
+        }
+        Insert: {
+          attiva?: boolean
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          fatturazione?: string
+          giorni_pagamento?: number
+          id?: string
+          limite_giornaliero_dipendente?: number | null
+          limite_mensile_azienda?: number | null
+          limite_mensile_dipendente?: number | null
+          locale_id: string
+          menu_id?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id: string
+          referente_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valida_al?: string | null
+          valida_dal?: string
+        }
+        Update: {
+          attiva?: boolean
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          fatturazione?: string
+          giorni_pagamento?: number
+          id?: string
+          limite_giornaliero_dipendente?: number | null
+          limite_mensile_azienda?: number | null
+          limite_mensile_dipendente?: number | null
+          locale_id?: string
+          menu_id?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string
+          referente_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valida_al?: string | null
+          valida_dal?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_convenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "fb_menu"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bar_convenzioni_addebiti: {
+        Row: {
+          addebitato_at: string
+          conto_id: string
+          convenzione_id: string
+          created_at: string
+          created_by: string | null
+          dipendente_id: string
+          fattura_id: string | null
+          id: string
+          importo: number
+          modulo: string
+          pagamento_id: string
+          per_aliquota: NonNullable<Json>
+        }
+        Insert: {
+          addebitato_at?: string
+          conto_id: string
+          convenzione_id: string
+          created_at?: string
+          created_by?: string | null
+          dipendente_id: string
+          fattura_id?: string | null
+          id?: string
+          importo: number
+          modulo?: string
+          pagamento_id: string
+          per_aliquota?: NonNullable<Json>
+        }
+        Update: {
+          addebitato_at?: string
+          conto_id?: string
+          convenzione_id?: string
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string
+          fattura_id?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          pagamento_id?: string
+          per_aliquota?: NonNullable<Json>
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_riepilogo"
+            referencedColumns: ["convenzione_id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_dipendenti_saldi"
+            referencedColumns: ["dipendente_id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_addebiti_pagamento_id_fkey"
+            columns: ["pagamento_id"]
+            isOneToOne: true
+            referencedRelation: "conti_pagamenti"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bar_convenzioni_dipendenti: {
+        Row: {
+          attivo: boolean
+          codice_tessera: string | null
+          contatto_id: string | null
+          convenzione_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          limite_mensile: number | null
+          modulo: string
+          nome: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          codice_tessera?: string | null
+          contatto_id?: string | null
+          convenzione_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          limite_mensile?: number | null
+          modulo?: string
+          nome: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          codice_tessera?: string | null
+          contatto_id?: string | null
+          convenzione_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          limite_mensile?: number | null
+          modulo?: string
+          nome?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_riepilogo"
+            referencedColumns: ["convenzione_id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bar_mescite: {
+        Row: {
+          anomalia: boolean
+          aperta_at: string
+          aperta_da: string | null
+          articolo_id: string
+          chiusa_at: string | null
+          chiusa_da: string | null
+          contenitore: string
+          created_at: string
+          created_by: string | null
+          erogato_teorico: number | null
+          id: string
+          locale_id: string
+          lotto_id: string | null
+          modulo: string
+          note: string | null
+          periodo: unknown
+          quantita_iniziale: number
+          quantita_residua: number | null
+          sfrido: number | null
+          sfrido_pct: number | null
+          sfrido_registrato: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          anomalia?: boolean
+          aperta_at?: string
+          aperta_da?: string | null
+          articolo_id: string
+          chiusa_at?: string | null
+          chiusa_da?: string | null
+          contenitore?: string
+          created_at?: string
+          created_by?: string | null
+          erogato_teorico?: number | null
+          id?: string
+          locale_id: string
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          quantita_iniziale: number
+          quantita_residua?: number | null
+          sfrido?: number | null
+          sfrido_pct?: number | null
+          sfrido_registrato?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          anomalia?: boolean
+          aperta_at?: string
+          aperta_da?: string | null
+          articolo_id?: string
+          chiusa_at?: string | null
+          chiusa_da?: string | null
+          contenitore?: string
+          created_at?: string
+          created_by?: string | null
+          erogato_teorico?: number | null
+          id?: string
+          locale_id?: string
+          lotto_id?: string | null
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          quantita_iniziale?: number
+          quantita_residua?: number | null
+          sfrido?: number | null
+          sfrido_pct?: number | null
+          sfrido_registrato?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_mescite_aperta_da_fkey"
+            columns: ["aperta_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_chiusa_da_fkey"
+            columns: ["chiusa_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campagne: {
         Row: {
           canale: Database["public"]["Enums"]["campagna_canale"]
@@ -7038,6 +7482,7 @@ export type Database = {
           contatto_id: string | null
           conto_id: string | null
           conto_richiesto_at: string | null
+          convenzione_dipendente_id: string | null
           coperti: number | null
           created_at: string
           created_by: string | null
@@ -7068,6 +7513,7 @@ export type Database = {
           contatto_id?: string | null
           conto_id?: string | null
           conto_richiesto_at?: string | null
+          convenzione_dipendente_id?: string | null
           coperti?: number | null
           created_at?: string
           created_by?: string | null
@@ -7098,6 +7544,7 @@ export type Database = {
           contatto_id?: string | null
           conto_id?: string | null
           conto_richiesto_at?: string | null
+          convenzione_dipendente_id?: string | null
           coperti?: number | null
           created_at?: string
           created_by?: string | null
@@ -7146,6 +7593,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "conti_saldi"
             referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_convenzione_dipendente_id_fkey"
+            columns: ["convenzione_dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_convenzione_dipendente_id_fkey"
+            columns: ["convenzione_dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_dipendenti_saldi"
+            referencedColumns: ["dipendente_id"]
           },
           {
             foreignKeyName: "fb_comande_created_by_fkey"
@@ -7585,6 +8046,7 @@ export type Database = {
           nome: string
           note: string | null
           pausa_uscite_min: number
+          soglia_sfrido_pct: number
           updated_at: string
           updated_by: string | null
         }
@@ -7603,6 +8065,7 @@ export type Database = {
           nome: string
           note?: string | null
           pausa_uscite_min?: number
+          soglia_sfrido_pct?: number
           updated_at?: string
           updated_by?: string | null
         }
@@ -7621,6 +8084,7 @@ export type Database = {
           nome?: string
           note?: string | null
           pausa_uscite_min?: number
+          soglia_sfrido_pct?: number
           updated_at?: string
           updated_by?: string | null
         }
@@ -8923,11 +9387,13 @@ export type Database = {
           livelli: NonNullable<Json>
           modulo: string
           nome: string
+          premio_prodotto_id: string | null
           premio_timbri: string | null
           punti_per_euro: number
           punti_validita_mesi: number | null
           referral_punti: number
           regolamento: string | null
+          timbri_prodotti: string[]
           timbri_soglia: number | null
           updated_at: string
           updated_by: string | null
@@ -8942,11 +9408,13 @@ export type Database = {
           livelli?: NonNullable<Json>
           modulo: string
           nome: string
+          premio_prodotto_id?: string | null
           premio_timbri?: string | null
           punti_per_euro?: number
           punti_validita_mesi?: number | null
           referral_punti?: number
           regolamento?: string | null
+          timbri_prodotti?: string[]
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
@@ -8961,11 +9429,13 @@ export type Database = {
           livelli?: NonNullable<Json>
           modulo?: string
           nome?: string
+          premio_prodotto_id?: string | null
           premio_timbri?: string | null
           punti_per_euro?: number
           punti_validita_mesi?: number | null
           referral_punti?: number
           regolamento?: string | null
+          timbri_prodotti?: string[]
           timbri_soglia?: number | null
           updated_at?: string
           updated_by?: string | null
@@ -12591,6 +13061,134 @@ export type Database = {
         }
         Relationships: []
       }
+      bar_convenzioni_dipendenti_saldi: {
+        Row: {
+          attivo: boolean | null
+          codice_tessera: string | null
+          convenzione_id: string | null
+          dipendente_id: string | null
+          limite_giornaliero: number | null
+          limite_mensile: number | null
+          modulo: string | null
+          nome: string | null
+          speso_mese: number | null
+          speso_oggi: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "bar_convenzioni_riepilogo"
+            referencedColumns: ["convenzione_id"]
+          },
+        ]
+      }
+      bar_convenzioni_riepilogo: {
+        Row: {
+          attiva: boolean | null
+          azienda: string | null
+          codice: string | null
+          consumazioni_da_fatturare: number | null
+          convenzione_id: string | null
+          da_fatturare: number | null
+          dipendenti_attivi: number | null
+          limite_mensile_azienda: number | null
+          locale_id: string | null
+          modulo: string | null
+          organizzazione_id: string | null
+          residuo_mese: number | null
+          speso_mese: number | null
+          ultima_consumazione: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_convenzioni_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bar_mescite_stato: {
+        Row: {
+          anomalia: boolean | null
+          aperta: boolean | null
+          aperta_at: string | null
+          articolo: string | null
+          articolo_id: string | null
+          chiusa_at: string | null
+          codice_lotto: string | null
+          contenitore: string | null
+          costo_sfrido: number | null
+          costo_unitario: number | null
+          erogato: number | null
+          id: string | null
+          locale_id: string | null
+          lotto_id: string | null
+          modulo: string | null
+          note: string | null
+          quantita_iniziale: number | null
+          quantita_residua: number | null
+          residuo_teorico: number | null
+          sfrido: number | null
+          sfrido_pct: number | null
+          sfrido_registrato: boolean | null
+          unita_misura: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bar_mescite_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_locale_id_fkey"
+            columns: ["locale_id"]
+            isOneToOne: false
+            referencedRelation: "fb_locali"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_mescite_lotto_id_fkey"
+            columns: ["lotto_id"]
+            isOneToOne: false
+            referencedRelation: "mag_lotti_stato"
+            referencedColumns: ["lotto_id"]
+          },
+        ]
+      }
       conti_saldi: {
         Row: {
           codice: string | null
@@ -13395,6 +13993,35 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      bar_addebita_convenzione: {
+        Args: { p_conto: string; p_dipendente: string; p_importo: number }
+        Returns: string
+      }
+      bar_chiudi_mescita: {
+        Args: { p_mescita: string; p_note?: string; p_residuo: number }
+        Returns: Json
+      }
+      bar_erogato: { Args: { p_mescita: string }; Returns: number }
+      bar_fattura_convenzione: {
+        Args: { p_al: string; p_convenzione: string; p_numero: string }
+        Returns: string
+      }
+      bar_mescita_analisi: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: {
+          anomalie: number
+          articolo: string
+          articolo_id: string
+          consumo_reale: number
+          contenitori: number
+          costo_sfrido: number
+          erogato_teorico: number
+          quantita_iniziale: number
+          sfrido: number
+          sfrido_pct: number
+          unita_misura: string
+        }[]
+      }
       calcola_provvigioni: {
         Args: { p_agente: string; p_periodo: string }
         Returns: number
@@ -13514,6 +14141,10 @@ export type Database = {
         Args: { p_giorno?: string; p_locale: string }
         Returns: Json
       }
+      fb_cruscotto_base: {
+        Args: { p_giorno?: string; p_locale: string }
+        Returns: Json
+      }
       fb_fabbisogno_personale: {
         Args: { p_giorno: string; p_locale: string }
         Returns: {
@@ -13556,6 +14187,10 @@ export type Database = {
         Returns: boolean
       }
       fb_kpi: {
+        Args: { p_al: string; p_dal: string; p_locale: string }
+        Returns: Json
+      }
+      fb_kpi_base: {
         Args: { p_al: string; p_dal: string; p_locale: string }
         Returns: Json
       }
@@ -13611,6 +14246,24 @@ export type Database = {
           origine: string
           prezzo: number
           promozione_id: string
+        }[]
+      }
+      fb_proposta_riordino: {
+        Args: { p_giorni?: number; p_locale: string }
+        Returns: {
+          articolo_id: string
+          consumo_medio_giorno: number
+          descrizione: string
+          fabbisogno_eventi: number
+          fabbisogno_ordini: number
+          fabbisogno_periodo: number
+          fattore_stagionale: number
+          fornitore_id: string
+          giacenza: number
+          in_arrivo: number
+          quantita_proposta: number
+          scorta_minima: number
+          unita_misura: string
         }[]
       }
       fb_registro_allergeni: {
@@ -13682,6 +14335,10 @@ export type Database = {
           tempo_previsto_min: number
         }[]
       }
+      fid_omaggio_su_conto: {
+        Args: { p_conto: string; p_tessera: string }
+        Returns: string
+      }
       fid_registra_acquisto: {
         Args: {
           p_importo: number
@@ -13694,6 +14351,10 @@ export type Database = {
       fid_riscatta_premio: {
         Args: { p_rif_id?: string; p_rif_tipo?: string; p_tessera: string }
         Returns: string
+      }
+      fid_timbri_conto: {
+        Args: { p_conto: string; p_riferimenti: string[] }
+        Returns: number
       }
       fid_usa_punti_su_conto: {
         Args: { p_conto: string; p_punti: number; p_tessera: string }
