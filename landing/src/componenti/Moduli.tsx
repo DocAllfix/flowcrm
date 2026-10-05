@@ -1,10 +1,11 @@
-import { BASE_NUCLEO, MODULI, NUCLEO } from "@/contenuti/moduli";
+import { BASE_NUCLEO, FAMIGLIE, MODULI, NUCLEO } from "@/contenuti/moduli";
 import { Rivela } from "./Rivela";
 
 /**
  * Nucleo e moduli come una STRUTTURA, non come un elenco: in alto il nucleo che ogni
- * istanza ha (quattro aree, con le voci vere del menu), sotto i cinque moduli appesi
- * con un filo. Ogni modulo dice cosa AGGIUNGE e a quali aree del nucleo si AGGANCIA.
+ * istanza ha (quattro aree, con le voci vere del menu), sotto i dodici moduli appesi
+ * con un filo e raggruppati per famiglia. Ogni modulo dice cosa AGGIUNGE e a quali
+ * aree del nucleo si AGGANCIA.
  *
  * Ogni scheda è il collegamento alla pagina del modulo (`/moduli/<id>`).
  *
@@ -79,65 +80,75 @@ export function Moduli() {
           </div>
         </Rivela>
 
-        {/* Il filo: dal nucleo ai moduli (solo dove i moduli stanno su una riga). La
-            barra va dal centro della prima colonna al centro dell'ultima: 5 colonne,
-            4 spazi da 1rem. */}
+        {/* Il filo: dal nucleo ai moduli. */}
         <div aria-hidden="true" className="relative hidden h-12 lg:block">
-          <span className="absolute left-1/2 top-0 h-6 w-px bg-filo-notte" />
-          <span className={`absolute left-1/2 top-1 ml-3 ${etichetta}`}>Si agganciano al nucleo</span>
-          <span className="absolute top-6 h-px bg-filo-notte" style={{ left: "calc((100% - 4rem) / 10)", right: "calc((100% - 4rem) / 10)" }} />
+          <span className="absolute left-1/2 top-0 h-12 w-px bg-filo-notte" />
+          <span className={`absolute left-1/2 top-3 ml-3 ${etichetta}`}>Si agganciano al nucleo</span>
         </div>
-        <p className={`mt-10 mb-4 lg:hidden ${etichetta}`}>I moduli · si agganciano al nucleo</p>
+        <p className={`mt-10 lg:hidden ${etichetta}`}>I moduli · si agganciano al nucleo</p>
 
-        {/* I moduli. Ogni scheda è una SUBGRID di tre righe (testa, «Aggiunge», «Usa dal
-            nucleo»): le sezioni partono alla stessa altezza in tutte le colonne. */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {MODULI.map((m, i) => (
-            <Rivela key={m.id} ritardo={i * 50} className="row-span-3 grid grid-rows-subgrid">
-              <a
-                href={`/moduli/${m.id}`}
-                data-modulo={m.id}
-                aria-labelledby={`modulo-${m.id}`}
-                className="modulo-settore relative row-span-3 grid grid-rows-subgrid gap-y-6 rounded-lg border border-filo-notte p-5 lg:before:absolute lg:before:-top-6 lg:before:left-1/2 lg:before:h-6 lg:before:w-px lg:before:bg-filo-notte"
-              >
-                <div>
-                  <h3 id={`modulo-${m.id}`} className="text-[1.25rem] font-bold leading-tight tracking-[-0.02em] [font-stretch:110%]">
-                    {m.nome}
-                  </h3>
-                  <p className="mt-1 text-[0.8125rem] text-pretty text-cotto-notte">{m.perChi}</p>
-                </div>
-
-                <div>
-                  <p className={etichetta}>Aggiunge</p>
-                  <ul className="mt-2 space-y-1.5 text-[0.875rem] leading-snug text-pretty">
-                    {m.aggiunge.map((v) => (
-                      <li
-                        key={v}
-                        className="relative pl-3 before:absolute before:left-0 before:top-[0.5em] before:size-1 before:rounded-full before:bg-cotto-notte"
+        {/* I moduli, famiglia per famiglia (le famiglie del selettore dell'applicazione).
+            Ogni scheda è una SUBGRID di tre righe (testa, «Aggiunge», «Usa dal nucleo»):
+            le sezioni partono alla stessa altezza in tutte le schede di una riga. */}
+        <div className="mt-6 space-y-12 lg:mt-0 lg:rounded-lg lg:border lg:border-filo-notte lg:p-8">
+          {FAMIGLIE.map((famiglia) => {
+            const moduli = MODULI.filter((m) => m.famiglia === famiglia);
+            return (
+              <div key={famiglia} role="group" aria-labelledby={`famiglia-${moduli[0]!.id}`}>
+                <h3 id={`famiglia-${moduli[0]!.id}`} className={`mb-4 ${etichetta}`}>
+                  <span className="text-carta">{famiglia}</span> · {moduli.length === 1 ? "1 modulo" : `${moduli.length} moduli`}
+                </h3>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {moduli.map((m, i) => (
+                    <Rivela key={m.id} ritardo={i * 50} className="row-span-3 grid grid-rows-subgrid">
+                      <a
+                        href={`/moduli/${m.id}`}
+                        data-modulo={m.id}
+                        aria-labelledby={`modulo-${m.id}`}
+                        className="modulo-settore relative row-span-3 grid grid-rows-subgrid gap-y-6 rounded-lg border border-filo-notte p-5"
                       >
-                        {v}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                        <div>
+                          <h4 id={`modulo-${m.id}`} className="text-[1.25rem] font-bold leading-tight tracking-[-0.02em] [font-stretch:110%]">
+                            {m.nome}
+                          </h4>
+                          <p className="mt-1 text-[0.8125rem] text-pretty text-cotto-notte">{m.perChi}</p>
+                        </div>
 
-                <div className="border-t border-filo-notte pt-4">
-                  <p className={etichetta}>Usa dal nucleo</p>
-                  <p className="mt-2 flex flex-wrap gap-1.5">
-                    {m.aggancia.map((g) => (
-                      <span key={g} className="rounded-sm border border-filo-notte px-2 py-0.5 text-[0.75rem] font-semibold">
-                        {NOMI_GRUPPI[g]}
-                      </span>
-                    ))}
-                  </p>
-                  <p className="mt-3 text-[0.8125rem] leading-relaxed text-pretty text-tenue-notte">{m.ponte}</p>
-                  <p className="mt-4 text-[0.8125rem] font-semibold text-cotto-notte">
-                    Scopri il modulo <span aria-hidden="true">→</span>
-                  </p>
+                        <div>
+                          <p className={etichetta}>Aggiunge</p>
+                          <ul className="mt-2 space-y-1.5 text-[0.875rem] leading-snug text-pretty">
+                            {m.aggiunge.map((v) => (
+                              <li
+                                key={v}
+                                className="relative pl-3 before:absolute before:left-0 before:top-[0.5em] before:size-1 before:rounded-full before:bg-cotto-notte"
+                              >
+                                {v}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="border-t border-filo-notte pt-4">
+                          <p className={etichetta}>Usa dal nucleo</p>
+                          <p className="mt-2 flex flex-wrap gap-1.5">
+                            {m.aggancia.map((g) => (
+                              <span key={g} className="rounded-sm border border-filo-notte px-2 py-0.5 text-[0.75rem] font-semibold">
+                                {NOMI_GRUPPI[g]}
+                              </span>
+                            ))}
+                          </p>
+                          <p className="mt-3 text-[0.8125rem] leading-relaxed text-pretty text-tenue-notte">{m.ponte}</p>
+                          <p className="mt-4 text-[0.8125rem] font-semibold text-cotto-notte">
+                            Scopri il modulo <span aria-hidden="true">→</span>
+                          </p>
+                        </div>
+                      </a>
+                    </Rivela>
+                  ))}
                 </div>
-              </a>
-            </Rivela>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         <p className="mt-12">

@@ -12,7 +12,21 @@ import path from "node:path";
 import { parse as leggiYaml } from "yaml";
 import { z } from "zod";
 
-export const SETTORI_BLOG = ["cantiere", "gare", "automezzi", "agenti", "poliambulatori", "nucleo"] as const;
+export const SETTORI_BLOG = [
+  "cantiere",
+  "gare",
+  "automezzi",
+  "agenti",
+  "poliambulatori",
+  "ristorante",
+  "bar",
+  "hotel",
+  "palestra",
+  "fioraio",
+  "garage",
+  "immobiliare",
+  "nucleo",
+] as const;
 export type SettoreBlog = (typeof SETTORI_BLOG)[number];
 
 /** I nomi da mostrare: gli stessi di `contenuti/moduli.ts`, più il nucleo. */
@@ -22,6 +36,13 @@ export const NOMI_SETTORI: Record<SettoreBlog, string> = {
   automezzi: "Automezzi",
   agenti: "Agenti",
   poliambulatori: "Poliambulatori",
+  ristorante: "Ristorante",
+  bar: "Bar",
+  hotel: "Hotel",
+  palestra: "Palestra",
+  fioraio: "Fioraio",
+  garage: "Garage e autorimesse",
+  immobiliare: "Agenzia immobiliare",
   nucleo: "Gestione d'impresa",
 };
 

@@ -5,7 +5,7 @@ import { PAGINE_SETTORE, type IdSettore } from "@/contenuti/settori";
 import { PaginaSettore } from "@/componenti/settori/PaginaSettore";
 import { NOME, URL_CANONICO, jsonLd } from "@/lib/sito";
 
-/** Solo i cinque moduli: un indirizzo inventato è un 404, non una pagina vuota. */
+/** Solo i moduli che esistono: un indirizzo inventato è un 404, non una pagina vuota. */
 export const dynamicParams = false;
 
 export function generateStaticParams() {

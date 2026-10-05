@@ -100,6 +100,135 @@ voci:
     angolo: "Segnali che servono (clienti persi, offerte dimenticate), cosa deve fare il minimo, errori tipici nell'adozione, dove stanno i dati."
     stato: da-scrivere
 
+  # ── Moduli nuovi (05/10/2026): due articoli per settore, alternati. Gli altri due per
+  # arrivare a quattro li aggiunge la pianificazione mensile con i dati di Search Console.
+
+  - slug: food-cost-ristorante-come-calcolarlo
+    settore: ristorante
+    titolo: "Food cost del ristorante: come si calcola piatto per piatto"
+    parolaChiave: "food cost ristorante"
+    correlate: ["calcolo food cost", "food cost percentuale", "costo ricetta ristorante"]
+    intento: pratico
+    angolo: "Formula in percentuale, esempio su una ricetta con un semilavorato (dosi, rese e rapporti, niente euro), soglie tipiche per categoria, come usarlo con il menu engineering."
+    stato: da-scrivere
+
+  - slug: tassa-di-soggiorno-come-si-calcola
+    settore: hotel
+    titolo: "Tassa di soggiorno: come si calcola, esenzioni e versamento"
+    parolaChiave: "calcolo tassa di soggiorno"
+    correlate: ["esenzioni tassa di soggiorno", "imposta di soggiorno gestore struttura"]
+    intento: informativo
+    angolo: "Chi la istituisce (il comune), notti massime, esenzioni e riduzioni per età, responsabilità del gestore, rendiconto; esempio con una famiglia. Fonti: D.Lgs. 23/2011 art. 4 e un regolamento comunale."
+    stato: da-scrivere
+
+  - slug: gestione-abbonamenti-palestra
+    settore: palestra
+    titolo: "Abbonamenti in palestra: rinnovi, sospensioni e morosi"
+    parolaChiave: "gestione abbonamenti palestra"
+    correlate: ["rinnovo abbonamento palestra", "sospensione abbonamento palestra"]
+    intento: pratico
+    angolo: "Formule, sospensioni che spostano la scadenza, rinnovi con preavviso, regole sugli insoluti con una tolleranza, come comunicarle ai soci senza perderli."
+    stato: da-scrivere
+
+  - slug: incarico-esclusiva-agenzia-immobiliare
+    settore: immobiliare
+    titolo: "Incarico in esclusiva all'agenzia immobiliare: durata e clausole"
+    parolaChiave: "incarico in esclusiva agenzia immobiliare"
+    correlate: ["mandato di vendita immobiliare", "durata incarico agenzia"]
+    intento: informativo
+    angolo: "Esclusiva o no, durata, rinnovo tacito, prezzo minimo, recesso, cosa chiedere prima di firmare; le scadenze che l'agenzia deve tenere d'occhio."
+    stato: da-scrivere
+
+  - slug: controllo-mescita-bar
+    settore: bar
+    titolo: "Controllo della mescita al bar: teorico contro reale"
+    parolaChiave: "controllo mescita bar"
+    correlate: ["sfrido bar", "calo bottiglie bar", "inventario bar"]
+    intento: pratico
+    angolo: "Calcolare il versato teorico dalle ricette vendute, misurare il reale, quale scarto è accettabile, le cause tipiche delle differenze e come parlarne con il personale."
+    stato: da-scrivere
+
+  - slug: tariffe-parcheggio-come-impostarle
+    settore: garage
+    titolo: "Tariffe del parcheggio: frazioni, notte e tetto giornaliero"
+    parolaChiave: "tariffe parcheggio a ore"
+    correlate: ["tariffa notturna parcheggio", "abbonamento posto auto"]
+    intento: pratico
+    angolo: "Franchigia, frazione, prezzo notturno, festivi e tetto giornaliero; esempi di calcolo in minuti e frazioni (niente euro); gli errori sulle soste a cavallo della mezzanotte."
+    stato: da-scrivere
+
+  - slug: fiori-freschi-ridurre-sprechi
+    settore: fioraio
+    titolo: "Fiori freschi in negozio: come ridurre gli sprechi"
+    parolaChiave: "ridurre sprechi fiori"
+    correlate: ["conservazione fiori recisi", "gestione magazzino fioreria"]
+    intento: pratico
+    angolo: "Vita commerciale per specie, rotazione per data di arrivo, acquisti tarati sulle ricorrenze, registrare gli scarti per motivo e leggerli a fine mese."
+    stato: da-scrivere
+
+  - slug: registro-haccp-temperature
+    settore: ristorante
+    titolo: "Registro HACCP delle temperature: cosa scrivere e quando"
+    parolaChiave: "registro temperature HACCP"
+    correlate: ["scheda temperature frigoriferi", "controlli HACCP ristorante"]
+    intento: pratico
+    angolo: "Quali apparecchi, ogni quanto, soglie di riferimento, azione correttiva da registrare, cosa guardano i controlli ufficiali. Fonte: Reg. CE 852/2004."
+    stato: da-scrivere
+
+  - slug: alloggiati-web-come-funziona
+    settore: hotel
+    titolo: "Alloggiati Web: comunicare gli ospiti alla Questura"
+    parolaChiave: "alloggiati web"
+    correlate: ["comunicazione ospiti questura", "schedina alloggiati"]
+    intento: pratico
+    angolo: "Obbligo (art. 109 TULPS), tempi, dati richiesti, tipi di alloggiato, errori frequenti nel file; PMIFlow prepara il file, il caricamento resta manuale."
+    stato: da-scrivere
+
+  - slug: certificato-medico-palestra
+    settore: palestra
+    titolo: "Certificato medico in palestra: quando serve e come gestirlo"
+    parolaChiave: "certificato medico palestra"
+    correlate: ["certificato sportivo non agonistico", "scadenza certificato medico"]
+    intento: informativo
+    angolo: "Agonistico e non agonistico, cosa dicono le norme in vigore (fonti ufficiali), cosa conservare, promemoria di scadenza, chi è responsabile."
+    stato: da-scrivere
+
+  - slug: antiriciclaggio-agenti-immobiliari
+    settore: immobiliare
+    titolo: "Antiriciclaggio per agenti immobiliari: l'adeguata verifica"
+    parolaChiave: "antiriciclaggio agenti immobiliari"
+    correlate: ["adeguata verifica cliente", "titolare effettivo"]
+    intento: informativo
+    angolo: "Obblighi dal D.Lgs. 231/2007: identificazione, titolare effettivo, profilo di rischio, verifica rafforzata per le persone politicamente esposte, conservazione per dieci anni."
+    stato: da-scrivere
+
+  - slug: convenzioni-bar-aziende
+    settore: bar
+    titolo: "Convenzioni del bar con le aziende vicine: come impostarle"
+    parolaChiave: "convenzione bar aziende"
+    correlate: ["pranzo convenzionato dipendenti", "buoni pasto bar"]
+    intento: pratico
+    angolo: "Listino riservato, limiti di spesa, come riconoscere il dipendente, fattura periodica all'azienda; differenze dai buoni pasto."
+    stato: da-scrivere
+
+  - slug: custodia-chiavi-autorimessa
+    settore: garage
+    titolo: "Custodia delle chiavi in autorimessa: responsabilità e registro"
+    parolaChiave: "custodia chiavi autorimessa"
+    correlate: ["responsabilità garage danni auto", "contratto di parcheggio custodia"]
+    intento: informativo
+    angolo: "Deposito o semplice parcheggio (codice civile, artt. 1766 e seguenti), registro delle consegne, danni e contestazioni con le foto all'ingresso."
+    stato: da-scrivere
+
+  - slug: ricorrenze-clienti-fioraio
+    settore: fioraio
+    titolo: "Le ricorrenze dei clienti: il calendario che riempie il negozio"
+    parolaChiave: "ricorrenze clienti fioraio"
+    correlate: ["promemoria compleanni clienti", "fidelizzazione fioreria"]
+    intento: pratico
+    angolo: "Quali date raccogliere all'ordine, consenso privacy, quando ricontattare e con quale messaggio, un esempio di calendario dell'anno."
+    stato: da-scrivere
+
   - slug: verifica-durc-subappaltatori
     settore: cantiere
     titolo: "DURC dei subappaltatori: verifica, scadenze e responsabilità"

@@ -24,7 +24,10 @@ export function PaginaSettore({ id }: { id: IdSettore }) {
   const m = MODULI.find((x) => x.id === id)!;
   const p = PAGINE_SETTORE[id];
   const a = ANTEPRIME_SETTORE[id];
-  const altri = MODULI.filter((x) => x.id !== id);
+  // Prima i moduli della stessa famiglia (chi ha un ristorante guarda il bar), poi gli altri.
+  const altri = MODULI.filter((x) => x.id !== id).sort((x, y) => Number(y.famiglia === m.famiglia) - Number(x.famiglia === m.famiglia));
+  // Un modulo ancora spento nella demo pubblica non ha il pulsante: porterebbe al cruscotto generico.
+  const demo = DEMO_ATTIVA && p.inDemo !== false;
   const dalBlog = articoliDelSettore(id).slice(0, 3);
   const linkDemo = `${URL_DEMO}?vai=${encodeURIComponent(p.percorsoDemo)}`;
 
@@ -57,7 +60,7 @@ export function PaginaSettore({ id }: { id: IdSettore }) {
                 </h1>
                 <p className="prosa mt-6 max-w-[34rem] text-[1.0625rem] text-tenue md:text-[1.125rem]">{p.sottotitolo}</p>
                 <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
-                  {DEMO_ATTIVA ? (
+                  {demo ? (
                     <a href={linkDemo} className="bottone bottone-due-righe bottone-inchiostro">
                       Apri {p.nomeBreve} nella demo{" "}
                       <span className="sotto">Un clic, senza registrazione</span>

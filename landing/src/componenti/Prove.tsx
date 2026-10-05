@@ -12,10 +12,21 @@ import { Diagramma } from "./Diagramma";
 /**
  * Per chi è, detto in una riga subito sotto l'hero: la stessa funzione della striscia
  * degli standard ISO nel riferimento FormazioneEvalis. Chi arriva capisce in un colpo
- * d'occhio se la pagina parla di lui. Sono i settori dei cinque moduli, non un elenco
+ * d'occhio se la pagina parla di lui. Sono i settori dei dodici moduli, non un elenco
  * scelto per fare numero.
  */
-const SETTORI = ["Imprese edili", "Impiantisti", "Studi e poliambulatori", "Reti di agenti", "Chi partecipa a gare", "Aziende di servizi"];
+const SETTORI = [
+  "Imprese edili e impiantisti",
+  "Chi partecipa a gare",
+  "Ristoranti e bar",
+  "Hotel e B&B",
+  "Palestre",
+  "Fioristi",
+  "Autorimesse",
+  "Agenzie immobiliari",
+  "Reti di agenti",
+  "Studi e poliambulatori",
+];
 
 export function Prove() {
   return (
