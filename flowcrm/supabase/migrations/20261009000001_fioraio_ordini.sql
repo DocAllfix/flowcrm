@@ -447,14 +447,27 @@ $$;
 CREATE TRIGGER fior_ordini_importi AFTER UPDATE OF importo_consegna, sconto ON fior_ordini FOR EACH ROW EXECUTE FUNCTION fior_ordine_importi();
 
 -- Scarico degli articoli venduti così come sono (vasi, piante, accessori): una volta sola.
+-- Al banco escono subito anche le composizioni già pronte in negozio (niente commessa).
 CREATE OR REPLACE FUNCTION fior_scarica_articoli(p_ordine UUID)
 RETURNS VOID
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public AS $$
-DECLARE r RECORD;
+DECLARE
+  o fior_ordini%ROWTYPE;
+  r RECORD;
+  m RECORD;
 BEGIN
-  IF (SELECT materiali_scaricati FROM fior_ordini WHERE id = p_ordine FOR UPDATE) THEN RETURN; END IF;
-  FOR r IN SELECT * FROM fior_ordini_righe WHERE ordine_id = p_ordine AND tipo = 'articolo' LOOP
-    PERFORM mag_scarica(r.articolo_id, r.quantita, 'vendita', 'fior_ordini_righe', r.id, 'Ordine fiorista');
+  SELECT * INTO o FROM fior_ordini WHERE id = p_ordine FOR UPDATE;
+  IF o.materiali_scaricati THEN RETURN; END IF;
+  FOR r IN SELECT * FROM fior_ordini_righe WHERE ordine_id = p_ordine LOOP
+    IF r.tipo = 'articolo' THEN
+      PERFORM mag_scarica(r.articolo_id, r.quantita, 'vendita', 'fior_ordini_righe', r.id, 'Ordine fiorista');
+    ELSIF o.modalita = 'banco' AND r.tipo = 'composizione' THEN
+      PERFORM scarica_distinta(r.distinta_id, r.quantita, 'vendita', 'fior_ordini_righe', r.id);
+    ELSIF o.modalita = 'banco' THEN
+      FOR m IN SELECT * FROM fior_righe_materiali WHERE riga_id = r.id LOOP
+        PERFORM mag_scarica(m.articolo_id, m.quantita * r.quantita, 'vendita', 'fior_ordini_righe', r.id, 'Vendita al banco');
+      END LOOP;
+    END IF;
   END LOOP;
   UPDATE fior_ordini SET materiali_scaricati = true WHERE id = p_ordine;
 END;
@@ -473,6 +486,7 @@ BEGIN
   IF NEW.stato IN ('confermato', 'in_preparazione', 'pronto', 'in_consegna', 'consegnato', 'chiuso') THEN
     v_entro := (NEW.data_richiesta + COALESCE(NEW.ora_richiesta, TIME '09:00')) AT TIME ZONE 'Europe/Rome';
     FOR r IN SELECT x.* FROM fior_ordini_righe x WHERE x.ordine_id = NEW.id AND x.tipo IN ('composizione', 'su_misura')
+              AND NEW.modalita <> 'banco'
               AND NOT EXISTS (SELECT 1 FROM fior_produzione p WHERE p.riga_id = x.id) LOOP
       INSERT INTO fior_produzione (codice, ordine_id, riga_id, descrizione, quantita, operatore_id, minuti_previsti, pronta_entro, created_by)
       VALUES (genera_codice('PRD'), NEW.id, r.id, r.descrizione, r.quantita, NEW.addetto_preparazione,
