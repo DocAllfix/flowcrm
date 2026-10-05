@@ -104,6 +104,8 @@ export function AllegatiSection({ entita, entitaId, categorie }: Props) {
         {!isLoading && allegati.length === 0 && (
           <EmptyState
             icon={FileText}
+            compatto
+            filtrato
             title="Nessun allegato"
             description="Trascina un file qui sopra per iniziare."
           />

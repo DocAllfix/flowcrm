@@ -15303,6 +15303,2564 @@ export type Database = {
           },
         ]
       }
+      pal_abbonamenti: {
+        Row: {
+          accessi_totali: number | null
+          accessi_usati: number
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          disdetto_at: string | null
+          fine: string | null
+          formula_id: string
+          id: string
+          inizio: string
+          metodo_pagamento: string
+          modulo: string
+          note: string | null
+          prezzo: number | null
+          quota_azienda: number
+          rinnovo_automatico: boolean | null
+          rinnovo_di: string | null
+          socio_id: string
+          stato: Database["public"]["Enums"]["pal_abbonamento_stato"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          accessi_totali?: number | null
+          accessi_usati?: number
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          disdetto_at?: string | null
+          fine?: string | null
+          formula_id: string
+          id?: string
+          inizio?: string
+          metodo_pagamento?: string
+          modulo?: string
+          note?: string | null
+          prezzo?: number | null
+          quota_azienda?: number
+          rinnovo_automatico?: boolean | null
+          rinnovo_di?: string | null
+          socio_id: string
+          stato?: Database["public"]["Enums"]["pal_abbonamento_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          accessi_totali?: number | null
+          accessi_usati?: number
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          disdetto_at?: string | null
+          fine?: string | null
+          formula_id?: string
+          id?: string
+          inizio?: string
+          metodo_pagamento?: string
+          modulo?: string
+          note?: string | null
+          prezzo?: number | null
+          quota_azienda?: number
+          rinnovo_automatico?: boolean | null
+          rinnovo_di?: string | null
+          socio_id?: string
+          stato?: Database["public"]["Enums"]["pal_abbonamento_stato"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_abbonamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_abbonamenti_formula_id_fkey"
+            columns: ["formula_id"]
+            isOneToOne: false
+            referencedRelation: "pal_formule"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_abbonamenti_rinnovo_di_fkey"
+            columns: ["rinnovo_di"]
+            isOneToOne: false
+            referencedRelation: "pal_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_abbonamenti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_abbonamenti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_abbonamenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_accessi: {
+        Row: {
+          abbonamento_id: string | null
+          carnet_id: string | null
+          consentito: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          ingresso_at: string
+          modulo: string
+          motivo: string | null
+          sede_id: string
+          servizio: string
+          socio_id: string
+          tipo: string
+          uscita_at: string | null
+        }
+        Insert: {
+          abbonamento_id?: string | null
+          carnet_id?: string | null
+          consentito: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ingresso_at?: string
+          modulo?: string
+          motivo?: string | null
+          sede_id: string
+          servizio?: string
+          socio_id: string
+          tipo?: string
+          uscita_at?: string | null
+        }
+        Update: {
+          abbonamento_id?: string | null
+          carnet_id?: string | null
+          consentito?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          ingresso_at?: string
+          modulo?: string
+          motivo?: string | null
+          sede_id?: string
+          servizio?: string
+          socio_id?: string
+          tipo?: string
+          uscita_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_accessi_abbonamento_id_fkey"
+            columns: ["abbonamento_id"]
+            isOneToOne: false
+            referencedRelation: "pal_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet_stato"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+        ]
+      }
+      pal_appuntamenti: {
+        Row: {
+          carnet_id: string | null
+          cliente_nome: string | null
+          created_at: string
+          created_by: string | null
+          fine: string | null
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          operatore_id: string | null
+          periodo: unknown
+          prezzo: number | null
+          rata_id: string | null
+          risorsa: string | null
+          sede_id: string
+          servizio_id: string
+          socio_id: string | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          carnet_id?: string | null
+          cliente_nome?: string | null
+          created_at?: string
+          created_by?: string | null
+          fine?: string | null
+          id?: string
+          inizio: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          periodo?: unknown
+          prezzo?: number | null
+          rata_id?: string | null
+          risorsa?: string | null
+          sede_id: string
+          servizio_id: string
+          socio_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          carnet_id?: string | null
+          cliente_nome?: string | null
+          created_at?: string
+          created_by?: string | null
+          fine?: string | null
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          periodo?: unknown
+          prezzo?: number | null
+          rata_id?: string | null
+          risorsa?: string | null
+          sede_id?: string
+          servizio_id?: string
+          socio_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_appuntamenti_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet_stato"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_rata_id_fkey"
+            columns: ["rata_id"]
+            isOneToOne: false
+            referencedRelation: "pal_rate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_servizio_id_fkey"
+            columns: ["servizio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_servizi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_appuntamenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_armadietti: {
+        Row: {
+          assegnato_dal: string | null
+          assegnato_fino: string | null
+          cauzione: number
+          cauzione_versata: boolean
+          chiave: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          note: string | null
+          numero: string
+          sede_id: string
+          socio_id: string | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+          zona: string | null
+        }
+        Insert: {
+          assegnato_dal?: string | null
+          assegnato_fino?: string | null
+          cauzione?: number
+          cauzione_versata?: boolean
+          chiave?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          numero: string
+          sede_id: string
+          socio_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Update: {
+          assegnato_dal?: string | null
+          assegnato_fino?: string | null
+          cauzione?: number
+          cauzione_versata?: boolean
+          chiave?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          numero?: string
+          sede_id?: string
+          socio_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_armadietti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_armadietti_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_armadietti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_armadietti_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_armadietti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_carnet: {
+        Row: {
+          acquistato_il: string
+          acquisto: string
+          annullato: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          pacchetto_id: string | null
+          prezzo: number
+          scadenza: string | null
+          servizio: string
+          socio_id: string
+          totale: number
+          updated_at: string
+          updated_by: string | null
+          usati: number
+        }
+        Insert: {
+          acquistato_il?: string
+          acquisto?: string
+          annullato?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          pacchetto_id?: string | null
+          prezzo?: number
+          scadenza?: string | null
+          servizio: string
+          socio_id: string
+          totale: number
+          updated_at?: string
+          updated_by?: string | null
+          usati?: number
+        }
+        Update: {
+          acquistato_il?: string
+          acquisto?: string
+          annullato?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          pacchetto_id?: string | null
+          prezzo?: number
+          scadenza?: string | null
+          servizio?: string
+          socio_id?: string
+          totale?: number
+          updated_at?: string
+          updated_by?: string | null
+          usati?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_carnet_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_pacchetto_id_fkey"
+            columns: ["pacchetto_id"]
+            isOneToOne: false
+            referencedRelation: "pal_pacchetti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_certificazioni: {
+        Row: {
+          certificazione: string
+          conseguita_il: string | null
+          created_at: string
+          created_by: string | null
+          dipendente_id: string
+          ente: string | null
+          id: string
+          modulo: string
+          note: string | null
+          scadenza: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          certificazione: string
+          conseguita_il?: string | null
+          created_at?: string
+          created_by?: string | null
+          dipendente_id: string
+          ente?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          scadenza?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          certificazione?: string
+          conseguita_il?: string | null
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string
+          ente?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          scadenza?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_certificazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_certificazioni_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_certificazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_convenzioni: {
+        Row: {
+          al: string | null
+          attiva: boolean
+          budget_annuo: number | null
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          dal: string | null
+          formule_ammesse: string[]
+          id: string
+          modulo: string
+          nome: string | null
+          note: string | null
+          organizzazione_id: string
+          quota_azienda_pct: number
+          sconto_pct: number
+          servizi: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          attiva?: boolean
+          budget_annuo?: number | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          formule_ammesse?: string[]
+          id?: string
+          modulo?: string
+          nome?: string | null
+          note?: string | null
+          organizzazione_id: string
+          quota_azienda_pct?: number
+          sconto_pct?: number
+          servizi?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          attiva?: boolean
+          budget_annuo?: number | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          formule_ammesse?: string[]
+          id?: string
+          modulo?: string
+          nome?: string | null
+          note?: string | null
+          organizzazione_id?: string
+          quota_azienda_pct?: number
+          sconto_pct?: number
+          servizi?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_convenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_convenzioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_convenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_corsi: {
+        Row: {
+          al: string | null
+          attivo: boolean
+          capienza: number
+          colore: string | null
+          created_at: string
+          created_by: string | null
+          dal: string | null
+          descrizione: string | null
+          disciplina: string
+          durata_min: number
+          giorni: number[]
+          id: string
+          istruttore_id: string | null
+          livello: string
+          modulo: string
+          nome: string
+          ora: string | null
+          sala_id: string | null
+          sede_id: string
+          servizio: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          attivo?: boolean
+          capienza?: number
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          descrizione?: string | null
+          disciplina?: string
+          durata_min?: number
+          giorni?: number[]
+          id?: string
+          istruttore_id?: string | null
+          livello?: string
+          modulo?: string
+          nome: string
+          ora?: string | null
+          sala_id?: string | null
+          sede_id: string
+          servizio?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          attivo?: boolean
+          capienza?: number
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          descrizione?: string | null
+          disciplina?: string
+          durata_min?: number
+          giorni?: number[]
+          id?: string
+          istruttore_id?: string | null
+          livello?: string
+          modulo?: string
+          nome?: string
+          ora?: string | null
+          sala_id?: string | null
+          sede_id?: string
+          servizio?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_corsi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_corsi_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_corsi_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_corsi_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_corsi_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_corsi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_formule: {
+        Row: {
+          accessi: number | null
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          durata_mesi: number
+          fasce: Json | null
+          id: string
+          limitazioni: string | null
+          modulo: string
+          nome: string
+          ordine: number
+          prezzo: number
+          quota_iscrizione: number
+          rate: number
+          rinnovo_automatico: boolean
+          servizi: string[]
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          accessi?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          durata_mesi?: number
+          fasce?: Json | null
+          id?: string
+          limitazioni?: string | null
+          modulo?: string
+          nome: string
+          ordine?: number
+          prezzo: number
+          quota_iscrizione?: number
+          rate?: number
+          rinnovo_automatico?: boolean
+          servizi?: string[]
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          accessi?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          durata_mesi?: number
+          fasce?: Json | null
+          id?: string
+          limitazioni?: string | null
+          modulo?: string
+          nome?: string
+          ordine?: number
+          prezzo?: number
+          quota_iscrizione?: number
+          rate?: number
+          rinnovo_automatico?: boolean
+          servizi?: string[]
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_formule_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_formule_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_lezioni: {
+        Row: {
+          capienza: number
+          corso_id: string
+          created_at: string
+          created_by: string | null
+          fine: string
+          id: string
+          inizio: string
+          istruttore_id: string | null
+          modulo: string
+          note: string | null
+          periodo: unknown
+          sala_id: string | null
+          sede_id: string
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          capienza: number
+          corso_id: string
+          created_at?: string
+          created_by?: string | null
+          fine: string
+          id?: string
+          inizio: string
+          istruttore_id?: string | null
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          sala_id?: string | null
+          sede_id: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          capienza?: number
+          corso_id?: string
+          created_at?: string
+          created_by?: string | null
+          fine?: string
+          id?: string
+          inizio?: string
+          istruttore_id?: string | null
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          sala_id?: string | null
+          sede_id?: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_lezioni_corso_id_fkey"
+            columns: ["corso_id"]
+            isOneToOne: false
+            referencedRelation: "pal_corsi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_misurazioni: {
+        Row: {
+          altezza: number | null
+          created_at: string
+          created_by: string | null
+          data: string
+          id: string
+          massa_grassa_pct: number | null
+          misure: NonNullable<Json>
+          modulo: string
+          note: string | null
+          performance: NonNullable<Json>
+          peso: number | null
+          socio_id: string
+          trainer_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          altezza?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          massa_grassa_pct?: number | null
+          misure?: NonNullable<Json>
+          modulo?: string
+          note?: string | null
+          performance?: NonNullable<Json>
+          peso?: number | null
+          socio_id: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          altezza?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          massa_grassa_pct?: number | null
+          misure?: NonNullable<Json>
+          modulo?: string
+          note?: string | null
+          performance?: NonNullable<Json>
+          peso?: number | null
+          socio_id?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_misurazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_misurazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_misurazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_misurazioni_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_misurazioni_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_misurazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_pacchetti: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          prezzo: number
+          updated_at: string
+          updated_by: string | null
+          validita_giorni: number
+          voci: NonNullable<Json>
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          prezzo: number
+          updated_at?: string
+          updated_by?: string | null
+          validita_giorni?: number
+          voci: NonNullable<Json>
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          prezzo?: number
+          updated_at?: string
+          updated_by?: string | null
+          validita_giorni?: number
+          voci?: NonNullable<Json>
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_pacchetti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_pacchetti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_prenotazioni: {
+        Row: {
+          abbonamento_id: string | null
+          annullata_at: string | null
+          canale: string
+          carnet_id: string | null
+          check_in_at: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          lezione_id: string
+          modulo: string
+          penale_rata_id: string | null
+          posizione: number | null
+          posto: string | null
+          socio_id: string
+          stato: string
+          tardiva: boolean
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abbonamento_id?: string | null
+          annullata_at?: string | null
+          canale?: string
+          carnet_id?: string | null
+          check_in_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lezione_id: string
+          modulo?: string
+          penale_rata_id?: string | null
+          posizione?: number | null
+          posto?: string | null
+          socio_id: string
+          stato?: string
+          tardiva?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abbonamento_id?: string | null
+          annullata_at?: string | null
+          canale?: string
+          carnet_id?: string | null
+          check_in_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lezione_id?: string
+          modulo?: string
+          penale_rata_id?: string | null
+          posizione?: number | null
+          posto?: string | null
+          socio_id?: string
+          stato?: string
+          tardiva?: boolean
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_prenotazioni_abbonamento_id_fkey"
+            columns: ["abbonamento_id"]
+            isOneToOne: false
+            referencedRelation: "pal_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet_stato"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_lezione_id_fkey"
+            columns: ["lezione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_lezioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_lezione_id_fkey"
+            columns: ["lezione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_lezioni_posti"
+            referencedColumns: ["lezione_id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_penale_rata_id_fkey"
+            columns: ["penale_rata_id"]
+            isOneToOne: false
+            referencedRelation: "pal_rate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_prove: {
+        Row: {
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          esito: string | null
+          id: string
+          modulo: string
+          quando: string
+          sede_id: string
+          servizio: string | null
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          esito?: string | null
+          id?: string
+          modulo?: string
+          quando: string
+          sede_id: string
+          servizio?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          esito?: string | null
+          id?: string
+          modulo?: string
+          quando?: string
+          sede_id?: string
+          servizio?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_prove_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prove_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prove_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prove_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_prove_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_rate: {
+        Row: {
+          abbonamento_id: string | null
+          carnet_acquisto: string | null
+          conto_id: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          fattura_id: string | null
+          id: string
+          importo: number
+          metodo: string
+          modulo: string
+          numero: number
+          organizzazione_id: string | null
+          pagata_il: string | null
+          pagatore: string
+          prossimo_tentativo: string | null
+          scadenza: string
+          socio_id: string
+          stato: string
+          tentativi: number
+          ultimo_esito: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abbonamento_id?: string | null
+          carnet_acquisto?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          fattura_id?: string | null
+          id?: string
+          importo: number
+          metodo?: string
+          modulo?: string
+          numero?: number
+          organizzazione_id?: string | null
+          pagata_il?: string | null
+          pagatore?: string
+          prossimo_tentativo?: string | null
+          scadenza: string
+          socio_id: string
+          stato?: string
+          tentativi?: number
+          ultimo_esito?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abbonamento_id?: string | null
+          carnet_acquisto?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          fattura_id?: string | null
+          id?: string
+          importo?: number
+          metodo?: string
+          modulo?: string
+          numero?: number
+          organizzazione_id?: string | null
+          pagata_il?: string | null
+          pagatore?: string
+          prossimo_tentativo?: string | null
+          scadenza?: string
+          socio_id?: string
+          stato?: string
+          tentativi?: number
+          ultimo_esito?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_rate_abbonamento_id_fkey"
+            columns: ["abbonamento_id"]
+            isOneToOne: false
+            referencedRelation: "pal_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "pal_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "pal_rate_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_rate_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_rate_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_sale: {
+        Row: {
+          attiva: boolean
+          attrezzature: string[]
+          capienza: number | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          note: string | null
+          sede_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          attrezzature?: string[]
+          capienza?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          note?: string | null
+          sede_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          attrezzature?: string[]
+          capienza?: number | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          sede_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_sale_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sale_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sale_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_schede: {
+        Row: {
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          frequenza: string | null
+          id: string
+          modulo: string
+          note_trainer: string | null
+          obiettivi: string | null
+          precedente_id: string | null
+          programma: string | null
+          socio_id: string
+          titolo: string
+          trainer_id: string | null
+          updated_at: string
+          updated_by: string | null
+          valida_dal: string
+          valida_fino: string | null
+          versione: number
+        }
+        Insert: {
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          frequenza?: string | null
+          id?: string
+          modulo?: string
+          note_trainer?: string | null
+          obiettivi?: string | null
+          precedente_id?: string | null
+          programma?: string | null
+          socio_id: string
+          titolo?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valida_dal?: string
+          valida_fino?: string | null
+          versione?: number
+        }
+        Update: {
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          frequenza?: string | null
+          id?: string
+          modulo?: string
+          note_trainer?: string | null
+          obiettivi?: string | null
+          precedente_id?: string | null
+          programma?: string | null
+          socio_id?: string
+          titolo?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valida_dal?: string
+          valida_fino?: string | null
+          versione?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_schede_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_schede_precedente_id_fkey"
+            columns: ["precedente_id"]
+            isOneToOne: false
+            referencedRelation: "pal_schede"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_schede_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_schede_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_schede_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_schede_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_schede_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_schede_esercizi: {
+        Row: {
+          carico: string | null
+          created_at: string
+          created_by: string | null
+          esercizio: string
+          giorno: string
+          id: string
+          modulo: string
+          note: string | null
+          ordine: number
+          recupero: string | null
+          ripetizioni: string | null
+          scheda_id: string
+          serie: number | null
+        }
+        Insert: {
+          carico?: string | null
+          created_at?: string
+          created_by?: string | null
+          esercizio: string
+          giorno?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          ordine?: number
+          recupero?: string | null
+          ripetizioni?: string | null
+          scheda_id: string
+          serie?: number | null
+        }
+        Update: {
+          carico?: string | null
+          created_at?: string
+          created_by?: string | null
+          esercizio?: string
+          giorno?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          ordine?: number
+          recupero?: string | null
+          ripetizioni?: string | null
+          scheda_id?: string
+          serie?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_schede_esercizi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_schede_esercizi_scheda_id_fkey"
+            columns: ["scheda_id"]
+            isOneToOne: false
+            referencedRelation: "pal_schede"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_sedi: {
+        Row: {
+          attiva: boolean
+          avvisi_email: boolean
+          cancellazione_ore: number
+          comune: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          indirizzo: string | null
+          modulo: string
+          nome: string
+          noshow_blocco_giorni: number
+          noshow_consuma_credito: boolean
+          noshow_finestra_giorni: number
+          noshow_penale: number
+          noshow_soglia: number
+          note: string | null
+          orari: NonNullable<Json>
+          referral_giorni: number
+          retry_giorni: number
+          richiede_certificato: boolean
+          telefono: string | null
+          tentativi_max: number
+          tolleranza_insoluto_giorni: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          avvisi_email?: boolean
+          cancellazione_ore?: number
+          comune?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          nome: string
+          noshow_blocco_giorni?: number
+          noshow_consuma_credito?: boolean
+          noshow_finestra_giorni?: number
+          noshow_penale?: number
+          noshow_soglia?: number
+          note?: string | null
+          orari?: NonNullable<Json>
+          referral_giorni?: number
+          retry_giorni?: number
+          richiede_certificato?: boolean
+          telefono?: string | null
+          tentativi_max?: number
+          tolleranza_insoluto_giorni?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          avvisi_email?: boolean
+          cancellazione_ore?: number
+          comune?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          nome?: string
+          noshow_blocco_giorni?: number
+          noshow_consuma_credito?: boolean
+          noshow_finestra_giorni?: number
+          noshow_penale?: number
+          noshow_soglia?: number
+          note?: string | null
+          orari?: NonNullable<Json>
+          referral_giorni?: number
+          retry_giorni?: number
+          richiede_certificato?: boolean
+          telefono?: string | null
+          tentativi_max?: number
+          tolleranza_insoluto_giorni?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_sedi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sedi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_servizi: {
+        Row: {
+          attivo: boolean
+          carnet: string | null
+          created_at: string
+          created_by: string | null
+          durata_min: number
+          id: string
+          modulo: string
+          nome: string
+          prezzo: number
+          richiede_operatore: boolean
+          risorse: string[]
+          sede_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          carnet?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number
+          id?: string
+          modulo?: string
+          nome: string
+          prezzo?: number
+          richiede_operatore?: boolean
+          risorse?: string[]
+          sede_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          carnet?: string | null
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number
+          id?: string
+          modulo?: string
+          nome?: string
+          prezzo?: number
+          richiede_operatore?: boolean
+          risorse?: string[]
+          sede_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_servizi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_servizi_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_servizi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_sessioni_pt: {
+        Row: {
+          carnet_id: string | null
+          compenso: number
+          created_at: string
+          created_by: string | null
+          fine: string
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          periodo: unknown
+          prezzo: number
+          rata_id: string | null
+          sala_id: string | null
+          sede_id: string
+          socio_id: string
+          stato: string
+          tipo: string
+          trainer_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          carnet_id?: string | null
+          compenso?: number
+          created_at?: string
+          created_by?: string | null
+          fine: string
+          id?: string
+          inizio: string
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          prezzo?: number
+          rata_id?: string | null
+          sala_id?: string | null
+          sede_id: string
+          socio_id: string
+          stato?: string
+          tipo?: string
+          trainer_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          carnet_id?: string | null
+          compenso?: number
+          created_at?: string
+          created_by?: string | null
+          fine?: string
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          prezzo?: number
+          rata_id?: string | null
+          sala_id?: string | null
+          sede_id?: string
+          socio_id?: string
+          stato?: string
+          tipo?: string
+          trainer_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_sessioni_pt_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_carnet_id_fkey"
+            columns: ["carnet_id"]
+            isOneToOne: false
+            referencedRelation: "pal_carnet_stato"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_rata_id_fkey"
+            columns: ["rata_id"]
+            isOneToOne: false
+            referencedRelation: "pal_rate"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_sessioni_pt_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_soci: {
+        Row: {
+          badge: string | null
+          bloccato: boolean
+          blocco_fino: string | null
+          blocco_motivo: string | null
+          certificato_scadenza: string | null
+          codice: string | null
+          condizioni_accettate: boolean
+          condizioni_at: string | null
+          consenso_salute: boolean
+          consenso_salute_at: string | null
+          contatto_id: string
+          convenzione_id: string | null
+          created_at: string
+          created_by: string | null
+          data_iscrizione: string
+          data_nascita: string | null
+          emergenza_nome: string | null
+          emergenza_telefono: string | null
+          ex_socio_at: string | null
+          id: string
+          modulo: string
+          note: string | null
+          preferenze: string | null
+          prenotazioni_bloccate_fino: string | null
+          presentato_da: string | null
+          qr_token: string
+          ricerca: unknown
+          sede_id: string
+          trainer_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          badge?: string | null
+          bloccato?: boolean
+          blocco_fino?: string | null
+          blocco_motivo?: string | null
+          certificato_scadenza?: string | null
+          codice?: string | null
+          condizioni_accettate?: boolean
+          condizioni_at?: string | null
+          consenso_salute?: boolean
+          consenso_salute_at?: string | null
+          contatto_id: string
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_iscrizione?: string
+          data_nascita?: string | null
+          emergenza_nome?: string | null
+          emergenza_telefono?: string | null
+          ex_socio_at?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          prenotazioni_bloccate_fino?: string | null
+          presentato_da?: string | null
+          qr_token?: string
+          ricerca?: unknown
+          sede_id: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          badge?: string | null
+          bloccato?: boolean
+          blocco_fino?: string | null
+          blocco_motivo?: string | null
+          certificato_scadenza?: string | null
+          codice?: string | null
+          condizioni_accettate?: boolean
+          condizioni_at?: string | null
+          consenso_salute?: boolean
+          consenso_salute_at?: string | null
+          contatto_id?: string
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_iscrizione?: string
+          data_nascita?: string | null
+          emergenza_nome?: string | null
+          emergenza_telefono?: string | null
+          ex_socio_at?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          prenotazioni_bloccate_fino?: string | null
+          presentato_da?: string | null
+          qr_token?: string
+          ricerca?: unknown
+          sede_id?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_soci_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_convenzioni_utilizzo"
+            referencedColumns: ["convenzione_id"]
+          },
+          {
+            foreignKeyName: "pal_soci_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_presentato_da_fkey"
+            columns: ["presentato_da"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_presentato_da_fkey"
+            columns: ["presentato_da"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_soci_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_trainer_fk"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_trainer_fk"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_soci_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_sospensioni: {
+        Row: {
+          abbonamento_id: string
+          al: string | null
+          autorizzata_at: string | null
+          autorizzata_da: string | null
+          created_at: string
+          created_by: string | null
+          dal: string | null
+          giorni: number | null
+          id: string
+          modulo: string
+          motivo: string
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abbonamento_id: string
+          al?: string | null
+          autorizzata_at?: string | null
+          autorizzata_da?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          giorni?: number | null
+          id?: string
+          modulo?: string
+          motivo: string
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abbonamento_id?: string
+          al?: string | null
+          autorizzata_at?: string | null
+          autorizzata_da?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          giorni?: number | null
+          id?: string
+          modulo?: string
+          motivo?: string
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_sospensioni_abbonamento_id_fkey"
+            columns: ["abbonamento_id"]
+            isOneToOne: false
+            referencedRelation: "pal_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sospensioni_autorizzata_da_fkey"
+            columns: ["autorizzata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sospensioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_sospensioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_trainer: {
+        Row: {
+          attivo: boolean
+          colore: string | null
+          compenso_lezione: number
+          compenso_sessione: number
+          competenze: string[]
+          created_at: string
+          created_by: string | null
+          dipendente_id: string | null
+          disponibilita: NonNullable<Json>
+          id: string
+          modulo: string
+          nome: string
+          note: string | null
+          personal_trainer: boolean
+          specializzazioni: string[]
+          tariffa_sessione: number
+          updated_at: string
+          updated_by: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          colore?: string | null
+          compenso_lezione?: number
+          compenso_sessione?: number
+          competenze?: string[]
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string | null
+          disponibilita?: NonNullable<Json>
+          id?: string
+          modulo?: string
+          nome: string
+          note?: string | null
+          personal_trainer?: boolean
+          specializzazioni?: string[]
+          tariffa_sessione?: number
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          colore?: string | null
+          compenso_lezione?: number
+          compenso_sessione?: number
+          competenze?: string[]
+          created_at?: string
+          created_by?: string | null
+          dipendente_id?: string | null
+          disponibilita?: NonNullable<Json>
+          id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          personal_trainer?: boolean
+          specializzazioni?: string[]
+          tariffa_sessione?: number
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_trainer_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_trainer_dipendente_id_fkey"
+            columns: ["dipendente_id"]
+            isOneToOne: false
+            referencedRelation: "dipendenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_trainer_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_trainer_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_valutazioni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data: string
+          follow_up: string | null
+          id: string
+          livello: string | null
+          modulo: string
+          obiettivi: string | null
+          parametri: NonNullable<Json>
+          programma_proposto: string | null
+          socio_id: string
+          test: NonNullable<Json>
+          tipo: string
+          trainer_id: string | null
+          updated_at: string
+          updated_by: string | null
+          valutazione: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          follow_up?: string | null
+          id?: string
+          livello?: string | null
+          modulo?: string
+          obiettivi?: string | null
+          parametri?: NonNullable<Json>
+          programma_proposto?: string | null
+          socio_id: string
+          test?: NonNullable<Json>
+          tipo?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valutazione?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          follow_up?: string | null
+          id?: string
+          livello?: string | null
+          modulo?: string
+          obiettivi?: string | null
+          parametri?: NonNullable<Json>
+          programma_proposto?: string | null
+          socio_id?: string
+          test?: NonNullable<Json>
+          tipo?: string
+          trainer_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valutazione?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_valutazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_valutazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_valutazioni_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_valutazioni_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_valutazioni_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_valutazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pazienti: {
         Row: {
           attivo: boolean
@@ -17583,6 +20141,325 @@ export type Database = {
           },
         ]
       }
+      pal_carnet_stato: {
+        Row: {
+          acquistato_il: string | null
+          acquisto: string | null
+          annullato: boolean | null
+          created_at: string | null
+          created_by: string | null
+          id: string | null
+          modulo: string | null
+          nome: string | null
+          pacchetto_id: string | null
+          prezzo: number | null
+          residui: number | null
+          scadenza: string | null
+          servizio: string | null
+          socio_id: string | null
+          stato: string | null
+          totale: number | null
+          updated_at: string | null
+          updated_by: string | null
+          usati: number | null
+        }
+        Insert: {
+          acquistato_il?: string | null
+          acquisto?: string | null
+          annullato?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          pacchetto_id?: string | null
+          prezzo?: number | null
+          residui?: never
+          scadenza?: string | null
+          servizio?: string | null
+          socio_id?: string | null
+          stato?: never
+          totale?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+          usati?: number | null
+        }
+        Update: {
+          acquistato_il?: string | null
+          acquisto?: string | null
+          annullato?: boolean | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string | null
+          modulo?: string | null
+          nome?: string | null
+          pacchetto_id?: string | null
+          prezzo?: number | null
+          residui?: never
+          scadenza?: string | null
+          servizio?: string | null
+          socio_id?: string | null
+          stato?: never
+          totale?: number | null
+          updated_at?: string | null
+          updated_by?: string | null
+          usati?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_carnet_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_pacchetto_id_fkey"
+            columns: ["pacchetto_id"]
+            isOneToOne: false
+            referencedRelation: "pal_pacchetti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+          {
+            foreignKeyName: "pal_carnet_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_convenzioni_utilizzo: {
+        Row: {
+          accessi_mese: number | null
+          attiva: boolean | null
+          attivi: number | null
+          azienda: string | null
+          budget_annuo: number | null
+          codice: string | null
+          convenzione_id: string | null
+          da_fatturare: number | null
+          iscritti: number | null
+          organizzazione_id: string | null
+          quota_anno: number | null
+          quota_azienda_pct: number | null
+          sconto_pct: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_convenzioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_lezioni_posti: {
+        Row: {
+          cancellazioni: number | null
+          capienza: number | null
+          colore: string | null
+          corso: string | null
+          corso_id: string | null
+          disciplina: string | null
+          fine: string | null
+          in_attesa: number | null
+          inizio: string | null
+          iscritti: number | null
+          istruttore_id: string | null
+          lezione_id: string | null
+          livello: string | null
+          posti_liberi: number | null
+          presenti: number | null
+          sala_id: string | null
+          sede_id: string | null
+          stato: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_lezioni_corso_id_fkey"
+            columns: ["corso_id"]
+            isOneToOne: false
+            referencedRelation: "pal_corsi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_istruttore_id_fkey"
+            columns: ["istruttore_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_lezioni_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pal_presenti: {
+        Row: {
+          ingresso_at: string | null
+          nome: string | null
+          sede_id: string | null
+          servizio: string | null
+          socio_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_accessi_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_accessi_socio_id_fkey"
+            columns: ["socio_id"]
+            isOneToOne: false
+            referencedRelation: "pal_soci_stato"
+            referencedColumns: ["socio_id"]
+          },
+        ]
+      }
+      pal_soci_stato: {
+        Row: {
+          badge: string | null
+          bloccato: boolean | null
+          certificato_scadenza: string | null
+          codice: string | null
+          condizioni_accettate: boolean | null
+          consenso_salute: boolean | null
+          contatto_id: string | null
+          convenzione_id: string | null
+          da_pagare: number | null
+          data_iscrizione: string | null
+          email: string | null
+          nome: string | null
+          scadenza: string | null
+          sede_id: string | null
+          socio_id: string | null
+          stato: string | null
+          telefono: string | null
+          trainer_id: string | null
+          ultimo_accesso: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pal_soci_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "pal_convenzioni_utilizzo"
+            referencedColumns: ["convenzione_id"]
+          },
+          {
+            foreignKeyName: "pal_soci_sede_id_fkey"
+            columns: ["sede_id"]
+            isOneToOne: false
+            referencedRelation: "pal_sedi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_trainer_fk"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_trainer_fk"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "pal_trainer_riepilogo"
+            referencedColumns: ["trainer_id"]
+          },
+        ]
+      }
+      pal_trainer_riepilogo: {
+        Row: {
+          clienti: number | null
+          compensi_mese: number | null
+          nome: string | null
+          personal_trainer: boolean | null
+          sessioni_prenotate: number | null
+          sessioni_residue_clienti: number | null
+          sessioni_svolte: number | null
+          trainer_id: string | null
+        }
+        Insert: {
+          clienti?: never
+          compensi_mese?: never
+          nome?: string | null
+          personal_trainer?: boolean | null
+          sessioni_prenotate?: never
+          sessioni_residue_clienti?: never
+          sessioni_svolte?: never
+          trainer_id?: string | null
+        }
+        Update: {
+          clienti?: never
+          compensi_mese?: never
+          nome?: string | null
+          personal_trainer?: boolean | null
+          sessioni_prenotate?: never
+          sessioni_residue_clienti?: never
+          sessioni_svolte?: never
+          trainer_id?: string | null
+        }
+        Relationships: []
+      }
       turni_ore_settimana: {
         Row: {
           assenze: number | null
@@ -18542,6 +21419,101 @@ export type Database = {
       modulo_attivo: { Args: { p_slug: string }; Returns: boolean }
       modulo_licenziato: { Args: { p_slug: string }; Returns: boolean }
       notifica_deal_a_rischio: { Args: { giorni?: number }; Returns: number }
+      pal_avvisa: {
+        Args: { p_oggetto: string; p_socio: string; p_testo: string }
+        Returns: boolean
+      }
+      pal_chiudi_lezione: { Args: { p_lezione: string }; Returns: number }
+      pal_chiudi_lezioni_finite: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      pal_cruscotto: { Args: { p_sede: string }; Returns: Json }
+      pal_esito_addebito: {
+        Args: { p_esito?: string; p_rata: string; p_riuscito: boolean }
+        Returns: string
+      }
+      pal_euro: { Args: { p: number }; Returns: string }
+      pal_fattura_convenzione: {
+        Args: { p_al: string; p_convenzione: string; p_numero: string }
+        Returns: string
+      }
+      pal_genera_lezioni: {
+        Args: { p_al: string; p_dal: string; p_sede: string }
+        Returns: number
+      }
+      pal_in_sospensione: {
+        Args: { p_abbonamento: string; p_giorno: string }
+        Returns: boolean
+      }
+      pal_incassa_rata: {
+        Args: {
+          p_metodo?: Database["public"]["Enums"]["pagamento_metodo"]
+          p_rata: string
+          p_riferimento?: string
+        }
+        Returns: string
+      }
+      pal_kpi: {
+        Args: { p_al: string; p_dal: string; p_sede: string }
+        Returns: Json
+      }
+      pal_notifica_direzione: {
+        Args: {
+          p_messaggio: string
+          p_tipo?: Database["public"]["Enums"]["notifica_tipo"]
+          p_titolo: string
+          p_url: string
+        }
+        Returns: undefined
+      }
+      pal_nuova_versione_scheda: { Args: { p_scheda: string }; Returns: string }
+      pal_oggi: { Args: Record<PropertyKey, never>; Returns: string }
+      pal_pipeline: { Args: Record<PropertyKey, never>; Returns: string }
+      pal_promemoria_corsi: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      pal_puo_salute: { Args: { p_socio: string }; Returns: boolean }
+      pal_rate_scadute: { Args: Record<PropertyKey, never>; Returns: number }
+      pal_registra_ingresso: {
+        Args: {
+          p_codice: string
+          p_sede?: string
+          p_servizio?: string
+          p_tipo?: string
+        }
+        Returns: Json
+      }
+      pal_registra_uscita: { Args: { p_socio: string }; Returns: boolean }
+      pal_rendi_carnet: { Args: { p_carnet: string }; Returns: undefined }
+      pal_rinnova: {
+        Args: { p_abbonamento: string; p_formula?: string }
+        Returns: string
+      }
+      pal_rinnovi_notturni: { Args: Record<PropertyKey, never>; Returns: Json }
+      pal_scala_carnet: {
+        Args: { p_quando?: string; p_servizio: string; p_socio: string }
+        Returns: string
+      }
+      pal_scorri_attesa: { Args: { p_lezione: string }; Returns: string }
+      pal_socio_riepilogo: { Args: { p_socio: string }; Returns: Json }
+      pal_trainer_corrente: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      pal_vendi_pacchetto: {
+        Args: { p_metodo?: string; p_pacchetto: string; p_socio: string }
+        Returns: string
+      }
+      pal_vendi_prodotti: {
+        Args: { p_righe: Json; p_socio?: string }
+        Returns: string
+      }
+      pal_verifica_accesso: {
+        Args: { p_istante?: string; p_servizio?: string; p_socio: string }
+        Returns: Json
+      }
       preleva_mail_da_inviare: {
         Args: { quante?: number }
         Returns: {
@@ -18651,6 +21623,34 @@ export type Database = {
         Returns: string[]
       }
       seg_hotel_partiti: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_assidui: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_corsi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_ex: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_in_scadenza: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_nuovi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_pal_pt: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
@@ -18967,6 +21967,7 @@ export type Database = {
         | "conto_aziendale"
         | "altro"
       pagamento_stato: "da_incassare" | "incassato" | "in_ritardo" | "parziale"
+      pal_abbonamento_stato: "attivo" | "sospeso" | "scaduto" | "disdetto"
       partner_tipo: "rivenditore" | "tecnologico" | "strategico" | "commerciale"
       patente_tipo:
         | "patente_b"
@@ -20050,6 +23051,7 @@ export const Constants = {
         "altro",
       ],
       pagamento_stato: ["da_incassare", "incassato", "in_ritardo", "parziale"],
+      pal_abbonamento_stato: ["attivo", "sospeso", "scaduto", "disdetto"],
       partner_tipo: ["rivenditore", "tecnologico", "strategico", "commerciale"],
       patente_tipo: [
         "patente_b",
