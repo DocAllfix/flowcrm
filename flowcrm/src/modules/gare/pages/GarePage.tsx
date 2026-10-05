@@ -108,7 +108,8 @@ export function GarePage() {
         </div>
       ) : filtrate.length === 0 ? (
         <EmptyState icon={Gavel} title="Nessuna gara"
-          description="Registra la prima procedura per iniziare a monitorare termini ed esiti." />
+          description="Registra la prima procedura per iniziare a monitorare termini ed esiti."
+          action={<BottoneScrittura variant="outline" onClick={() => setCreateOpen(true)}>Nuova gara</BottoneScrittura>} />
       ) : (
         <Card className="overflow-hidden">
           <Table>

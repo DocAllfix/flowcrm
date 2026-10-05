@@ -47,7 +47,7 @@ export function ConSede({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Crea la palestra con le sue sale: formule di abbonamento e carnet tipici li prepariamo noi, poi si cambiano quando vuoi.'
             : 'La direzione deve prima configurare la sede.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura la palestra</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura la palestra</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraSedeDialog open={apri} onOpenChange={setApri} />
       </>
     )

@@ -80,7 +80,7 @@ function Convenzioni_() {
         <EmptyState icon={Building2} title="Nessuna convenzione"
           description={isManager ? 'Collega un\'azienda vicina: i suoi dipendenti consumano sul conto aziendale e a fine periodo parte una sola fattura.'
             : 'Le convenzioni con le aziende le crea la direzione.'}
-          action={isManager ? <Button variant="outline" onClick={() => setDialog({ aperto: true })}><Plus className="h-4 w-4" /> Crea la prima</Button> : undefined} />
+          action={isManager ? <Button variant="outline" onClick={() => setDialog({ aperto: true })}><Plus className="h-4 w-4" /> Crea la prima</Button> : undefined} filtrato={!isManager} />
       ) : (
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
           <Card className="h-fit overflow-hidden">

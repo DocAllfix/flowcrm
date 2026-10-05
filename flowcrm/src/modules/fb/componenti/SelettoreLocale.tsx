@@ -43,7 +43,7 @@ export function ConLocale({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Crea il locale con la sua sala, i tavoli e le postazioni di preparazione: bastano due minuti.'
             : 'La direzione deve prima configurare il locale.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura il locale</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura il locale</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraLocaleDialog open={apri} onOpenChange={setApri} />
       </>
     )

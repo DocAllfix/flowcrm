@@ -74,7 +74,8 @@ aperto accanto, correggendolo mentre si procede.
 - `<slug>` del cliente: solo `^[a-z0-9]([a-z0-9-]*[a-z0-9])?$`, finisce nel
   dominio ed è irreversibile senza rifare l'istanza;
 - moduli acquistati fra `gare`, `cantiere`, `automezzi`, `agenti`,
-  `poliambulatori`;
+  `poliambulatori`, `ristorante`, `bar`, `hotel`, `palestra`, `fioraio`,
+  `garage`, `immobiliare`;
 - ragione sociale, logo, colori.
 
 ---

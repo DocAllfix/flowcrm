@@ -114,7 +114,7 @@ function Clienti() {
           </Card>
         )}
       </div>
-      {sceltoId ? <SchedaCliente contattoId={sceltoId} /> : <EmptyState icon={HeartHandshake} title="Scegli un cliente" description="Visite, spesa, piatti e vini preferiti, allergie, ricorrenze, recensioni." />}
+      {sceltoId ? <SchedaCliente contattoId={sceltoId} /> : <EmptyState filtrato icon={HeartHandshake} title="Scegli un cliente" description="Visite, spesa, piatti e vini preferiti, allergie, ricorrenze, recensioni." />}
     </div>
   )
 }

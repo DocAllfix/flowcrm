@@ -7,7 +7,13 @@ I moduli acquistati si attivano in due punti (entrambi obbligatori):
    restituisce righe, qualunque cosa faccia il frontend);
 2. **UI** — env `VITE_MODULES` (CSV di slug) nel build del frontend.
 
-Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`.
+Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`,
+`ristorante`, `bar`, `hotel`, `palestra`, `fioraio`, `garage`, `immobiliare`.
+
+Ristorante e Bar condividono il motore di sala e cucina: basta una delle due
+licenze per accenderlo, le funzioni proprie di ciascuno restano dietro la sua.
+Gli slug ammessi sono controllati anche dall'avvio del container e da
+`deploy/preflight.sh` (un test tiene gli elenchi allineati al registro).
 
 ## Installazione (Supabase self-hosted su server del cliente)
 
@@ -23,7 +29,10 @@ Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`.
 5. **Admin del cliente**: creare l'utente admin (dashboard o SQL con
    `crypt(pw, gen_salt('bf'))` e i campi token a stringa vuota).
 6. **Cron**: verificare in `cron.job` gli schedule `processa-scadenze-*` e
-   `deal-a-rischio-*` (pg_cron è nel compose).
+   `deal-a-rischio-*` (pg_cron è nel compose). I moduli nuovi aggiungono i loro
+   giri notturni, presenti in tutte le istanze e innocui senza licenza:
+   `invia-campagne-programmate`, `fb-marcia-uscite`, `hotel-*`, `palestra-*`,
+   `fioraio-*`, `garage-giro-notturno`, `immobiliare-giro-notturno`.
 7. **Secrets Edge Functions** (se si vuole il copilot): AZURE_OPENAI_*,
    AZURE_EMBED_*, COPILOT_ALLOWED_ORIGINS=`https://<cliente>.flowcrm.com`,
    CRON_SECRET. Poi `supabase functions deploy copilot crea-utente cron-scadenze`.
@@ -46,6 +55,10 @@ Slug disponibili: `gare`, `cantiere`, `automezzi`, `agenti`, `poliambulatori`.
 - [ ] moduli NON acquistati: 0 righe via API anche per l'admin
 - [ ] (se agenti) utente-agente: vede solo i propri dati
 - [ ] (se poliambulatori) segreteria: 0 righe su fascicolo/visite/referti
+- [ ] (se palestra) misure, progressi e valutazioni: solo trainer assegnato e admin, con il consenso
+- [ ] (se immobiliare) un agente vede le sue provvigioni e non quelle degli altri; antiriciclaggio riservato
+- [ ] (moduli verticali nuovi) operatore: 0 dati economici negli indicatori (`*_kpi` → `economici: null`)
+- [ ] configurazione guidata del modulo alla prima apertura (ristorante/bar: sala; hotel: struttura; palestra: sede; fioraio: negozio; garage: autorimessa; immobiliare: agenzia)
 - [ ] scadenzari attivi (riga in cron.job) e notifiche in-app funzionanti
 - [ ] backup notturno verificato con un restore di prova
 - [ ] headers di sicurezza attivi sul dominio (CSP con l'URL dell'istanza)

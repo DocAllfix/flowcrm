@@ -34,7 +34,7 @@ export function ConAgenzia({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Bastano il nome dell\'agenzia e le provvigioni abituali: le regole si cambiano poi quando vuoi.'
             : 'La direzione deve prima configurare l\'agenzia.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura l'agenzia</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura l'agenzia</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraDialog open={apri} onOpenChange={setApri} />
       </>
     )

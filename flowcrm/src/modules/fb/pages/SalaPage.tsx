@@ -102,7 +102,7 @@ function Sala_() {
             <div className="flex gap-2">
               <Input value={nuovaSala} onChange={(e) => setNuovaSala(e.target.value)} placeholder="Nome della sala" aria-label="Nome della sala" />
               <BottoneScrittura onClick={aggiungiSala}>Aggiungi</BottoneScrittura>
-            </div>) : undefined} />
+            </div>) : undefined} filtrato={!isManager} />
       ) : (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-3">
@@ -110,7 +110,7 @@ function Sala_() {
               <Skeleton className="aspect-[10/7] w-full rounded-xl" />
             ) : tavoliSala.length === 0 && !disposizione ? (
               <EmptyState icon={LayoutGrid} title="Sala senza tavoli" description="Entra in disposizione e aggiungi i tavoli."
-                action={isManager ? <Button onClick={() => setDisposizione(true)}>Disponi i tavoli</Button> : undefined} />
+                action={isManager ? <Button onClick={() => setDisposizione(true)}>Disponi i tavoli</Button> : undefined} filtrato={!isManager} />
             ) : (
               <MappaSala sala={sala} tavoli={tavoliSala} selezionato={selezionato} onSeleziona={setSelezionato}
                 disposizione={disposizione}

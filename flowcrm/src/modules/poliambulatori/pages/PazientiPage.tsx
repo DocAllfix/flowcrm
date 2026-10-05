@@ -80,7 +80,8 @@ export function PazientiPage() {
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={HeartPulse} title="Nessun paziente"
-          description="Registra il primo paziente per gestire agenda e fascicoli." />
+          description="Registra il primo paziente per gestire agenda e fascicoli."
+          action={<BottoneScrittura variant="outline" onClick={() => setCreateOpen(true)}>Nuovo paziente</BottoneScrittura>} />
       ) : (
         <Card className="overflow-hidden">
           <Table>

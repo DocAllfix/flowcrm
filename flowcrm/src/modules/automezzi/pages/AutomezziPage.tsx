@@ -118,7 +118,8 @@ export function AutomezziPage() {
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={Truck} title="Nessun mezzo"
-          description="Registra il primo veicolo per monitorare scadenze e costi." />
+          description="Registra il primo veicolo per monitorare scadenze e costi."
+          action={<BottoneScrittura variant="outline" onClick={() => setCreateOpen(true)}>Nuovo mezzo</BottoneScrittura>} />
       ) : (
         <Card className="overflow-hidden">
           <Table>

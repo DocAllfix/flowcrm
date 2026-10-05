@@ -87,7 +87,8 @@ export function AgentiPage() {
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={BriefcaseBusiness} title="Nessun agente"
-          description="Registra la rete vendita per gestire mandati, visite e provvigioni." />
+          description="Registra la rete vendita per gestire mandati, visite e provvigioni."
+          action={<BottoneScrittura variant="outline" onClick={() => setCreateOpen(true)}>Nuovo agente</BottoneScrittura>} />
       ) : (
         <Card className="overflow-hidden">
           <Table>

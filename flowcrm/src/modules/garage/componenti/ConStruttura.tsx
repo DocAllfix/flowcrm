@@ -48,7 +48,7 @@ export function ConStruttura({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Bastano il nome, i piani e quanti posti ci sono: la mappa e una tariffa oraria di partenza le prepariamo noi, poi si cambiano quando vuoi.'
             : 'La direzione deve prima configurare l\'autorimessa.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura l'autorimessa</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura l'autorimessa</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraStrutturaDialog open={apri} onOpenChange={setApri} />
       </>
     )

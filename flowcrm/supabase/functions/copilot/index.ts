@@ -48,6 +48,15 @@ const TABELLE_LEGGIBILI: Record<string, string> = {
   pazienti: 'codice, nome, cognome, telefono',
   appuntamenti: 'inizio, durata_minuti, stato, urgente',
   scadenze_moduli: 'modulo, tipo, descrizione, data_scadenza, stato',
+  fb_prenotazioni: 'nome, persone, inizio, stato, telefono',
+  hotel_prenotazioni: 'codice, ospite_nome, arrivo, partenza, notti, stato, prezzo_totale',
+  pal_soci: 'codice, data_iscrizione, certificato_scadenza, bloccato',
+  fior_ordini: 'codice, committente_nome, destinatario_nome, data_richiesta, stato, totale',
+  gar_contratti: 'codice, tipo, inizio, fine, canone, stato',
+  gar_soste: 'ticket, targa, ingresso_at, uscita_at, importo, stato',
+  imm_immobili: 'codice, titolo, tipologia, indirizzo, comune, prezzo, canone, stato',
+  imm_richieste: 'codice, tipo, comuni, budget_max, stato',
+  imm_lead: 'codice, nome, tipo, origine, stato, ricevuto_at',
 }
 const TABELLE_TESTO: Record<string, string> = {
   organizzazioni: 'ragione_sociale', contatti: 'nome', deals: 'nome',
@@ -56,6 +65,8 @@ const TABELLE_TESTO: Record<string, string> = {
   dipendenti: 'nome',
   gare: 'titolo', cantieri: 'denominazione', automezzi: 'targa', agenti: 'nome',
   pazienti: 'cognome', appuntamenti: 'stato', scadenze_moduli: 'descrizione',
+  fb_prenotazioni: 'nome', hotel_prenotazioni: 'ospite_nome', pal_soci: 'codice', fior_ordini: 'committente_nome',
+  gar_contratti: 'codice', gar_soste: 'targa', imm_immobili: 'indirizzo', imm_richieste: 'codice', imm_lead: 'nome',
 }
 const TABELLE = Object.keys(TABELLE_LEGGIBILI)
 
@@ -72,7 +83,18 @@ const PAGINE: Record<string, string> = {
   agenti: '/agenti', 'direzione commerciale': '/direzione-commerciale',
   pazienti: '/pazienti', 'agenda poliambulatorio': '/agenda-poliambulatorio',
   'dashboard sanitaria': '/poliambulatorio-dashboard',
+  ristorante: '/ristorante', bar: '/bar',
+  hotel: '/hotel', 'prenotazioni hotel': '/hotel/prenotazioni',
+  palestra: '/palestra', soci: '/palestra/soci', corsi: '/palestra/corsi',
+  fioraio: '/fioraio', 'ordini fiori': '/fioraio/ordini', laboratorio: '/fioraio/produzione',
+  garage: '/garage', 'ingressi e uscite': '/garage/movimenti', 'mappa dei posti': '/garage/posti',
+  'agenzia immobiliare': '/immobiliare', immobili: '/immobiliare/immobili', 'richieste immobiliari': '/immobiliare/richieste',
+  'trattative immobiliari': '/immobiliare/trattative',
 }
+
+// Il cruscotto di ogni modulo verticale: la funzione del database che lo
+// calcola, con la RLS dell'utente (niente dati economici a chi non li vede).
+const CRUSCOTTI = ['ristorante', 'bar', 'hotel', 'palestra', 'fioraio', 'garage', 'immobiliare'] as const
 
 // ── Tool disponibili al modello (set chiuso, parametrico) ─────────
 const TOOLS = [
@@ -156,6 +178,18 @@ const TOOLS = [
         type: 'object',
         properties: { domanda: { type: 'string', description: "La domanda su come usare FlowCRM" } },
         required: ['domanda'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'cruscotto_modulo',
+      description: "Come va oggi un modulo verticale (ristorante, bar, hotel, palestra, fioraio, garage, agenzia immobiliare): coperti, arrivi, ingressi, ordini, posti liberi, trattative. Usa per 'com'è la situazione in sala, in hotel, in negozio'.",
+      parameters: {
+        type: 'object',
+        properties: { modulo: { type: 'string', enum: [...CRUSCOTTI] } },
+        required: ['modulo'],
       },
     },
   },
@@ -300,6 +334,42 @@ async function eseguiTool(name: string, args: Record<string, unknown>, sb: Retur
       if (error || !data?.length) return { sezioni: [], nota: 'Nessuna sezione pertinente nel manuale.' }
       return { sezioni: data }
     }
+    case 'cruscotto_modulo': {
+      const m = String(args.modulo)
+      if (!(CRUSCOTTI as readonly string[]).includes(m)) return { errore: 'modulo non valido' }
+      // Locale, hotel, sede, autorimessa: il primo, come lo apre l'app.
+      const primo = async (tabella: string, filtro?: [string, string]) => {
+        let q = sb.from(tabella).select('id').limit(1)
+        if (filtro) q = q.eq(filtro[0], filtro[1])
+        const { data } = await q
+        return (data?.[0] as { id: string } | undefined)?.id ?? null
+      }
+      const nessuno = { nota: 'Niente da mostrare: il modulo non è configurato o non è attivo.' }
+      let esito: { data: unknown; error: unknown }
+      if (m === 'ristorante' || m === 'bar') {
+        const locale = await primo('fb_locali', ['modulo', m])
+        if (!locale) return nessuno
+        esito = await sb.rpc('fb_cruscotto', { p_locale: locale })
+      } else if (m === 'hotel') {
+        const struttura = await primo('hotel_strutture')
+        if (!struttura) return nessuno
+        esito = await sb.rpc('hotel_front_office', { p_struttura: struttura })
+      } else if (m === 'palestra') {
+        const sede = await primo('pal_sedi')
+        if (!sede) return nessuno
+        esito = await sb.rpc('pal_cruscotto', { p_sede: sede })
+      } else if (m === 'garage') {
+        const struttura = await primo('gar_strutture')
+        if (!struttura) return nessuno
+        esito = await sb.rpc('gar_cruscotto', { p_struttura: struttura })
+      } else {
+        esito = await sb.rpc(m === 'fioraio' ? 'fior_cruscotto' : 'imm_cruscotto')
+      }
+      if (esito.error) return { errore: 'non accessibile (modulo non attivo o permessi)' }
+      // Gli elenchi lunghi si tagliano: al modello bastano i numeri.
+      const testo = JSON.stringify(esito.data)
+      return testo.length > 6000 ? { cruscotto_parziale: testo.slice(0, 6000) } : { cruscotto: esito.data }
+    }
     default:
       return { errore: 'tool sconosciuto' }
   }
@@ -311,6 +381,7 @@ Rispondi in italiano, conciso e concreto. Usa SEMPRE i tool: non inventare numer
 
 REGOLE:
 - Dati (quanti/quali/mostrami): usa conta_entita, elenca_record, panoramica, deal_per_stage, mie_attivita, prossime_riunioni, scadenze_prossime.
+- Situazione di oggi in un modulo verticale (sala, hotel, palestra, negozio di fiori, autorimessa, agenzia immobiliare): usa cruscotto_modulo.
 - "Come vanno le cose", riepilogo, fatturato, quanto devo incassare/scaduto/tasse: usa panoramica.
 - Come si fa qualcosa: usa cerca_guida; se il manuale non copre il tema, rispondi con la MAPPA FUNZIONI qui sotto.
 - L'utente vuole aprire/andare a una pagina: usa vai_a_pagina.
@@ -335,6 +406,12 @@ MAPPA FUNZIONI (dove si fa cosa):
 - MODULO Parco automezzi (se attivo): elenco mezzi con codice AUTO-AAAA-NNNN e targa; scheda con assegnazioni, manutenzioni, rifornimenti (i km inseriti aggiornano il contachilometri), utilizzi, sinistri e multe, pneumatici e attrezzature, costi analitici e costo/km (solo admin/manager), documenti e scadenze (revisione, bollo, assicurazione…) con notifiche automatiche a 30/7/1/0 giorni; Dashboard parco con mezzi per stato e patenti/CQC/ADR dei conducenti (scadenze monitorate, solo admin/manager).
 - MODULO Agenti di commercio (se attivo): rete vendita con codice AGEN-AAAA-NNNN; fascicolo con mandati (rinnovo monitorato), portafoglio clienti, rapporti visita, offerte→ordini con righe, PROVVIGIONI (piano base + regole per cliente/zona/prodotto, "Calcola dal venduto" sui consegnati/fatturati, liquidazione — solo admin/manager), obiettivi con avanzamento, note spese con approvazione; Direzione commerciale = confronto agenti (manager). Portale Agente: l'utente collegato a un agente vede SOLO i propri dati (lo impone il database).
 - MODULO Poliambulatori (se attivo): pazienti con codice PAZ-AAAA-NNNN e Fascicolo Digitale; agenda per professionista con anti doppia-prenotazione (click per prenotare, drag per spostare); i CONTENUTI CLINICI (fascicolo sanitario, cartelle, referti) sono visibili SOLO ai medici collegati e all'admin — la segreteria gestisce anagrafica, consensi, agenda e comunicazioni; referti con validazione (contenuto congelato dopo la firma) e invio; Struttura = professionisti, prestazioni con tariffe, sale, convenzioni, apparecchiature (tarature nello scadenzario), magazzino con lotti in scadenza, registro qualità; Dashboard sanitaria con agenda di oggi, no-show e referti da validare.
+- MODULO Ristorante e MODULO Bar (se attivi): sala con i tavoli dal vivo, prenotazioni e lista d'attesa, comande per portata, cucina e banco per stazione, menu e ricettario con food cost, cantina, magazzino con lotti, HACCP, eventi, cassa con conti divisi; il Bar ha mescita, convenzioni aziendali, happy hour e timbri fedeltà.
+- MODULO Hotel (se attivo): front office con arrivi e partenze, room rack, prenotazioni con tariffe e trattamenti, check-in e check-out con conto camera, pulizie, gruppi, tassa di soggiorno, file per Alloggiati Web, revenue (occupazione, ADR, RevPAR).
+- MODULO Palestra (se attivo): reception con il controllo degli ingressi e il motivo di ogni no, soci con abbonamenti e carnet, corsi con prenotazioni e lista d'attesa, personal training, schede e progressi (riservati al trainer), incassi, prospect.
+- MODULO Fioraio (se attivo): ordini con committente e destinatario diversi e il biglietto, composizioni su misura, laboratorio che scarica i fiori, giro delle consegne, banco, abbonamenti floreali, ricorrenze dei clienti, sprechi.
+- MODULO Garage (se attivo): mappa dei posti dal vivo, ingressi e uscite con ticket e tariffa calcolata, abbonamenti con rate, prenotazioni, chiavi in custodia, danni, ricarica elettrica, servizi e deposito gomme, convenzioni aziendali.
+- MODULO Agenzia immobiliare (se attivo): fascicolo dell'immobile (proprietari, documenti, incarico, valutazione sui comparabili, annuncio), richieste dei clienti con il matching, lead, visite, proposte e controproposte, preliminare e rogito (serve l'adeguata verifica antiriciclaggio), locazioni con ISTAT, provvigioni, contratti da modello.
 - Ogni lista ha il menu Azioni per Modificare/Archiviare/Eliminare (elimina solo admin). Import/Export CSV su varie liste.
 - Profilo: dati e cambio password. Gestione utenti (solo admin): ruoli, stato, creazione nuovi utenti.
 - Ruoli: admin (tutto), manager (tutto tranne utenti/eliminazioni definitive), operatore (CRM/vendite/attività, NIENTE amministrazione né HR).`

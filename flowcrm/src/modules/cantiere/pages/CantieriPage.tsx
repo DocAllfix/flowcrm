@@ -104,7 +104,8 @@ export function CantieriPage() {
         </div>
       ) : filtrati.length === 0 ? (
         <EmptyState icon={HardHat} title="Nessun cantiere"
-          description="Apri il primo cantiere per gestire avanzamento, personale e sicurezza." />
+          description="Apri il primo cantiere per gestire avanzamento, personale e sicurezza."
+          action={<BottoneScrittura variant="outline" onClick={() => setCreateOpen(true)}>Nuovo cantiere</BottoneScrittura>} />
       ) : (
         <Card className="overflow-hidden">
           <Table>
