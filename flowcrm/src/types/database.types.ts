@@ -1882,6 +1882,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "attivita_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "attivita_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -3126,6 +3133,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "bar_convenzioni_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "bar_convenzioni_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
@@ -3300,6 +3314,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bar_convenzioni_dipendenti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "bar_convenzioni_dipendenti_convenzione_id_fkey"
@@ -3609,6 +3630,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campagne_destinatari_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "campagne_destinatari_mail_id_fkey"
@@ -5320,6 +5348,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "conti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "conti_conto_padre_id_fkey"
             columns: ["conto_padre_id"]
             isOneToOne: false
@@ -6064,6 +6099,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "coupon_utilizzi_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "coupon_utilizzi_conto_id_fkey"
             columns: ["conto_id"]
             isOneToOne: false
@@ -6258,6 +6300,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "deals_created_by_fkey"
@@ -6767,6 +6816,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "eventi_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "eventi_conto_id_fkey"
             columns: ["conto_id"]
             isOneToOne: false
@@ -6880,6 +6936,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "eventi_partecipanti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "eventi_partecipanti_created_by_fkey"
@@ -7398,6 +7461,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_attesa_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "fb_attesa_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -7562,6 +7632,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fb_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "fb_clienti_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -7699,6 +7776,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_comande_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "fb_comande_conto_id_fkey"
@@ -8505,6 +8589,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fb_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "fb_prenotazioni_created_by_fkey"
@@ -9422,6 +9513,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "feedback_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "feedback_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -9640,6 +9738,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fid_tessere_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "fid_tessere_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -9669,6 +9774,1172 @@ export type Database = {
           },
           {
             foreignKeyName: "fid_tessere_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_abbonamenti: {
+        Row: {
+          cap: string | null
+          citta: string | null
+          codice: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          data_rinnovo: string | null
+          destinatario_nome: string
+          destinatario_telefono: string | null
+          distinta_id: string | null
+          fascia: string | null
+          frequenza: string
+          id: string
+          indirizzo: string | null
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          pagamento: string
+          piano: string
+          prezzo: number
+          prodotti: string | null
+          prossima_consegna: string
+          ritiro: boolean
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cap?: string | null
+          citta?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_rinnovo?: string | null
+          destinatario_nome: string
+          destinatario_telefono?: string | null
+          distinta_id?: string | null
+          fascia?: string | null
+          frequenza?: string
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          pagamento?: string
+          piano: string
+          prezzo: number
+          prodotti?: string | null
+          prossima_consegna: string
+          ritiro?: boolean
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cap?: string | null
+          citta?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_rinnovo?: string | null
+          destinatario_nome?: string
+          destinatario_telefono?: string | null
+          distinta_id?: string | null
+          fascia?: string | null
+          frequenza?: string
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          pagamento?: string
+          piano?: string
+          prezzo?: number
+          prodotti?: string | null
+          prossima_consegna?: string
+          ritiro?: boolean
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_abbonamenti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_abbonamenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_cerimonie: {
+        Row: {
+          agenzia_id: string | null
+          allestimenti: NonNullable<Json>
+          colori: string | null
+          consegna_at: string | null
+          created_at: string
+          created_by: string | null
+          defunto: string | null
+          evento_id: string
+          fiori: string | null
+          id: string
+          luogo_cerimonia: string | null
+          modulo: string
+          montaggio_at: string | null
+          note: string | null
+          ricorrente: boolean
+          smontaggio_at: string | null
+          tema: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agenzia_id?: string | null
+          allestimenti?: NonNullable<Json>
+          colori?: string | null
+          consegna_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          defunto?: string | null
+          evento_id: string
+          fiori?: string | null
+          id?: string
+          luogo_cerimonia?: string | null
+          modulo?: string
+          montaggio_at?: string | null
+          note?: string | null
+          ricorrente?: boolean
+          smontaggio_at?: string | null
+          tema?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agenzia_id?: string | null
+          allestimenti?: NonNullable<Json>
+          colori?: string | null
+          consegna_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          defunto?: string | null
+          evento_id?: string
+          fiori?: string | null
+          id?: string
+          luogo_cerimonia?: string | null
+          modulo?: string
+          montaggio_at?: string | null
+          note?: string | null
+          ricorrente?: boolean
+          smontaggio_at?: string | null
+          tema?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_cerimonie_agenzia_id_fkey"
+            columns: ["agenzia_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_cerimonie_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_cerimonie_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: true
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_cerimonie_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_consegne: {
+        Row: {
+          autista_id: string | null
+          consegnata_at: string | null
+          created_at: string
+          created_by: string | null
+          data: string
+          esito: string | null
+          fascia: string | null
+          id: string
+          importo: number
+          modulo: string
+          note: string | null
+          ordine_id: string
+          partita_at: string | null
+          ricevuta_da: string | null
+          sequenza: number | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+          veicolo: string | null
+          zona_id: string | null
+        }
+        Insert: {
+          autista_id?: string | null
+          consegnata_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data: string
+          esito?: string | null
+          fascia?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          note?: string | null
+          ordine_id: string
+          partita_at?: string | null
+          ricevuta_da?: string | null
+          sequenza?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo?: string | null
+          zona_id?: string | null
+        }
+        Update: {
+          autista_id?: string | null
+          consegnata_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          esito?: string | null
+          fascia?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          note?: string | null
+          ordine_id?: string
+          partita_at?: string | null
+          ricevuta_da?: string | null
+          sequenza?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo?: string | null
+          zona_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_consegne_autista_id_fkey"
+            columns: ["autista_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_consegne_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_consegne_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: true
+            referencedRelation: "fior_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_consegne_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_consegne_zona_id_fkey"
+            columns: ["zona_id"]
+            isOneToOne: false
+            referencedRelation: "fior_zone"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_impostazioni: {
+        Row: {
+          abbonamenti_anticipo_giorni: number
+          costo_orario: number
+          created_at: string
+          created_by: string | null
+          fasce: string[]
+          id: number
+          indirizzo: string | null
+          modulo: string
+          negozio: string | null
+          promemoria_ricorrenze_giorni: number
+          ricarico_pct: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abbonamenti_anticipo_giorni?: number
+          costo_orario?: number
+          created_at?: string
+          created_by?: string | null
+          fasce?: string[]
+          id?: number
+          indirizzo?: string | null
+          modulo?: string
+          negozio?: string | null
+          promemoria_ricorrenze_giorni?: number
+          ricarico_pct?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abbonamenti_anticipo_giorni?: number
+          costo_orario?: number
+          created_at?: string
+          created_by?: string | null
+          fasce?: string[]
+          id?: number
+          indirizzo?: string | null
+          modulo?: string
+          negozio?: string | null
+          promemoria_ricorrenze_giorni?: number
+          ricarico_pct?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_impostazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_impostazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_ordini: {
+        Row: {
+          abbonamento_id: string | null
+          addetto_consegna: string | null
+          addetto_preparazione: string | null
+          annullato_motivo: string | null
+          anonimo: boolean
+          biglietto_stampato: boolean
+          canale: string
+          canale_riferimento: string | null
+          cap: string | null
+          citta: string | null
+          codice: string | null
+          committente_id: string | null
+          committente_nome: string
+          committente_telefono: string | null
+          confermato_at: string | null
+          consegnato_at: string | null
+          conto_id: string | null
+          costo_stimato: number
+          created_at: string
+          created_by: string | null
+          data_ordine: string
+          data_richiesta: string
+          destinatario_nome: string | null
+          destinatario_telefono: string | null
+          evento_id: string | null
+          fascia: string | null
+          firma: string | null
+          id: string
+          importo_consegna: number
+          indicazioni: string | null
+          indirizzo: string | null
+          materiali_scaricati: boolean
+          messaggio: string | null
+          modalita: string
+          modulo: string
+          note: string | null
+          occasione: string | null
+          ora_richiesta: string | null
+          organizzazione_id: string | null
+          pagatore_id: string | null
+          pagatore_organizzazione_id: string | null
+          pronto_at: string | null
+          ricerca: unknown
+          ricorda_ricorrenza: boolean
+          sconto: number
+          stato: Database["public"]["Enums"]["fior_ordine_stato"]
+          totale: number
+          updated_at: string
+          updated_by: string | null
+          zona_id: string | null
+        }
+        Insert: {
+          abbonamento_id?: string | null
+          addetto_consegna?: string | null
+          addetto_preparazione?: string | null
+          annullato_motivo?: string | null
+          anonimo?: boolean
+          biglietto_stampato?: boolean
+          canale?: string
+          canale_riferimento?: string | null
+          cap?: string | null
+          citta?: string | null
+          codice?: string | null
+          committente_id?: string | null
+          committente_nome: string
+          committente_telefono?: string | null
+          confermato_at?: string | null
+          consegnato_at?: string | null
+          conto_id?: string | null
+          costo_stimato?: number
+          created_at?: string
+          created_by?: string | null
+          data_ordine?: string
+          data_richiesta?: string
+          destinatario_nome?: string | null
+          destinatario_telefono?: string | null
+          evento_id?: string | null
+          fascia?: string | null
+          firma?: string | null
+          id?: string
+          importo_consegna?: number
+          indicazioni?: string | null
+          indirizzo?: string | null
+          materiali_scaricati?: boolean
+          messaggio?: string | null
+          modalita?: string
+          modulo?: string
+          note?: string | null
+          occasione?: string | null
+          ora_richiesta?: string | null
+          organizzazione_id?: string | null
+          pagatore_id?: string | null
+          pagatore_organizzazione_id?: string | null
+          pronto_at?: string | null
+          ricerca?: never
+          ricorda_ricorrenza?: boolean
+          sconto?: number
+          stato?: Database["public"]["Enums"]["fior_ordine_stato"]
+          totale?: number
+          updated_at?: string
+          updated_by?: string | null
+          zona_id?: string | null
+        }
+        Update: {
+          abbonamento_id?: string | null
+          addetto_consegna?: string | null
+          addetto_preparazione?: string | null
+          annullato_motivo?: string | null
+          anonimo?: boolean
+          biglietto_stampato?: boolean
+          canale?: string
+          canale_riferimento?: string | null
+          cap?: string | null
+          citta?: string | null
+          codice?: string | null
+          committente_id?: string | null
+          committente_nome?: string
+          committente_telefono?: string | null
+          confermato_at?: string | null
+          consegnato_at?: string | null
+          conto_id?: string | null
+          costo_stimato?: number
+          created_at?: string
+          created_by?: string | null
+          data_ordine?: string
+          data_richiesta?: string
+          destinatario_nome?: string | null
+          destinatario_telefono?: string | null
+          evento_id?: string | null
+          fascia?: string | null
+          firma?: string | null
+          id?: string
+          importo_consegna?: number
+          indicazioni?: string | null
+          indirizzo?: string | null
+          materiali_scaricati?: boolean
+          messaggio?: string | null
+          modalita?: string
+          modulo?: string
+          note?: string | null
+          occasione?: string | null
+          ora_richiesta?: string | null
+          organizzazione_id?: string | null
+          pagatore_id?: string | null
+          pagatore_organizzazione_id?: string | null
+          pronto_at?: string | null
+          ricerca?: never
+          ricorda_ricorrenza?: boolean
+          sconto?: number
+          stato?: Database["public"]["Enums"]["fior_ordine_stato"]
+          totale?: number
+          updated_at?: string
+          updated_by?: string | null
+          zona_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_ordini_abbonamento_id_fkey"
+            columns: ["abbonamento_id"]
+            isOneToOne: false
+            referencedRelation: "fior_abbonamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_addetto_consegna_fkey"
+            columns: ["addetto_consegna"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_addetto_preparazione_fkey"
+            columns: ["addetto_preparazione"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_committente_id_fkey"
+            columns: ["committente_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_committente_id_fkey"
+            columns: ["committente_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_pagatore_id_fkey"
+            columns: ["pagatore_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_pagatore_id_fkey"
+            columns: ["pagatore_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_pagatore_organizzazione_id_fkey"
+            columns: ["pagatore_organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_zona_id_fkey"
+            columns: ["zona_id"]
+            isOneToOne: false
+            referencedRelation: "fior_zone"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_ordini_righe: {
+        Row: {
+          aliquota_iva: number
+          articolo_id: string | null
+          costo_unitario: number
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          distinta_id: string | null
+          id: string
+          importo: number
+          minuti: number | null
+          modulo: string
+          ordine_id: string
+          prezzo_unitario: number | null
+          quantita: number
+          richiesta: NonNullable<Json>
+          sconto_pct: number
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          articolo_id?: string | null
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          distinta_id?: string | null
+          id?: string
+          importo?: number
+          minuti?: number | null
+          modulo?: string
+          ordine_id: string
+          prezzo_unitario?: number | null
+          quantita?: number
+          richiesta?: NonNullable<Json>
+          sconto_pct?: number
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          articolo_id?: string | null
+          costo_unitario?: number
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          distinta_id?: string | null
+          id?: string
+          importo?: number
+          minuti?: number | null
+          modulo?: string
+          ordine_id?: string
+          prezzo_unitario?: number | null
+          quantita?: number
+          richiesta?: NonNullable<Json>
+          sconto_pct?: number
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_ordini_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_distinta_id_fkey"
+            columns: ["distinta_id"]
+            isOneToOne: false
+            referencedRelation: "distinte_base_riepilogo"
+            referencedColumns: ["distinta_id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ordini_righe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_produzione: {
+        Row: {
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          fine_at: string | null
+          id: string
+          inizio_at: string | null
+          minuti_effettivi: number | null
+          minuti_previsti: number | null
+          modulo: string
+          note: string | null
+          operatore_id: string | null
+          ordine_id: string
+          pronta_entro: string | null
+          quantita: number
+          riga_id: string
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string | null
+          minuti_effettivi?: number | null
+          minuti_previsti?: number | null
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          ordine_id: string
+          pronta_entro?: string | null
+          quantita: number
+          riga_id: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string | null
+          minuti_effettivi?: number | null
+          minuti_previsti?: number | null
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          ordine_id?: string
+          pronta_entro?: string | null
+          quantita?: number
+          riga_id?: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_produzione_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_produzione_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_produzione_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_produzione_riga_id_fkey"
+            columns: ["riga_id"]
+            isOneToOne: true
+            referencedRelation: "fior_ordini_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_produzione_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_resi: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number
+          modulo: string
+          motivo: string
+          ordine_id: string
+          quantita: number
+          riga_id: string
+          rivendibile: boolean
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          motivo: string
+          ordine_id: string
+          quantita: number
+          riga_id: string
+          rivendibile?: boolean
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          motivo?: string
+          ordine_id?: string
+          quantita?: number
+          riga_id?: string
+          rivendibile?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_resi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_resi_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_resi_riga_id_fkey"
+            columns: ["riga_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini_righe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_ricorrenze: {
+        Row: {
+          anno: number | null
+          attiva: boolean
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          giorno: number
+          id: string
+          mese: number
+          modulo: string
+          note: string | null
+          ordine_id: string | null
+          per_chi: string | null
+          tipo: string
+          ultimo_avviso: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          anno?: number | null
+          attiva?: boolean
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          giorno: number
+          id?: string
+          mese: number
+          modulo?: string
+          note?: string | null
+          ordine_id?: string | null
+          per_chi?: string | null
+          tipo?: string
+          ultimo_avviso?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          anno?: number | null
+          attiva?: boolean
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          giorno?: number
+          id?: string
+          mese?: number
+          modulo?: string
+          note?: string | null
+          ordine_id?: string | null
+          per_chi?: string | null
+          tipo?: string
+          ultimo_avviso?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_ricorrenze_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ricorrenze_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "fior_ricorrenze_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ricorrenze_ordine_id_fkey"
+            columns: ["ordine_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_ricorrenze_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_righe_materiali: {
+        Row: {
+          articolo_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          quantita: number
+          riga_id: string
+        }
+        Insert: {
+          articolo_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          quantita: number
+          riga_id: string
+        }
+        Update: {
+          articolo_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          quantita?: number
+          riga_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_righe_materiali_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_righe_materiali_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "fior_righe_materiali_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_righe_materiali_riga_id_fkey"
+            columns: ["riga_id"]
+            isOneToOne: false
+            referencedRelation: "fior_ordini_righe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_zone: {
+        Row: {
+          attiva: boolean
+          cap: string[]
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number
+          modulo: string
+          nome: string
+          ordine: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          cap?: string[]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          nome: string
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          cap?: string[]
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          nome?: string
+          ordine?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fior_zone_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fior_zone_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
@@ -10604,6 +11875,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "gift_card_acquirente_id_fkey"
+            columns: ["acquirente_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "gift_card_conto_vendita_id_fkey"
             columns: ["conto_vendita_id"]
             isOneToOne: false
@@ -11298,6 +12576,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "hotel_gruppi_struttura_id_fkey"
@@ -12040,6 +13325,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hotel_oggetti_smarriti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "hotel_oggetti_smarriti_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -12202,6 +13494,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_ospiti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "hotel_ospiti_created_by_fkey"
@@ -12685,6 +13984,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "hotel_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
             columns: ["conto_id"]
             isOneToOne: false
@@ -12739,6 +14045,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_pagatore_contatto_id_fkey"
+            columns: ["pagatore_contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "hotel_prenotazioni_piano_id_fkey"
@@ -13379,6 +14692,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "hotel_servizi_prenotazioni_conto_id_fkey"
@@ -15262,6 +16582,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fk_referente_principale"
+            columns: ["referente_principale_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "organizzazioni_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -16658,6 +17985,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "pal_prove_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "pal_prove_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -17514,6 +18848,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "pal_soci_convenzione_id_fkey"
@@ -18553,6 +19894,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "riunioni_partecipanti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "riunioni_partecipanti_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -18868,6 +20216,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segnalazioni_sicurezza_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "segnalazioni_sicurezza_created_by_fkey"
@@ -19513,6 +20868,13 @@ export type Database = {
             referencedRelation: "contatti"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fb_comande_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
         ]
       }
       fb_kds: {
@@ -19812,10 +21174,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "fid_tessere_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
             foreignKeyName: "fid_tessere_programma_id_fkey"
             columns: ["programma_id"]
             isOneToOne: false
             referencedRelation: "fid_programmi"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fior_clienti_riepilogo: {
+        Row: {
+          consenso_marketing: boolean | null
+          contatto_id: string | null
+          email: string | null
+          giorni_tra_ordini: number | null
+          nome: string | null
+          ordini: number | null
+          organizzazione_id: string | null
+          primo_ordine: string | null
+          ricorrenze: number | null
+          spesa: number | null
+          telefono: string | null
+          ultimo_ordine: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contatti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
             referencedColumns: ["id"]
           },
         ]
@@ -20090,6 +21484,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
         ]
       }
@@ -20389,6 +21790,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "contatti"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pal_soci_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
           },
           {
             foreignKeyName: "pal_soci_convenzione_id_fkey"
@@ -21082,6 +22490,100 @@ export type Database = {
         Args: { p_conto: string; p_punti: number; p_tessera: string }
         Returns: number
       }
+      fior_agenda: {
+        Args: { p_al: string; p_dal: string }
+        Returns: {
+          dettaglio: string
+          percorso: string
+          quando: string
+          riferimento: string
+          tipo: string
+          titolo: string
+        }[]
+      }
+      fior_cliente_profilo: { Args: { p_contatto: string }; Returns: Json }
+      fior_composizioni_disponibili: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          attributi: Json
+          categoria: string
+          codice: string
+          costo: number
+          distinta_id: string
+          minuti: number
+          nome: string
+          prezzo: number
+          realizzabili: number
+        }[]
+      }
+      fior_conto_ordine: { Args: { p_ordine: string }; Returns: string }
+      fior_cruscotto: { Args: Record<PropertyKey, never>; Returns: Json }
+      fior_fabbisogno: {
+        Args: { p_giorni?: number }
+        Returns: {
+          articolo_id: string
+          categoria: string
+          consumo_medio_giorno: number
+          descrizione: string
+          fornitore_id: string
+          giacenza: number
+          per_eventi: number
+          per_ordini: number
+          quantita_proposta: number
+          scorta_minima: number
+          stagionalita: string
+          unita_misura: string
+        }[]
+      }
+      fior_genera_ordini_abbonamenti: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      fior_kpi: { Args: { p_al: string; p_dal: string }; Returns: Json }
+      fior_oggi: { Args: Record<PropertyKey, never>; Returns: string }
+      fior_ordine_ricalcola: { Args: { p_ordine: string }; Returns: undefined }
+      fior_promemoria_ricorrenze: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      fior_prossima: {
+        Args: { p_giorno: number; p_mese: number }
+        Returns: string
+      }
+      fior_regole: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          abbonamenti_anticipo_giorni: number
+          costo_orario: number
+          created_at: string
+          created_by: string | null
+          fasce: string[]
+          id: number
+          indirizzo: string | null
+          modulo: string
+          negozio: string | null
+          promemoria_ricorrenze_giorni: number
+          ricarico_pct: number
+          updated_at: string
+          updated_by: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "fior_impostazioni"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      fior_scarica_articoli: { Args: { p_ordine: string }; Returns: undefined }
+      fior_sprechi: { Args: { p_al: string; p_dal: string }; Returns: Json }
+      fior_stima: {
+        Args: { p_materiali: Json; p_minuti?: number }
+        Returns: Json
+      }
+      fior_vendi_banco: {
+        Args: { p_contatto?: string; p_righe: Json }
+        Returns: string
+      }
       genera_codice: { Args: { p_prefisso: string }; Returns: string }
       genera_codice_gift_card: {
         Args: Record<PropertyKey, never>
@@ -21606,6 +23108,22 @@ export type Database = {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
+      seg_fior_abituali: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fior_festa: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fior_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_fior_ricorrenze: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
       seg_hotel_abituali: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
@@ -21868,6 +23386,15 @@ export type Database = {
         | "premio"
         | "scadenza"
         | "rettifica"
+      fior_ordine_stato:
+        | "ricevuto"
+        | "confermato"
+        | "in_preparazione"
+        | "pronto"
+        | "in_consegna"
+        | "consegnato"
+        | "chiuso"
+        | "annullato"
       gara_ati_ruolo: "mandataria" | "mandante" | "consorziata"
       gara_cauzione_tipo:
         "provvisoria" | "definitiva" | "fideiussione" | "polizza_assicurativa"
@@ -22928,6 +24455,16 @@ export const Constants = {
         "premio",
         "scadenza",
         "rettifica",
+      ],
+      fior_ordine_stato: [
+        "ricevuto",
+        "confermato",
+        "in_preparazione",
+        "pronto",
+        "in_consegna",
+        "consegnato",
+        "chiuso",
+        "annullato",
       ],
       gara_ati_ruolo: ["mandataria", "mandante", "consorziata"],
       gara_cauzione_tipo: [

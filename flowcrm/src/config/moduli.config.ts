@@ -1,6 +1,6 @@
 /**
  * Registro dei moduli verticali (Gare, Cantiere, Automezzi, Agenti,
- * Poliambulatori, Ristorante, Bar, Hotel, Palestra). Ogni modulo è un pacchetto in src/modules/<slug> che
+ * Poliambulatori, Ristorante, Bar, Hotel, Palestra, Fioraio). Ogni modulo è un pacchetto in src/modules/<slug> che
  * dichiara qui la propria navigazione e le proprie route.
  *
  * Attivazione a due livelli:
@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, Flower2, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -33,6 +33,8 @@ import { HOTEL_NAV } from '@/modules/hotel/nav'
 import { hotelRoutes } from '@/modules/hotel/routes'
 import { PALESTRA_NAV } from '@/modules/palestra/nav'
 import { palestraRoutes } from '@/modules/palestra/routes'
+import { FIORAIO_NAV } from '@/modules/fioraio/nav'
+import { fioraioRoutes } from '@/modules/fioraio/routes'
 
 export interface ModuloDef {
   slug: string
@@ -120,6 +122,14 @@ export const MODULI: ModuloDef[] = [
     descrizione: 'Per palestre e centri fitness: soci, abbonamenti e accessi, corsi, personal trainer, incassi ricorrenti',
     nav: PALESTRA_NAV,
     routes: palestraRoutes,
+  },
+  {
+    slug: 'fioraio',
+    label: 'Fioraio',
+    icon: Flower2,
+    descrizione: 'Per fioristi: ordini con destinatario e biglietto, composizioni, laboratorio, consegne, deperibilità',
+    nav: FIORAIO_NAV,
+    routes: fioraioRoutes,
   },
 ]
 
