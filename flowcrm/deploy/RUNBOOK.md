@@ -483,7 +483,8 @@ prova davvero. Ogni notte i dati tornano come nuovi. Modello preso da Legisboard
 | cosa non può | cancellare, caricare file, creare utenti, cambiare credenziali/metadati, toccare pipeline, profili, moduli, impostazioni; il Copilot vero (è simulato) |
 | dove sta la regola | nel database: `scrittura_demo_rifiutata()`, `scrittura_file_consentita()`, blocco credenziali; più `crea-utente` e `copilot` |
 | ripristino | `SELECT public.ripristina_demo();` — ogni notte alle 2:00 UTC (pg_cron, job `ripristino-demo`) |
-| installazione/aggiornamento del ripristino | lanciare `flowcrm/provisioning/demo-dati-dimostrativi.sql` sul database della demo |
+| installazione/aggiornamento del ripristino | lanciare `flowcrm/provisioning/demo-moduli-nuovi.sql` e poi `flowcrm/provisioning/demo-dati-dimostrativi.sql` sul database della demo |
+| moduli verticali | l'ospite li **legge** soltanto (non sono in `demo_tabelle_ospite`); i dati dimostrativi dei sette moduli nuovi si rifanno ogni notte, solo per i moduli accesi |
 | credenziali dell'ospite | `~/.config/flotta/pmiflow-demo-pubblica.env`, e nelle variabili `VITE_DEMO_PUBBLICA_EMAIL/PASSWORD` del progetto Vercel `pmiflow-demo` |
 
 Le credenziali sono leggibili nel bundle: è voluto. Ogni permesso dell'ospite sta
@@ -497,6 +498,17 @@ descritta in GUASTI G-38.
 - Tutto il resto (trattative, commesse, fatture, incassi, tasse, attività) si
   ricrea con date relative a oggi.
 - Via le righe create dai visitatori, e le sessioni dell'ospite più vecchie di un giorno.
+- Moduli nuovi (ristorante, bar, hotel, palestra, fioraio, garage, agenzia
+  immobiliare): `demo_pulisci_moduli_nuovi()` all'inizio, prima delle anagrafiche
+  che i loro clienti tengono legate; `demo_semina_moduli_nuovi()` in fondo, con le
+  date di oggi (prenotazioni di stasera, arrivi di domani, lezioni della settimana,
+  storico degli ultimi sette giorni). Si semina solo un modulo con la licenza
+  attiva. Gli identificativi del seme cominciano con `de70de70` e sono fissi: due
+  passate danno le stesse righe e gli stessi codici. Un errore dei moduli non ferma
+  il ripristino del nucleo: finisce nel testo restituito e in un WARNING.
+- **Accendere un modulo nuovo in demo**: riga in `moduli_licenze` (attivo), slug in
+  `VITE_MODULES` del progetto `pmiflow-demo` e ridistribuzione, poi
+  `SELECT public.demo_semina_moduli_nuovi();` (o si aspetta la notte).
 - Verificare che giri: `select * from cron.job_run_details where jobid =
   (select jobid from cron.job where jobname = 'ripristino-demo') order by start_time desc limit 3;`
 - Rifare la fotografia (per esempio dopo aver cambiato il seme):

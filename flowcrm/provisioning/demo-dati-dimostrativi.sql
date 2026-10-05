@@ -8,6 +8,8 @@
 -- `ripristina_demo()` e tutto torna come nuovo, con date relative a oggi.
 --
 -- Lanciare questo file = INSTALLARE o AGGIORNARE (funzioni e job).
+-- I moduli nuovi hanno il loro file, demo-moduli-nuovi.sql, da lanciare
+-- PRIMA di questo: il ripristino ne chiama la pulizia e la semina se ci sono.
 -- Ripristinare subito, a mano:   SELECT public.ripristina_demo();
 -- Come si lancia: Management API (POST /v1/projects/<ref>/database/query,
 -- token in ~/.config/flotta/supabase.env) o SQL Editor del pannello.
@@ -74,6 +76,7 @@ DECLARE
   f_sal1 uuid; f_sal2 uuid; f uuid;
   v_cant uuid;
   oggi date := current_date;
+  v_moduli text := '';
 BEGIN
   -- ── 0. L'ospite: chi entra nella demo pubblica è «Giulia Martini», la titolare ──
   SELECT id INTO U FROM auth.users WHERE email = 'visita@pmiflow.eu';
@@ -81,6 +84,17 @@ BEGIN
   UPDATE user_profiles SET nome = 'Giulia', cognome = 'Martini', ruolo = 'admin',
          manutentore = false, ospite_demo = true, attivo = true WHERE id = U;
   IF NOT FOUND THEN RAISE EXCEPTION 'profilo dell''ospite mancante'; END IF;
+
+  -- ── 0b. Moduli nuovi (demo-moduli-nuovi.sql): via le loro righe PRIMA delle
+  -- anagrafiche, che i loro clienti, ospiti e soci tengono legate. Un errore qui
+  -- non deve fermare il ripristino del nucleo: si annota e si va avanti.
+  IF to_regprocedure('public.demo_pulisci_moduli_nuovi()') IS NOT NULL THEN
+    BEGIN
+      PERFORM demo_pulisci_moduli_nuovi();
+    EXCEPTION WHEN OTHERS THEN
+      RAISE WARNING 'pulizia dei moduli nuovi non riuscita: %', SQLERRM;
+    END;
+  END IF;
 
   -- ── 1. Pulizia: dati vecchi (luglio-agosto) e resti delle suite di test ──
   -- Tutte: anche quelle del cantiere sono del seme, e un visitatore può crearne di
@@ -251,6 +265,16 @@ BEGIN
   -- ── 9. Progetti: date da oggi ───────────────────────────────────
   UPDATE progetti SET scadenza = oggi + 35 WHERE nome = 'Sito e-commerce Verdi';
   UPDATE progetti SET scadenza = oggi + 50 WHERE nome = 'Migrazione gestionale interno';
+  -- ── 9b. Moduli nuovi: dati dimostrativi con le date di oggi, solo per i moduli accesi ──
+  IF to_regprocedure('public.demo_semina_moduli_nuovi(uuid)') IS NOT NULL THEN
+    BEGIN
+      v_moduli := '; ' || demo_semina_moduli_nuovi(U);
+    EXCEPTION WHEN OTHERS THEN
+      v_moduli := '; moduli nuovi NON seminati: ' || SQLERRM;
+      RAISE WARNING 'semina dei moduli nuovi non riuscita: %', SQLERRM;
+    END;
+  END IF;
+
   -- ── 10. Sessioni dell'ospite: una per ingresso, crescono. Via quelle di ieri. ──
   -- Un errore qui non deve far fallire il ripristino dei dati.
   BEGIN
@@ -259,7 +283,7 @@ BEGIN
     RAISE WARNING 'pulizia sessioni non riuscita: %', SQLERRM;
   END;
 
-  RETURN 'ripristinata ' || to_char(now() AT TIME ZONE 'Europe/Rome', 'DD/MM/YYYY HH24:MI');
+  RETURN 'ripristinata ' || to_char(now() AT TIME ZONE 'Europe/Rome', 'DD/MM/YYYY HH24:MI') || v_moduli;
 END $ripristino$;
 
 REVOKE ALL ON FUNCTION public.ripristina_demo() FROM PUBLIC, anon, authenticated;
