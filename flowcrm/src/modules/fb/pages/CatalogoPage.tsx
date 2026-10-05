@@ -111,7 +111,7 @@ function ProdottiTab({ prodotti, categorie, caricamento }: { prodotti: Prodotto[
       {caricamento ? <SkeletonTabella righe={6} colonne={isManager ? 8 : 5} /> : elenco.length === 0 ? (
         <EmptyState icon={UtensilsCrossed} title="Nessun prodotto" filtrato={prodotti.length > 0}
           description={prodotti.length ? 'Cambia categoria o ricerca.' : 'Crea i piatti e le bevande: prezzo, ricetta e allergeni.'}
-          action={isManager && !prodotti.length ? <BottoneScrittura onClick={() => setDialog({ aperto: true })}>Nuovo prodotto</BottoneScrittura> : undefined} />
+          action={isManager && !prodotti.length ? <BottoneScrittura variant="outline" onClick={() => setDialog({ aperto: true })}><Plus className="h-4 w-4" /> Crea il primo prodotto</BottoneScrittura> : undefined} />
       ) : (
         <Card className="overflow-hidden">
           <Table>

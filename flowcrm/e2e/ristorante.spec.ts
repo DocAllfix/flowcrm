@@ -29,8 +29,10 @@ test('servizio completo: tavolo → comanda → cucina → cassa', async ({ page
 
   // Primo accesso: configurazione guidata del locale.
   await page.goto('/ristorante/sala')
+  // Si aspetta la pagina pronta: o la configurazione guidata o il titolo (isVisible non attende).
   const configura = page.getByRole('button', { name: 'Configura il locale' })
-  if (await configura.isVisible({ timeout: 5_000 }).catch(() => false)) {
+  await expect(configura.or(page.getByRole('heading', { name: 'Sala', exact: true }))).toBeVisible({ timeout: 20_000 })
+  if (await configura.isVisible()) {
     await configura.click()
     await page.locator('#cl-nome').fill(`Trattoria E2E ${suffisso}`)
     await page.locator('#cl-sale').fill('Sala')
@@ -44,6 +46,8 @@ test('servizio completo: tavolo → comanda → cucina → cassa', async ({ page
   await page.goto('/ristorante/catalogo')
   await page.getByRole('button', { name: 'Nuovo prodotto' }).click()
   await page.locator('#pd-nome').fill(piatto)
+  await page.getByRole('combobox', { name: 'Categoria' }).click()
+  await page.getByRole('option', { name: 'Primi', exact: true }).first().click()
   await page.locator('#pd-prezzo').fill('12')
   await page.locator('#pd-costo').fill('3')
   await page.getByRole('button', { name: 'Crea', exact: true }).click()
