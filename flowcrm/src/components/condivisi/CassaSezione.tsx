@@ -5,7 +5,7 @@
  * Totale, pagato e residuo li calcola il database; un conto si chiude solo
  * a saldo zero e poi non cambia più.
  */
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { Banknote, CircleCheck, Lock, Receipt, Scissors, SplitSquareHorizontal, Ticket, Wallet } from 'lucide-react'
@@ -42,7 +42,10 @@ const etichettaMetodo = (m: string) => METODI.find((x) => x.valore === m)?.label
 const euro = (n: number | string | null | undefined) =>
   n === null || n === undefined ? '—' : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(Number(n))
 
-export function CassaSezione({ modulo }: { modulo: string }) {
+/** Aggiunte del modulo al conto scelto (es. l'addebito in convenzione del Bar). */
+export type EstensioneConto = (ctx: { conto: Tables<'conti'>; residuo: number }) => ReactNode
+
+export function CassaSezione({ modulo, estensione }: { modulo: string; estensione?: EstensioneConto }) {
   const [params, setParams] = useSearchParams()
   const contoId = params.get('conto')
   useDalVivo(['fb_comande_righe', 'fb_comande'])
@@ -83,7 +86,7 @@ export function CassaSezione({ modulo }: { modulo: string }) {
             </ul>
           )}
         </Card>
-        {scelto ? <DettaglioConto conto={scelto} conti={conti} modulo={modulo} onChiuso={() => setParams({})} />
+        {scelto ? <DettaglioConto conto={scelto} conti={conti} modulo={modulo} estensione={estensione} onChiuso={() => setParams({})} />
           : <EmptyState icon={Receipt} title="Scegli un conto" description="A sinistra i conti aperti: tavoli, banco, camere, clienti." />}
       </div>
     </div>
@@ -136,7 +139,9 @@ function SessioneCassa({ modulo }: { modulo: string }) {
   )
 }
 
-function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; conti: Conto[]; modulo: string; onChiuso: () => void }) {
+function DettaglioConto({ conto, conti, modulo, estensione, onChiuso }: {
+  conto: Conto; conti: Conto[]; modulo: string; estensione?: EstensioneConto; onChiuso: () => void
+}) {
   const { isManager } = useAuth()
   const { data: righe = [] } = useElenco<Riga>('conti_righe', { filtri: { conto_id: conto.id }, ordine: [{ colonna: 'created_at' }] })
   const { data: pagamenti = [] } = useElenco<Pagamento>('conti_pagamenti', { filtri: { conto_id: conto.id }, ordine: [{ colonna: 'pagato_at' }] })
@@ -375,7 +380,8 @@ function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; cont
                   onError: (e) => toast.error(messaggioErrore(e)) })}>Applica</BottoneScrittura>
             </div>
           </div>
-          {conto.contatto_id && <PuntiTessera conto={conto} modulo={modulo} />}
+          {conto.contatto_id && <FedeltaConto conto={conto} modulo={modulo} />}
+          {estensione?.({ conto, residuo })}
           {isManager && (
             <div className="border-t border-border pt-4">
               <Label htmlFor="pg-sconto">Sconto o abbuono (€)</Label>
@@ -412,24 +418,51 @@ function DettaglioConto({ conto, conti, modulo, onChiuso }: { conto: Conto; cont
   )
 }
 
-/** Punti spendibili della tessera del cliente (cashback, sconti fedeltà). */
-function PuntiTessera({ conto, modulo }: { conto: Conto; modulo: string }) {
+/**
+ * Tessera del cliente sul conto: punti spendibili (cashback, sconti) e
+ * premio a timbri («10 caffè → 1 omaggio») da togliere dal conto.
+ */
+function FedeltaConto({ conto, modulo }: { conto: Conto; modulo: string }) {
   const { data: tessere = [] } = useElenco<Database['public']['Views']['fid_saldi']['Row']>('fid_saldi', { filtri: { contatto_id: conto.contatto_id ?? undefined, modulo } })
   const { data: programmi = [] } = useElenco<Tables<'fid_programmi'>>('fid_programmi', { filtri: { modulo } })
   const usa = useAzione('fid_usa_punti_su_conto', ['fid_saldi', 'conti', 'conti_saldi'])
+  const omaggio = useAzione('fid_omaggio_su_conto', ['fid_saldi', 'conti', 'conti_saldi'])
   const [punti, setPunti] = useState('')
-  const t = tessere.find((x) => programmi.find((p) => p.id === x.programma_id)?.valore_punto)
-  if (!t) return null
-  const valore = Number(programmi.find((p) => p.id === t.programma_id)?.valore_punto ?? 0)
+  const programma = (id: string | null) => programmi.find((p) => p.id === id)
+  const t = tessere.find((x) => programma(x.programma_id)?.valore_punto)
+  const tt = tessere.find((x) => programma(x.programma_id)?.timbri_soglia)
+  if (!t && !tt) return null
+  const valore = Number(programma(t?.programma_id ?? null)?.valore_punto ?? 0)
+  const soglia = programma(tt?.programma_id ?? null)?.timbri_soglia ?? 0
   return (
-    <div className="border-t border-border pt-4">
-      <h3 className="mb-1 text-title text-foreground">Punti della tessera</h3>
-      <p className="mb-2 text-sm text-muted-foreground">{t.codice}: {t.punti} punti, valgono {euro((t.punti ?? 0) * valore)}</p>
-      <div className="flex gap-2">
-        <Input inputMode="numeric" value={punti} onChange={(e) => setPunti(e.target.value)} placeholder="Punti da usare" aria-label="Punti da usare" />
-        <BottoneScrittura variant="outline" disabled={!(Number(punti) > 0)} onClick={() => usa.mutate({ p_tessera: t.tessera_id!, p_conto: conto.id, p_punti: Number(punti) },
-          { onSuccess: (s) => { toast.success(`Sconto di ${euro(s)} con i punti`); setPunti('') }, onError: (e) => toast.error(messaggioErrore(e)) })}>Usa</BottoneScrittura>
-      </div>
-    </div>
+    <>
+      {t && (
+        <div className="border-t border-border pt-4">
+          <h3 className="mb-1 text-title text-foreground">Punti della tessera</h3>
+          <p className="mb-2 text-sm text-muted-foreground">{t.codice}: {t.punti} punti, valgono {euro((t.punti ?? 0) * valore)}</p>
+          <div className="flex gap-2">
+            <Input inputMode="numeric" value={punti} onChange={(e) => setPunti(e.target.value)} placeholder="Punti da usare" aria-label="Punti da usare" />
+            <BottoneScrittura variant="outline" disabled={!(Number(punti) > 0)} onClick={() => usa.mutate({ p_tessera: t.tessera_id!, p_conto: conto.id, p_punti: Number(punti) },
+              { onSuccess: (s) => { toast.success(`Sconto di ${euro(s)} con i punti`); setPunti('') }, onError: (e) => toast.error(messaggioErrore(e)) })}>Usa</BottoneScrittura>
+          </div>
+        </div>
+      )}
+      {tt && (
+        <div className="border-t border-border pt-4">
+          <h3 className="mb-1 text-title text-foreground">Timbri della tessera</h3>
+          <p className="mb-2 text-sm text-muted-foreground">
+            {tt.codice}: <span className="tabular-nums">{tt.timbri ?? 0} su {soglia}</span>
+            {(tt.premi_disponibili ?? 0) > 0 ? ` · ${programma(tt.programma_id)?.premio_timbri ?? 'premio'} da ritirare` : ''}
+          </p>
+          {(tt.premi_disponibili ?? 0) > 0 && (
+            <BottoneScrittura variant="outline" disabled={omaggio.isPending}
+              onClick={() => omaggio.mutate({ p_tessera: tt.tessera_id!, p_conto: conto.id },
+                { onSuccess: (nome) => toast.success(`${nome} in omaggio: tolto dal conto`), onError: (e) => toast.error(messaggioErrore(e)) })}>
+              Applica l'omaggio
+            </BottoneScrittura>
+          )}
+        </div>
+      )}
+    </>
   )
 }

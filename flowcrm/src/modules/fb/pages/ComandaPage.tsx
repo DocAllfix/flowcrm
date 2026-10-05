@@ -29,6 +29,7 @@ import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { cn } from '@/lib/utils'
 import { supabase, type Tables } from '@/lib/supabase'
 import { CercaContatto } from '@/components/condivisi/CercaContatto'
+import { ConvenzioneComanda } from '@/modules/bar/componenti/ConvenzioneComanda'
 import { useSalva, useRiga, useElenco, useInserisci, useDalVivo, fondKeys, messaggioErrore } from '@/lib/queries/fondamenta'
 import { useQueryClient } from '@tanstack/react-query'
 import { useFb } from '@/modules/fb/contesto'
@@ -124,7 +125,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
       if (error) throw error
       for (const t of TABELLE_SERVIZIO) qc.invalidateQueries({ queryKey: fondKeys.tabella(t) })
       qc.invalidateQueries({ queryKey: ['fond', 'fb_comande', 'dettaglio', c!.id] })
-      toast.success(bozza.some((b) => b.differito) ? 'Inviato: le portate successive aspettano la marcia' : 'Inviato in cucina e al bar')
+      toast.success(bozza.some((b) => b.differito) ? 'Inviato: le portate successive aspettano la marcia' : c?.modulo === 'bar' ? 'Inviato alle postazioni' : 'Inviato in cucina e al bar')
       setBozza([])
     } catch (e) { toast.error(messaggioErrore(e)) } finally { setInvio(false) }
   }
@@ -158,7 +159,8 @@ function Comanda_({ comandaId }: { comandaId: string }) {
           Comanda {c.stato === 'chiusa' ? 'chiusa' : 'annullata'}{c.chiusa_at ? ` alle ${fmtOra(c.chiusa_at)}` : ''}: si consulta soltanto.
         </div>
       )}
-      <ClienteComanda comandaId={c.id} contattoId={c.contatto_id} aperta={aperta} note={c.note} modulo={c.modulo} chiusa={c.stato === 'chiusa'} />
+      <ClienteComanda comandaId={c.id} contattoId={c.contatto_id} aperta={aperta} note={c.note} modulo={c.modulo} chiusa={c.stato === 'chiusa'}
+        localeId={c.locale_id} convenzioneDipendenteId={c.convenzione_dipendente_id} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 2xl:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         {/* ── Scelta dei prodotti ── */}
@@ -257,7 +259,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
                 ))}
               </ul>
               <BottoneScrittura className="mt-3 w-full" onClick={invia} disabled={invio}>
-                <Send className="h-4 w-4" /> {invio ? 'Invio…' : `Invia ${bozza.reduce((s, b) => s + b.quantita, 0)} ${bozza.length === 1 && bozza[0].quantita === 1 ? 'piatto' : 'piatti'}`}
+                <Send className="h-4 w-4" /> {invio ? 'Invio…' : `Invia ${bozza.reduce((s, b) => s + b.quantita, 0)} ${bozza.length === 1 && bozza[0].quantita === 1 ? (c.modulo === 'bar' ? 'voce' : 'piatto') : (c.modulo === 'bar' ? 'voci' : 'piatti')}`}
               </BottoneScrittura>
             </Card>
           )}
@@ -333,7 +335,7 @@ function Comanda_({ comandaId }: { comandaId: string }) {
                                   <DropdownMenuItem onSelect={() => azioneRiga(r, { stato: 'servita' }, 'Servito')}>Segna servito</DropdownMenuItem>
                                 )}
                                 {r.stato === 'in_attesa' && (
-                                  <DropdownMenuItem onSelect={() => azioneRiga(r, { stato: 'da_preparare' }, 'Inviato in cucina')}>Manda subito</DropdownMenuItem>
+                                  <DropdownMenuItem onSelect={() => azioneRiga(r, { stato: 'da_preparare' }, c.modulo === 'bar' ? 'Inviato alla postazione' : 'Inviato in cucina')}>Manda subito</DropdownMenuItem>
                                 )}
                                 {!r.omaggio && !r.rifacimento_di && (
                                   <DropdownMenuItem onSelect={() => azioneRiga(r, { omaggio: true }, 'Offerto dalla casa')}>
@@ -425,8 +427,9 @@ function SchedaConsegna({ consegnaId }: { consegnaId: string }) {
 }
 
 /** Cliente al tavolo: chi è, cosa non può mangiare, cosa preferisce; a fine servizio il suo parere. */
-function ClienteComanda({ comandaId, contattoId, aperta, note, modulo, chiusa }: {
+function ClienteComanda({ comandaId, contattoId, aperta, note, modulo, chiusa, localeId, convenzioneDipendenteId }: {
   comandaId: string; contattoId: string | null; aperta: boolean; note: string | null; modulo: string; chiusa: boolean
+  localeId: string; convenzioneDipendenteId: string | null
 }) {
   const salva = useSalva('fb_comande', TABELLE_SERVIZIO)
   const parere = useInserisci('feedback')
@@ -453,6 +456,7 @@ function ClienteComanda({ comandaId, contattoId, aperta, note, modulo, chiusa }:
         <div className="w-72"><CercaContatto id="cm-cliente" valore={nome} contattoId={null} segnaposto="Collega il cliente (storico e allergie)…"
           onTesto={setNome} onScegli={(k) => salva.mutate({ id: comandaId, values: { contatto_id: k.id } }, { onError: (e) => toast.error(messaggioErrore(e)) })} /></div>
       ) : <span className="text-muted-foreground">Cliente non identificato</span>}
+      {aperta && modulo === 'bar' && <ConvenzioneComanda comandaId={comandaId} localeId={localeId} dipendenteId={convenzioneDipendenteId} />}
       {aperta ? (
         <div className="min-w-60 flex-1"><Input defaultValue={note ?? ''} key={comandaId} placeholder="Nota per la sala e la cucina (compleanno, fretta…)" aria-label="Nota della comanda"
           onBlur={(e) => e.target.value !== (note ?? '') && salva.mutate({ id: comandaId, values: { note: e.target.value || null } })} /></div>

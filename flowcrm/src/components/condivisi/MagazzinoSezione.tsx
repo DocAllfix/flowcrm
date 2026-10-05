@@ -36,6 +36,10 @@ type Rating = Database['public']['Views']['fornitori_rating']['Row']
 type Organizzazione = Pick<Tables<'organizzazioni'>, 'id' | 'ragione_sociale'>
 interface Riordino { articolo_id: string; descrizione: string; fornitore_id: string | null; unita_misura: string
   giacenza: number; scorta_minima: number; consumo_medio_giorno: number; quantita_proposta: number }
+/** Proposta che guarda avanti: stagione, eventi, ordini già presi, merce in arrivo. */
+export interface RiordinoPrevisto extends Riordino {
+  in_arrivo: number; fattore_stagionale: number; fabbisogno_periodo: number; fabbisogno_eventi: number; fabbisogno_ordini: number
+}
 
 const TABELLE = ['mag_articoli', 'mag_giacenze', 'mag_lotti', 'mag_lotti_stato', 'mag_movimenti', 'mag_ordini', 'mag_ordini_righe', 'mag_inventari', 'mag_inventari_righe']
 const USCITE: { valore: Movimento['tipo']; label: string }[] = [
@@ -56,9 +60,11 @@ interface Props {
   moduli: string[]
   /** Schede in più del modulo (sprechi, tracciabilità…). */
   extra?: { valore: string; etichetta: string; contenuto: ReactNode }[]
+  /** Proposta di riordino previsionale del modulo, al posto di quella sulla sola scorta minima. */
+  riordino?: { righe: RiordinoPrevisto[]; controlli: ReactNode }
 }
 
-export function MagazzinoSezione({ modulo, moduli, extra = [] }: Props) {
+export function MagazzinoSezione({ modulo, moduli, extra = [], riordino }: Props) {
   const { data: giacenze = [] } = useElenco<Giacenza>('mag_giacenze', { filtri: { modulo: moduli }, ordine: [{ colonna: 'descrizione' }] })
   const { data: lotti = [] } = useElenco<LottoStato>('mag_lotti_stato', { filtri: { modulo: moduli }, ordine: [{ colonna: 'fine_vita' }] })
   const sotto = giacenze.filter((g) => g.sotto_scorta).length
@@ -79,7 +85,7 @@ export function MagazzinoSezione({ modulo, moduli, extra = [] }: Props) {
       <TabsContent value="lotti"><Lotti lotti={lotti} /></TabsContent>
       <TabsContent value="movimenti"><Movimenti moduli={moduli} /></TabsContent>
       <TabsContent value="ordini"><Ordini modulo={modulo} moduli={moduli} /></TabsContent>
-      <TabsContent value="riordino"><RiordinoTab modulo={modulo} moduli={moduli} /></TabsContent>
+      <TabsContent value="riordino"><RiordinoTab modulo={modulo} moduli={moduli} previsto={riordino} /></TabsContent>
       <TabsContent value="inventari"><Inventari modulo={modulo} moduli={moduli} /></TabsContent>
       <TabsContent value="fornitori"><Fornitori modulo={modulo} /><Listini modulo={modulo} moduli={moduli} /></TabsContent>
       {extra.map((e) => <TabsContent key={e.valore} value={e.valore}>{e.contenuto}</TabsContent>)}
@@ -364,11 +370,11 @@ function DettaglioOrdine({ ordine, articoli }: { ordine: Ordine; articoli: Artic
   )
 }
 
-function RiordinoTab({ modulo, moduli }: { modulo: string; moduli: string[] }) {
+function RiordinoTab({ modulo, moduli, previsto }: { modulo: string; moduli: string[]; previsto?: Props['riordino'] }) {
   const proposte = moduli.map((m) => m)
-  const r0 = useRpc<Riordino[]>('mag_proposta_riordino', { p_modulo: proposte[0] })
-  const r1 = useRpc<Riordino[]>('mag_proposta_riordino', { p_modulo: proposte[1] ?? proposte[0] }, { abilitato: proposte.length > 1 })
-  const righe = [...(r0.data ?? []), ...(proposte.length > 1 ? r1.data ?? [] : [])]
+  const r0 = useRpc<Riordino[]>('mag_proposta_riordino', { p_modulo: proposte[0] }, { abilitato: !previsto })
+  const r1 = useRpc<Riordino[]>('mag_proposta_riordino', { p_modulo: proposte[1] ?? proposte[0] }, { abilitato: !previsto && proposte.length > 1 })
+  const righe: (Riordino & Partial<RiordinoPrevisto>)[] = previsto?.righe ?? [...(r0.data ?? []), ...(proposte.length > 1 ? r1.data ?? [] : [])]
   const fornitori = useOrganizzazioni()
   const [inCorso, setInCorso] = useState(false)
 
@@ -389,23 +395,44 @@ function RiordinoTab({ modulo, moduli }: { modulo: string; moduli: string[] }) {
     } catch (e) { toast.error(messaggioErrore(e)) } finally { setInCorso(false) }
   }
 
-  return righe.length === 0 ? <EmptyState icon={ShoppingCart} title="Nulla da riordinare" description="Nessun articolo è sotto la scorta minima." /> : (
+  if (righe.length === 0) {
+    return (
+      <div className="space-y-3">
+        {previsto?.controlli}
+        <EmptyState icon={ShoppingCart} title="Nulla da riordinare" filtrato={!!previsto}
+          description={previsto ? 'Le scorte coprono il periodo scelto: allungalo per guardare più avanti.' : 'Nessun articolo è sotto la scorta minima.'} />
+      </div>
+    )
+  }
+  return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-muted-foreground">Proposta: tornare alla scorta minima più una settimana di consumo medio degli ultimi 30 giorni.</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        {previsto?.controlli ?? <p className="text-sm text-muted-foreground">Proposta: tornare alla scorta minima più una settimana di consumo medio degli ultimi 30 giorni.</p>}
         <BottoneScrittura onClick={creaOrdini} disabled={inCorso}>Crea gli ordini per fornitore</BottoneScrittura>
       </div>
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <Table>
-          <TableHeader><TableRow><TableHead>Articolo</TableHead><TableHead>Fornitore</TableHead><TableHead className="text-right">Giacenza</TableHead><TableHead className="text-right">Scorta minima</TableHead><TableHead className="text-right">Consumo/giorno</TableHead><TableHead className="text-right">Da ordinare</TableHead></TableRow></TableHeader>
+          <TableHeader><TableRow><TableHead>Articolo</TableHead><TableHead>Fornitore</TableHead><TableHead className="text-right">Giacenza</TableHead>
+            {previsto ? <><TableHead className="text-right">In arrivo</TableHead><TableHead className="text-right">Consumo previsto</TableHead>
+              <TableHead className="text-right">Eventi</TableHead><TableHead className="text-right">Ordini presi</TableHead></>
+              : <><TableHead className="text-right">Scorta minima</TableHead><TableHead className="text-right">Consumo/giorno</TableHead></>}
+            <TableHead className="text-right">Da ordinare</TableHead></TableRow></TableHeader>
           <TableBody>
             {righe.map((r) => (
               <TableRow key={r.articolo_id}>
                 <TableCell className="text-foreground">{r.descrizione}</TableCell>
                 <TableCell className="text-muted-foreground">{fornitori.find((f) => f.id === r.fornitore_id)?.ragione_sociale ?? <Badge tone="warning">Senza fornitore</Badge>}</TableCell>
-                <TableCell numerica>{fmt(r.giacenza)} {r.unita_misura}</TableCell>
-                <TableCell numerica>{fmt(r.scorta_minima)}</TableCell>
-                <TableCell numerica>{fmt(r.consumo_medio_giorno)}</TableCell>
+                <TableCell numerica>{fmt(r.giacenza)} {r.unita_misura}<span className="block text-xs text-muted-foreground">minimo {fmt(r.scorta_minima)}</span></TableCell>
+                {previsto ? <>
+                  <TableCell numerica>{fmt(r.in_arrivo ?? 0)}</TableCell>
+                  <TableCell numerica>{fmt(r.fabbisogno_periodo ?? 0)}
+                    {Number(r.fattore_stagionale) !== 1 && <span className="block text-xs text-muted-foreground">stagione ×{fmt(r.fattore_stagionale ?? 1)}</span>}</TableCell>
+                  <TableCell numerica>{fmt(r.fabbisogno_eventi ?? 0)}</TableCell>
+                  <TableCell numerica>{fmt(r.fabbisogno_ordini ?? 0)}</TableCell>
+                </> : <>
+                  <TableCell numerica>{fmt(r.scorta_minima)}</TableCell>
+                  <TableCell numerica>{fmt(r.consumo_medio_giorno)}</TableCell>
+                </>}
                 <TableCell numerica className="font-semibold">{fmt(r.quantita_proposta)}</TableCell>
               </TableRow>
             ))}
