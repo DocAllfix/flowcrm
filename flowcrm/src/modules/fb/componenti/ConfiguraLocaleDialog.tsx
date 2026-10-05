@@ -83,18 +83,19 @@ export function ConfiguraLocaleDialog({ open, onOpenChange }: Props) {
         }
       }
 
-      // Catalogo: categorie tipiche solo se non ce ne sono ancora.
-      const { count } = await supabase.from('fb_categorie').select('id', { count: 'exact', head: true })
-      let categorie: { id: string; area: string; nome: string }[] = []
-      if (!count) {
-        const base = modulo === 'bar' ? CATEGORIE_BAR : CATEGORIE_RISTORANTE
+      // Catalogo (condiviso tra ristorante e bar): si aggiungono le categorie
+      // tipiche del modulo che mancano, senza toccare quelle che ci sono.
+      const { data: esistenti, error: e4a } = await supabase.from('fb_categorie').select('id, area, nome, ordine')
+      if (e4a) throw e4a
+      const nomi = new Set((esistenti ?? []).map((c) => c.nome.trim().toLowerCase()))
+      const mancanti = (modulo === 'bar' ? CATEGORIE_BAR : CATEGORIE_RISTORANTE).filter((c) => !nomi.has(c.nome.toLowerCase()))
+      let categorie: { id: string; area: string; nome: string }[] = esistenti ?? []
+      if (mancanti.length) {
+        const dopo = Math.max(-1, ...(esistenti ?? []).map((c) => c.ordine)) + 1
         const { data, error: e4 } = await supabase.from('fb_categorie')
-          .insert(base.map((c, i) => ({ ...c, ordine: i, created_by: io }))).select('id, area, nome')
+          .insert(mancanti.map((c, i) => ({ ...c, ordine: dopo + i, created_by: io }))).select('id, area, nome')
         if (e4) throw e4
-        categorie = data
-      } else {
-        const { data } = await supabase.from('fb_categorie').select('id, area, nome')
-        categorie = data ?? []
+        categorie = [...categorie, ...data]
       }
       const cibo = categorie.filter((c) => c.area === 'food').map((c) => c.id)
       const bevande = categorie.filter((c) => c.area === 'beverage').map((c) => c.id)

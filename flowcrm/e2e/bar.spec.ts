@@ -34,8 +34,10 @@ test('banco: convenzione → ordine → postazione → addebito all\'azienda →
 
   // Primo accesso: configurazione guidata del bar.
   await page.goto('/bar/banco')
+  // Si aspetta la pagina pronta: o la configurazione guidata o il titolo (isVisible non attende).
   const configura = page.getByRole('button', { name: 'Configura il locale' })
-  if (await configura.isVisible({ timeout: 5_000 }).catch(() => false)) {
+  await expect(configura.or(page.getByRole('heading', { name: 'Banco', exact: true }))).toBeVisible({ timeout: 20_000 })
+  if (await configura.isVisible()) {
     await configura.click()
     await page.locator('#cl-nome').fill(`Bar E2E ${suffisso}`)
     await page.locator('#cl-sale').fill('Sala, Banco')
@@ -111,8 +113,10 @@ test('banco: convenzione → ordine → postazione → addebito all\'azienda →
   await page.goto(urlOrdine)
   await page.getByRole('link', { name: 'Conto e pagamento' }).click()
   await expect(page).toHaveURL(/\/bar\/cassa\?conto=/)
+  // Cassa: chiusa al primo uso del giorno, aperta se un'altra prova l'ha già aperta.
   const apriCassa = page.getByRole('button', { name: 'Apri la cassa' })
-  if (await apriCassa.isVisible({ timeout: 3_000 }).catch(() => false)) await apriCassa.click()
+  await expect(apriCassa.or(page.getByRole('button', { name: 'Chiudi la cassa' }))).toBeVisible({ timeout: 10_000 })
+  if (await apriCassa.isVisible()) await apriCassa.click()
   await expect(page.getByRole('combobox', { name: 'Dipendente convenzionato' })).toContainText(dipendente, { timeout: 10_000 })
   await page.getByRole('button', { name: /Addebita .* all'azienda/ }).click()
   await expect(page.getByText('Conto saldato.')).toBeVisible({ timeout: 10_000 })
