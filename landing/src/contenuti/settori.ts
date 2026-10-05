@@ -438,7 +438,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale ristorante",
     paroleCorrelate: ["software per ristoranti", "food cost ristorante", "comande al tavolo", "registro HACCP digitale"],
     percorsoDemo: "/ristorante",
-    inDemo: false,
     nomeBreve: "il Ristorante",
     problemi: [
       {
@@ -517,7 +516,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale bar",
     paroleCorrelate: ["software per bar", "gestione happy hour", "convenzioni bar aziende", "controllo mescita bar"],
     percorsoDemo: "/bar",
-    inDemo: false,
     nomeBreve: "il Bar",
     problemi: [
       {
@@ -596,7 +594,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale hotel",
     paroleCorrelate: ["software gestionale albergo", "planning camere hotel", "calcolo tassa di soggiorno", "gestionale per B&B"],
     percorsoDemo: "/hotel",
-    inDemo: false,
     nomeBreve: "l'Hotel",
     problemi: [
       {
@@ -675,7 +672,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale palestra",
     paroleCorrelate: ["software per palestre", "gestione abbonamenti palestra", "prenotazione corsi palestra", "controllo accessi palestra"],
     percorsoDemo: "/palestra",
-    inDemo: false,
     nomeBreve: "la Palestra",
     problemi: [
       {
@@ -754,7 +750,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale fiorista",
     paroleCorrelate: ["software per fioristi", "gestione ordini fioreria", "consegna fiori a domicilio", "magazzino fiori deperibili"],
     percorsoDemo: "/fioraio",
-    inDemo: false,
     nomeBreve: "il Fioraio",
     problemi: [
       {
@@ -833,7 +828,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale autorimessa",
     paroleCorrelate: ["software per parcheggi", "gestione garage", "abbonamenti posto auto", "tariffe sosta parcheggio"],
     percorsoDemo: "/garage",
-    inDemo: false,
     nomeBreve: "il Garage",
     problemi: [
       {
@@ -912,7 +906,6 @@ export const PAGINE_SETTORE: Record<IdSettore, PaginaSettore> = {
     parolaChiave: "gestionale agenzia immobiliare",
     paroleCorrelate: ["software per agenzie immobiliari", "CRM immobiliare", "incrocio domanda offerta immobili", "gestione incarichi immobiliari"],
     percorsoDemo: "/immobiliare",
-    inDemo: false,
     nomeBreve: "l'Agenzia",
     problemi: [
       {
