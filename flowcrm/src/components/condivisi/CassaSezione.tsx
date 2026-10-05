@@ -96,7 +96,7 @@ export function CassaSezione({ modulo, estensione }: { modulo: string; estension
 }
 
 function SessioneCassa({ modulo }: { modulo: string }) {
-  const { data: sessioni = [] } = useElenco<Sessione>('cassa_sessioni', { filtri: { modulo, stato: 'aperta' } })
+  const { data: sessioni = [], isLoading } = useElenco<Sessione>('cassa_sessioni', { filtri: { modulo, stato: 'aperta' } })
   const apri = useInserisci('cassa_sessioni')
   const chiudi = useAzione('chiudi_sessione_cassa', ['cassa_sessioni'])
   const [fondo, setFondo] = useState('100')
@@ -107,6 +107,8 @@ function SessioneCassa({ modulo }: { modulo: string }) {
   })
   const attesi = s ? Number(s.fondo_iniziale) + contanti.reduce((x, p) => x + Number(p.importo), 0) : 0
 
+  // Finché non si sa se la cassa è aperta, niente «Cassa chiusa» di passaggio.
+  if (isLoading) return <Skeleton className="h-[74px]" />
   if (!s) {
     return (
       <Card className="flex flex-wrap items-end gap-3 p-4">

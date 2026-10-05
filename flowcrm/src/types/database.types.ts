@@ -11190,6 +11190,2642 @@ export type Database = {
           },
         ]
       }
+      gar_aree: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          ordine: number
+          piano: number
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          ordine?: number
+          piano?: number
+          struttura_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          piano?: number
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_aree_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_aree_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_aree_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_aree_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_attese: {
+        Row: {
+          avvisato_il: string | null
+          cliente_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          note: string | null
+          solo_coperto: boolean
+          stato: string
+          struttura_id: string
+          tipo_posto: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          avvisato_il?: string | null
+          cliente_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          solo_coperto?: boolean
+          stato?: string
+          struttura_id: string
+          tipo_posto?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          avvisato_il?: string | null
+          cliente_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          solo_coperto?: boolean
+          stato?: string
+          struttura_id?: string
+          tipo_posto?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_attese_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_attese_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_attese_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_attese_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_attese_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_attese_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_autorizzazioni: {
+        Row: {
+          al: string | null
+          attiva: boolean
+          cliente_id: string
+          codice: string | null
+          convenzione_id: string | null
+          created_at: string
+          created_by: string | null
+          dal: string
+          fasce: NonNullable<Json>
+          id: string
+          livello: string
+          modulo: string
+          note: string | null
+          persona: string | null
+          posti: string[]
+          targa: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          al?: string | null
+          attiva?: boolean
+          cliente_id: string
+          codice?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          fasce?: NonNullable<Json>
+          id?: string
+          livello?: string
+          modulo?: string
+          note?: string | null
+          persona?: string | null
+          posti?: string[]
+          targa?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          al?: string | null
+          attiva?: boolean
+          cliente_id?: string
+          codice?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          fasce?: NonNullable<Json>
+          id?: string
+          livello?: string
+          modulo?: string
+          note?: string | null
+          persona?: string | null
+          posti?: string[]
+          targa?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_autorizzazioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_autorizzazioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_autorizzazioni_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_autorizzazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_autorizzazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_autorizzazioni_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_chiavi: {
+        Row: {
+          armadietto: string | null
+          cliente_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          in_mano_a: string | null
+          modulo: string
+          note: string | null
+          numero: string
+          posizione: string | null
+          stato: string
+          struttura_id: string
+          targa: string | null
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          armadietto?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          in_mano_a?: string | null
+          modulo?: string
+          note?: string | null
+          numero: string
+          posizione?: string | null
+          stato?: string
+          struttura_id: string
+          targa?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          armadietto?: string | null
+          cliente_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          in_mano_a?: string | null
+          modulo?: string
+          note?: string | null
+          numero?: string
+          posizione?: string | null
+          stato?: string
+          struttura_id?: string
+          targa?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_chiavi_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_chiavi_movimenti: {
+        Row: {
+          avvenuto_at: string
+          chiave_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          motivo: string | null
+          operatore_id: string | null
+          persona: string | null
+          tipo: string
+        }
+        Insert: {
+          avvenuto_at?: string
+          chiave_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          motivo?: string | null
+          operatore_id?: string | null
+          persona?: string | null
+          tipo: string
+        }
+        Update: {
+          avvenuto_at?: string
+          chiave_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          motivo?: string | null
+          operatore_id?: string | null
+          persona?: string | null
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_chiavi_movimenti_chiave_id_fkey"
+            columns: ["chiave_id"]
+            isOneToOne: false
+            referencedRelation: "gar_chiavi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_movimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_chiavi_movimenti_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_clienti: {
+        Row: {
+          attivo: boolean
+          codice: string | null
+          codice_fiscale: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          indirizzo: string | null
+          modulo: string
+          nome: string
+          note: string | null
+          organizzazione_id: string | null
+          partita_iva: string | null
+          ricerca: unknown
+          telefono: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          codice?: string | null
+          codice_fiscale?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          nome: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partita_iva?: string | null
+          ricerca?: never
+          telefono?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          codice?: string | null
+          codice_fiscale?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          modulo?: string
+          nome?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partita_iva?: string | null
+          ricerca?: never
+          telefono?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_colonnine: {
+        Row: {
+          asset_id: string | null
+          codice: string
+          connettore: string | null
+          created_at: string
+          created_by: string | null
+          fermo: string | null
+          id: string
+          modulo: string
+          note: string | null
+          posto_id: string | null
+          potenza_kw: number | null
+          prese: number
+          struttura_id: string
+          tariffa_kwh: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          asset_id?: string | null
+          codice: string
+          connettore?: string | null
+          created_at?: string
+          created_by?: string | null
+          fermo?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          posto_id?: string | null
+          potenza_kw?: number | null
+          prese?: number
+          struttura_id: string
+          tariffa_kwh?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          asset_id?: string | null
+          codice?: string
+          connettore?: string | null
+          created_at?: string
+          created_by?: string | null
+          fermo?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          posto_id?: string | null
+          potenza_kw?: number | null
+          prese?: number
+          struttura_id?: string
+          tariffa_kwh?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_colonnine_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_assegnabili"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_contratti: {
+        Row: {
+          canone: number
+          cliente_id: string
+          codice: string | null
+          condizioni: string | null
+          convenzione_id: string | null
+          created_at: string
+          created_by: string | null
+          deposito_cauzionale: number
+          deposito_versato: boolean
+          fine: string | null
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          pagamento_automatico: boolean
+          periodicita: string
+          periodo: unknown
+          posto_id: string | null
+          preavviso_giorni: number
+          rate_fino: string | null
+          recesso_il: string | null
+          rinnovo_automatico: boolean
+          sospeso_al: string | null
+          sospeso_dal: string | null
+          stato: string
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          canone?: number
+          cliente_id: string
+          codice?: string | null
+          condizioni?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deposito_cauzionale?: number
+          deposito_versato?: boolean
+          fine?: string | null
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          pagamento_automatico?: boolean
+          periodicita?: string
+          periodo?: never
+          posto_id?: string | null
+          preavviso_giorni?: number
+          rate_fino?: string | null
+          recesso_il?: string | null
+          rinnovo_automatico?: boolean
+          sospeso_al?: string | null
+          sospeso_dal?: string | null
+          stato?: string
+          struttura_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          canone?: number
+          cliente_id?: string
+          codice?: string | null
+          condizioni?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deposito_cauzionale?: number
+          deposito_versato?: boolean
+          fine?: string | null
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          pagamento_automatico?: boolean
+          periodicita?: string
+          periodo?: never
+          posto_id?: string | null
+          preavviso_giorni?: number
+          rate_fino?: string | null
+          recesso_il?: string | null
+          rinnovo_automatico?: boolean
+          sospeso_al?: string | null
+          sospeso_dal?: string | null
+          stato?: string
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_contratti_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_assegnabili"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_convenzioni: {
+        Row: {
+          al: string | null
+          attiva: boolean
+          canone_mensile: number
+          cliente_id: string
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          dal: string
+          fatturato_fino: string | null
+          fatturazione: string
+          id: string
+          modulo: string
+          note: string | null
+          posti_acquistati: number
+          struttura_id: string
+          tariffario_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          attiva?: boolean
+          canone_mensile?: number
+          cliente_id: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          fatturato_fino?: string | null
+          fatturazione?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          posti_acquistati?: number
+          struttura_id: string
+          tariffario_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          attiva?: boolean
+          canone_mensile?: number
+          cliente_id?: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          fatturato_fino?: string | null
+          fatturazione?: string
+          id?: string
+          modulo?: string
+          note?: string | null
+          posti_acquistati?: number
+          struttura_id?: string
+          tariffario_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_convenzioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_tariffario_id_fkey"
+            columns: ["tariffario_id"]
+            isOneToOne: false
+            referencedRelation: "gar_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_convenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_danni: {
+        Row: {
+          assicurazione: string | null
+          chiuso_at: string | null
+          cliente_id: string | null
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          esito: string | null
+          id: string
+          importo_stimato: number | null
+          modulo: string
+          operatore_id: string | null
+          relazione: string | null
+          responsabilita: string
+          riferimento_video: string | null
+          rilevato_at: string
+          segnalazione_id: string | null
+          sosta_id: string | null
+          stato: string
+          struttura_id: string
+          targa: string | null
+          testimoni: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          assicurazione?: string | null
+          chiuso_at?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          esito?: string | null
+          id?: string
+          importo_stimato?: number | null
+          modulo?: string
+          operatore_id?: string | null
+          relazione?: string | null
+          responsabilita?: string
+          riferimento_video?: string | null
+          rilevato_at?: string
+          segnalazione_id?: string | null
+          sosta_id?: string | null
+          stato?: string
+          struttura_id: string
+          targa?: string | null
+          testimoni?: string | null
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          assicurazione?: string | null
+          chiuso_at?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          esito?: string | null
+          id?: string
+          importo_stimato?: number | null
+          modulo?: string
+          operatore_id?: string | null
+          relazione?: string | null
+          responsabilita?: string
+          riferimento_video?: string | null
+          rilevato_at?: string
+          segnalazione_id?: string | null
+          sosta_id?: string | null
+          stato?: string
+          struttura_id?: string
+          targa?: string | null
+          testimoni?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_danni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_danni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_segnalazione_id_fkey"
+            columns: ["segnalazione_id"]
+            isOneToOne: false
+            referencedRelation: "segnalazioni_sicurezza"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["sosta_id"]
+          },
+          {
+            foreignKeyName: "gar_danni_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_soste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_danni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_danni_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_festivi: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          data: string
+          descrizione: string
+          modulo: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          data: string
+          descrizione: string
+          modulo?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          descrizione?: string
+          modulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_festivi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_pneumatici: {
+        Row: {
+          battistrada_mm: number | null
+          cliente_id: string
+          codice: string | null
+          con_cerchi: boolean
+          created_at: string
+          created_by: string | null
+          data_deposito: string
+          descrizione: string | null
+          id: string
+          marca: string | null
+          misura: string | null
+          modulo: string
+          note: string | null
+          numeri_serie: string | null
+          posizione: string | null
+          quantita: number
+          restituiti_il: string | null
+          restituzione_prevista: string | null
+          stagione: string
+          stato: string
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          battistrada_mm?: number | null
+          cliente_id: string
+          codice?: string | null
+          con_cerchi?: boolean
+          created_at?: string
+          created_by?: string | null
+          data_deposito?: string
+          descrizione?: string | null
+          id?: string
+          marca?: string | null
+          misura?: string | null
+          modulo?: string
+          note?: string | null
+          numeri_serie?: string | null
+          posizione?: string | null
+          quantita?: number
+          restituiti_il?: string | null
+          restituzione_prevista?: string | null
+          stagione?: string
+          stato?: string
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          battistrada_mm?: number | null
+          cliente_id?: string
+          codice?: string | null
+          con_cerchi?: boolean
+          created_at?: string
+          created_by?: string | null
+          data_deposito?: string
+          descrizione?: string | null
+          id?: string
+          marca?: string | null
+          misura?: string | null
+          modulo?: string
+          note?: string | null
+          numeri_serie?: string | null
+          posizione?: string | null
+          quantita?: number
+          restituiti_il?: string | null
+          restituzione_prevista?: string | null
+          stagione?: string
+          stato?: string
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_pneumatici_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_pneumatici_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_posti: {
+        Row: {
+          canone: number | null
+          codice: string
+          coperto: boolean
+          created_at: string
+          created_by: string | null
+          fermo: string | null
+          id: string
+          larghezza_m: number | null
+          lunghezza_m: number | null
+          modulo: string
+          note: string | null
+          numero: number | null
+          piano: number
+          riservato: boolean
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          zona: string | null
+        }
+        Insert: {
+          canone?: number | null
+          codice: string
+          coperto?: boolean
+          created_at?: string
+          created_by?: string | null
+          fermo?: string | null
+          id?: string
+          larghezza_m?: number | null
+          lunghezza_m?: number | null
+          modulo?: string
+          note?: string | null
+          numero?: number | null
+          piano?: number
+          riservato?: boolean
+          struttura_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Update: {
+          canone?: number | null
+          codice?: string
+          coperto?: boolean
+          created_at?: string
+          created_by?: string | null
+          fermo?: string | null
+          id?: string
+          larghezza_m?: number | null
+          lunghezza_m?: number | null
+          modulo?: string
+          note?: string | null
+          numero?: number | null
+          piano?: number
+          riservato?: boolean
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_posti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_posti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_prenotazioni: {
+        Row: {
+          anticipo: number
+          canale: string
+          cliente_id: string | null
+          cliente_nome: string
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          importo_previsto: number | null
+          ingresso: string
+          modulo: string
+          note: string | null
+          periodo: unknown
+          posto_id: string | null
+          stato: string
+          struttura_id: string
+          targa: string | null
+          tariffario_id: string | null
+          telefono: string | null
+          tipo_veicolo: string
+          updated_at: string
+          updated_by: string | null
+          uscita: string
+          veicolo_id: string | null
+        }
+        Insert: {
+          anticipo?: number
+          canale?: string
+          cliente_id?: string | null
+          cliente_nome: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_previsto?: number | null
+          ingresso: string
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          posto_id?: string | null
+          stato?: string
+          struttura_id: string
+          targa?: string | null
+          tariffario_id?: string | null
+          telefono?: string | null
+          tipo_veicolo?: string
+          updated_at?: string
+          updated_by?: string | null
+          uscita: string
+          veicolo_id?: string | null
+        }
+        Update: {
+          anticipo?: number
+          canale?: string
+          cliente_id?: string | null
+          cliente_nome?: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo_previsto?: number | null
+          ingresso?: string
+          modulo?: string
+          note?: string | null
+          periodo?: never
+          posto_id?: string | null
+          stato?: string
+          struttura_id?: string
+          targa?: string | null
+          tariffario_id?: string | null
+          telefono?: string | null
+          tipo_veicolo?: string
+          updated_at?: string
+          updated_by?: string | null
+          uscita?: string
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_prenotazioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_assegnabili"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_tariffario_id_fkey"
+            columns: ["tariffario_id"]
+            isOneToOne: false
+            referencedRelation: "gar_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_prenotazioni_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_rate: {
+        Row: {
+          avviso_il: string | null
+          cliente_id: string
+          conto_id: string | null
+          contratto_id: string
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          importo: number
+          modulo: string
+          pagata_il: string | null
+          periodo_al: string
+          periodo_dal: string
+          scadenza: string
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          avviso_il?: string | null
+          cliente_id: string
+          conto_id?: string | null
+          contratto_id: string
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          importo: number
+          modulo?: string
+          pagata_il?: string | null
+          periodo_al: string
+          periodo_dal: string
+          scadenza: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          avviso_il?: string | null
+          cliente_id?: string
+          conto_id?: string | null
+          contratto_id?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          importo?: number
+          modulo?: string
+          pagata_il?: string | null
+          periodo_al?: string
+          periodo_dal?: string
+          scadenza?: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_rate_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_rate_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_rate_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_rate_contratto_id_fkey"
+            columns: ["contratto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_contratti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_rate_contratto_id_fkey"
+            columns: ["contratto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["contratto_id"]
+          },
+          {
+            foreignKeyName: "gar_rate_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_rate_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_ricariche: {
+        Row: {
+          cliente_id: string | null
+          colonnina_id: string
+          conto_id: string | null
+          convenzione_id: string | null
+          costo: number | null
+          created_at: string
+          created_by: string | null
+          fatturata: boolean
+          fine_at: string | null
+          id: string
+          inizio_at: string
+          kwh: number | null
+          modulo: string
+          operatore_id: string | null
+          presa: number
+          sosta_id: string | null
+          stato: string
+          targa: string
+          tariffa_kwh: number
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          cliente_id?: string | null
+          colonnina_id: string
+          conto_id?: string | null
+          convenzione_id?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          fatturata?: boolean
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string
+          kwh?: number | null
+          modulo?: string
+          operatore_id?: string | null
+          presa?: number
+          sosta_id?: string | null
+          stato?: string
+          targa: string
+          tariffa_kwh: number
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          cliente_id?: string | null
+          colonnina_id?: string
+          conto_id?: string | null
+          convenzione_id?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          fatturata?: boolean
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string
+          kwh?: number | null
+          modulo?: string
+          operatore_id?: string | null
+          presa?: number
+          sosta_id?: string | null
+          stato?: string
+          targa?: string
+          tariffa_kwh?: number
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_ricariche_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_colonnina_id_fkey"
+            columns: ["colonnina_id"]
+            isOneToOne: false
+            referencedRelation: "gar_colonnine"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_colonnina_id_fkey"
+            columns: ["colonnina_id"]
+            isOneToOne: false
+            referencedRelation: "gar_colonnine_stato"
+            referencedColumns: ["colonnina_id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["sosta_id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_soste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_ricariche_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_servizi: {
+        Row: {
+          aliquota_iva: number
+          categoria: string | null
+          cliente_id: string | null
+          codice: string | null
+          consegnato_at: string | null
+          conto_id: string | null
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          id: string
+          iniziato_at: string | null
+          listino_id: string | null
+          modulo: string
+          note: string | null
+          operatore_id: string | null
+          pagato: boolean
+          prezzo: number | null
+          programmato_at: string | null
+          pronto_at: string | null
+          sosta_id: string | null
+          stato: string
+          struttura_id: string
+          targa: string | null
+          updated_at: string
+          updated_by: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          categoria?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          consegnato_at?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          iniziato_at?: string | null
+          listino_id?: string | null
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          pagato?: boolean
+          prezzo?: number | null
+          programmato_at?: string | null
+          pronto_at?: string | null
+          sosta_id?: string | null
+          stato?: string
+          struttura_id: string
+          targa?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          categoria?: string | null
+          cliente_id?: string | null
+          codice?: string | null
+          consegnato_at?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          iniziato_at?: string | null
+          listino_id?: string | null
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          pagato?: boolean
+          prezzo?: number | null
+          programmato_at?: string | null
+          pronto_at?: string | null
+          sosta_id?: string | null
+          stato?: string
+          struttura_id?: string
+          targa?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_servizi_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_listino_id_fkey"
+            columns: ["listino_id"]
+            isOneToOne: false
+            referencedRelation: "gar_servizi_listino"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["sosta_id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_sosta_id_fkey"
+            columns: ["sosta_id"]
+            isOneToOne: false
+            referencedRelation: "gar_soste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_servizi_listino: {
+        Row: {
+          aliquota_iva: number
+          attivo: boolean
+          categoria: string
+          created_at: string
+          created_by: string | null
+          durata_min: number | null
+          id: string
+          modulo: string
+          nome: string
+          prezzo: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          attivo?: boolean
+          categoria?: string
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number | null
+          id?: string
+          modulo?: string
+          nome: string
+          prezzo?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          attivo?: boolean
+          categoria?: string
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number | null
+          id?: string
+          modulo?: string
+          nome?: string
+          prezzo?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_servizi_listino_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_servizi_listino_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_soste: {
+        Row: {
+          cliente_id: string | null
+          conto_id: string | null
+          contratto_id: string | null
+          convenzione_id: string | null
+          created_at: string
+          created_by: string | null
+          dettaglio: Json | null
+          fatturata: boolean
+          id: string
+          importo: number | null
+          ingresso_at: string
+          minuti: number | null
+          modalita_ingresso: string
+          modalita_uscita: string | null
+          modulo: string
+          note: string | null
+          operatore_ingresso: string | null
+          operatore_uscita: string | null
+          posto_id: string | null
+          prenotazione_id: string | null
+          stato: string
+          struttura_id: string
+          targa: string
+          tariffario_id: string | null
+          ticket: string | null
+          tipo_veicolo: string
+          updated_at: string
+          updated_by: string | null
+          uscita_at: string | null
+          veicolo_id: string | null
+        }
+        Insert: {
+          cliente_id?: string | null
+          conto_id?: string | null
+          contratto_id?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          dettaglio?: Json | null
+          fatturata?: boolean
+          id?: string
+          importo?: number | null
+          ingresso_at?: string
+          minuti?: number | null
+          modalita_ingresso?: string
+          modalita_uscita?: string | null
+          modulo?: string
+          note?: string | null
+          operatore_ingresso?: string | null
+          operatore_uscita?: string | null
+          posto_id?: string | null
+          prenotazione_id?: string | null
+          stato?: string
+          struttura_id: string
+          targa: string
+          tariffario_id?: string | null
+          ticket?: string | null
+          tipo_veicolo?: string
+          updated_at?: string
+          updated_by?: string | null
+          uscita_at?: string | null
+          veicolo_id?: string | null
+        }
+        Update: {
+          cliente_id?: string | null
+          conto_id?: string | null
+          contratto_id?: string | null
+          convenzione_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          dettaglio?: Json | null
+          fatturata?: boolean
+          id?: string
+          importo?: number | null
+          ingresso_at?: string
+          minuti?: number | null
+          modalita_ingresso?: string
+          modalita_uscita?: string | null
+          modulo?: string
+          note?: string | null
+          operatore_ingresso?: string | null
+          operatore_uscita?: string | null
+          posto_id?: string | null
+          prenotazione_id?: string | null
+          stato?: string
+          struttura_id?: string
+          targa?: string
+          tariffario_id?: string | null
+          ticket?: string | null
+          tipo_veicolo?: string
+          updated_at?: string
+          updated_by?: string | null
+          uscita_at?: string | null
+          veicolo_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_soste_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_contratto_id_fkey"
+            columns: ["contratto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_contratti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_contratto_id_fkey"
+            columns: ["contratto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["contratto_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_convenzione_id_fkey"
+            columns: ["convenzione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_convenzioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_operatore_ingresso_fkey"
+            columns: ["operatore_ingresso"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_operatore_uscita_fkey"
+            columns: ["operatore_uscita"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_assegnabili"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "gar_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_soste_tariffario_id_fkey"
+            columns: ["tariffario_id"]
+            isOneToOne: false
+            referencedRelation: "gar_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_soste_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_strutture: {
+        Row: {
+          altezza_max_m: number | null
+          attiva: boolean
+          avvisa_ingresso: boolean
+          comune: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          indirizzo: string | null
+          modalita_accesso: string[]
+          modulo: string
+          nome: string
+          note: string | null
+          orari: NonNullable<Json>
+          peso_max_kg: number | null
+          piani: number
+          responsabile_id: string | null
+          superficie_mq: number | null
+          tipologia: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          altezza_max_m?: number | null
+          attiva?: boolean
+          avvisa_ingresso?: boolean
+          comune?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          indirizzo?: string | null
+          modalita_accesso?: string[]
+          modulo?: string
+          nome: string
+          note?: string | null
+          orari?: NonNullable<Json>
+          peso_max_kg?: number | null
+          piani?: number
+          responsabile_id?: string | null
+          superficie_mq?: number | null
+          tipologia?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          altezza_max_m?: number | null
+          attiva?: boolean
+          avvisa_ingresso?: boolean
+          comune?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          indirizzo?: string | null
+          modalita_accesso?: string[]
+          modulo?: string
+          nome?: string
+          note?: string | null
+          orari?: NonNullable<Json>
+          peso_max_kg?: number | null
+          piani?: number
+          responsabile_id?: string | null
+          superficie_mq?: number | null
+          tipologia?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_strutture_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_strutture_responsabile_id_fkey"
+            columns: ["responsabile_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_strutture_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_tariffari: {
+        Row: {
+          annuale: number | null
+          attivo: boolean
+          condizioni: string | null
+          convenzionato: boolean
+          created_at: string
+          created_by: string | null
+          festivo_pct: number
+          franchigia_min: number
+          frazione_min: number
+          id: string
+          mensile: number | null
+          modulo: string
+          nome: string
+          notte_alle: string | null
+          notte_dalle: string | null
+          prezzo_frazione: number
+          prezzo_notte: number | null
+          settimanale: number | null
+          struttura_id: string
+          tetto_giornaliero: number | null
+          tipo_veicolo: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          annuale?: number | null
+          attivo?: boolean
+          condizioni?: string | null
+          convenzionato?: boolean
+          created_at?: string
+          created_by?: string | null
+          festivo_pct?: number
+          franchigia_min?: number
+          frazione_min?: number
+          id?: string
+          mensile?: number | null
+          modulo?: string
+          nome: string
+          notte_alle?: string | null
+          notte_dalle?: string | null
+          prezzo_frazione: number
+          prezzo_notte?: number | null
+          settimanale?: number | null
+          struttura_id: string
+          tetto_giornaliero?: number | null
+          tipo_veicolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          annuale?: number | null
+          attivo?: boolean
+          condizioni?: string | null
+          convenzionato?: boolean
+          created_at?: string
+          created_by?: string | null
+          festivo_pct?: number
+          franchigia_min?: number
+          frazione_min?: number
+          id?: string
+          mensile?: number | null
+          modulo?: string
+          nome?: string
+          notte_alle?: string | null
+          notte_dalle?: string | null
+          prezzo_frazione?: number
+          prezzo_notte?: number | null
+          settimanale?: number | null
+          struttura_id?: string
+          tetto_giornaliero?: number | null
+          tipo_veicolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_tariffari_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_tariffari_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_tariffari_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+          {
+            foreignKeyName: "gar_tariffari_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_veicoli: {
+        Row: {
+          alimentazione: string | null
+          altezza_m: number | null
+          assicurazione: string | null
+          assicurazione_scadenza: string | null
+          cilindrata: number | null
+          cliente_id: string | null
+          colore: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          larghezza_m: number | null
+          lunghezza_m: number | null
+          marca: string | null
+          modello: string | null
+          modulo: string
+          note: string | null
+          peso_kg: number | null
+          proprietario: string | null
+          ricerca: unknown
+          targa: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          utilizzatore: string | null
+        }
+        Insert: {
+          alimentazione?: string | null
+          altezza_m?: number | null
+          assicurazione?: string | null
+          assicurazione_scadenza?: string | null
+          cilindrata?: number | null
+          cliente_id?: string | null
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          larghezza_m?: number | null
+          lunghezza_m?: number | null
+          marca?: string | null
+          modello?: string | null
+          modulo?: string
+          note?: string | null
+          peso_kg?: number | null
+          proprietario?: string | null
+          ricerca?: never
+          targa: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          utilizzatore?: string | null
+        }
+        Update: {
+          alimentazione?: string | null
+          altezza_m?: number | null
+          assicurazione?: string | null
+          assicurazione_scadenza?: string | null
+          cilindrata?: number | null
+          cliente_id?: string | null
+          colore?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          larghezza_m?: number | null
+          lunghezza_m?: number | null
+          marca?: string | null
+          modello?: string | null
+          modulo?: string
+          note?: string | null
+          peso_kg?: number | null
+          proprietario?: string | null
+          ricerca?: never
+          targa?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          utilizzatore?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_veicoli_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_veicoli_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_veicoli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_veicoli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gare: {
         Row: {
           aggiudicatario: string | null
@@ -21270,6 +23906,304 @@ export type Database = {
           },
         ]
       }
+      gar_clienti_riepilogo: {
+        Row: {
+          attivo: boolean | null
+          cliente_id: string | null
+          codice: string | null
+          contatto_id: string | null
+          contratti_attivi: number | null
+          da_pagare: number | null
+          dentro: number | null
+          email: string | null
+          insoluto: number | null
+          modulo: string | null
+          nome: string | null
+          organizzazione_id: string | null
+          posti: string | null
+          prossima_scadenza: string | null
+          targhe: string | null
+          telefono: string | null
+          tipo: string | null
+          ultimo_accesso: string | null
+          veicoli: number | null
+        }
+        Insert: {
+          attivo?: boolean | null
+          cliente_id?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          contratti_attivi?: never
+          da_pagare?: never
+          dentro?: never
+          email?: string | null
+          insoluto?: never
+          modulo?: string | null
+          nome?: string | null
+          organizzazione_id?: string | null
+          posti?: never
+          prossima_scadenza?: never
+          targhe?: never
+          telefono?: string | null
+          tipo?: string | null
+          ultimo_accesso?: never
+          veicoli?: never
+        }
+        Update: {
+          attivo?: boolean | null
+          cliente_id?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          contratti_attivi?: never
+          da_pagare?: never
+          dentro?: never
+          email?: string | null
+          insoluto?: never
+          modulo?: string | null
+          nome?: string | null
+          organizzazione_id?: string | null
+          posti?: never
+          prossima_scadenza?: never
+          targhe?: never
+          telefono?: string | null
+          tipo?: string | null
+          ultimo_accesso?: never
+          veicoli?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "gar_clienti_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gar_colonnine_stato: {
+        Row: {
+          asset_id: string | null
+          codice: string | null
+          colonnina_id: string | null
+          connettore: string | null
+          fermo: string | null
+          modulo: string | null
+          note: string | null
+          posto: string | null
+          posto_id: string | null
+          potenza_kw: number | null
+          prese: number | null
+          prese_in_uso: number | null
+          prese_libere: number | null
+          stato: string | null
+          struttura_id: string | null
+          tariffa_kwh: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_colonnine_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_assegnabili"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_posto_id_fkey"
+            columns: ["posto_id"]
+            isOneToOne: false
+            referencedRelation: "gar_posti_stato"
+            referencedColumns: ["posto_id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_colonnine_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+        ]
+      }
+      gar_posti_assegnabili: {
+        Row: {
+          canone: number | null
+          codice: string | null
+          coperto: boolean | null
+          modulo: string | null
+          numero: number | null
+          piano: number | null
+          posto_id: string | null
+          struttura_id: string | null
+          tipo: string | null
+          zona: string | null
+        }
+        Insert: {
+          canone?: number | null
+          codice?: string | null
+          coperto?: boolean | null
+          modulo?: string | null
+          numero?: number | null
+          piano?: number | null
+          posto_id?: string | null
+          struttura_id?: string | null
+          tipo?: string | null
+          zona?: string | null
+        }
+        Update: {
+          canone?: number | null
+          codice?: string | null
+          coperto?: boolean | null
+          modulo?: string | null
+          numero?: number | null
+          piano?: number | null
+          posto_id?: string | null
+          struttura_id?: string | null
+          tipo?: string | null
+          zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+        ]
+      }
+      gar_posti_stato: {
+        Row: {
+          assegnato_dal: string | null
+          canone: number | null
+          cliente: string | null
+          cliente_id: string | null
+          codice: string | null
+          contratto_id: string | null
+          coperto: boolean | null
+          fermo: string | null
+          ingresso_at: string | null
+          modulo: string | null
+          note: string | null
+          numero: number | null
+          piano: number | null
+          posto_id: string | null
+          prenotato_da: string | null
+          prenotato_dalle: string | null
+          prenotazione_id: string | null
+          riservato: boolean | null
+          sosta_id: string | null
+          stato: string | null
+          struttura_id: string | null
+          targa: string | null
+          targa_assegnata: string | null
+          ticket: string | null
+          tipo: string | null
+          veicolo_id: string | null
+          zona: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gar_contratti_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "gar_clienti_riepilogo"
+            referencedColumns: ["cliente_id"]
+          },
+          {
+            foreignKeyName: "gar_contratti_veicolo_id_fkey"
+            columns: ["veicolo_id"]
+            isOneToOne: false
+            referencedRelation: "gar_veicoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gar_posti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "gar_strutture_riepilogo"
+            referencedColumns: ["struttura_id"]
+          },
+        ]
+      }
+      gar_strutture_riepilogo: {
+        Row: {
+          auto: number | null
+          commerciali: number | null
+          coperti: number | null
+          disabili: number | null
+          elettrici: number | null
+          fermi: number | null
+          modulo: string | null
+          moto: number | null
+          nome: string | null
+          posti: number | null
+          scoperti: number | null
+          struttura_id: string | null
+        }
+        Relationships: []
+      }
       gift_card_saldi: {
         Row: {
           codice: string | null
@@ -22584,6 +25518,99 @@ export type Database = {
         Args: { p_contatto?: string; p_righe: Json }
         Returns: string
       }
+      gar_apri_conto: {
+        Args: {
+          p_cliente: string
+          p_descrizione: string
+          p_id: string
+          p_importo: number
+          p_iva?: number
+          p_riga: string
+          p_tipo: string
+        }
+        Returns: string
+      }
+      gar_attese_avvisa: { Args: Record<PropertyKey, never>; Returns: number }
+      gar_avvisa: {
+        Args: { p_cliente: string; p_oggetto: string; p_testo: string }
+        Returns: boolean
+      }
+      gar_calcola_tariffa: {
+        Args: { p_ingresso: string; p_tariffario: string; p_uscita: string }
+        Returns: Json
+      }
+      gar_convenzione_consuntivo: {
+        Args: { p_al: string; p_convenzione: string; p_dal: string }
+        Returns: Json
+      }
+      gar_cruscotto: { Args: { p_struttura: string }; Returns: Json }
+      gar_emetti_rate: {
+        Args: { p_contratto: string; p_fino?: string }
+        Returns: number
+      }
+      gar_euro: { Args: { p: number }; Returns: string }
+      gar_fattura_convenzione: {
+        Args: { p_al: string; p_convenzione: string; p_numero: string }
+        Returns: string
+      }
+      gar_festivo: { Args: { p_data: string }; Returns: boolean }
+      gar_giro_notturno: { Args: Record<PropertyKey, never>; Returns: Json }
+      gar_incassa_rata: {
+        Args: {
+          p_metodo?: Database["public"]["Enums"]["pagamento_metodo"]
+          p_rata: string
+        }
+        Returns: string
+      }
+      gar_ingresso: {
+        Args: {
+          p_modalita?: string
+          p_posto?: string
+          p_struttura: string
+          p_targa: string
+          p_tipo_veicolo?: string
+        }
+        Returns: Json
+      }
+      gar_kpi: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: Json
+      }
+      gar_notifica_direzione: {
+        Args: {
+          p_messaggio: string
+          p_tipo?: Database["public"]["Enums"]["notifica_tipo"]
+          p_titolo: string
+          p_url: string
+        }
+        Returns: undefined
+      }
+      gar_oggi: { Args: Record<PropertyKey, never>; Returns: string }
+      gar_ricarica_avvia: {
+        Args: { p_colonnina: string; p_presa?: number; p_targa: string }
+        Returns: string
+      }
+      gar_ricarica_chiudi: {
+        Args: { p_kwh: number; p_ricarica: string }
+        Returns: Json
+      }
+      gar_targa: { Args: { p: string }; Returns: string }
+      gar_tariffario_per: {
+        Args: {
+          p_convenzionato?: boolean
+          p_struttura: string
+          p_tipo_veicolo: string
+        }
+        Returns: string
+      }
+      gar_uscita: {
+        Args: { p_modalita?: string; p_sosta: string }
+        Returns: Json
+      }
+      gar_verifica_accesso: {
+        Args: { p_istante?: string; p_struttura: string; p_targa: string }
+        Returns: Json
+      }
       genera_codice: { Args: { p_prefisso: string }; Returns: string }
       genera_codice_gift_card: {
         Args: Record<PropertyKey, never>
@@ -23121,6 +26148,22 @@ export type Database = {
         Returns: string[]
       }
       seg_fior_ricorrenze: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_gar_abbonati: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_gar_ex: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_gar_in_scadenza: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_gar_occasionali: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
