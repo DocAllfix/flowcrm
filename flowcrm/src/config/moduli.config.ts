@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, Flower2, Warehouse, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, Flower2, Warehouse, Building, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -37,6 +37,8 @@ import { FIORAIO_NAV } from '@/modules/fioraio/nav'
 import { fioraioRoutes } from '@/modules/fioraio/routes'
 import { GARAGE_NAV } from '@/modules/garage/nav'
 import { garageRoutes } from '@/modules/garage/routes'
+import { IMMOBILIARE_NAV } from '@/modules/immobiliare/nav'
+import { immobiliareRoutes } from '@/modules/immobiliare/routes'
 
 export interface ModuloDef {
   slug: string
@@ -140,6 +142,14 @@ export const MODULI: ModuloDef[] = [
     descrizione: 'Per autorimesse e parcheggi: posti dal vivo, ingressi e uscite con tariffa, abbonamenti, chiavi, danni, ricarica',
     nav: GARAGE_NAV,
     routes: garageRoutes,
+  },
+  {
+    slug: 'immobiliare',
+    label: 'Agenzia immobiliare',
+    icon: Building,
+    descrizione: "Per agenzie immobiliari: fascicolo dell'immobile, incarichi, matching con i clienti, visite, proposte, rogiti, locazioni, provvigioni",
+    nav: IMMOBILIARE_NAV,
+    routes: immobiliareRoutes,
   },
 ]
 
