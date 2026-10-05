@@ -26,7 +26,7 @@ export function GET() {
     "",
     "## Pagine",
     `- [Presentazione](${URL_CANONICO}/): funzioni, moduli, come si parte, domande frequenti`,
-    `- [Moduli di settore](${URL_CANONICO}/moduli): il nucleo e i cinque moduli, con una pagina per ciascuno`,
+    `- [Moduli di settore](${URL_CANONICO}/moduli): il nucleo e i dodici moduli, raggruppati per famiglia, con una pagina per ciascuno`,
     `- [Sicurezza e dati](${URL_CANONICO}/sicurezza): dove stanno i dati, permessi, backup, sub-responsabili`,
     "",
     ...(articoli().length

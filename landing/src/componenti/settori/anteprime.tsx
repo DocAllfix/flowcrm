@@ -1,6 +1,6 @@
 import type { IdSettore } from "@/contenuti/settori";
 import type { DatiFinestra } from "./Finestra";
-import { Anteprima, Chip, Etichetta, Intestazione, RigaBarra, Righe } from "./Pezzi";
+import { Anteprima, Chip, Etichetta, Intestazione, RigaBarra, Righe, type Tono } from "./Pezzi";
 
 /**
  * Le anteprime delle pagine di settore: la finestra dell'hero e le quattro tessere di
@@ -477,6 +477,408 @@ function Referti() {
   );
 }
 
+/* ─────────────── Pezzi delle anteprime dei moduli nuovi ─────────────── */
+/* Sette moduli, ventotto tessere: le compongono quattro forme ricorrenti (righe,
+   barre, griglia di posti, registri), così la grammatica resta quella del resto. */
+
+type RigaDati = { titolo: string; nota?: string; stato?: string; tono?: Tono };
+
+function TesseraRighe({ etichetta, righe, piede }: { etichetta: string; righe: RigaDati[]; piede?: [string, string] }) {
+  return (
+    <Anteprima>
+      <Etichetta>{etichetta}</Etichetta>
+      <div className="mt-3">
+        <Righe righe={righe} />
+      </div>
+      {piede && (
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-filo pt-3 text-[0.75rem]">
+          <span className="text-tenue">{piede[0]}</span>
+          <span className="cifre shrink-0 font-semibold">{piede[1]}</span>
+        </div>
+      )}
+    </Anteprima>
+  );
+}
+
+function TesseraBarre({ etichetta, barre, nota }: { etichetta: string; barre: [string, string, number, boolean?][]; nota?: [string, string] }) {
+  return (
+    <Anteprima>
+      <Etichetta>{etichetta}</Etichetta>
+      <div className="mt-3 space-y-3">
+        {barre.map(([e, v, p, a]) => (
+          <RigaBarra key={e} etichetta={e} valore={v} percento={p} accento={a} />
+        ))}
+      </div>
+      {nota && (
+        <div className="mt-4 rounded-sm border border-filo bg-foglio px-3 py-2">
+          <p className="text-[0.75rem] font-semibold">{nota[0]}</p>
+          <p className="text-[0.75rem] text-tenue">{nota[1]}</p>
+        </div>
+      )}
+    </Anteprima>
+  );
+}
+
+type StatoCella = "libero" | "occupato" | "riservato" | "attesa";
+const CELLE: Record<StatoCella, string> = {
+  libero: "border-filo bg-foglio text-tenue",
+  occupato: "border-inchiostro bg-inchiostro text-carta",
+  riservato: "border-filo bg-carta-2 text-inchiostro",
+  attesa: "border-cotto bg-cotto/10 text-cotto-scuro",
+};
+
+function TesseraGriglia({ etichetta, colonne, celle, legenda, piede }: { etichetta: string; colonne: number; celle: [string, StatoCella][]; legenda: [StatoCella, string][]; piede?: string }) {
+  return (
+    <Anteprima>
+      <Etichetta>{etichetta}</Etichetta>
+      <div className="mt-3 grid gap-1.5" style={{ gridTemplateColumns: `repeat(${colonne}, minmax(0, 1fr))` }}>
+        {celle.map(([nome, stato]) => (
+          <span key={nome} className={`truncate rounded-sm border px-1 py-1.5 text-center text-[0.6875rem] font-semibold ${CELLE[stato]}`}>
+            {nome}
+          </span>
+        ))}
+      </div>
+      <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[0.6875rem] text-tenue">
+        {legenda.map(([stato, testo]) => (
+          <span key={stato} className="flex items-center gap-1.5">
+            <span className={`inline-block size-2.5 rounded-[2px] border ${CELLE[stato]}`} /> {testo}
+          </span>
+        ))}
+      </p>
+      {piede && <p className="mt-3 border-t border-filo pt-3 text-[0.75rem] font-semibold">{piede}</p>}
+    </Anteprima>
+  );
+}
+
+function TesseraRegistri({ voci }: { voci: [string, string, string, Tono][] }) {
+  return (
+    <Anteprima>
+      <div className="space-y-3">
+        {voci.map(([registro, cosa, esito, tono]) => (
+          <div key={cosa} className="flex items-center gap-3 rounded-sm border border-filo bg-foglio px-3 py-2">
+            <span className="min-w-0 flex-1">
+              <span className="block text-[0.6875rem] uppercase tracking-[0.1em] text-tenue">{registro}</span>
+              <span className="block truncate text-[0.8125rem] font-semibold">{cosa}</span>
+            </span>
+            <Chip tono={tono}>{esito}</Chip>
+          </div>
+        ))}
+      </div>
+    </Anteprima>
+  );
+}
+
+/* ───────────────────────── Ristorante ───────────────────────── */
+
+const SalaRistorante = () => (
+  <TesseraGriglia
+    etichetta="Sala interna · stasera"
+    colonne={4}
+    celle={[["1", "libero"], ["2", "occupato"], ["3", "riservato"], ["4", "occupato"], ["5", "attesa"], ["6", "riservato"], ["7", "libero"], ["8", "riservato"]]}
+    legenda={[["libero", "Libero"], ["occupato", "Al servizio"], ["riservato", "Prenotato"], ["attesa", "Seduti, da ordinare"]]}
+    piede="Lista d'attesa · Pellegrini, 3 persone · circa 25 minuti"
+  />
+);
+const CucinaRistorante = () => (
+  <TesseraRighe
+    etichetta="Cucina · postazione primi e secondi"
+    righe={[
+      { titolo: "2 × Risotto ai porcini", nota: "Tavolo 2 · uno senza formaggio", stato: "In preparazione", tono: "accento" },
+      { titolo: "1 × Tagliata di manzo", nota: "Tavolo 2 · cottura media", stato: "Attende il via", tono: "attesa" },
+      { titolo: "4 × Casoncelli", nota: "Tavolo 4 · seconda uscita", stato: "Pronti", tono: "fatto" },
+    ]}
+    piede={["Tempo medio di preparazione stasera", "11 minuti"]}
+  />
+);
+const RicetteRistorante = () => (
+  <TesseraBarre
+    etichetta="Food cost per piatto"
+    barre={[["Risotto ai porcini", "24%", 24], ["Tagliata di manzo", "33%", 33, true], ["Casoncelli alla bergamasca", "22%", 22], ["Tiramisù della casa", "18%", 18]]}
+    nota={["Allergeni · Risotto ai porcini", "Latte, sedano (dal brodo vegetale)"]}
+  />
+);
+const HaccpRistorante = () => (
+  <TesseraRegistri
+    voci={[
+      ["Temperature", "Frigo carni · 2,5 °C", "Nella soglia", "fatto"],
+      ["Temperature", "Frigo carni · 6,5 °C ieri sera", "Azione correttiva", "accento"],
+      ["Sanificazione", "Piani di lavoro · chiusura", "Fatto", "fatto"],
+      ["Eventi", "Pranzo di comunione · 34 coperti", "Confermato", "neutro"],
+    ]}
+  />
+);
+
+/* ───────────────────────── Bar ───────────────────────── */
+
+const BancoBar = () => (
+  <TesseraRighe
+    etichetta="Banco · comande in corso"
+    righe={[
+      { titolo: "2 × Espresso, 1 × Cappuccino", nota: "Macchina del caffè · banco", stato: "Pronto", tono: "fatto" },
+      { titolo: "2 × Spritz, 1 × Gin tonic", nota: "Bancone cocktail · tavolino T3", stato: "In preparazione", tono: "accento" },
+      { titolo: "1 × Spremuta", nota: "Bancone · asporto", stato: "Da fare", tono: "attesa" },
+    ]}
+    piede={["Attesa media al banco oggi", "3 minuti"]}
+  />
+);
+const PromozioniBar = () => (
+  <TesseraRighe
+    etichetta="Promozioni attive"
+    righe={[
+      { titolo: "Happy hour cocktail", nota: "Da lunedì a sabato · 18:00-20:00", stato: "In corso", tono: "accento" },
+      { titolo: "Prendi 3 paghi 2 · birre", nota: "Venerdì · 21:00-01:00", stato: "Stasera", tono: "neutro" },
+      { titolo: "Colazione completa", nota: "Tutti i giorni · 7:00-10:30", stato: "Chiusa", tono: "attesa" },
+    ]}
+  />
+);
+const ConvenzioniBar = () => (
+  <TesseraBarre
+    etichetta="Convenzione · Uffici Alfa"
+    barre={[["Spesa del mese sul limite aziendale", "62%", 62], ["Mario Rossi · limite di oggi", "80%", 80, true], ["Lucia Neri · limite di oggi", "35%", 35]]}
+    nota={["14 dipendenti autorizzati", "Listino riservato · fattura a fine mese"]}
+  />
+);
+const MescitaBar = () => (
+  <TesseraRighe
+    etichetta="Mescita · teorico e reale"
+    righe={[
+      { titolo: "Gin London Dry", nota: "Scarto oltre la soglia del locale", stato: "Da verificare", tono: "accento" },
+      { titolo: "Vermouth rosso", nota: "Versato in linea con le ricette", stato: "In linea", tono: "fatto" },
+      { titolo: "Tessera di Carla", nota: "Caffè sospeso · 9 timbri su 10", stato: "Quasi premio", tono: "neutro" },
+    ]}
+    piede={["Proposta di riordino", "Acqua tonica, 2 casse"]}
+  />
+);
+
+/* ───────────────────────── Hotel ───────────────────────── */
+
+function PlanningHotel() {
+  const righe = [
+    ["101", [[0, 3, "Galli"], [4, 7, "Conti"]]],
+    ["102", [[1, 5, "Longo"]]],
+    ["201", [[0, 1, "Caruso"], [2, 6, "Ferrara"]]],
+    ["202", [[0, 2, "Vitale"], [3, 7, "Coppola"]]],
+    ["301", [[0, 4, "Weber", true]]],
+  ] as const;
+  return (
+    <Anteprima>
+      <Etichetta>Planning · settimana</Etichetta>
+      <div className="mt-3 space-y-1.5">
+        {righe.map(([camera, soggiorni]) => (
+          <div key={camera} className="flex items-center gap-2">
+            <span className="w-8 shrink-0 font-mono text-[0.6875rem] text-tenue">{camera}</span>
+            <div className="relative h-5 flex-1 rounded-sm bg-carta-2">
+              {soggiorni.map(([da, a, nome, evidenza]) => (
+                <span
+                  key={nome}
+                  className={`absolute inset-y-0 truncate rounded-sm border px-1 text-[0.625rem] font-semibold leading-[1.15rem] ${evidenza ? "border-cotto bg-cotto/10 text-cotto-scuro" : "border-inchiostro/30 bg-foglio"}`}
+                  style={{ left: `${(da / 7) * 100}%`, width: `${((a - da) / 7) * 100}%` }}
+                >
+                  {nome}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 border-t border-filo pt-3 text-[0.75rem] text-tenue">Una camera non si assegna mai due volte nella stessa notte.</p>
+    </Anteprima>
+  );
+}
+const TariffeHotel = () => (
+  <TesseraRighe
+    etichetta="Piani tariffari · Doppia vista lago"
+    righe={[
+      { titolo: "Miglior tariffa", nota: "Fine settimana più cara · soggiorno minimo 2 notti", stato: "Base", tono: "neutro" },
+      { titolo: "Non rimborsabile", nota: "Sconto sulla miglior tariffa", stato: "Attivo", tono: "fatto" },
+      { titolo: "Prenota prima", nota: "Almeno 30 giorni di anticipo", stato: "Attivo", tono: "fatto" },
+      { titolo: "Portale online", nota: "Commissione dell'intermediario", stato: "18%", tono: "accento" },
+    ]}
+  />
+);
+const ContoHotel = () => (
+  <TesseraRighe
+    etichetta="Check-out · camera 301"
+    righe={[
+      { titolo: "4 notti in mezza pensione", nota: "Addebitate dalla chiusura notturna", stato: "Sul conto", tono: "fatto" },
+      { titolo: "Ristorante e minibar", nota: "Cena di giovedì · due bottiglie d'acqua", stato: "Sul conto", tono: "fatto" },
+      { titolo: "Tassa di soggiorno", nota: "2 adulti · bambino esente sotto i 14 anni", stato: "Calcolata", tono: "neutro" },
+      { titolo: "Ospiti registrati", nota: "3 su 3 · file Alloggiati pronto", stato: "Pronto", tono: "accento" },
+    ]}
+  />
+);
+const IndicatoriHotel = () => (
+  <TesseraBarre
+    etichetta="Ultimi 30 giorni"
+    barre={[["Occupazione", "71%", 71], ["Prenotazioni dirette", "49%", 49], ["Prenotazioni dai portali", "40%", 40, true], ["Cancellazioni", "4%", 4]]}
+    nota={["Suggerimento", "Weekend al 92%: valuta un aumento sulla Junior suite"]}
+  />
+);
+
+/* ───────────────────────── Palestra ───────────────────────── */
+
+const SociPalestra = () => (
+  <TesseraRighe
+    etichetta="Scadenze e rinnovi"
+    righe={[
+      { titolo: "Martina Locatelli", nota: "Open trimestrale · rinnovo automatico", stato: "Scade fra 6 giorni", tono: "accento" },
+      { titolo: "Federico Mazzoleni", nota: "Sospeso per infortunio · fine prorogata", stato: "Sospeso", tono: "attesa" },
+      { titolo: "Chiara Arnoldi", nota: "Annuale · convenzione Brembo Logistica", stato: "Attivo", tono: "fatto" },
+    ]}
+    piede={["Abbonamenti in scadenza entro 7 giorni", "11"]}
+  />
+);
+const ReceptionPalestra = () => (
+  <TesseraRighe
+    etichetta="Reception · ingressi di stamattina"
+    righe={[
+      { titolo: "Simone Carminati", nota: "Badge · sala pesi", stato: "Entrato", tono: "fatto" },
+      { titolo: "Riccardo Belotti", nota: "Rata insoluta da 12 giorni", stato: "Non entra", tono: "accento" },
+      { titolo: "Elena Gamba", nota: "QR · fascia mattina", stato: "Entrata", tono: "fatto" },
+      { titolo: "Nicola Magni", nota: "Certificato medico scaduto", stato: "Non entra", tono: "accento" },
+    ]}
+  />
+);
+const CorsiPalestra = () => (
+  <TesseraBarre
+    etichetta="Lezioni di oggi"
+    barre={[["18:30 · Pilates", "14 su 14 · 2 in attesa", 100, true], ["19:30 · Spinning", "11 su 14", 79], ["20:30 · Zumba", "16 su 20", 80]]}
+    nota={["Disdetta dell'ultimo minuto", "Il posto al Pilates passa al primo in lista"]}
+  />
+);
+const TrainerPalestra = () => (
+  <TesseraRighe
+    etichetta="Personal training · Sara"
+    righe={[
+      { titolo: "Scheda di ottobre · Alessia Rota", nota: "Versione 3 · forza e postura", stato: "In corso", tono: "neutro" },
+      { titolo: "Valutazione iniziale · Luca Bergamelli", nota: "Consenso ai dati sulla salute registrato", stato: "Fatta", tono: "fatto" },
+      { titolo: "Sessione delle 17:00", nota: "Pacchetto 10 sessioni · 4 rimaste", stato: "Oggi", tono: "accento" },
+    ]}
+  />
+);
+
+/* ───────────────────────── Fioraio ───────────────────────── */
+
+const OrdiniFioraio = () => (
+  <TesseraRighe
+    etichetta="Consegne di oggi · per zona"
+    righe={[
+      { titolo: "Nonna Lina · Borgo Palazzo", nota: "Da Marta Pedrini · entro le 15", stato: "In consegna", tono: "accento" },
+      { titolo: "Dott.ssa Carrara · Centro", nota: "Da Paola Vavassori · 10:00", stato: "Pronta", tono: "fatto" },
+      { titolo: "Reception Studio Ferri", nota: "Abbonamento settimanale", stato: "Da assegnare", tono: "attesa" },
+    ]}
+    piede={["Ritiri in negozio oggi", "2"]}
+  />
+);
+const LaboratorioFioraio = () => (
+  <TesseraRighe
+    etichetta="Laboratorio · commesse"
+    righe={[
+      { titolo: "Cuscino di lilium e rose bianche", nota: "Esequie Ruggeri · 45 minuti", stato: "Da fare", tono: "attesa" },
+      { titolo: "Bouquet 12 rose rosse", nota: "Distinta: rose, eucalipto, nastro", stato: "In corso", tono: "accento" },
+      { titolo: "Mazzo di tulipani", nota: "Ritiro alle 18", stato: "Pronta", tono: "fatto" },
+    ]}
+    piede={["Materiali scaricati quando la composizione è pronta", "Sì"]}
+  />
+);
+const MagazzinoFioraio = () => (
+  <TesseraBarre
+    etichetta="Fiori · vita commerciale residua"
+    barre={[["Peonie · arrivate 3 giorni fa", "1 giorno", 20, true], ["Tulipani", "2 giorni", 35, true], ["Rose rosse Freedom", "5 giorni", 70], ["Lilium bianco", "7 giorni", 90]]}
+    nota={["Sotto scorta", "Rose bianche e spugna da fiori"]}
+  />
+);
+const RicorrenzeFioraio = () => (
+  <TesseraRighe
+    etichetta="Ricorrenze e abbonamenti"
+    righe={[
+      { titolo: "Compleanno della moglie Elisa", nota: "Roberto Agostinelli · fra 5 giorni", stato: "Promemoria", tono: "accento" },
+      { titolo: "Fiori della hall · Albergo San Marco", nota: "Settimanale · prossima consegna giovedì", stato: "Attivo", tono: "fatto" },
+      { titolo: "Matrimonio Pedrini · Bonomi", nota: "Arco, 12 centrotavola, bouquet", stato: "Confermato", tono: "neutro" },
+    ]}
+  />
+);
+
+/* ───────────────────────── Garage ───────────────────────── */
+
+const MappaGarage = () => (
+  <TesseraGriglia
+    etichetta="Piano -1 · corsia A"
+    colonne={6}
+    celle={[["A01", "occupato"], ["A02", "libero"], ["A03", "occupato"], ["A04", "occupato"], ["A05", "libero"], ["A06", "occupato"], ["A07", "riservato"], ["A08", "occupato"], ["A09", "libero"], ["A10", "attesa"], ["A11", "occupato"], ["A12", "libero"]]}
+    legenda={[["libero", "Libero"], ["occupato", "Occupato"], ["riservato", "Prenotato"], ["attesa", "In manutenzione"]]}
+    piede="Uscita FK 201 TT · 3 ore e 20 minuti · tariffa calcolata"
+  />
+);
+const AbbonamentiGarage = () => (
+  <TesseraRighe
+    etichetta="Abbonamenti e convenzioni"
+    righe={[
+      { titolo: "Studio Notarile Morelli", nota: "Annuale · posti B07 e B08", stato: "In regola", tono: "fatto" },
+      { titolo: "Ilaria Moioli", nota: "Mensile · scade fra 9 giorni, senza rinnovo", stato: "In scadenza", tono: "accento" },
+      { titolo: "Assicurazioni Orobie", nota: "Convenzione · 4 posti · 2 autorizzati", stato: "Consuntivo", tono: "neutro" },
+    ]}
+  />
+);
+const ChiaviGarage = () => (
+  <TesseraRighe
+    etichetta="Chiavi in custodia"
+    righe={[
+      { titolo: "K01 · EZ 903 KD", nota: "Armadio 1 · gancio 1", stato: "In armadio", tono: "fatto" },
+      { titolo: "K02 · GE 110 AA", nota: "Consegnata a Paolo Cornago · 9:40", stato: "Fuori", tono: "accento" },
+      { titolo: "Prenotazione · GC 512 DM", nota: "Domani 8:30-18:30 · posto A20", stato: "Confermata", tono: "neutro" },
+    ]}
+  />
+);
+const ServiziGarage = () => (
+  <TesseraRegistri
+    voci={[
+      ["Danni e contestazioni", "Graffio portiera · FT 671 PP", "Da accertare", "accento"],
+      ["Ricarica", "Colonnina EV1 · 22 kW", "In corso", "neutro"],
+      ["Servizi", "Lavaggio esterno · GA 115 TR", "Sul conto", "fatto"],
+      ["Deposito gomme", "Treno invernale · cliente Gritti", "In deposito", "fatto"],
+    ]}
+  />
+);
+
+/* ───────────────────────── Agenzia immobiliare ───────────────────────── */
+
+const FascicoloImmobile = () => (
+  <TesseraRighe
+    etichetta="Documenti · Trilocale in Città Alta"
+    righe={[
+      { titolo: "Atto di provenienza", nota: "Caricato", stato: "Presente", tono: "fatto" },
+      { titolo: "Planimetria e visura catastale", nota: "Conformi", stato: "Presente", tono: "fatto" },
+      { titolo: "Attestato di prestazione energetica", nota: "Richiesto al tecnico", stato: "Mancante", tono: "accento" },
+    ]}
+    piede={["Storico del prezzo", "Un ribasso in 70 giorni"]}
+  />
+);
+const MatchingImmobile = () => (
+  <TesseraBarre
+    etichetta="Clienti compatibili"
+    barre={[["Stefano Carrara · famiglia", "92 su 100", 92, true], ["Omar Benali · investitore", "74 su 100", 74], ["Valeria Mologni", "58 su 100", 58]]}
+    nota={["Perché 92", "Zona, budget, camere, ascensore e terrazzo come richiesto"]}
+  />
+);
+const TrattativaImmobile = () => (
+  <TesseraRighe
+    etichetta="Trattativa · Quadrilocale in Borgo Palazzo"
+    righe={[
+      { titolo: "Seconda visita · Stefano Carrara", nota: "Con i genitori · vuole offrire", stato: "Svolta", tono: "fatto" },
+      { titolo: "Proposta d'acquisto", nota: "Subordinata al mutuo", stato: "Respinta", tono: "neutro" },
+      { titolo: "Controproposta del proprietario", nota: "Scade fra 3 giorni", stato: "In attesa", tono: "accento" },
+    ]}
+  />
+);
+const ProvvigioniImmobile = () => (
+  <TesseraBarre
+    etichetta="Ripartizione della provvigione"
+    barre={[["Agente dell'immobile", "50%", 50], ["Agente del cliente", "40%", 40], ["Segnalatore", "10%", 10, true]]}
+    nota={["Antiriciclaggio dell'acquirente", "Adeguata verifica fatta · da conservare per 10 anni"]}
+  />
+);
+
 /* ───────────────────────── Mappa ───────────────────────── */
 
 export const ANTEPRIME_SETTORE: Record<IdSettore, { finestra: DatiFinestra; tessere: Record<string, React.ComponentType> }> = {
@@ -597,5 +999,170 @@ export const ANTEPRIME_SETTORE: Record<IdSettore, { finestra: DatiFinestra; tess
       ],
     },
     tessere: { paziente: Paziente, agenda: Agenda, struttura: Struttura, referti: Referti },
+  },
+  ristorante: {
+    finestra: {
+      indirizzo: "osteria-del-borgo.pmiflow.it/ristorante/analisi",
+      sigla: "OB",
+      cliente: "Osteria del Borgo",
+      tinta: OCRA,
+      titolo: "Analisi degli ultimi sette giorni",
+      stato: "Servizio aperto",
+      schede: ["KPI", "Menu engineering", "Food cost", "Tempi di cucina", "Bevande", "Sprechi"],
+      numeri: [
+        ["Coperti", "412"],
+        ["Food cost", "27%"],
+        ["Lotti in scadenza", "3", true],
+      ],
+      righe: [
+        ["Piatto più venduto", "Casoncelli alla bergamasca"],
+        ["Menu engineering", "Tagliata di manzo · piatto stella"],
+        ["Lotto da usare per primo", "Funghi porcini · fra 2 giorni", true],
+        ["Tempo medio di cucina", "11 minuti"],
+      ],
+    },
+    tessere: { sala: SalaRistorante, cucina: CucinaRistorante, ricette: RicetteRistorante, haccp: HaccpRistorante },
+  },
+  bar: {
+    finestra: {
+      indirizzo: "caffe-centrale.pmiflow.it/bar/mescita",
+      sigla: "CC",
+      cliente: "Caffè Centrale",
+      tinta: BLU,
+      titolo: "Mescita della settimana",
+      stato: "3 bottiglie aperte",
+      schede: ["In uso", "Chiuse", "Teorico e reale"],
+      numeri: [
+        ["Versato teorico", "1,42 l"],
+        ["Versato reale", "1,51 l"],
+        ["Scarto", "6%", true],
+      ],
+      righe: [
+        ["Gin London Dry", "Oltre la soglia del locale", true],
+        ["Vermouth rosso", "In linea con le ricette"],
+        ["Happy hour", "Oggi 18:00-20:00 · cocktail"],
+        ["Prossimo riordino", "Acqua tonica · 2 casse"],
+      ],
+    },
+    tessere: { banco: BancoBar, promozioni: PromozioniBar, convenzioni: ConvenzioniBar, mescita: MescitaBar },
+  },
+  hotel: {
+    finestra: {
+      indirizzo: "hotel-belvedere.pmiflow.it/hotel/prenotazioni",
+      sigla: "HB",
+      cliente: "Hotel Belvedere",
+      tinta: BLU,
+      codice: "PRN-2026-0142",
+      titolo: "Famiglia Weber · camera 301",
+      stato: "In soggiorno",
+      schede: ["Ospiti", "Soggiorno", "Notti", "Servizi", "Caparra e garanzie", "Documenti"],
+      numeri: [
+        ["Notti", "4"],
+        ["Ospiti", "3"],
+        ["Partenza", "sabato", true],
+      ],
+      righe: [
+        ["Trattamento", "Mezza pensione"],
+        ["Canale", "Portale online · commissione 18%"],
+        ["Late check-out", "Richiesto per le 12", true],
+        ["Ospiti registrati", "3 su 3 · file Alloggiati pronto"],
+      ],
+    },
+    tessere: { planning: PlanningHotel, tariffe: TariffeHotel, conto: ContoHotel, indicatori: IndicatoriHotel },
+  },
+  palestra: {
+    finestra: {
+      indirizzo: "fitlab.pmiflow.it/palestra/soci",
+      sigla: "FL",
+      cliente: "Fit Lab",
+      tinta: VIOLA,
+      codice: "SOC-2026-0118",
+      titolo: "Martina Locatelli",
+      stato: "In regola",
+      schede: ["Profilo", "Abbonamenti e carnet", "Pagamenti", "Ingressi, corsi e PT", "Allenamento e progressi", "Documenti"],
+      numeri: [
+        ["Ingressi del mese", "14"],
+        ["Lezioni prenotate", "3"],
+        ["Abbonamento", "6 giorni", true],
+      ],
+      righe: [
+        ["Formula", "Open trimestrale · rinnovo automatico"],
+        ["Certificato medico", "Valido fino a marzo"],
+        ["Prossima lezione", "Pilates · domani alle 18:30"],
+        ["Rinnovo", "Rata generata alla scadenza", true],
+      ],
+    },
+    tessere: { soci: SociPalestra, reception: ReceptionPalestra, corsi: CorsiPalestra, trainer: TrainerPalestra },
+  },
+  fioraio: {
+    finestra: {
+      indirizzo: "fiori-citta-alta.pmiflow.it/fioraio/ordini",
+      sigla: "FA",
+      cliente: "Fiori di Città Alta",
+      tinta: VERDE,
+      codice: "FIO-2026-0231",
+      titolo: "Bouquet di peonie per Nonna Lina",
+      stato: "In consegna",
+      schede: ["Prodotti", "Destinatario e biglietto", "Produzione e consegna", "Resi", "Foto"],
+      numeri: [
+        ["Consegna", "oggi, 15:00"],
+        ["Zona", "Borgo Palazzo"],
+        ["Composizioni", "1"],
+      ],
+      righe: [
+        ["Ordinato da", "Marta Pedrini"],
+        ["Destinatario", "Lina Pedrini · via Borgo Palazzo"],
+        ["Biglietto", "«Tanti auguri nonna!» · Marta e Luca"],
+        ["Ricorrenza", "Compleanno · salvata per il prossimo anno", true],
+      ],
+    },
+    tessere: { ordini: OrdiniFioraio, laboratorio: LaboratorioFioraio, magazzino: MagazzinoFioraio, ricorrenze: RicorrenzeFioraio },
+  },
+  garage: {
+    finestra: {
+      indirizzo: "autorimessa-matteotti.pmiflow.it/garage/clienti",
+      sigla: "AM",
+      cliente: "Autorimessa Matteotti",
+      tinta: OCRA,
+      titolo: "Studio Notarile Morelli",
+      stato: "Abbonato",
+      schede: ["Anagrafica", "Veicoli", "Contratti", "Accessi autorizzati", "Pagamenti", "Ingressi", "Prenotazioni e servizi", "Documenti"],
+      numeri: [
+        ["Posti riservati", "2"],
+        ["Ingressi del mese", "38"],
+        ["Rate scadute", "0"],
+      ],
+      righe: [
+        ["Contratto", "Annuale · posti B07 e B08"],
+        ["Veicolo", "GE 110 AA · Mercedes Classe C"],
+        ["Accessi autorizzati", "Dal lunedì al venerdì, 7-20"],
+        ["Chiave in custodia", "K02 · consegnata alle 9:40", true],
+      ],
+    },
+    tessere: { mappa: MappaGarage, abbonamenti: AbbonamentiGarage, chiavi: ChiaviGarage, servizi: ServiziGarage },
+  },
+  immobiliare: {
+    finestra: {
+      indirizzo: "casa-orobica.pmiflow.it/immobiliare/immobili",
+      sigla: "CO",
+      cliente: "Casa Orobica",
+      tinta: BLU,
+      codice: "IMM-2026-0034",
+      titolo: "Trilocale con terrazzo in Città Alta",
+      stato: "Disponibile",
+      schede: ["Scheda", "Proprietari", "Documenti", "Incarico", "Valutazione", "Annuncio", "Clienti compatibili", "Visite e proposte", "Report"],
+      numeri: [
+        ["Superficie", "95 m²"],
+        ["Clienti compatibili", "6"],
+        ["Giorni sul mercato", "41"],
+      ],
+      righe: [
+        ["Incarico", "Esclusiva · scade fra 3 mesi"],
+        ["Proprietari", "2 · quote al 50%"],
+        ["Documenti", "APE da raccogliere", true],
+        ["Prossima visita", "Oggi alle 18 · Stefano Carrara"],
+      ],
+    },
+    tessere: { fascicolo: FascicoloImmobile, matching: MatchingImmobile, trattativa: TrattativaImmobile, provvigioni: ProvvigioniImmobile },
   },
 };

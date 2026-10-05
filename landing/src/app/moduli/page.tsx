@@ -5,9 +5,9 @@ import { Moduli } from "@/componenti/Moduli";
 import { MODULI } from "@/contenuti/moduli";
 import { NOME, URL_CANONICO, jsonLd } from "@/lib/sito";
 
-const TITOLO = "Moduli di settore: cantiere, gare, automezzi, agenti, sanità";
+const TITOLO = "Moduli di settore: edilizia, ospitalità, servizi e sanità";
 const DESCRIZIONE =
-  "Il nucleo di PMIFlow è uguale per tutti; i moduli di settore aggiungono cantieri, gare d'appalto, parco mezzi, rete agenti e poliambulatori, sugli stessi dati.";
+  "Il nucleo di PMIFlow è uguale per tutti; i moduli aggiungono cantieri e gare, ristoranti, bar e hotel, palestre, fioristi, autorimesse, agenzie e sanità.";
 
 export const metadata: Metadata = {
   title: { absolute: TITOLO },

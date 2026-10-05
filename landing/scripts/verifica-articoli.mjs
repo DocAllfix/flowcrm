@@ -22,7 +22,8 @@ const CARTELLA = path.join(RADICE, "src/contenuti/blog");
 const PUBBLICA = path.join(RADICE, "public");
 const MINIMO_PAROLE = 900;
 
-const ID_MODULI = ["gare", "cantiere", "automezzi", "agenti", "poliambulatori"];
+// Le pagine /moduli/<id> sono quelle dei settori del blog (tranne il nucleo): un elenco solo.
+const ID_MODULI = SETTORI_BLOG.filter((s) => s !== "nucleo");
 const PAGINE_FISSE = ["/", "/moduli", "/blog", "/sicurezza", "/privacy", "/cookie", "/termini", "/blog/feed.xml"];
 const ANCORE_HOME = ["funzioni", "moduli", "anteprima", "come-si-parte", "domande", "contatti"];
 
