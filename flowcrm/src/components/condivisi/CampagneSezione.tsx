@@ -40,7 +40,7 @@ export function CampagneSezione({ modulo }: { modulo: string }) {
   const segmento = segmenti.find((s) => s.slug === f.segmento)
   const scelta = campagne.find((c) => c.id === sceltaId) ?? null
 
-  if (!isManager) return <EmptyState icon={Megaphone} title="Campagne" description="Le campagne le prepara e le invia la direzione." />
+  if (!isManager) return <EmptyState icon={Megaphone} filtrato title="Campagne" description="Le campagne le prepara e le invia la direzione." />
 
   async function crea(e: FormEvent) {
     e.preventDefault()
@@ -92,7 +92,7 @@ export function CampagneSezione({ modulo }: { modulo: string }) {
           </Card>
         )}
       </div>
-      {scelta ? <DettaglioCampagna campagna={scelta} /> : <EmptyState icon={Megaphone} title="Scegli una campagna" description="Anteprima del testo, destinatari ed esclusi, invio subito o programmato." />}
+      {scelta ? <DettaglioCampagna campagna={scelta} /> : <EmptyState icon={Megaphone} filtrato title="Scegli una campagna" description="Anteprima del testo, destinatari ed esclusi, invio subito o programmato." />}
     </div>
   )
 }

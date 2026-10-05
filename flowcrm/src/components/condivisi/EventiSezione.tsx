@@ -112,7 +112,7 @@ export function EventiSezione({ modulo, tipi, etichettaAllergene = (v) => v, all
           )}
         </Card>
         {scelto ? <DettaglioEvento evento={scelto} modulo={modulo} etichettaAllergene={etichettaAllergene} allergeni={allergeni} />
-          : <EmptyState icon={CalendarHeart} title="Scegli un evento" description="Programma, invitati e allergie, personale, preventivo e margine." />}
+          : <EmptyState icon={CalendarHeart} filtrato title="Scegli un evento" description="Programma, invitati e allergie, personale, preventivo e margine." />}
       </div>
     </div>
   )

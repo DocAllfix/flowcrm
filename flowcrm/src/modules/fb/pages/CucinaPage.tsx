@@ -155,7 +155,7 @@ function Cucina_() {
 
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         {stazioni.length > 1 ? (
-          <Tabs value={stazioneId ?? undefined} onValueChange={setStazioneId}>
+          <Tabs value={stazioneId ?? ''} onValueChange={setStazioneId}>
             <TabsList>{stazioni.map((s) => <TabsTrigger key={s.id} value={s.id}>{s.nome}</TabsTrigger>)}</TabsList>
           </Tabs>
         ) : <span />}

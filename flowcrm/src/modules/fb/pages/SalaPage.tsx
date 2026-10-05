@@ -89,7 +89,7 @@ function Sala_() {
         </>} />
 
       {sale.length > 1 && (
-        <Tabs value={sala?.id} onValueChange={(v) => { setSalaId(v); setSelezionato(null) }} className="mb-4">
+        <Tabs value={sala?.id ?? ''} onValueChange={(v) => { setSalaId(v); setSelezionato(null) }} className="mb-4">
           <TabsList>{sale.map((s) => <TabsTrigger key={s.id} value={s.id}>{s.nome}</TabsTrigger>)}</TabsList>
         </Tabs>
       )}
