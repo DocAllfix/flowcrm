@@ -1742,6 +1742,7 @@ export type Database = {
           durata_minuti: number | null
           gara_id: string | null
           id: string
+          immobile_id: string | null
           inizio: string | null
           luogo: string | null
           organizzazione_id: string | null
@@ -1770,6 +1771,7 @@ export type Database = {
           durata_minuti?: number | null
           gara_id?: string | null
           id?: string
+          immobile_id?: string | null
           inizio?: string | null
           luogo?: string | null
           organizzazione_id?: string | null
@@ -1798,6 +1800,7 @@ export type Database = {
           durata_minuti?: number | null
           gara_id?: string | null
           id?: string
+          immobile_id?: string | null
           inizio?: string | null
           luogo?: string | null
           organizzazione_id?: string | null
@@ -1907,6 +1910,13 @@ export type Database = {
             columns: ["gara_id"]
             isOneToOne: false
             referencedRelation: "gare"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attivita_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
             referencedColumns: ["id"]
           },
           {
@@ -6222,6 +6232,7 @@ export type Database = {
           created_by: string | null
           data_chiusura_prevista: string | null
           id: string
+          immobile_id: string | null
           importo: number
           motivo_perdita: string | null
           nome: string
@@ -6244,6 +6255,7 @@ export type Database = {
           created_by?: string | null
           data_chiusura_prevista?: string | null
           id?: string
+          immobile_id?: string | null
           importo?: number
           motivo_perdita?: string | null
           nome: string
@@ -6266,6 +6278,7 @@ export type Database = {
           created_by?: string | null
           data_chiusura_prevista?: string | null
           id?: string
+          immobile_id?: string | null
           importo?: number
           motivo_perdita?: string | null
           nome?: string
@@ -6313,6 +6326,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
             referencedColumns: ["id"]
           },
           {
@@ -18155,6 +18175,2667 @@ export type Database = {
           },
         ]
       }
+      imm_agenti: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          iscrizione_ruolo: string | null
+          modulo: string
+          note: string | null
+          obiettivo_acquisizioni: number | null
+          obiettivo_chiusure: number | null
+          obiettivo_provvigioni: number | null
+          quota_pct: number | null
+          updated_at: string
+          updated_by: string | null
+          user_id: string
+          zone: string[]
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          iscrizione_ruolo?: string | null
+          modulo?: string
+          note?: string | null
+          obiettivo_acquisizioni?: number | null
+          obiettivo_chiusure?: number | null
+          obiettivo_provvigioni?: number | null
+          quota_pct?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          user_id: string
+          zone?: string[]
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          iscrizione_ruolo?: string | null
+          modulo?: string
+          note?: string | null
+          obiettivo_acquisizioni?: number | null
+          obiettivo_chiusure?: number | null
+          obiettivo_provvigioni?: number | null
+          quota_pct?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          user_id?: string
+          zone?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_agenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_agenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_agenti_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_aml_verifiche: {
+        Row: {
+          adeguata_verifica: string
+          conservare_fino: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          documento_numero: string
+          documento_scadenza: string | null
+          documento_tipo: string
+          id: string
+          identificato_il: string
+          immobile_id: string | null
+          modalita: string
+          modulo: string
+          note: string | null
+          operatore_id: string | null
+          organizzazione_id: string | null
+          origine_fondi: string | null
+          pep: boolean
+          rischio: string
+          ruolo: string
+          scopo_natura: string | null
+          titolare_effettivo: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          adeguata_verifica?: string
+          conservare_fino?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          documento_numero: string
+          documento_scadenza?: string | null
+          documento_tipo?: string
+          id?: string
+          identificato_il?: string
+          immobile_id?: string | null
+          modalita?: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          organizzazione_id?: string | null
+          origine_fondi?: string | null
+          pep?: boolean
+          rischio?: string
+          ruolo?: string
+          scopo_natura?: string | null
+          titolare_effettivo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          adeguata_verifica?: string
+          conservare_fino?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          documento_numero?: string
+          documento_scadenza?: string | null
+          documento_tipo?: string
+          id?: string
+          identificato_il?: string
+          immobile_id?: string | null
+          modalita?: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          organizzazione_id?: string | null
+          origine_fondi?: string | null
+          pep?: boolean
+          rischio?: string
+          ruolo?: string
+          scopo_natura?: string | null
+          titolare_effettivo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_aml_verifiche_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_aml_verifiche_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_annunci: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          id: string
+          immobile_id: string
+          modulo: string
+          portali: string[]
+          pubblicato_il: string | null
+          sito: boolean
+          social: boolean
+          stato: string
+          titolo: string
+          tour_url: string | null
+          updated_at: string
+          updated_by: string | null
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          id?: string
+          immobile_id: string
+          modulo?: string
+          portali?: string[]
+          pubblicato_il?: string | null
+          sito?: boolean
+          social?: boolean
+          stato?: string
+          titolo: string
+          tour_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          portali?: string[]
+          pubblicato_il?: string | null
+          sito?: boolean
+          social?: boolean
+          stato?: string
+          titolo?: string
+          tour_url?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_annunci_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_annunci_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: true
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_annunci_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_canoni: {
+        Row: {
+          canone: number
+          created_at: string
+          created_by: string | null
+          dal: string
+          id: string
+          locazione_id: string
+          modulo: string
+          motivo: string
+          variazione_istat: number | null
+        }
+        Insert: {
+          canone: number
+          created_at?: string
+          created_by?: string | null
+          dal: string
+          id?: string
+          locazione_id: string
+          modulo?: string
+          motivo: string
+          variazione_istat?: number | null
+        }
+        Update: {
+          canone?: number
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          locazione_id?: string
+          modulo?: string
+          motivo?: string
+          variazione_istat?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_canoni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_canoni_locazione_id_fkey"
+            columns: ["locazione_id"]
+            isOneToOne: false
+            referencedRelation: "imm_locazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_chiusure: {
+        Row: {
+          caparra_versata: number
+          codice: string | null
+          consegna_chiavi_il: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          documentazione_finale: boolean
+          id: string
+          immobile_id: string
+          modulo: string
+          notaio_id: string | null
+          note: string | null
+          preliminare_il: string | null
+          prezzo: number
+          proposta_id: string | null
+          recensione_richiesta_il: string | null
+          referral: string | null
+          rogito_il: string | null
+          rogito_previsto: string | null
+          soddisfazione: number | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          caparra_versata?: number
+          codice?: string | null
+          consegna_chiavi_il?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          documentazione_finale?: boolean
+          id?: string
+          immobile_id: string
+          modulo?: string
+          notaio_id?: string | null
+          note?: string | null
+          preliminare_il?: string | null
+          prezzo: number
+          proposta_id?: string | null
+          recensione_richiesta_il?: string | null
+          referral?: string | null
+          rogito_il?: string | null
+          rogito_previsto?: string | null
+          soddisfazione?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          caparra_versata?: number
+          codice?: string | null
+          consegna_chiavi_il?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          documentazione_finale?: boolean
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          notaio_id?: string | null
+          note?: string | null
+          preliminare_il?: string | null
+          prezzo?: number
+          proposta_id?: string | null
+          recensione_richiesta_il?: string | null
+          referral?: string | null
+          rogito_il?: string | null
+          rogito_previsto?: string | null
+          soddisfazione?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_chiusure_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_notaio_id_fkey"
+            columns: ["notaio_id"]
+            isOneToOne: false
+            referencedRelation: "imm_collaboratori"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_proposta_id_fkey"
+            columns: ["proposta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_proposte"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_chiusure_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_collaboratori: {
+        Row: {
+          attivo: boolean
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          id: string
+          modulo: string
+          nome: string
+          note: string | null
+          organizzazione_id: string | null
+          provvigione_pct: number | null
+          telefono: string | null
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          note?: string | null
+          organizzazione_id?: string | null
+          provvigione_pct?: number | null
+          telefono?: string | null
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          provvigione_pct?: number | null
+          telefono?: string | null
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_collaboratori_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_collaboratori_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_collaboratori_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_collaboratori_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_collaboratori_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_contratti: {
+        Row: {
+          approvazione_id: string | null
+          chiusura_id: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          firmato_il: string | null
+          id: string
+          immobile_id: string | null
+          incarico_id: string | null
+          locazione_id: string | null
+          modello_id: string | null
+          modulo: string
+          proposta_id: string | null
+          stato: string
+          testo: string
+          tipo: string
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          approvazione_id?: string | null
+          chiusura_id?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          firmato_il?: string | null
+          id?: string
+          immobile_id?: string | null
+          incarico_id?: string | null
+          locazione_id?: string | null
+          modello_id?: string | null
+          modulo?: string
+          proposta_id?: string | null
+          stato?: string
+          testo: string
+          tipo: string
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          approvazione_id?: string | null
+          chiusura_id?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          firmato_il?: string | null
+          id?: string
+          immobile_id?: string | null
+          incarico_id?: string | null
+          locazione_id?: string | null
+          modello_id?: string | null
+          modulo?: string
+          proposta_id?: string | null
+          stato?: string
+          testo?: string
+          tipo?: string
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_contratti_approvazione_id_fkey"
+            columns: ["approvazione_id"]
+            isOneToOne: false
+            referencedRelation: "approvazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_chiusura_id_fkey"
+            columns: ["chiusura_id"]
+            isOneToOne: false
+            referencedRelation: "imm_chiusure"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_incarico_id_fkey"
+            columns: ["incarico_id"]
+            isOneToOne: false
+            referencedRelation: "imm_incarichi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_locazione_id_fkey"
+            columns: ["locazione_id"]
+            isOneToOne: false
+            referencedRelation: "imm_locazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_modello_id_fkey"
+            columns: ["modello_id"]
+            isOneToOne: false
+            referencedRelation: "imm_modelli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_proposta_id_fkey"
+            columns: ["proposta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_proposte"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_contratti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_documenti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          id: string
+          immobile_id: string
+          modulo: string
+          note: string | null
+          obbligatorio: boolean
+          ricevuto_il: string | null
+          scadenza: string | null
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          immobile_id: string
+          modulo?: string
+          note?: string | null
+          obbligatorio?: boolean
+          ricevuto_il?: string | null
+          scadenza?: string | null
+          stato?: string
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          note?: string | null
+          obbligatorio?: boolean
+          ricevuto_il?: string | null
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_documenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_documenti_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_documenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_immobili: {
+        Row: {
+          agente_id: string | null
+          anno_costruzione: number | null
+          arredato: string
+          ascensore: boolean
+          bagni: number | null
+          balconi: number
+          camere: number | null
+          canone: number | null
+          cantina: boolean
+          cap: string | null
+          classe_energetica: string | null
+          codice: string | null
+          comune: string
+          concluso_il: string | null
+          condizionamento: boolean
+          contratto: string
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          garage: boolean
+          giardino: boolean
+          id: string
+          indirizzo: string
+          ipe: number | null
+          locali: number | null
+          modulo: string
+          note: string | null
+          piano: string | null
+          posto_auto: boolean
+          prezzo: number | null
+          prezzo_iniziale: number | null
+          prezzo_mq: number | null
+          prezzo_vendita: number | null
+          provincia: string | null
+          pubblicato_il: string | null
+          ricerca: unknown
+          riscaldamento: string | null
+          spese_condominiali: number | null
+          stato: string
+          stato_conservazione: string | null
+          superficie_calpestabile: number | null
+          superficie_commerciale: number | null
+          terrazzi: number
+          tipologia: string
+          titolo: string | null
+          updated_at: string
+          updated_by: string | null
+          zona: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          anno_costruzione?: number | null
+          arredato?: string
+          ascensore?: boolean
+          bagni?: number | null
+          balconi?: number
+          camere?: number | null
+          canone?: number | null
+          cantina?: boolean
+          cap?: string | null
+          classe_energetica?: string | null
+          codice?: string | null
+          comune: string
+          concluso_il?: string | null
+          condizionamento?: boolean
+          contratto?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          garage?: boolean
+          giardino?: boolean
+          id?: string
+          indirizzo: string
+          ipe?: number | null
+          locali?: number | null
+          modulo?: string
+          note?: string | null
+          piano?: string | null
+          posto_auto?: boolean
+          prezzo?: number | null
+          prezzo_iniziale?: number | null
+          prezzo_mq?: never
+          prezzo_vendita?: number | null
+          provincia?: string | null
+          pubblicato_il?: string | null
+          ricerca?: never
+          riscaldamento?: string | null
+          spese_condominiali?: number | null
+          stato?: string
+          stato_conservazione?: string | null
+          superficie_calpestabile?: number | null
+          superficie_commerciale?: number | null
+          terrazzi?: number
+          tipologia?: string
+          titolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          anno_costruzione?: number | null
+          arredato?: string
+          ascensore?: boolean
+          bagni?: number | null
+          balconi?: number
+          camere?: number | null
+          canone?: number | null
+          cantina?: boolean
+          cap?: string | null
+          classe_energetica?: string | null
+          codice?: string | null
+          comune?: string
+          concluso_il?: string | null
+          condizionamento?: boolean
+          contratto?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          garage?: boolean
+          giardino?: boolean
+          id?: string
+          indirizzo?: string
+          ipe?: number | null
+          locali?: number | null
+          modulo?: string
+          note?: string | null
+          piano?: string | null
+          posto_auto?: boolean
+          prezzo?: number | null
+          prezzo_iniziale?: number | null
+          prezzo_mq?: never
+          prezzo_vendita?: number | null
+          provincia?: string | null
+          pubblicato_il?: string | null
+          ricerca?: never
+          riscaldamento?: string | null
+          spese_condominiali?: number | null
+          stato?: string
+          stato_conservazione?: string | null
+          superficie_calpestabile?: number | null
+          superficie_commerciale?: number | null
+          terrazzi?: number
+          tipologia?: string
+          titolo?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          zona?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_immobili_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_immobili_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_immobili_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_immobili_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_impostazioni: {
+        Row: {
+          agenzia: string
+          created_at: string
+          created_by: string | null
+          id: number
+          istat_pct: number
+          lead_risposta_ore: number
+          locazione_mensilita: number
+          modulo: string
+          provvigione_acquirente_pct: number
+          provvigione_minima: number
+          provvigione_venditore_pct: number
+          quota_agente_pct: number
+          report_giorni: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agenzia: string
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          istat_pct?: number
+          lead_risposta_ore?: number
+          locazione_mensilita?: number
+          modulo?: string
+          provvigione_acquirente_pct?: number
+          provvigione_minima?: number
+          provvigione_venditore_pct?: number
+          quota_agente_pct?: number
+          report_giorni?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agenzia?: string
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          istat_pct?: number
+          lead_risposta_ore?: number
+          locazione_mensilita?: number
+          modulo?: string
+          provvigione_acquirente_pct?: number
+          provvigione_minima?: number
+          provvigione_venditore_pct?: number
+          quota_agente_pct?: number
+          report_giorni?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_impostazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_impostazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_incarichi: {
+        Row: {
+          agente_id: string | null
+          codice: string | null
+          condizioni: string | null
+          conferito_il: string
+          created_at: string
+          created_by: string | null
+          durata_mesi: number
+          esclusiva: boolean
+          firmato_il: string | null
+          id: string
+          immobile_id: string
+          modulo: string
+          note: string | null
+          obiettivi: string | null
+          prezzo_minimo: number | null
+          prezzo_richiesto: number | null
+          provvigione_fissa: number | null
+          provvigione_pct: number | null
+          rinnovo_tacito: boolean
+          scadenza: string | null
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          codice?: string | null
+          condizioni?: string | null
+          conferito_il?: string
+          created_at?: string
+          created_by?: string | null
+          durata_mesi?: number
+          esclusiva?: boolean
+          firmato_il?: string | null
+          id?: string
+          immobile_id: string
+          modulo?: string
+          note?: string | null
+          obiettivi?: string | null
+          prezzo_minimo?: number | null
+          prezzo_richiesto?: number | null
+          provvigione_fissa?: number | null
+          provvigione_pct?: number | null
+          rinnovo_tacito?: boolean
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          codice?: string | null
+          condizioni?: string | null
+          conferito_il?: string
+          created_at?: string
+          created_by?: string | null
+          durata_mesi?: number
+          esclusiva?: boolean
+          firmato_il?: string | null
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          note?: string | null
+          obiettivi?: string | null
+          prezzo_minimo?: number | null
+          prezzo_richiesto?: number | null
+          provvigione_fissa?: number | null
+          provvigione_pct?: number | null
+          rinnovo_tacito?: boolean
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_incarichi_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_incarichi_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_incarichi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_incarichi_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_incarichi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_lead: {
+        Row: {
+          agente_id: string | null
+          codice: string | null
+          collaboratore_id: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          email: string | null
+          fonte: string | null
+          id: string
+          immobile_id: string | null
+          marketing_id: string | null
+          messaggio: string | null
+          modulo: string
+          motivo_perdita: string | null
+          nome: string
+          origine: string
+          priorita: string
+          prossima_azione: string | null
+          prossima_azione_il: string | null
+          ricevuto_at: string
+          richiesta_id: string | null
+          sollecito_at: string | null
+          stato: string
+          telefono: string | null
+          tipo: string
+          ultima_interazione_at: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          codice?: string | null
+          collaboratore_id?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          email?: string | null
+          fonte?: string | null
+          id?: string
+          immobile_id?: string | null
+          marketing_id?: string | null
+          messaggio?: string | null
+          modulo?: string
+          motivo_perdita?: string | null
+          nome: string
+          origine?: string
+          priorita?: string
+          prossima_azione?: string | null
+          prossima_azione_il?: string | null
+          ricevuto_at?: string
+          richiesta_id?: string | null
+          sollecito_at?: string | null
+          stato?: string
+          telefono?: string | null
+          tipo?: string
+          ultima_interazione_at?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          codice?: string | null
+          collaboratore_id?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          email?: string | null
+          fonte?: string | null
+          id?: string
+          immobile_id?: string | null
+          marketing_id?: string | null
+          messaggio?: string | null
+          modulo?: string
+          motivo_perdita?: string | null
+          nome?: string
+          origine?: string
+          priorita?: string
+          prossima_azione?: string | null
+          prossima_azione_il?: string | null
+          ricevuto_at?: string
+          richiesta_id?: string | null
+          sollecito_at?: string | null
+          stato?: string
+          telefono?: string | null
+          tipo?: string
+          ultima_interazione_at?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_lead_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_lead_collaboratore_id_fkey"
+            columns: ["collaboratore_id"]
+            isOneToOne: false
+            referencedRelation: "imm_collaboratori"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_lead_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_marketing_id_fkey"
+            columns: ["marketing_id"]
+            isOneToOne: false
+            referencedRelation: "imm_marketing"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_richiesta_id_fkey"
+            columns: ["richiesta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_richieste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_lead_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_locazioni: {
+        Row: {
+          canone: number | null
+          canone_iniziale: number
+          canone_richiesto: number | null
+          codice: string | null
+          conduttore_id: string
+          created_at: string
+          created_by: string | null
+          deposito: number
+          disdetta_il: string | null
+          durata_mesi: number | null
+          fine: string | null
+          garanzie: string | null
+          id: string
+          immobile_id: string
+          inizio: string
+          istat: boolean
+          modulo: string
+          note: string | null
+          proposta_id: string | null
+          prossimo_adeguamento: string | null
+          rinnovo_tacito: boolean
+          stato: string
+          tipo_contratto: string
+          ultimo_adeguamento: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          canone?: number | null
+          canone_iniziale: number
+          canone_richiesto?: number | null
+          codice?: string | null
+          conduttore_id: string
+          created_at?: string
+          created_by?: string | null
+          deposito?: number
+          disdetta_il?: string | null
+          durata_mesi?: number | null
+          fine?: string | null
+          garanzie?: string | null
+          id?: string
+          immobile_id: string
+          inizio: string
+          istat?: boolean
+          modulo?: string
+          note?: string | null
+          proposta_id?: string | null
+          prossimo_adeguamento?: string | null
+          rinnovo_tacito?: boolean
+          stato?: string
+          tipo_contratto?: string
+          ultimo_adeguamento?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          canone?: number | null
+          canone_iniziale?: number
+          canone_richiesto?: number | null
+          codice?: string | null
+          conduttore_id?: string
+          created_at?: string
+          created_by?: string | null
+          deposito?: number
+          disdetta_il?: string | null
+          durata_mesi?: number | null
+          fine?: string | null
+          garanzie?: string | null
+          id?: string
+          immobile_id?: string
+          inizio?: string
+          istat?: boolean
+          modulo?: string
+          note?: string | null
+          proposta_id?: string | null
+          prossimo_adeguamento?: string | null
+          rinnovo_tacito?: boolean
+          stato?: string
+          tipo_contratto?: string
+          ultimo_adeguamento?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_locazioni_conduttore_id_fkey"
+            columns: ["conduttore_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_locazioni_conduttore_id_fkey"
+            columns: ["conduttore_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_locazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_locazioni_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_locazioni_proposta_id_fkey"
+            columns: ["proposta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_proposte"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_locazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_marketing: {
+        Row: {
+          al: string | null
+          campagna_id: string | null
+          canale: string
+          codice: string | null
+          costo: number
+          created_at: string
+          created_by: string | null
+          dal: string
+          id: string
+          immobile_id: string | null
+          modulo: string
+          nome: string
+          note: string | null
+          obiettivo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          campagna_id?: string | null
+          canale?: string
+          codice?: string | null
+          costo?: number
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          immobile_id?: string | null
+          modulo?: string
+          nome: string
+          note?: string | null
+          obiettivo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          campagna_id?: string | null
+          canale?: string
+          codice?: string | null
+          costo?: number
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          immobile_id?: string | null
+          modulo?: string
+          nome?: string
+          note?: string | null
+          obiettivo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_marketing_campagna_id_fkey"
+            columns: ["campagna_id"]
+            isOneToOne: false
+            referencedRelation: "campagne"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_marketing_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_marketing_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_marketing_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_modelli: {
+        Row: {
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          testo: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          testo: string
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          testo?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_modelli_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_modelli_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_prezzi: {
+        Row: {
+          canone: number | null
+          created_at: string
+          created_by: string | null
+          dal: string
+          id: string
+          immobile_id: string
+          modulo: string
+          prezzo: number | null
+        }
+        Insert: {
+          canone?: number | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          immobile_id: string
+          modulo?: string
+          prezzo?: number | null
+        }
+        Update: {
+          canone?: number | null
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          prezzo?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_prezzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_prezzi_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_privacy: {
+        Row: {
+          consenso_marketing: boolean
+          consenso_terzi: boolean
+          consenso_trattamento: boolean
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          informativa_il: string
+          modulo: string
+          note: string | null
+          revocato_il: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          consenso_marketing?: boolean
+          consenso_terzi?: boolean
+          consenso_trattamento?: boolean
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          informativa_il?: string
+          modulo?: string
+          note?: string | null
+          revocato_il?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          consenso_marketing?: boolean
+          consenso_terzi?: boolean
+          consenso_trattamento?: boolean
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          informativa_il?: string
+          modulo?: string
+          note?: string | null
+          revocato_il?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_privacy_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_privacy_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_privacy_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_privacy_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_proposte: {
+        Row: {
+          agente_id: string | null
+          caparra: number
+          codice: string | null
+          condizioni: string | null
+          condizioni_sospensive: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          da: string
+          decisa_il: string | null
+          id: string
+          immobile_id: string
+          importo_mutuo: number | null
+          modulo: string
+          mutuo: boolean
+          note: string | null
+          padre_id: string | null
+          prezzo_offerto: number
+          prezzo_richiesto: number | null
+          scadenza: string | null
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          caparra?: number
+          codice?: string | null
+          condizioni?: string | null
+          condizioni_sospensive?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          da?: string
+          decisa_il?: string | null
+          id?: string
+          immobile_id: string
+          importo_mutuo?: number | null
+          modulo?: string
+          mutuo?: boolean
+          note?: string | null
+          padre_id?: string | null
+          prezzo_offerto: number
+          prezzo_richiesto?: number | null
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          caparra?: number
+          codice?: string | null
+          condizioni?: string | null
+          condizioni_sospensive?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          da?: string
+          decisa_il?: string | null
+          id?: string
+          immobile_id?: string
+          importo_mutuo?: number | null
+          modulo?: string
+          mutuo?: boolean
+          note?: string | null
+          padre_id?: string | null
+          prezzo_offerto?: number
+          prezzo_richiesto?: number | null
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_proposte_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_padre_id_fkey"
+            columns: ["padre_id"]
+            isOneToOne: false
+            referencedRelation: "imm_proposte"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proposte_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_proprietari: {
+        Row: {
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          immobile_id: string
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          quota_pct: number
+          referente: boolean
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          immobile_id: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          quota_pct?: number
+          referente?: boolean
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          quota_pct?: number
+          referente?: boolean
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_proprietari_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proprietari_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_proprietari_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proprietari_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proprietari_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_proprietari_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_provvigioni: {
+        Row: {
+          agente_id: string | null
+          base: number
+          chiusura_id: string | null
+          codice: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          fattura_id: string | null
+          fisso: number | null
+          id: string
+          immobile_id: string
+          importo: number
+          incassata_il: string | null
+          lato: string
+          locazione_id: string | null
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          pct: number | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          base?: number
+          chiusura_id?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          fattura_id?: string | null
+          fisso?: number | null
+          id?: string
+          immobile_id: string
+          importo: number
+          incassata_il?: string | null
+          lato: string
+          locazione_id?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          pct?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          base?: number
+          chiusura_id?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          fattura_id?: string | null
+          fisso?: number | null
+          id?: string
+          immobile_id?: string
+          importo?: number
+          incassata_il?: string | null
+          lato?: string
+          locazione_id?: string | null
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          pct?: number | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_provvigioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_chiusura_id_fkey"
+            columns: ["chiusura_id"]
+            isOneToOne: false
+            referencedRelation: "imm_chiusure"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_fattura_id_fkey"
+            columns: ["fattura_id"]
+            isOneToOne: false
+            referencedRelation: "fatture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_locazione_id_fkey"
+            columns: ["locazione_id"]
+            isOneToOne: false
+            referencedRelation: "imm_locazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_provvigioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_report_inviati: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          dati: NonNullable<Json>
+          destinatari: number
+          id: string
+          immobile_id: string
+          inviato_il: string
+          modulo: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          dati: NonNullable<Json>
+          destinatari?: number
+          id?: string
+          immobile_id: string
+          inviato_il?: string
+          modulo?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          dati?: NonNullable<Json>
+          destinatari?: number
+          id?: string
+          immobile_id?: string
+          inviato_il?: string
+          modulo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_report_inviati_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_report_inviati_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_richieste: {
+        Row: {
+          agente_id: string | null
+          bagni_min: number | null
+          budget_max: number | null
+          budget_min: number | null
+          camere_min: number | null
+          codice: string | null
+          comuni: string[]
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          finanziamento: boolean
+          garanzie: string | null
+          id: string
+          modulo: string
+          note: string | null
+          preferenze: string | null
+          reddito_mensile: number | null
+          referenze: string | null
+          requisiti: string[]
+          stato: string
+          superficie_min: number | null
+          tempistica: string | null
+          tipo: string
+          tipo_cliente: string
+          tipologie: string[]
+          updated_at: string
+          updated_by: string | null
+          zone: string[]
+        }
+        Insert: {
+          agente_id?: string | null
+          bagni_min?: number | null
+          budget_max?: number | null
+          budget_min?: number | null
+          camere_min?: number | null
+          codice?: string | null
+          comuni?: string[]
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          finanziamento?: boolean
+          garanzie?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          reddito_mensile?: number | null
+          referenze?: string | null
+          requisiti?: string[]
+          stato?: string
+          superficie_min?: number | null
+          tempistica?: string | null
+          tipo?: string
+          tipo_cliente?: string
+          tipologie?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          zone?: string[]
+        }
+        Update: {
+          agente_id?: string | null
+          bagni_min?: number | null
+          budget_max?: number | null
+          budget_min?: number | null
+          camere_min?: number | null
+          codice?: string | null
+          comuni?: string[]
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          finanziamento?: boolean
+          garanzie?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          reddito_mensile?: number | null
+          referenze?: string | null
+          requisiti?: string[]
+          stato?: string
+          superficie_min?: number | null
+          tempistica?: string | null
+          tipo?: string
+          tipo_cliente?: string
+          tipologie?: string[]
+          updated_at?: string
+          updated_by?: string | null
+          zone?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_richieste_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_richieste_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_richieste_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_richieste_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_richieste_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_richieste_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_ripartizioni: {
+        Row: {
+          agente_id: string | null
+          beneficiario: string
+          collaboratore_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number
+          modulo: string
+          pagata_il: string | null
+          pct: number
+          provvigione_id: string
+        }
+        Insert: {
+          agente_id?: string | null
+          beneficiario: string
+          collaboratore_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          pagata_il?: string | null
+          pct: number
+          provvigione_id: string
+        }
+        Update: {
+          agente_id?: string | null
+          beneficiario?: string
+          collaboratore_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number
+          modulo?: string
+          pagata_il?: string | null
+          pct?: number
+          provvigione_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_ripartizioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_ripartizioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_ripartizioni_collaboratore_id_fkey"
+            columns: ["collaboratore_id"]
+            isOneToOne: false
+            referencedRelation: "imm_collaboratori"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_ripartizioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_ripartizioni_provvigione_id_fkey"
+            columns: ["provvigione_id"]
+            isOneToOne: false
+            referencedRelation: "imm_provvigioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_selezioni: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          immobile_id: string
+          inviato_il: string | null
+          modulo: string
+          note: string | null
+          punteggio: number | null
+          richiesta_id: string
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          immobile_id: string
+          inviato_il?: string | null
+          modulo?: string
+          note?: string | null
+          punteggio?: number | null
+          richiesta_id: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          immobile_id?: string
+          inviato_il?: string | null
+          modulo?: string
+          note?: string | null
+          punteggio?: number | null
+          richiesta_id?: string
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_selezioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_selezioni_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_selezioni_richiesta_id_fkey"
+            columns: ["richiesta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_richieste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_selezioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_valutazioni: {
+        Row: {
+          agente_id: string | null
+          codice: string | null
+          comparabili: NonNullable<Json>
+          correttivi: NonNullable<Json>
+          created_at: string
+          created_by: string | null
+          data: string
+          id: string
+          immobile_id: string
+          modulo: string
+          note: string | null
+          presentata_il: string | null
+          superficie: number | null
+          updated_at: string
+          updated_by: string | null
+          valore_agente: number | null
+          valore_automatico: number | null
+          valore_max: number | null
+          valore_min: number | null
+          valore_mq: number | null
+        }
+        Insert: {
+          agente_id?: string | null
+          codice?: string | null
+          comparabili?: NonNullable<Json>
+          correttivi?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          immobile_id: string
+          modulo?: string
+          note?: string | null
+          presentata_il?: string | null
+          superficie?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valore_agente?: number | null
+          valore_automatico?: number | null
+          valore_max?: number | null
+          valore_min?: number | null
+          valore_mq?: number | null
+        }
+        Update: {
+          agente_id?: string | null
+          codice?: string | null
+          comparabili?: NonNullable<Json>
+          correttivi?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          immobile_id?: string
+          modulo?: string
+          note?: string | null
+          presentata_il?: string | null
+          superficie?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valore_agente?: number | null
+          valore_automatico?: number | null
+          valore_max?: number | null
+          valore_min?: number | null
+          valore_mq?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_valutazioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_valutazioni_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_valutazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_valutazioni_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_valutazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      imm_visite: {
+        Row: {
+          agente_id: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          durata_min: number
+          esito: string | null
+          feedback: string | null
+          fine: string
+          gradimento: number | null
+          id: string
+          immobile_id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          numero: number
+          periodo: unknown
+          prossime_azioni: string | null
+          richiesta_id: string | null
+          stato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          agente_id?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number
+          esito?: string | null
+          feedback?: string | null
+          fine: string
+          gradimento?: number | null
+          id?: string
+          immobile_id: string
+          inizio: string
+          modulo?: string
+          note?: string | null
+          numero?: number
+          periodo?: never
+          prossime_azioni?: string | null
+          richiesta_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          agente_id?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          durata_min?: number
+          esito?: string | null
+          feedback?: string | null
+          fine?: string
+          gradimento?: number | null
+          id?: string
+          immobile_id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          numero?: number
+          periodo?: never
+          prossime_azioni?: string | null
+          richiesta_id?: string | null
+          stato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_visite_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_visite_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "imm_agenti_riepilogo"
+            referencedColumns: ["agente_id"]
+          },
+          {
+            foreignKeyName: "imm_visite_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_visite_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "fior_clienti_riepilogo"
+            referencedColumns: ["contatto_id"]
+          },
+          {
+            foreignKeyName: "imm_visite_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_visite_immobile_id_fkey"
+            columns: ["immobile_id"]
+            isOneToOne: false
+            referencedRelation: "imm_immobili"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_visite_richiesta_id_fkey"
+            columns: ["richiesta_id"]
+            isOneToOne: false
+            referencedRelation: "imm_richieste"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imm_visite_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       impostazioni_istanza: {
         Row: {
           id: boolean
@@ -24428,6 +27109,38 @@ export type Database = {
           },
         ]
       }
+      imm_agenti_riepilogo: {
+        Row: {
+          acquisizioni_mese: number | null
+          agente_id: string | null
+          attivo: boolean | null
+          clienti: number | null
+          lead_aperti: number | null
+          locazioni_mese: number | null
+          modulo: string | null
+          nome: string | null
+          obiettivo_acquisizioni: number | null
+          obiettivo_chiusure: number | null
+          obiettivo_provvigioni: number | null
+          portafoglio: number | null
+          provvigioni_mese: number | null
+          trattative: number | null
+          user_id: string | null
+          valore_portafoglio: number | null
+          vendite_mese: number | null
+          visite_mese: number | null
+          zone: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imm_agenti_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mag_giacenze: {
         Row: {
           anomalia_negativa: boolean | null
@@ -25897,6 +28610,137 @@ export type Database = {
         }[]
       }
       html_escape: { Args: { p: string }; Returns: string }
+      imm_adegua_istat: {
+        Args: { p_locazione: string; p_variazione: number }
+        Returns: number
+      }
+      imm_agenda: {
+        Args: { p_agente?: string; p_al: string; p_dal: string }
+        Returns: {
+          dettaglio: string
+          percorso: string
+          quando: string
+          riferimento: string
+          tipo: string
+          titolo: string
+        }[]
+      }
+      imm_agente_corrente: { Args: Record<PropertyKey, never>; Returns: string }
+      imm_avanza: {
+        Args: {
+          p_contatto: string
+          p_fase: string
+          p_immobile: string
+          p_organizzazione?: string
+          p_pipeline: string
+          p_valore?: number
+        }
+        Returns: string
+      }
+      imm_compila: {
+        Args: {
+          p_chiusura?: string
+          p_contatto?: string
+          p_immobile: string
+          p_incarico?: string
+          p_locazione?: string
+          p_modello: string
+          p_proposta?: string
+        }
+        Returns: string
+      }
+      imm_converti_lead: { Args: { p_lead: string }; Returns: Json }
+      imm_crea_provvigione: {
+        Args: {
+          p_agente: string
+          p_base: number
+          p_chiusura: string
+          p_contatto: string
+          p_fisso: number
+          p_immobile: string
+          p_lato: string
+          p_locazione: string
+          p_organizzazione: string
+          p_pct: number
+        }
+        Returns: string
+      }
+      imm_cruscotto: { Args: Record<PropertyKey, never>; Returns: Json }
+      imm_euro: { Args: { p: number }; Returns: string }
+      imm_fattura_provvigione: {
+        Args: { p_numero: string; p_provvigione: string }
+        Returns: string
+      }
+      imm_feed_annunci: { Args: Record<PropertyKey, never>; Returns: string }
+      imm_giro_notturno: { Args: Record<PropertyKey, never>; Returns: Json }
+      imm_invia_report: { Args: { p_immobile: string }; Returns: number }
+      imm_invia_selezione: { Args: { p_richiesta: string }; Returns: number }
+      imm_kpi: { Args: { p_al: string; p_dal: string }; Returns: Json }
+      imm_match: {
+        Args: { p_richiesta: string }
+        Returns: {
+          immobile_id: string
+          motivi: string[]
+          punteggio: number
+        }[]
+      }
+      imm_match_immobile: {
+        Args: { p_immobile: string }
+        Returns: {
+          contatto_id: string
+          motivi: string[]
+          punteggio: number
+          richiesta_id: string
+        }[]
+      }
+      imm_notifica_agente: {
+        Args: {
+          p_agente: string
+          p_messaggio: string
+          p_tipo?: Database["public"]["Enums"]["notifica_tipo"]
+          p_titolo: string
+          p_url: string
+        }
+        Returns: undefined
+      }
+      imm_notifica_direzione: {
+        Args: {
+          p_messaggio: string
+          p_tipo?: Database["public"]["Enums"]["notifica_tipo"]
+          p_titolo: string
+          p_url: string
+        }
+        Returns: undefined
+      }
+      imm_oggi: { Args: Record<PropertyKey, never>; Returns: string }
+      imm_pipeline: { Args: { p_nome: string }; Returns: string }
+      imm_proponi: {
+        Args: { p_richiesta: string; p_soglia?: number }
+        Returns: number
+      }
+      imm_punteggio: {
+        Args: {
+          i: Database["public"]["Tables"]["imm_immobili"]["Row"]
+          r: Database["public"]["Tables"]["imm_richieste"]["Row"]
+        }
+        Returns: {
+          motivi: string[]
+          punteggio: number
+        }[]
+      }
+      imm_report: { Args: { p_immobile: string }; Returns: Json }
+      imm_ripartisci: {
+        Args: { p_provvigione: string; p_righe: Json }
+        Returns: number
+      }
+      imm_scrivi: {
+        Args: { p_contatto: string; p_oggetto: string; p_testo: string }
+        Returns: boolean
+      }
+      imm_stima: {
+        Args: { p_correttivi?: Json; p_immobile: string }
+        Returns: Json
+      }
       invia_campagna: { Args: { p_campagna: string }; Returns: number }
       invia_campagne_programmate: {
         Args: Record<PropertyKey, never>
@@ -26184,6 +29028,22 @@ export type Database = {
         Returns: string[]
       }
       seg_hotel_partiti: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_imm_cercano: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_imm_clienti_conclusi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_imm_proprietari: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_imm_senza_visite: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
