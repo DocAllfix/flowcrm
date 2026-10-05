@@ -36,9 +36,13 @@ Si esegue **solo con il via libera esplicito del committente**.
 5. **Controlli sul sito vero**: login ospite su `demo.pmiflow.eu/demo`, giro delle pagine dei
    cinque moduli e del CRM, nessun «Avvio interrotto», nessun errore in console; la ricerca
    Ctrl+K funziona.
-6. **Accensione di un modulo nuovo in demo** (Sprint 10, dopo i dati dimostrativi): riga in
-   `moduli_licenze`, slug in `VITE_MODULES` su Vercel e redeploy, seme dei dati e ripristino
-   notturno aggiornati.
+6. **Dati dimostrativi** (Sprint 10): lanciare `provisioning/demo-moduli-nuovi.sql` e poi
+   `provisioning/demo-dati-dimostrativi.sql` (il ripristino notturno ora pulisce e rifà anche
+   i moduli nuovi). `SELECT public.ripristina_demo();` deve restituire «ripristinata …;
+   nessun modulo nuovo acceso» finché le licenze sono spente.
+7. **Accensione di un modulo nuovo in demo**: riga in `moduli_licenze`, slug in `VITE_MODULES`
+   su Vercel e redeploy, poi `SELECT public.demo_semina_moduli_nuovi();`. Controllo: login
+   ospite, cruscotto del modulo con i dati, una scrittura rifiutata (l'ospite legge soltanto).
 
 ## Ritorno indietro
 
