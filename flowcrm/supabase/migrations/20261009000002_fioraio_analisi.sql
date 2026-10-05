@@ -420,13 +420,13 @@ ON CONFLICT (slug) DO NOTHING;
 CREATE OR REPLACE FUNCTION fior_composizioni_disponibili()
 RETURNS TABLE (distinta_id UUID, codice TEXT, nome TEXT, categoria TEXT, prezzo NUMERIC, costo NUMERIC, minuti INT, realizzabili INT, attributi JSONB)
 LANGUAGE sql STABLE SECURITY INVOKER SET search_path = pg_catalog, public AS $$
-  SELECT d.id, d.codice, d.nome, d.categoria, d.prezzo_vendita, costo_distinta(d.id), d.tempo_preparazione_min,
+  SELECT d.id, d.codice, d.nome, d.tipo, d.prezzo_vendita, costo_distinta(d.id), d.tempo_preparazione_min,
          COALESCE((SELECT floor(min(COALESCE(g.giacenza, 0) / NULLIF(e.quantita, 0)))::int
                      FROM esplodi_distinta(d.id, 1) e LEFT JOIN mag_giacenze g ON g.articolo_id = e.articolo_id), 0),
          d.attributi
     FROM distinte_base d
    WHERE d.modulo = 'fioraio' AND d.attivo
-   ORDER BY d.categoria, d.nome
+   ORDER BY d.tipo, d.nome
 $$;
 
 -- ═══ 10. RICERCA ════════════════════════════════════════════════════

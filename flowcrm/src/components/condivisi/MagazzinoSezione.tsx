@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
+import { FotoDialog } from '@/components/condivisi/FotoDialog'
 import { useAuth } from '@/hooks/useAuth'
 import type { Tables } from '@/lib/supabase'
 import { supabase } from '@/lib/supabase'
@@ -62,9 +63,14 @@ interface Props {
   extra?: { valore: string; etichetta: string; contenuto: ReactNode }[]
   /** Proposta di riordino previsionale del modulo, al posto di quella sulla sola scorta minima. */
   riordino?: { righe: RiordinoPrevisto[]; controlli: ReactNode }
+  /** Categorie proposte per i nuovi articoli (fiori recisi, piante, vasi…). */
+  categorieArticolo?: string[]
+  /** Campi in più dell'articolo, propri del modulo (varietà, colore, dimensione…): finiscono negli attributi. */
+  campiArticolo?: CampoArticolo[]
 }
+export interface CampoArticolo { chiave: string; etichetta: string; segnaposto?: string }
 
-export function MagazzinoSezione({ modulo, moduli, extra = [], riordino }: Props) {
+export function MagazzinoSezione({ modulo, moduli, extra = [], riordino, categorieArticolo, campiArticolo }: Props) {
   const { data: giacenze = [] } = useElenco<Giacenza>('mag_giacenze', { filtri: { modulo: moduli }, ordine: [{ colonna: 'descrizione' }] })
   const { data: lotti = [] } = useElenco<LottoStato>('mag_lotti_stato', { filtri: { modulo: moduli }, ordine: [{ colonna: 'fine_vita' }] })
   const sotto = giacenze.filter((g) => g.sotto_scorta).length
@@ -82,7 +88,7 @@ export function MagazzinoSezione({ modulo, moduli, extra = [], riordino }: Props
         <TabsTrigger value="fornitori">Fornitori</TabsTrigger>
         {extra.map((e) => <TabsTrigger key={e.valore} value={e.valore}>{e.etichetta}</TabsTrigger>)}
       </TabsList>
-      <TabsContent value="giacenze"><Giacenze modulo={modulo} moduli={moduli} giacenze={giacenze} /></TabsContent>
+      <TabsContent value="giacenze"><Giacenze modulo={modulo} moduli={moduli} giacenze={giacenze} categorie={categorieArticolo} campi={campiArticolo} /></TabsContent>
       <TabsContent value="lotti"><Lotti lotti={lotti} onOrdini={() => setScheda('ordini')} /></TabsContent>
       <TabsContent value="movimenti"><Movimenti moduli={moduli} onGiacenze={() => setScheda('giacenze')} /></TabsContent>
       <TabsContent value="ordini"><Ordini modulo={modulo} moduli={moduli} /></TabsContent>
@@ -101,13 +107,17 @@ function useOrganizzazioni() {
   return useElenco<Organizzazione>('organizzazioni', { filtri: { attivo: true }, select: 'id, ragione_sociale', ordine: [{ colonna: 'ragione_sociale' }], limite: 1000 }).data ?? []
 }
 
-function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string[]; giacenze: Giacenza[] }) {
+function Giacenze({ modulo, moduli, giacenze, categorie, campi = [] }: {
+  modulo: string; moduli: string[]; giacenze: Giacenza[]; categorie?: string[]; campi?: CampoArticolo[]
+}) {
   const { isManager } = useAuth()
   const articoli = useArticoli(moduli)
   const fornitori = useOrganizzazioni()
   const nuovo = useSalva('mag_articoli', TABELLE)
   const muovi = useInserisci('mag_movimenti', TABELLE)
-  const [f, setF] = useState({ descrizione: '', categoria: '', unita: 'kg', costo: '', scorta: '', fornitore: '', deperibile: false, durata: '' })
+  const vuoto = { descrizione: '', categoria: '', unita: 'kg', costo: '', scorta: '', fornitore: '', deperibile: false, durata: '', prezzo: '', iva: '22', stagione: '' }
+  const [f, setF] = useState(vuoto)
+  const [altri, setAltri] = useState<Record<string, string>>({})
   const [mov, setMov] = useState<{ articolo: string; tipo: string; quantita: string; note: string }>({ articolo: '', tipo: 'carico', quantita: '', note: '' })
   const [aperto, setAperto] = useState(false)
 
@@ -117,8 +127,12 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
     try {
       await nuovo.mutateAsync({ values: { modulo, descrizione: f.descrizione.trim(), categoria: f.categoria.trim() || null, unita_misura: f.unita.trim() || 'pz',
         costo_unitario: n(f.costo) || 0, scorta_minima: n(f.scorta) || 0, fornitore_id: f.fornitore || null, deperibile: f.deperibile,
-        durata_giorni: f.durata ? Number(f.durata) : null } })
-      setF({ descrizione: '', categoria: '', unita: 'kg', costo: '', scorta: '', fornitore: '', deperibile: false, durata: '' })
+        durata_giorni: f.durata ? Number(f.durata) : null,
+        // Con un prezzo l'articolo si può vendere al banco.
+        prezzo_vendita: f.prezzo ? n(f.prezzo) : null, vendibile: !!f.prezzo, aliquota_iva: Number(f.iva) || 22,
+        stagionalita: f.stagione.trim() || null,
+        attributi: Object.fromEntries(Object.entries(altri).filter(([, v]) => v.trim()).map(([k, v]) => [k, v.trim()])) } })
+      setF(vuoto); setAltri({})
       setAperto(false)
       toast.success('Articolo creato')
     } catch (err) { toast.error(messaggioErrore(err)) }
@@ -162,7 +176,10 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
         {aperto && (
           <form onSubmit={creaArticolo} className="mt-4 grid grid-cols-2 gap-3 border-t border-border pt-4 sm:grid-cols-4">
             <div className="col-span-2 space-y-1.5"><Label htmlFor="ar-d">Descrizione *</Label><Input id="ar-d" value={f.descrizione} onChange={(e) => setF({ ...f, descrizione: e.target.value })} /></div>
-            <div className="space-y-1.5"><Label htmlFor="ar-c">Categoria</Label><Input id="ar-c" value={f.categoria} onChange={(e) => setF({ ...f, categoria: e.target.value })} placeholder="Materie prime, bevande…" /></div>
+            <div className="space-y-1.5"><Label htmlFor="ar-c">Categoria</Label>
+              <Input id="ar-c" value={f.categoria} onChange={(e) => setF({ ...f, categoria: e.target.value })} list={categorie ? 'ar-c-elenco' : undefined}
+                placeholder={categorie ? categorie.slice(0, 2).join(', ') + '…' : 'Materie prime, bevande…'} />
+              {categorie && <datalist id="ar-c-elenco">{categorie.map((c) => <option key={c} value={c} />)}</datalist>}</div>
             <div className="space-y-1.5"><Label htmlFor="ar-u">Unità</Label><Input id="ar-u" value={f.unita} onChange={(e) => setF({ ...f, unita: e.target.value })} /></div>
             <div className="space-y-1.5"><Label htmlFor="ar-k">Costo unitario (€)</Label><Input id="ar-k" inputMode="decimal" value={f.costo} onChange={(e) => setF({ ...f, costo: e.target.value })} /></div>
             <div className="space-y-1.5"><Label htmlFor="ar-s">Scorta minima</Label><Input id="ar-s" inputMode="decimal" value={f.scorta} onChange={(e) => setF({ ...f, scorta: e.target.value })} /></div>
@@ -172,12 +189,25 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
                 <SelectContent>{fornitori.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}</SelectContent>
               </Select></div>
             <div className="space-y-1.5"><Label htmlFor="ar-v">Vita commerciale (giorni)</Label><Input id="ar-v" type="number" min={1} value={f.durata} onChange={(e) => setF({ ...f, durata: e.target.value, deperibile: !!e.target.value })} /></div>
+            <div className="space-y-1.5"><Label htmlFor="ar-p">Prezzo di vendita (€)</Label><Input id="ar-p" inputMode="decimal" value={f.prezzo} onChange={(e) => setF({ ...f, prezzo: e.target.value })} placeholder="Solo se si vende" /></div>
+            <div className="space-y-1.5"><Label>IVA</Label>
+              <Select value={f.iva} onValueChange={(v) => setF({ ...f, iva: v })}>
+                <SelectTrigger aria-label="Aliquota IVA"><SelectValue /></SelectTrigger>
+                <SelectContent>{['4', '5', '10', '22'].map((a) => <SelectItem key={a} value={a}>{a}%</SelectItem>)}</SelectContent>
+              </Select></div>
+            {campi.map((c) => (
+              <div key={c.chiave} className="space-y-1.5"><Label htmlFor={`ar-x-${c.chiave}`}>{c.etichetta}</Label>
+                <Input id={`ar-x-${c.chiave}`} value={altri[c.chiave] ?? ''} onChange={(e) => setAltri({ ...altri, [c.chiave]: e.target.value })} placeholder={c.segnaposto} /></div>
+            ))}
+            {campi.length > 0 && (
+              <div className="space-y-1.5"><Label htmlFor="ar-st">Stagionalità</Label><Input id="ar-st" value={f.stagione} onChange={(e) => setF({ ...f, stagione: e.target.value })} placeholder="Marzo–maggio" /></div>
+            )}
             <div className="col-span-2 flex justify-end gap-2 sm:col-span-4"><BottoneScrittura type="submit">Crea articolo</BottoneScrittura></div>
           </form>
         )}
       </Card>
       {giacenze.length === 0 ? (
-        <EmptyState icon={PackagePlus} title="Magazzino vuoto" description="Crea gli articoli e registra i primi carichi."
+        <EmptyState icon={PackagePlus} title="Magazzino vuoto" filtrato={aperto} description="Crea gli articoli e registra i primi carichi."
           action={!aperto ? <Button variant="outline" onClick={() => setAperto(true)}><PackagePlus className="h-4 w-4" /> Nuovo articolo</Button> : undefined} />
       ) : (
         <Card className="overflow-hidden">
@@ -185,6 +215,7 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
             <TableHeader><TableRow>
               <TableHead>Articolo</TableHead><TableHead>Categoria</TableHead><TableHead className="text-right">Giacenza</TableHead>
               <TableHead className="text-right">Scorta minima</TableHead>{isManager && <TableHead className="text-right">Valore</TableHead>}<TableHead>Stato</TableHead>
+              <TableHead><span className="sr-only">Foto</span></TableHead>
             </TableRow></TableHeader>
             <TableBody>
               {giacenze.map((g) => (
@@ -195,6 +226,7 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
                   <TableCell numerica>{fmt(g.scorta_minima)}</TableCell>
                   {isManager && <TableCell numerica>{euro(g.valore)}</TableCell>}
                   <TableCell>{g.anomalia_negativa ? <Badge tone="danger">Sotto zero: inventario</Badge> : g.sotto_scorta ? <Badge tone="warning">Sotto scorta</Badge> : <Badge tone="success">Ok</Badge>}</TableCell>
+                  <TableCell className="text-right"><FotoDialog entita="mag_articoli" entitaId={g.articolo_id!} titolo={g.descrizione ?? 'Articolo'} categorie={['foto', 'scheda tecnica']} /></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -216,7 +248,8 @@ function Lotti({ lotti, onOrdini }: { lotti: LottoStato[]; onOrdini: () => void 
         <Card className="overflow-hidden">
           <Table>
             <TableHeader><TableRow><TableHead>Lotto</TableHead><TableHead>Articolo</TableHead><TableHead>Ubicazione</TableHead>
-              <TableHead className="text-right">Ricevuto</TableHead><TableHead className="text-right">Fine vita</TableHead><TableHead className="text-right">Residuo</TableHead><TableHead>Stato</TableHead></TableRow></TableHeader>
+              <TableHead className="text-right">Ricevuto</TableHead><TableHead className="text-right">Fine vita</TableHead><TableHead className="text-right">Residuo</TableHead><TableHead>Stato</TableHead>
+              <TableHead><span className="sr-only">Scheda del lotto</span></TableHead></TableRow></TableHeader>
             <TableBody>
               {elenco.map((l) => {
                 const g = l.giorni_residui
@@ -230,6 +263,11 @@ function Lotti({ lotti, onOrdini }: { lotti: LottoStato[]; onOrdini: () => void 
                     <TableCell numerica>{fmt(l.residuo)}</TableCell>
                     <TableCell>{g === null ? <Badge tone="neutral">Senza scadenza</Badge> : g < 0 ? <Badge tone="danger">Scaduto</Badge>
                       : g <= 3 ? <Badge tone="warning">{g === 0 ? 'Scade oggi' : `${g} giorni`}</Badge> : <Badge tone="success">{g} giorni</Badge>}</TableCell>
+                    <TableCell className="text-right">
+                      <FotoDialog entita="mag_lotti" entitaId={l.lotto_id!} titolo={`Lotto ${l.codice_lotto ?? ''} · ${l.descrizione}`} categorie={['foto', 'documento di trasporto']}>
+                        <SchedaLotto lottoId={l.lotto_id!} />
+                      </FotoDialog>
+                    </TableCell>
                   </TableRow>
                 )
               })}
@@ -238,6 +276,35 @@ function Lotti({ lotti, onOrdini }: { lotti: LottoStato[]; onOrdini: () => void 
         </Card>
       )}
     </div>
+  )
+}
+
+/** Dati del lotto oltre al ricevimento: da dove viene, quando è andato in vendita, come sta, quando si smaltisce. */
+function SchedaLotto({ lottoId }: { lottoId: string }) {
+  const { data: lotti = [] } = useElenco<Tables<'mag_lotti'>>('mag_lotti', { filtri: { id: lottoId } })
+  const salva = useSalva('mag_lotti', TABELLE)
+  const l = lotti[0]
+  const [f, setF] = useState<Partial<Tables<'mag_lotti'>> | null>(null)
+  if (!l) return null
+  const v = { ...l, ...f }
+  const testo = (k: 'provenienza' | 'ubicazione' | 'stato_conservazione' | 'note', etichetta: string, segnaposto?: string) => (
+    <div className="space-y-1.5"><Label htmlFor={`lt-${k}`}>{etichetta}</Label>
+      <Input id={`lt-${k}`} value={v[k] ?? ''} placeholder={segnaposto} onChange={(e) => setF({ ...f, [k]: e.target.value || null })} /></div>
+  )
+  const giorno = (k: 'data_inserimento' | 'data_apertura' | 'data_scadenza' | 'data_smaltimento', etichetta: string) => (
+    <div className="space-y-1.5"><Label htmlFor={`lt-${k}`}>{etichetta}</Label>
+      <Input id={`lt-${k}`} type="date" value={v[k] ?? ''} onChange={(e) => setF({ ...f, [k]: e.target.value || null })} /></div>
+  )
+  return (
+    <form className="grid grid-cols-1 gap-3 sm:grid-cols-2" onSubmit={(e) => { e.preventDefault(); if (!f) return
+      salva.mutate({ id: l.id, values: f }, { onSuccess: () => { toast.success('Lotto aggiornato'); setF(null) }, onError: (err) => toast.error(messaggioErrore(err)) }) }}>
+      {testo('provenienza', 'Provenienza', 'Olanda, serra locale…')}{testo('ubicazione', 'Ubicazione', 'Cella, banco, vetrina')}
+      {giorno('data_inserimento', 'In negozio dal')}{giorno('data_scadenza', 'Fine vita prevista')}
+      {testo('stato_conservazione', 'Stato di conservazione', 'Ottimo, da vendere subito…')}{giorno('data_smaltimento', 'Da smaltire il')}
+      <div className="sm:col-span-2">{testo('note', 'Note')}</div>
+      <p className="text-xs text-muted-foreground sm:col-span-2">Ricevuto il {data(l.data_ricevimento)}{l.temperatura_ricevimento != null ? ` a ${fmt(l.temperatura_ricevimento)} °C` : ''}. Il deteriorato e l'invenduto si registrano come uscite nelle giacenze.</p>
+      <div className="flex justify-end sm:col-span-2"><BottoneScrittura type="submit" variant="outline" disabled={!f || salva.isPending}>Salva</BottoneScrittura></div>
+    </form>
   )
 }
 

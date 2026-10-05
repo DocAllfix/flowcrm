@@ -484,7 +484,8 @@ DECLARE
 BEGIN
   IF TG_OP = 'UPDATE' AND NEW.stato IS NOT DISTINCT FROM OLD.stato THEN RETURN NEW; END IF;
   IF NEW.stato IN ('confermato', 'in_preparazione', 'pronto', 'in_consegna', 'consegnato', 'chiuso') THEN
-    v_entro := (NEW.data_richiesta + COALESCE(NEW.ora_richiesta, TIME '09:00')) AT TIME ZONE 'Europe/Rome';
+    -- Senza un'ora precisa la composizione serve entro la fine della giornata.
+    v_entro := (NEW.data_richiesta + COALESCE(NEW.ora_richiesta, TIME '18:00')) AT TIME ZONE 'Europe/Rome';
     FOR r IN SELECT x.* FROM fior_ordini_righe x WHERE x.ordine_id = NEW.id AND x.tipo IN ('composizione', 'su_misura')
               AND NEW.modalita <> 'banco'
               AND NOT EXISTS (SELECT 1 FROM fior_produzione p WHERE p.riga_id = x.id) LOOP
