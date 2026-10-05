@@ -12,7 +12,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(51);
+select plan(52);
 
 insert into auth.users (id, email)
 values
@@ -119,7 +119,7 @@ insert into gar_danni (id, struttura_id, tipo, descrizione, stato, created_by) v
   ('b9000000-0000-0000-0000-000000000002', 'b1000000-0000-0000-0000-000000000001', 'anomalia', 'Sbarra d''uscita rimasta aperta', 'chiuso', '00000000-0000-0000-0000-00000000000c');
 select isnt((select chiuso_at from gar_danni where id = 'b9000000-0000-0000-0000-000000000002'), null, 'l''anomalia chiusa ha la sua data di chiusura');
 select pg_temp.torna_postgres();
-select is((select count(*)::int from notifiche where destinatario_id = '00000000-0000-0000-0000-00000000000a' and titolo = 'Danno Ingresso · AB123CD'), 1,
+select is((select count(*)::int from notifiche where destinatario_id = '00000000-0000-0000-0000-00000000000a' and titolo = 'Danno all''ingresso · AB123CD'), 1,
   'la direzione è avvisata del danno');
 
 -- ═══ COLONNINE E RICARICHE ══════════════════════════════════════════
@@ -179,6 +179,16 @@ update gar_pneumatici set stato = 'restituiti' where id = 'bb000000-0000-0000-00
 select is((select format('%s|%s', restituiti_il = pg_temp.oggi(), (select count(*) from scadenze_moduli where entita = 'gar_pneumatici'
               and entita_id = 'bb000000-0000-0000-0000-000000000001' and stato = 'aperta')) from gar_pneumatici where id = 'bb000000-0000-0000-0000-000000000001'),
   't|0', 'restituite le gomme, la scadenza si toglie');
+
+-- ═══ ANTICIPO DELLA PRENOTAZIONE ════════════════════════════════════
+select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
+insert into gar_prenotazioni (id, struttura_id, cliente_id, cliente_nome, targa, ingresso, uscita, anticipo, created_by) values
+  ('bf000000-0000-0000-0000-000000000001', 'b1000000-0000-0000-0000-000000000001', 'b4000000-0000-0000-0000-000000000001', 'Mario Rossi', 'AB123CD',
+   now() + interval '3 days', now() + interval '3 days 2 hours', 5, '00000000-0000-0000-0000-00000000000c');
+select pg_temp.torna_postgres();
+select is((select format('%s|%s', c.stato, s.residuo) from conti c join conti_saldi s on s.conto_id = c.id
+            where c.riferimento_tipo = 'gar_prenotazioni' and c.riferimento_id = 'bf000000-0000-0000-0000-000000000001'),
+  'aperto|5.00', 'l''anticipo della prenotazione è un conto da incassare');
 
 -- ═══ LISTA D'ATTESA ═════════════════════════════════════════════════
 insert into gar_attese (id, struttura_id, cliente_id, tipo_posto, created_at, created_by) values

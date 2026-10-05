@@ -168,7 +168,8 @@ CREATE OR REPLACE FUNCTION gar_danno_avvisa()
 RETURNS TRIGGER
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public AS $$
 BEGIN
-  PERFORM gar_notifica_direzione(initcap(replace(NEW.tipo, '_', ' ')) || COALESCE(' · ' || NEW.targa, ''), left(NEW.descrizione, 200), '/garage/danni',
+  PERFORM gar_notifica_direzione(CASE NEW.tipo WHEN 'danno_ingresso' THEN 'Danno all''ingresso' WHEN 'danno_uscita' THEN 'Danno all''uscita'
+                                   ELSE initcap(NEW.tipo) END || COALESCE(' · ' || NEW.targa, ''), left(NEW.descrizione, 200), '/garage/danni',
                                  (CASE WHEN NEW.tipo IN ('furto', 'incidente') THEN 'critical' ELSE 'warning' END)::notifica_tipo);
   RETURN NEW;
 END;
@@ -575,6 +576,18 @@ END;
 $$;
 CREATE TRIGGER gar_prenotazioni_avvisa AFTER INSERT OR UPDATE OF stato ON gar_prenotazioni FOR EACH ROW EXECUTE FUNCTION gar_prenotazione_avvisa();
 
+-- L'anticipo della prenotazione è un conto da incassare subito; all'uscita si scala dalla tariffa.
+CREATE OR REPLACE FUNCTION gar_prenotazione_anticipo()
+RETURNS TRIGGER
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public AS $$
+BEGIN
+  PERFORM gar_apri_conto('gar_prenotazioni', NEW.id, 'Anticipo ' || NEW.codice || ' · ' || NEW.cliente_nome, 'Anticipo della prenotazione ' || NEW.codice,
+                         NEW.anticipo, NEW.cliente_id);
+  RETURN NEW;
+END;
+$$;
+CREATE TRIGGER gar_prenotazioni_anticipo AFTER INSERT ON gar_prenotazioni FOR EACH ROW WHEN (NEW.anticipo > 0) EXECUTE FUNCTION gar_prenotazione_anticipo();
+
 -- ═══ 8. CONVENZIONI AZIENDALI: CONSUNTIVO E FATTURA (§13) ═══════════
 CREATE OR REPLACE FUNCTION gar_convenzione_consuntivo(p_convenzione UUID, p_dal DATE, p_al DATE)
 RETURNS JSONB
@@ -830,7 +843,9 @@ BEGIN
                             SELECT id, 'uscita', uscita_at, targa, posto_id, cliente_id, ticket FROM gar_soste WHERE struttura_id = p_struttura AND uscita_at IS NOT NULL) x
                       LEFT JOIN gar_posti p ON p.id = x.posto_id LEFT JOIN gar_clienti k ON k.id = x.cliente_id
                      ORDER BY x.quando DESC LIMIT 12) y), '[]'),
-    'da_incassare', (SELECT jsonb_build_object('numero', count(*), 'importo', COALESCE(sum(importo), 0)) FROM gar_soste WHERE struttura_id = p_struttura AND stato = 'da_pagare'),
+    -- Soste, servizi, ricariche e anticipi con il conto ancora aperto.
+    'da_incassare', (SELECT jsonb_build_object('numero', count(*), 'importo', COALESCE(sum(residuo), 0)) FROM conti_saldi
+                      WHERE modulo = 'garage' AND stato = 'aperto' AND residuo > 0),
     'abbonamenti_in_scadenza', (SELECT count(*) FROM gar_contratti WHERE struttura_id = p_struttura AND stato IN ('attivo', 'sospeso')
                                   AND COALESCE(recesso_il, fine) BETWEEN v_oggi AND v_oggi + 30),
     'incassi_oggi', (SELECT COALESCE(sum(p.importo), 0) FROM conti_pagamenti p WHERE p.modulo = 'garage' AND p.pagato_at >= v_da),
@@ -886,6 +901,7 @@ INSERT INTO campagne_segmenti (slug, modulo, etichetta, descrizione, funzione, p
 ON CONFLICT (slug) DO NOTHING;
 
 -- ═══ 14. RICERCA ════════════════════════════════════════════════════
+-- Il veicolo porta alla scheda del suo cliente (i veicoli senza cliente non hanno una scheda).
 CREATE OR REPLACE FUNCTION ricerca_globale(q TEXT)
 RETURNS TABLE (
   tipo         TEXT,
@@ -976,11 +992,11 @@ LANGUAGE sql STABLE SECURITY INVOKER SET search_path = pg_catalog, public AS $$
     WHERE fo.stato <> 'annullato' AND fo.data_richiesta >= (NOW() AT TIME ZONE 'Europe/Rome')::date - 365
       AND fo.ricerca @@ websearch_to_tsquery('simple', q)
     UNION ALL
-    SELECT 'veicolo_garage', gv.id,
+    SELECT 'veicolo_garage', gv.cliente_id,
            gv.targa || COALESCE(' · ' || NULLIF(trim(COALESCE(gv.marca, '') || ' ' || COALESCE(gv.modello, '')), ''), ''),
            COALESCE((SELECT gk.nome FROM gar_clienti gk WHERE gk.id = gv.cliente_id), '')
     FROM gar_veicoli gv
-    WHERE gv.ricerca @@ websearch_to_tsquery('simple', q)
+    WHERE gv.cliente_id IS NOT NULL AND gv.ricerca @@ websearch_to_tsquery('simple', q)
     UNION ALL
     SELECT 'cliente_garage', gc.id,
            gc.codice || ' · ' || gc.nome,
@@ -1058,7 +1074,7 @@ DECLARE f TEXT;
 BEGIN
   FOREACH f IN ARRAY ARRAY['gar_chiave_prepara()', 'gar_chiave_depositata()', 'gar_chiave_movimento()', 'gar_danno_prepara()', 'gar_danno_avvisa()',
                            'gar_apri_conto(text,uuid,text,text,numeric,uuid,numeric)', 'gar_servizio_prepara()', 'gar_servizio_pronto()', 'gar_conto_chiuso()',
-                           'gar_pneumatici_prepara()', 'gar_pneumatici_scadenza()', 'gar_attese_avvisa()', 'gar_prenotazione_avvisa()', 'gar_giro_notturno()',
+                           'gar_pneumatici_prepara()', 'gar_pneumatici_scadenza()', 'gar_attese_avvisa()', 'gar_prenotazione_avvisa()', 'gar_prenotazione_anticipo()', 'gar_giro_notturno()',
                            'gar_solo_campi()', 'seg_gar_abbonati(text,jsonb)', 'seg_gar_in_scadenza(text,jsonb)', 'seg_gar_occasionali(text,jsonb)',
                            'seg_gar_ex(text,jsonb)'] LOOP
     EXECUTE format('REVOKE ALL ON FUNCTION %s FROM PUBLIC', f);

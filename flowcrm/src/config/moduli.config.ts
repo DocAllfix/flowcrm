@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, Flower2, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, Flower2, Warehouse, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -35,6 +35,8 @@ import { PALESTRA_NAV } from '@/modules/palestra/nav'
 import { palestraRoutes } from '@/modules/palestra/routes'
 import { FIORAIO_NAV } from '@/modules/fioraio/nav'
 import { fioraioRoutes } from '@/modules/fioraio/routes'
+import { GARAGE_NAV } from '@/modules/garage/nav'
+import { garageRoutes } from '@/modules/garage/routes'
 
 export interface ModuloDef {
   slug: string
@@ -130,6 +132,14 @@ export const MODULI: ModuloDef[] = [
     descrizione: 'Per fioristi: ordini con destinatario e biglietto, composizioni, laboratorio, consegne, deperibilità',
     nav: FIORAIO_NAV,
     routes: fioraioRoutes,
+  },
+  {
+    slug: 'garage',
+    label: 'Garage e autorimesse',
+    icon: Warehouse,
+    descrizione: 'Per autorimesse e parcheggi: posti dal vivo, ingressi e uscite con tariffa, abbonamenti, chiavi, danni, ricarica',
+    nav: GARAGE_NAV,
+    routes: garageRoutes,
   },
 ]
 

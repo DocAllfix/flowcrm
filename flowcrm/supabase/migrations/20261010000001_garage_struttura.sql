@@ -494,7 +494,8 @@ SELECT p.id AS posto_id, p.struttura_id, p.modulo, p.codice, p.piano, p.zona, p.
          WHEN pr.id IS NOT NULL THEN 'prenotato'
          WHEN c.id IS NOT NULL OR p.riservato THEN 'riservato'
          ELSE 'libero'
-       END AS stato
+       END AS stato,
+       p.note
   FROM gar_posti p
   LEFT JOIN gar_soste s ON s.posto_id = p.id AND s.uscita_at IS NULL
   LEFT JOIN LATERAL (SELECT x.* FROM gar_contratti x WHERE x.posto_id = p.id AND x.stato IN ('attivo', 'sospeso') AND x.periodo @> gar_oggi()

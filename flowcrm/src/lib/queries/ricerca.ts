@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase'
 
 export interface RisultatoRicerca {
   tipo: 'organizzazione' | 'contatto' | 'gara' | 'cantiere' | 'automezzo' | 'agente' | 'paziente'
-    | 'prodotto_fb' | 'prenotazione_fb' | 'evento'
+    | 'prodotto_fb' | 'prenotazione_fb' | 'evento' | 'prenotazione_hotel' | 'socio_palestra' | 'ordine_fiorista' | 'veicolo_garage' | 'cliente_garage'
   id: string
   titolo: string
   sottotitolo: string

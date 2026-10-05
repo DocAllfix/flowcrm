@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  Search, Building2, User, Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, CalendarClock, PartyPopper,
+  Search, Building2, User, Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, CalendarClock, PartyPopper, BedDouble, Dumbbell, Flower2, Car, Warehouse,
 } from 'lucide-react'
 import { moduliAttivi } from '@/config/moduli.config'
 import { useRicercaGlobale } from '@/lib/queries/ricerca'
@@ -81,6 +81,10 @@ export function CommandPalette() {
     else if (r.tipo === 'paziente') navigate(`/pazienti/${r.id}`)
     else if (r.tipo === 'prodotto_fb') navigate(`${baseFb()}/catalogo`)
     else if (r.tipo === 'prenotazione_fb') navigate(`${baseFb()}/prenotazioni`)
+    else if (r.tipo === 'prenotazione_hotel') navigate(`/hotel/prenotazioni/${r.id}`)
+    else if (r.tipo === 'socio_palestra') navigate(`/palestra/soci/${r.id}`)
+    else if (r.tipo === 'ordine_fiorista') navigate(`/fioraio/ordini/${r.id}`)
+    else if (r.tipo === 'veicolo_garage' || r.tipo === 'cliente_garage') navigate(`/garage/clienti/${r.id}`)
     else if (r.tipo === 'evento') {
       // il sottotitolo comincia con il modulo dell'evento («ristorante · 14/11/2026»)
       const modulo = (r.sottotitolo ?? '').split(' · ')[0]
@@ -130,10 +134,15 @@ export function CommandPalette() {
                 : r.tipo === 'prodotto_fb' ? UtensilsCrossed
                 : r.tipo === 'prenotazione_fb' ? CalendarClock
                 : r.tipo === 'evento' ? PartyPopper
+                : r.tipo === 'prenotazione_hotel' ? BedDouble
+                : r.tipo === 'socio_palestra' ? Dumbbell
+                : r.tipo === 'ordine_fiorista' ? Flower2
+                : r.tipo === 'veicolo_garage' ? Car
+                : r.tipo === 'cliente_garage' ? Warehouse
                 : User
               return (
                 <button
-                  key={`${r.tipo}-${r.id}`}
+                  key={`${r.tipo}-${r.id}-${r.titolo}`}
                   onClick={() => go(r)}
                   onMouseEnter={() => setActive(i)}
                   className={cn(
@@ -156,6 +165,11 @@ export function CommandPalette() {
                       : r.tipo === 'prodotto_fb' ? 'Piatto'
                       : r.tipo === 'prenotazione_fb' ? 'Prenotazione'
                       : r.tipo === 'evento' ? 'Evento'
+                      : r.tipo === 'prenotazione_hotel' ? 'Soggiorno'
+                      : r.tipo === 'socio_palestra' ? 'Socio'
+                      : r.tipo === 'ordine_fiorista' ? 'Ordine'
+                      : r.tipo === 'veicolo_garage' ? 'Veicolo'
+                      : r.tipo === 'cliente_garage' ? 'Cliente garage'
                       : 'Contatto'}
                   </span>
                 </button>

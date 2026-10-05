@@ -147,8 +147,8 @@ jobs:
           set -euo pipefail
           supabase db push --db-url "$(supabase status -o env | grep '^DB_URL=' | cut -d= -f2-)" >/dev/null 2>&1 || true
           psql "$(supabase status -o env | grep '^DB_URL=' | cut -d= -f2- | tr -d '"')" -c \
-            "INSERT INTO moduli_licenze (slug) VALUES ('gare'),('cantiere'),('automezzi'),('agenti'),('poliambulatori'),('ristorante'),('bar'),('hotel'),('palestra'),('fioraio') ON CONFLICT DO NOTHING;"
-          echo "VITE_MODULES=gare,cantiere,automezzi,agenti,poliambulatori,ristorante,bar,hotel,palestra,fioraio" >> "$GITHUB_ENV"
+            "INSERT INTO moduli_licenze (slug) VALUES ('gare'),('cantiere'),('automezzi'),('agenti'),('poliambulatori'),('ristorante'),('bar'),('hotel'),('palestra'),('fioraio'),('garage') ON CONFLICT DO NOTHING;"
+          echo "VITE_MODULES=gare,cantiere,automezzi,agenti,poliambulatori,ristorante,bar,hotel,palestra,fioraio,garage" >> "$GITHUB_ENV"
 
       - name: Installa il browser
         run: npx playwright install --with-deps chromium
