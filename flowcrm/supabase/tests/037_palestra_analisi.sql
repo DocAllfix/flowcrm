@@ -8,7 +8,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(17);
+select plan(20);
 
 insert into auth.users (id, email)
 values
@@ -132,6 +132,22 @@ select ok('d7000000-0000-0000-0000-0000000000c1' in (select seg_pal_inattivi('pa
 select is((select jsonb_array_length(pal_socio_riepilogo('d5000000-0000-0000-0000-0000000000c1')->'abbonamenti')), 2,
   'i dati per l''app: storico abbonamenti, QR, accesso, carnet, prenotazioni');
 select is((select tipo from ricerca_globale('Rinnova') where tipo = 'socio_palestra' limit 1), 'socio_palestra', 'il socio si trova dalla ricerca');
+
+-- ═══ VENDITA DEI PRODOTTI AL BANCO ══════════════════════════════════
+insert into mag_articoli (id, modulo, descrizione, unita_misura, costo_unitario, prezzo_vendita, aliquota_iva, vendibile) values
+  ('da000000-0000-0000-0000-0000000000c1', 'palestra', 'Borraccia', 'pz', 4, 12, 22, true),
+  ('da000000-0000-0000-0000-0000000000c2', 'palestra', 'Detergente', 'pz', 3, null, 22, false);
+insert into mag_movimenti (articolo_id, tipo, quantita) values ('da000000-0000-0000-0000-0000000000c1', 'carico', 10);
+select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
+create temp table vendita as select pal_vendi_prodotti('[{"articolo_id": "da000000-0000-0000-0000-0000000000c1", "quantita": 2}]',
+  'd5000000-0000-0000-0000-0000000000c1') as conto;
+select throws_like($$select pal_vendi_prodotti('[{"articolo_id": "da000000-0000-0000-0000-0000000000c2", "quantita": 1}]')$$,
+  'Prodotto non in vendita', 'i materiali di consumo non si vendono al banco');
+select pg_temp.torna_postgres();
+select is((select format('%s|%s', s.totale, c.contatto_id = 'd7000000-0000-0000-0000-0000000000c1') from conti c join conti_saldi s on s.conto_id = c.id
+            where c.id = (select conto from vendita)), '24.00|t', 'due borracce: conto da 24 € intestato al socio');
+select is((select giacenza from mag_giacenze where articolo_id = 'da000000-0000-0000-0000-0000000000c1'), 8::numeric,
+  'la merce venduta esce dal magazzino');
 
 select * from finish();
 rollback;

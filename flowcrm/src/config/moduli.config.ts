@@ -1,6 +1,6 @@
 /**
  * Registro dei moduli verticali (Gare, Cantiere, Automezzi, Agenti,
- * Poliambulatori, Ristorante, Bar, Hotel). Ogni modulo è un pacchetto in src/modules/<slug> che
+ * Poliambulatori, Ristorante, Bar, Hotel, Palestra). Ogni modulo è un pacchetto in src/modules/<slug> che
  * dichiara qui la propria navigazione e le proprie route.
  *
  * Attivazione a due livelli:
@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, Dumbbell, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -31,6 +31,8 @@ import { BAR_NAV } from '@/modules/bar/nav'
 import { barRoutes } from '@/modules/bar/routes'
 import { HOTEL_NAV } from '@/modules/hotel/nav'
 import { hotelRoutes } from '@/modules/hotel/routes'
+import { PALESTRA_NAV } from '@/modules/palestra/nav'
+import { palestraRoutes } from '@/modules/palestra/routes'
 
 export interface ModuloDef {
   slug: string
@@ -110,6 +112,14 @@ export const MODULI: ModuloDef[] = [
     descrizione: 'Per hotel e strutture ricettive: planning, ricevimento, housekeeping, tariffe e revenue, adempimenti',
     nav: HOTEL_NAV,
     routes: hotelRoutes,
+  },
+  {
+    slug: 'palestra',
+    label: 'Palestra',
+    icon: Dumbbell,
+    descrizione: 'Per palestre e centri fitness: soci, abbonamenti e accessi, corsi, personal trainer, incassi ricorrenti',
+    nav: PALESTRA_NAV,
+    routes: palestraRoutes,
   },
 ]
 
