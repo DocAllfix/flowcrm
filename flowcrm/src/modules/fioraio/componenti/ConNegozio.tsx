@@ -31,7 +31,7 @@ export function ConNegozio({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Bastano il nome del negozio e le zone di consegna: ricarico e costo della manodopera hanno valori di partenza che poi si cambiano.'
             : 'La direzione deve prima configurare il negozio.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura il negozio</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura il negozio</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraDialog open={apri} onOpenChange={setApri} />
       </>
     )

@@ -95,7 +95,7 @@ export function GareDashboardPage() {
             <h2 className="text-title text-foreground">Gare per stato</h2>
           </div>
           {statoData.every((s) => s.numero === 0) ? (
-            <EmptyState icon={Gavel} title="Nessuna gara" description="Registra la prima procedura per vedere il funnel." />
+            <EmptyState filtrato icon={Gavel} title="Nessuna gara" description="Registra la prima procedura per vedere il funnel." />
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={statoData}>
@@ -114,7 +114,7 @@ export function GareDashboardPage() {
             <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (
-            <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
+            <EmptyState filtrato icon={CalendarClock} title="Nessuna scadenza aperta"
               description="Termini di presentazione e cauzioni compariranno qui." />
           ) : (
             <div className="space-y-1">
@@ -140,7 +140,7 @@ export function GareDashboardPage() {
             <h2 className="text-title text-foreground">Successo per ente appaltante</h2>
           </div>
           {enteData.length === 0 ? (
-            <EmptyState icon={Trophy} title="Nessun dato" description="Gli esiti per ente compariranno dopo le prime gare presentate." />
+            <EmptyState filtrato icon={Trophy} title="Nessun dato" description="Gli esiti per ente compariranno dopo le prime gare presentate." />
           ) : (
             <ResponsiveContainer width="100%" height={Math.max(160, enteData.length * 44)}>
               <BarChart data={enteData} layout="vertical" margin={{ left: 8, right: 16 }}>
@@ -163,7 +163,7 @@ export function GareDashboardPage() {
             <h2 className="text-title text-foreground">Successo per categoria SOA</h2>
           </div>
           {perCategoria.length === 0 ? (
-            <EmptyState icon={Trophy} title="Nessun dato"
+            <EmptyState filtrato icon={Trophy} title="Nessun dato"
               description="Classifica le gare per categoria SOA per vedere dove vinci di più." />
           ) : (
             <div className="space-y-2">
@@ -191,7 +191,7 @@ export function GareDashboardPage() {
             <h2 className="text-title text-foreground">Valore vinto per territorio</h2>
           </div>
           {territorioData.length === 0 ? (
-            <EmptyState icon={MapPin} title="Nessun dato" description="Classifica i territori nelle gare per vedere la mappa del successo." />
+            <EmptyState filtrato icon={MapPin} title="Nessun dato" description="Classifica i territori nelle gare per vedere la mappa del successo." />
           ) : (
             <ResponsiveContainer width="100%" height={Math.max(160, territorioData.length * 44)}>
               <BarChart data={territorioData} layout="vertical" margin={{ left: 8, right: 16 }}>

@@ -61,7 +61,7 @@ export function PoliambulatorioDashboardPage() {
             <h2 className="text-title text-foreground">Agenda di oggi</h2>
           </div>
           {appuntamentiOggi.length === 0 ? (
-            <EmptyState icon={CalendarDays} title="Nessun appuntamento oggi"
+            <EmptyState filtrato icon={CalendarDays} title="Nessun appuntamento oggi"
               description="Gli appuntamenti della giornata compariranno qui." />
           ) : (
             <div className="space-y-1">
@@ -95,7 +95,7 @@ export function PoliambulatorioDashboardPage() {
             <h2 className="text-title text-foreground">Scadenze della struttura</h2>
           </div>
           {scadenze.length === 0 ? (
-            <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
+            <EmptyState filtrato icon={CalendarClock} title="Nessuna scadenza aperta"
               description="Tarature, lotti in scadenza e verifiche compariranno qui." />
           ) : (
             <div className="space-y-1">

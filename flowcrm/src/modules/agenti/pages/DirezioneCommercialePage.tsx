@@ -44,7 +44,7 @@ export function DirezioneCommercialePage() {
           <h2 className="text-title text-foreground">Venduto per agente</h2>
         </div>
         {chartData.length === 0 ? (
-          <EmptyState icon={TrendingUp} title="Nessun dato"
+          <EmptyState filtrato icon={TrendingUp} title="Nessun dato"
             description="Il confronto compare con i primi ordini della rete." />
         ) : (
           <ResponsiveContainer width="100%" height={Math.max(160, chartData.length * 44)}>
@@ -67,7 +67,7 @@ export function DirezioneCommercialePage() {
         </div>
         {kpi.length === 0 ? (
           <div className="p-4">
-            <EmptyState icon={Users} title="Nessun agente" description="Registra la rete vendita per vedere il confronto." />
+            <EmptyState filtrato icon={Users} title="Nessun agente" description="Registra la rete vendita per vedere il confronto." />
           </div>
         ) : (
           <Table>

@@ -72,7 +72,7 @@ function Cantina_() {
           {vini.length === 0 ? (
             <EmptyState icon={Wine} title="Cantina vuota"
               description={isManager ? 'Aggiungi i vini: scheda, costo, prezzo a bottiglia e a calice.' : 'I vini li inserisce la direzione: qui compariranno con giacenze e prezzi.'}
-              action={isManager ? <Button variant="outline" onClick={() => setScheda('nuovo')}><Plus className="h-4 w-4" /> Aggiungi un vino</Button> : undefined} />
+              action={isManager ? <Button variant="outline" onClick={() => setScheda('nuovo')}><Plus className="h-4 w-4" /> Aggiungi un vino</Button> : undefined} filtrato={!isManager} />
           ) : (
             <Card className="overflow-hidden">
               <Table>

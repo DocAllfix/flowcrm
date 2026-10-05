@@ -168,7 +168,7 @@ function Cruscotto_() {
           </dl>
           <h3 className="mb-1 flex items-center gap-2 text-label uppercase text-muted-foreground"><CalendarClock className="h-3.5 w-3.5" /> Scadenze</h3>
           {tutteScadenze.length === 0 ? (
-            <EmptyState compatto icon={CalendarClock} title="Nessuna scadenza aperta" description="Garanzie, manutenzioni e acconti degli eventi compariranno qui." />
+            <EmptyState filtrato compatto icon={CalendarClock} title="Nessuna scadenza aperta" description="Garanzie, manutenzioni e acconti degli eventi compariranno qui." />
           ) : (
             <ul className="divide-y divide-border">
               {tutteScadenze.map((s) => (

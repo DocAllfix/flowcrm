@@ -37,7 +37,7 @@ fi
 # Uno slug sbagliato ("poliambulatorio" invece di "poliambulatori") darebbe
 # un menu senza quella voce e nessun errore: il cliente pagherebbe un modulo
 # che non vede. Qui invece l'avvio si ferma.
-MODULI_NOTI="gare cantiere automezzi agenti poliambulatori"
+MODULI_NOTI="gare cantiere automezzi agenti poliambulatori ristorante bar hotel palestra fioraio garage immobiliare"
 MODULES="${MODULES:-}"
 if [ -n "$MODULES" ]; then
   for m in $(echo "$MODULES" | tr ',' ' '); do

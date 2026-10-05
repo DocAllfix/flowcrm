@@ -80,7 +80,7 @@ fi
 [ "${ANON_KEY:-}" = "${SERVICE_ROLE_KEY:-}" ] && fail "ANON_KEY e SERVICE_ROLE_KEY sono identiche"
 
 # ── 6. Moduli: slug dall'elenco chiuso ──────────────────────────────
-NOTI="gare cantiere automezzi agenti poliambulatori"
+NOTI="gare cantiere automezzi agenti poliambulatori ristorante bar hotel palestra fioraio garage immobiliare"
 for m in $(echo "${MODULES:-}" | tr ',' ' '); do
   echo " $NOTI " | grep -q " $m " || fail "modulo sconosciuto '$m' (ammessi: $NOTI)"
 done

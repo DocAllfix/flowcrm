@@ -48,7 +48,7 @@ export function ConStruttura({ children }: { children: ReactNode }) {
           description={isManager
             ? 'Crea l\'hotel con piani, camere e tipologie: tariffe e trattamenti di partenza li prepariamo noi, poi si cambiano quando vuoi.'
             : 'La direzione deve prima configurare la struttura.'}
-          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura la struttura</BottoneScrittura> : undefined} />
+          action={isManager ? <BottoneScrittura onClick={() => setApri(true)}>Configura la struttura</BottoneScrittura> : undefined} filtrato={!isManager} />
         <ConfiguraStrutturaDialog open={apri} onOpenChange={setApri} />
       </>
     )

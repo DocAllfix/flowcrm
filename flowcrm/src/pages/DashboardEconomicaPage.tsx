@@ -60,7 +60,7 @@ export function DashboardEconomicaPage() {
             <h2 className="text-title text-foreground">Fatturato mensile</h2>
           </div>
           {fatturatoData.length === 0 ? (
-            <EmptyState icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere il fatturato." />
+            <EmptyState filtrato icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere il fatturato." />
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={fatturatoData}>
@@ -79,7 +79,7 @@ export function DashboardEconomicaPage() {
             <h2 className="text-title text-foreground">Cash flow previsto</h2>
           </div>
           {cashData.length === 0 ? (
-            <EmptyState icon={Wallet} title="Nessun dato" description="Incassi previsti e scadenze fiscali appariranno qui." />
+            <EmptyState filtrato icon={Wallet} title="Nessun dato" description="Incassi previsti e scadenze fiscali appariranno qui." />
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={cashData}>
@@ -101,7 +101,7 @@ export function DashboardEconomicaPage() {
           <h2 className="text-title text-foreground">Top clienti per fatturato</h2>
         </div>
         {topData.length === 0 ? (
-          <EmptyState icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere i clienti principali." />
+          <EmptyState filtrato icon={TrendingUp} title="Nessun dato" description="Registra fatture attive per vedere i clienti principali." />
         ) : (
           <ResponsiveContainer width="100%" height={Math.max(160, topData.length * 44)}>
             <BarChart data={topData} layout="vertical" margin={{ left: 8, right: 16 }}>

@@ -274,7 +274,7 @@ export function ParcoDashboardPage() {
             <h2 className="text-title text-foreground">Mezzi per stato</h2>
           </div>
           {automezzi.length === 0 ? (
-            <EmptyState icon={Truck} title="Nessun mezzo" description="Registra i veicoli per vedere il quadro del parco." />
+            <EmptyState filtrato icon={Truck} title="Nessun mezzo" description="Registra i veicoli per vedere il quadro del parco." />
           ) : (
             <ResponsiveContainer width="100%" height={240}>
               <BarChart data={perStato}>
@@ -293,7 +293,7 @@ export function ParcoDashboardPage() {
             <h2 className="text-title text-foreground">Scadenze imminenti</h2>
           </div>
           {scadenze.length === 0 ? (
-            <EmptyState icon={CalendarClock} title="Nessuna scadenza aperta"
+            <EmptyState filtrato icon={CalendarClock} title="Nessuna scadenza aperta"
               description="Revisioni, bolli, assicurazioni e abilitazioni compariranno qui." />
           ) : (
             <div className="space-y-1">

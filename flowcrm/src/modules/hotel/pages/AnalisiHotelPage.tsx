@@ -72,7 +72,7 @@ function Analisi_() {
       </Card>
 
       {isLoading ? <Skeleton className="h-96" /> : !k ? (
-        <EmptyState icon={ChartPie} title="Nessun dato" description="Scegli un periodo." />
+        <EmptyState filtrato icon={ChartPie} title="Nessun dato" description="Scegli un periodo." />
       ) : (
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
           <Card className="p-5">
