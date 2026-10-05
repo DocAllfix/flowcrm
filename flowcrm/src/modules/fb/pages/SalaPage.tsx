@@ -29,7 +29,7 @@ export function SalaPage() {
 function Sala_() {
   const { localeId, locale, modulo, nome } = useFb()
   const { isManager } = useAuth()
-  const { data: sale = [] } = useElenco<Sala>('fb_sale', {
+  const { data: sale = [], isLoading: saleInCaricamento } = useElenco<Sala>('fb_sale', {
     filtri: { locale_id: localeId ?? undefined, attiva: true }, ordine: [{ colonna: 'ordine' }], abilitato: !!localeId,
   })
   const { data: tavoli = [], isLoading } = useTavoliStato(localeId)
@@ -45,8 +45,9 @@ function Sala_() {
     if (sale.length && !sale.some((s) => s.id === salaId)) setSalaId(sale[0].id)
   }, [sale, salaId])
 
-  const sala = sale.find((s) => s.id === salaId) ?? null
-  const tavoliSala = useMemo(() => tavoli.filter((t) => t.sala_id === salaId), [tavoli, salaId])
+  // Prima che l'effetto scelga la sala vale la prima: niente «Nessuna sala» di passaggio.
+  const sala = sale.find((s) => s.id === salaId) ?? sale[0] ?? null
+  const tavoliSala = useMemo(() => tavoli.filter((t) => t.sala_id === sala?.id), [tavoli, sala?.id])
   const tavolo = tavoli.find((t) => t.tavolo_id === selezionato) ?? null
   const conta = (stati: string[]) => tavoli.filter((t) => stati.includes(t.stato ?? '')).length
 
@@ -88,12 +89,14 @@ function Sala_() {
         </>} />
 
       {sale.length > 1 && (
-        <Tabs value={salaId ?? undefined} onValueChange={(v) => { setSalaId(v); setSelezionato(null) }} className="mb-4">
+        <Tabs value={sala?.id} onValueChange={(v) => { setSalaId(v); setSelezionato(null) }} className="mb-4">
           <TabsList>{sale.map((s) => <TabsTrigger key={s.id} value={s.id}>{s.nome}</TabsTrigger>)}</TabsList>
         </Tabs>
       )}
 
-      {!sala ? (
+      {saleInCaricamento ? (
+        <Skeleton className="aspect-[10/7] w-full rounded-xl xl:w-[calc(100%-340px)]" />
+      ) : !sala ? (
         <EmptyState icon={LayoutGrid} title="Nessuna sala" description="Aggiungi una sala per disporre i tavoli."
           action={isManager ? (
             <div className="flex gap-2">

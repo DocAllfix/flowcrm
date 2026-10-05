@@ -33,6 +33,7 @@ const CATEGORIE_BAR: CategoriaBase[] = [
   { nome: 'Aperitivi', area: 'beverage', uscita: 0 }, { nome: 'Pasticceria', area: 'food', uscita: 0 },
   { nome: 'Panini e toast', area: 'food', uscita: 0 }, { nome: 'Piadine e tramezzini', area: 'food', uscita: 0 },
   { nome: 'Snack', area: 'food', uscita: 0 }, { nome: 'Gelati', area: 'food', uscita: 0 },
+  { nome: 'Prodotti confezionati', area: 'food', uscita: 0 }, { nome: 'Prodotti per asporto', area: 'food', uscita: 0 },
 ]
 
 interface Props { open: boolean; onOpenChange: (o: boolean) => void }
@@ -84,21 +85,24 @@ export function ConfiguraLocaleDialog({ open, onOpenChange }: Props) {
 
       // Catalogo: categorie tipiche solo se non ce ne sono ancora.
       const { count } = await supabase.from('fb_categorie').select('id', { count: 'exact', head: true })
-      let categorie: { id: string; area: string }[] = []
+      let categorie: { id: string; area: string; nome: string }[] = []
       if (!count) {
         const base = modulo === 'bar' ? CATEGORIE_BAR : CATEGORIE_RISTORANTE
         const { data, error: e4 } = await supabase.from('fb_categorie')
-          .insert(base.map((c, i) => ({ ...c, ordine: i, created_by: io }))).select('id, area')
+          .insert(base.map((c, i) => ({ ...c, ordine: i, created_by: io }))).select('id, area, nome')
         if (e4) throw e4
         categorie = data
       } else {
-        const { data } = await supabase.from('fb_categorie').select('id, area')
+        const { data } = await supabase.from('fb_categorie').select('id, area, nome')
         categorie = data ?? []
       }
       const cibo = categorie.filter((c) => c.area === 'food').map((c) => c.id)
       const bevande = categorie.filter((c) => c.area === 'beverage').map((c) => c.id)
+      // Bar §9: il caffè alla macchina, il cocktail al banco, il panino in cucina.
+      const caffe = categorie.filter((c) => /caff/i.test(c.nome)).map((c) => c.id)
       const stazioni = modulo === 'bar'
-        ? [{ nome: 'Banco bar', tipo: 'banco', categorie: bevande, predefinita: true },
+        ? [{ nome: 'Banco bar', tipo: 'banco', categorie: bevande.filter((id) => !caffe.includes(id)), predefinita: true },
+           { nome: 'Macchina del caffè', tipo: 'caffetteria', categorie: caffe, predefinita: false },
            { nome: 'Cucina', tipo: 'cucina', categorie: cibo, predefinita: false }]
         : [{ nome: 'Cucina', tipo: 'cucina', categorie: cibo, predefinita: true },
            { nome: 'Bar', tipo: 'bar', categorie: bevande, predefinita: false }]

@@ -94,9 +94,11 @@ export interface Cruscotto {
   sala: Record<string, number>
   cucina: Record<string, number | null>
   magazzino: Record<string, number>
+  personale: Record<string, number>
   vendite: null | {
     incasso: number; conti_chiusi: number; coperti: number; ticket_medio: number | null
     spesa_per_coperto: number | null; per_fascia_oraria: Record<string, number>
+    margine: number; food_cost_pct: number | null; beverage_cost_pct: number | null
   }
 }
 export function useCruscotto(localeId: string | null) {

@@ -16,7 +16,7 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
-import { MagazzinoSezione } from '@/components/condivisi/MagazzinoSezione'
+import { MagazzinoSezione, type RiordinoPrevisto } from '@/components/condivisi/MagazzinoSezione'
 import { ControlliSezione } from '@/components/condivisi/ControlliSezione'
 import { TurniSezione } from '@/components/condivisi/TurniSezione'
 import { EventiSezione } from '@/components/condivisi/EventiSezione'
@@ -34,11 +34,23 @@ interface Richiamo { servito_at: string; locale: string; comanda_numero: number;
 interface Fabbisogno { reparto: string; coperti_previsti: number; persone_suggerite: number; persone_pianificate: number; differenza: number }
 
 export function MagazzinoFbPage() {
-  const { modulo } = useFb()
+  const { modulo, localeId } = useFb()
+  // Riordino previsionale (Bar §22): consumo medio, stagione, eventi, ordini presi, merce in arrivo.
+  const [giorni, setGiorni] = useState('7')
+  const { data: previste = [] } = useRpc<RiordinoPrevisto[]>('fb_proposta_riordino', { p_locale: localeId, p_giorni: Number(giorni) }, { abilitato: !!localeId })
   return (
     <ConLocale>
       <PageHeader title="Magazzino" description="Materie prime, semilavorati, bevande, vini, packaging: lotti, scadenze, ordini, inventari." actions={<SelettoreLocale />} />
-      <MagazzinoSezione modulo="fb" moduli={['fb', modulo]} extra={[
+      <MagazzinoSezione modulo="fb" moduli={['fb', modulo]}
+        riordino={{ righe: previste, controlli: (
+          <div className="flex flex-wrap items-end gap-3">
+            <div className="w-44 space-y-1.5"><Label>Copri i prossimi</Label>
+              <Select value={giorni} onValueChange={setGiorni}><SelectTrigger aria-label="Giorni da coprire"><SelectValue /></SelectTrigger>
+                <SelectContent>{['3', '7', '14', '30'].map((g) => <SelectItem key={g} value={g}>{g} giorni</SelectItem>)}</SelectContent></Select></div>
+            <p className="max-w-[60ch] text-sm text-muted-foreground">Consumo medio delle ultime quattro settimane corretto con lo stesso periodo dell'anno scorso, più eventi confermati e ordini già presi; tolte giacenza e merce in arrivo.</p>
+          </div>
+        ) }}
+        extra={[
         { valore: 'sprechi', etichetta: 'Sprechi', contenuto: <Sprechi /> },
         { valore: 'richiamo', etichetta: 'Tracciabilità e richiamo', contenuto: <RichiamoLotto /> },
       ]} />

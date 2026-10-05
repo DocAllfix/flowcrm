@@ -5,7 +5,7 @@
  */
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertTriangle, CalendarClock, ChefHat, LayoutGrid, Package, Receipt } from 'lucide-react'
+import { AlertTriangle, CalendarClock, ChefHat, LayoutGrid, Package, Receipt, Users } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { PageHeader } from '@/components/ui/page-header'
 import { Card } from '@/components/ui/card'
@@ -54,6 +54,9 @@ function Cruscotto_() {
   const { data: scadenzeFb = [] } = useScadenzeAperteModulo('fb', 6)
   const tutteScadenze = [...scadenze, ...scadenzeFb].sort((a, b) => a.data_scadenza.localeCompare(b.data_scadenza)).slice(0, 6)
   const n = (v: number | null | undefined) => (isLoading ? undefined : v ?? 0)
+  const bar = modulo === 'bar'
+  const banco = `${base}/${bar ? 'banco' : 'cucina'}`
+  const pct = (v: number | null | undefined) => v == null ? '—' : `${fmtNumero(v, 1)}%`
 
   const fasce = c?.vendite ? Object.entries(c.vendite.per_fascia_oraria ?? {}).map(([ora, v]) => ({ ora: `${ora}:00`, incasso: Number(v) })) : []
 
@@ -61,10 +64,16 @@ function Cruscotto_() {
     <div>
       <PageHeader title={`Oggi da ${locale?.nome ?? ''}`} description={`Situazione del ${fmtData(new Date().toISOString())}, aggiornata in tempo reale.`}
         numeri={[
-          { etichetta: 'prenotazioni', valore: n(c?.sala.prenotazioni), inCaricamento: isLoading },
-          { etichetta: 'coperti previsti', valore: n(c?.sala.coperti_previsti), inCaricamento: isLoading },
-          { etichetta: 'coperti presenti', valore: n(c?.sala.coperti_presenti), inCaricamento: isLoading },
-          { etichetta: 'comande aperte', valore: n(c?.cucina.comande_aperte as number), inCaricamento: isLoading },
+          ...(bar ? [
+            { etichetta: 'tavoli occupati', valore: n(c?.sala.tavoli_occupati), inCaricamento: isLoading },
+            { etichetta: 'tavoli liberi', valore: n(c?.sala.tavoli_liberi), inCaricamento: isLoading },
+            { etichetta: 'clienti presenti', valore: n(c?.sala.coperti_presenti), inCaricamento: isLoading },
+          ] : [
+            { etichetta: 'prenotazioni', valore: n(c?.sala.prenotazioni), inCaricamento: isLoading },
+            { etichetta: 'coperti previsti', valore: n(c?.sala.coperti_previsti), inCaricamento: isLoading },
+            { etichetta: 'coperti presenti', valore: n(c?.sala.coperti_presenti), inCaricamento: isLoading },
+          ]),
+          { etichetta: bar ? 'ordini aperti' : 'comande aperte', valore: n(c?.cucina.comande_aperte as number), inCaricamento: isLoading },
           ...(c?.vendite ? [{ etichetta: 'incasso', valore: fmtEuro(c.vendite.incasso, 0) }] : []),
         ]}
         actions={<SelettoreLocale />} />
@@ -96,18 +105,18 @@ function Cruscotto_() {
         </Card>
 
         <Card className="p-5">
-          <h2 className="mb-3 flex items-center gap-2 text-title text-foreground"><ChefHat className="h-4 w-4 text-primary-testo" /> Cucina</h2>
+          <h2 className="mb-3 flex items-center gap-2 text-title text-foreground"><ChefHat className="h-4 w-4 text-primary-testo" /> {bar ? 'Banco' : 'Cucina'}</h2>
           <dl className="mb-4 grid grid-cols-2 gap-x-4">
-            <Voce etichetta="Da preparare" valore={n(c?.cucina.piatti_da_preparare as number)} a={`${base}/cucina`} />
-            <Voce etichetta="In preparazione" valore={n(c?.cucina.piatti_in_preparazione as number)} a={`${base}/cucina`} />
-            <Voce etichetta="Pronti da servire" valore={n(c?.cucina.piatti_pronti as number)} a={`${base}/cucina`} />
+            <Voce etichetta="Da preparare" valore={n(c?.cucina.piatti_da_preparare as number)} a={banco} />
+            <Voce etichetta="In preparazione" valore={n(c?.cucina.piatti_in_preparazione as number)} a={banco} />
+            <Voce etichetta="Pronti da servire" valore={n(c?.cucina.piatti_pronti as number)} a={banco} />
             <Voce etichetta="Tempo medio" valore={c?.cucina.tempo_medio_preparazione_min != null ? `${fmtNumero(c.cucina.tempo_medio_preparazione_min, 1)} min` : '—'} />
           </dl>
           <h3 className="mb-1 flex items-center gap-2 text-label uppercase text-muted-foreground">
             In ritardo {(c?.cucina.ritardi ?? 0) > 0 && <Badge tone="danger">{c?.cucina.ritardi}</Badge>}
           </h3>
           {ritardi.length === 0 ? (
-            <p className="py-3 text-sm text-muted-foreground">Nessun piatto oltre il tempo previsto.</p>
+            <p className="py-3 text-sm text-muted-foreground">{bar ? 'Nessun ordine oltre il tempo previsto.' : 'Nessun piatto oltre il tempo previsto.'}</p>
           ) : (
             <ul className="divide-y divide-border">
               {ritardi.map((r) => (
@@ -128,6 +137,9 @@ function Cruscotto_() {
               <Voce etichetta="Conti chiusi" valore={c.vendite.conti_chiusi} />
               <Voce etichetta="Ticket medio" valore={fmtEuro(c.vendite.ticket_medio)} />
               <Voce etichetta="Spesa per coperto" valore={fmtEuro(c.vendite.spesa_per_coperto)} />
+              <Voce etichetta="Margine" valore={fmtEuro(c.vendite.margine)} />
+              <Voce etichetta="Food cost" valore={pct(c.vendite.food_cost_pct)} />
+              <Voce etichetta="Beverage cost" valore={pct(c.vendite.beverage_cost_pct)} />
             </dl>
             {fasce.length === 0 ? (
               <p className="text-sm text-muted-foreground">L'andamento per fascia oraria compare con le prime vendite.</p>
@@ -151,6 +163,8 @@ function Cruscotto_() {
             <Voce etichetta="In scadenza (3 giorni)" valore={n(c?.magazzino.in_scadenza)} a={`${base}/magazzino`} />
             <Voce etichetta="Scaduti in giacenza" valore={n(c?.magazzino.scaduti)} a={`${base}/magazzino`} />
             <Voce etichetta="Ordini in arrivo" valore={n(c?.magazzino.ordini_in_arrivo)} a={`${base}/magazzino`} />
+            {bar && <Voce etichetta="Bottiglie in uso" valore={n(c?.magazzino.mescite_aperte)} a={`${base}/mescita`} />}
+            {bar && <Voce etichetta="Consumi anomali (7 giorni)" valore={n(c?.magazzino.consumi_anomali)} a={`${base}/mescita`} />}
           </dl>
           <h3 className="mb-1 flex items-center gap-2 text-label uppercase text-muted-foreground"><CalendarClock className="h-3.5 w-3.5" /> Scadenze</h3>
           {tutteScadenze.length === 0 ? (
@@ -168,6 +182,17 @@ function Cruscotto_() {
               ))}
             </ul>
           )}
+        </Card>
+
+        <Card className="p-5">
+          <h2 className="mb-3 flex items-center gap-2 text-title text-foreground"><Users className="h-4 w-4 text-primary-testo" /> Personale</h2>
+          <dl className="grid grid-cols-2 gap-x-4">
+            <Voce etichetta="In turno adesso" valore={n(c?.personale?.in_turno_ora)} a={`${base}/personale`} />
+            <Voce etichetta="Turni di oggi" valore={n(c?.personale?.turni_oggi)} a={`${base}/personale`} />
+            <Voce etichetta="Ore previste" valore={isLoading ? undefined : fmtNumero(c?.personale?.ore_previste ?? 0, 1)} />
+            <Voce etichetta="Ore lavorate" valore={isLoading ? undefined : fmtNumero(c?.personale?.ore_lavorate ?? 0, 1)} />
+            <Voce etichetta="Assenti" valore={n(c?.personale?.assenti)} a={`${base}/personale`} />
+          </dl>
         </Card>
       </div>
     </div>

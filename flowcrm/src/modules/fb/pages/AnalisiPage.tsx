@@ -27,7 +27,8 @@ import { ConLocale, SelettoreLocale } from '@/modules/fb/componenti/SelettoreLoc
 import { CLASSE_MENU, CANALE_LABEL, SPRECO_CAUSALE, fmtEuro, fmtNumero, oggiIso } from '@/modules/fb/stati'
 
 const tooltipStyle = { borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)' }
-type Kpi = Record<string, Record<string, number | string | null | Record<string, number>>>
+type Kpi = Record<string, Record<string, unknown>>
+interface Venduto { prodotto: string; quantita: number; margine: number }
 interface Me { prodotto_id: string; prodotto: string; categoria: string; venduti: number; quota_pct: number; prezzo_medio: number; costo_unitario: number
   margine_unitario: number; margine_totale: number; food_cost_pct: number | null; popolare: boolean; redditizio: boolean; classe: string }
 interface Fc { chiave: string; quantita: number; ricavo: number; costo: number; margine: number; food_cost_pct: number | null }
@@ -55,13 +56,16 @@ function Analisi_() {
   const cl = kpi?.clienti ?? {}
   const num = (v: unknown, d = 0) => fmtNumero(v as number, d)
   const pct = (v: unknown) => v == null ? '—' : `${fmtNumero(v as number, 1)}%`
+  const minuti = (v: unknown) => v == null ? '—' : `${fmtNumero(v as number, 1)} min`
+  const bar = modulo === 'bar'
 
   return (
     <div>
       <PageHeader title="Analisi" description="Numeri del periodo per decidere: cosa promuovere, cosa correggere, dove si perde."
         numeri={[
           { etichetta: 'fatturato', valore: fmtEuro(c.fatturato as number, 0), inCaricamento: isLoading },
-          { etichetta: 'coperti', valore: num(c.coperti), inCaricamento: isLoading },
+          bar ? { etichetta: 'scontrini', valore: num(c.conti), inCaricamento: isLoading }
+            : { etichetta: 'coperti', valore: num(c.coperti), inCaricamento: isLoading },
           { etichetta: 'ticket medio', valore: fmtEuro(c.ticket_medio as number), inCaricamento: isLoading },
           { etichetta: 'food cost', valore: pct(e.food_cost_pct), inCaricamento: isLoading },
           { etichetta: 'margine lordo', valore: fmtEuro(e.margine_lordo as number, 0), inCaricamento: isLoading },
@@ -90,30 +94,44 @@ function Analisi_() {
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
             <Card className="p-5">
               <h2 className="mb-3 text-title text-foreground">Commerciali</h2>
-              <Righe voci={[['Fatturato', fmtEuro(c.fatturato as number)], ['Fatturato netto IVA', fmtEuro(c.fatturato_netto as number)], ['Conti', num(c.conti)],
+              <Righe voci={[['Fatturato', fmtEuro(c.fatturato as number)], ['Fatturato netto IVA', fmtEuro(c.fatturato_netto as number)], ['Scontrini (conti chiusi)', num(c.conti)],
+                ['Ordini evasi', num(c.ordini)], ['Ordini annullati', num(c.ordini_annullati)],
                 ['Coperti', num(c.coperti)], ['Ticket medio', fmtEuro(c.ticket_medio as number)], ['Ricavo per coperto', fmtEuro(c.ricavo_per_coperto as number)],
                 ['Tasso di occupazione', pct(c.tasso_occupazione_pct)], ['Rotazione tavoli', `${num(c.rotazione_tavoli, 2)} al giorno`]]} />
-              <Fasce dati={c.per_fascia_oraria as Record<string, number> | undefined} />
+              <Serie titolo="Fatturato per fascia oraria" dati={c.per_fascia_oraria as Record<string, number> | undefined} etichetta={(ora) => `${ora}:00`} />
+              <Serie titolo="Fatturato per giorno" dati={c.per_giorno as Record<string, number> | undefined}
+                etichetta={(g) => new Date(`${g}T12:00`).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' })} />
             </Card>
             <Card className="p-5">
               <h2 className="mb-3 text-title text-foreground">Economici</h2>
               <Righe voci={[['Food cost', pct(e.food_cost_pct)], ['Beverage cost', pct(e.beverage_cost_pct)], ['Margine lordo', fmtEuro(e.margine_lordo as number)],
                 ['Costo materie prime', fmtEuro(e.costo_materie_prime as number)], ['Ore lavorate', num(e.ore_lavorate, 1)],
-                ['Costo del personale', e.costo_personale != null ? fmtEuro(e.costo_personale as number) : 'imposta il costo orario medio del locale'], ['Sprechi', fmtEuro(e.sprechi as number)]]} />
-              {c.per_canale && Object.keys(c.per_canale as object).length > 0 && (
+                ['Costo del personale', e.costo_personale != null ? fmtEuro(e.costo_personale as number) : 'imposta il costo orario medio del locale'], ['Sprechi', fmtEuro(e.sprechi as number)],
+                ...(bar ? [['Sfrido di mescita', fmtEuro(e.sfrido_mescita as number)], ['Consumi anomali alla mescita', num(e.mescite_anomale)]] as [string, string][] : [])]} />
+              {!!c.per_canale && Object.keys(c.per_canale as object).length > 0 && (
                 <p className="mt-3 text-sm text-muted-foreground">Per canale: {Object.entries(c.per_canale as Record<string, number>).map(([k2, v]) => `${CANALE_LABEL[k2] ?? k2} ${fmtEuro(v, 0)}`).join(' · ')}</p>
               )}
             </Card>
             <Card className="p-5">
-              <h2 className="mb-3 text-title text-foreground">Cucina</h2>
-              <Righe voci={[['Tempo medio di preparazione', k.tempo_medio_preparazione_min != null ? `${num(k.tempo_medio_preparazione_min, 1)} min` : '—'],
-                ['Tempo medio di servizio', k.tempo_medio_servizio_min != null ? `${num(k.tempo_medio_servizio_min, 1)} min` : '—'],
-                ['Piatti venduti', num(k.piatti_venduti)], ['Bevande vendute', num(k.bevande_vendute)], ['Piatti restituiti', num(k.piatti_restituiti)],
+              <h2 className="mb-3 text-title text-foreground">{bar ? 'Banco e cucina' : 'Cucina'}</h2>
+              <Righe voci={[['Tempo medio di preparazione', minuti(k.tempo_medio_preparazione_min)],
+                ['Tempo medio di servizio', minuti(k.tempo_medio_servizio_min)],
+                ['Attesa al banco', minuti(k.tempo_attesa_banco_min)], ['Attesa per il tavolo', minuti(k.tempo_attesa_tavolo_min)],
+                ['Voci evase', num(k.righe_evase)], ['Piatti venduti', num(k.piatti_venduti)], ['Bevande vendute', num(k.bevande_vendute)],
+                ['Errori nelle comande', num(k.errori_comande)], ['Piatti restituiti', num(k.piatti_restituiti)],
                 ['Rifacimenti', num(k.rifacimenti)], ['Righe annullate', num(k.righe_annullate)]]} />
             </Card>
             <Card className="p-5">
+              <h2 className="mb-3 text-title text-foreground">Prodotti</h2>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <Venduti titolo="Più venduti" voci={c.piu_venduti as Venduto[] | undefined} />
+                <Venduti titolo="Meno venduti" voci={c.meno_venduti as Venduto[] | undefined} />
+              </div>
+              <p className="mt-3 text-xs text-muted-foreground">Molto venduti ma con poco margine? Li trovi in «Menu engineering».</p>
+            </Card>
+            <Card className="p-5">
               <h2 className="mb-3 text-title text-foreground">Clienti</h2>
-              <Righe voci={[['Clienti identificati', num(cl.clienti_identificati)], ['Nuovi clienti', num(cl.nuovi_clienti)], ['Clienti ricorrenti', num(cl.clienti_ricorrenti)],
+              <Righe voci={[['Clienti attivi', num(cl.clienti_attivi)], ['Clienti identificati', num(cl.clienti_identificati)], ['Nuovi clienti', num(cl.nuovi_clienti)], ['Clienti ricorrenti', num(cl.clienti_ricorrenti)],
                 ['Frequenza media', num(cl.frequenza_media, 2)], ['Spesa media', fmtEuro(cl.spesa_media as number)], ['Prenotazioni', num(cl.prenotazioni)],
                 ['No-show', `${num(cl.no_show)} (${pct(cl.no_show_pct)})`], ['NPS', cl.nps != null ? num(cl.nps) : '—'],
                 ['Valutazione media', cl.valutazione_media != null ? `${num(cl.valutazione_media, 1)} / 5` : '—']]} />
@@ -138,12 +156,30 @@ function Righe({ voci }: { voci: [string, string][] }) {
   )
 }
 
-function Fasce({ dati }: { dati?: Record<string, number> }) {
-  const serie = Object.entries(dati ?? {}).map(([ora, v]) => ({ ora: `${ora}:00`, valore: Number(v) }))
+function Venduti({ titolo, voci }: { titolo: string; voci?: Venduto[] }) {
+  return (
+    <div>
+      <h3 className="mb-1 text-label uppercase text-muted-foreground">{titolo}</h3>
+      {!voci?.length ? <p className="text-sm text-muted-foreground">Nessuna vendita nel periodo.</p> : (
+        <ol className="divide-y divide-border text-sm">
+          {voci.map((v) => (
+            <li key={v.prodotto} className="flex items-baseline justify-between gap-3 py-1.5">
+              <span className="min-w-0 truncate text-foreground">{v.prodotto}</span>
+              <span className="shrink-0 tabular-nums text-muted-foreground">{fmtNumero(v.quantita)} · margine {fmtEuro(v.margine, 0)}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+    </div>
+  )
+}
+
+function Serie({ titolo, dati, etichetta }: { titolo: string; dati?: Record<string, number>; etichetta: (chiave: string) => string }) {
+  const serie = Object.entries(dati ?? {}).map(([chiave, v]) => ({ ora: etichetta(chiave), valore: Number(v) }))
   if (!serie.length) return null
   return (
     <div className="mt-4">
-      <h3 className="mb-1 text-label uppercase text-muted-foreground">Fatturato per fascia oraria</h3>
+      <h3 className="mb-1 text-label uppercase text-muted-foreground">{titolo}</h3>
       <ResponsiveContainer width="100%" height={180}>
         <BarChart data={serie}>
           <XAxis dataKey="ora" tick={{ fontSize: 11 }} stroke="currentColor" className="text-muted-foreground" />
@@ -217,7 +253,7 @@ function FoodCost({ dal, al }: { dal: string; al: string }) {
   const { localeId } = useFb()
   const [dimensione, setDimensione] = useState('categoria')
   const { data: righe = [] } = useRpc<Fc[]>('fb_food_cost', { p_locale: localeId, p_dal: dal, p_al: al, p_dimensione: dimensione }, { abilitato: !!localeId })
-  const DIM: Record<string, string> = { piatto: 'Piatto', categoria: 'Categoria', menu: 'Menu o listino', giorno: 'Giorno', chef: 'Chef', canale: 'Canale di vendita', area: 'Cucina e bevande', bevanda: 'Tipo di bevanda' }
+  const DIM: Record<string, string> = { piatto: 'Piatto', categoria: 'Categoria', menu: 'Menu o listino', giorno: 'Giorno', chef: 'Chef', canale: 'Canale di vendita', area: 'Cucina e bevande', bevanda: 'Tipo di bevanda', fascia: 'Fascia oraria' }
   return (
     <div className="space-y-3">
       <div className="w-56 space-y-1.5"><Label>Per</Label><Select value={dimensione} onValueChange={setDimensione}><SelectTrigger aria-label="Dimensione"><SelectValue /></SelectTrigger>

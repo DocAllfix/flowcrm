@@ -33,7 +33,10 @@ type Contatto = Pick<Tables<'contatti'>, 'id' | 'nome' | 'cognome'>
 const n = (s: string) => Number(s.replace(',', '.'))
 const euro = (v: number | string | null | undefined) => v == null ? '—' : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(Number(v))
 
-export function FidelizzazioneSezione({ modulo }: { modulo: string }) {
+/** Voci del catalogo del modulo su cui contare i timbri e da dare in omaggio. */
+export interface VoceCatalogoFid { id: string; nome: string; tipo: 'categoria' | 'prodotto' }
+
+export function FidelizzazioneSezione({ modulo, catalogo }: { modulo: string; catalogo?: VoceCatalogoFid[] }) {
   return (
     <Tabs defaultValue="tessere">
       <TabsList className="mb-4 flex-wrap">
@@ -43,7 +46,7 @@ export function FidelizzazioneSezione({ modulo }: { modulo: string }) {
         <TabsTrigger value="coupon">Coupon</TabsTrigger>
       </TabsList>
       <TabsContent value="tessere"><Tessere modulo={modulo} /></TabsContent>
-      <TabsContent value="programmi"><Programmi modulo={modulo} /></TabsContent>
+      <TabsContent value="programmi"><Programmi modulo={modulo} catalogo={catalogo} /></TabsContent>
       <TabsContent value="gift"><GiftCards modulo={modulo} /></TabsContent>
       <TabsContent value="coupon"><Coupons modulo={modulo} /></TabsContent>
     </Tabs>
@@ -119,11 +122,13 @@ function Tessere({ modulo }: { modulo: string }) {
   )
 }
 
-function Programmi({ modulo }: { modulo: string }) {
+function Programmi({ modulo, catalogo = [] }: { modulo: string; catalogo?: VoceCatalogoFid[] }) {
   const { isManager } = useAuth()
   const programmi = useProgrammi(modulo)
   const salva = useSalva('fid_programmi', ['fid_saldi'])
-  const [f, setF] = useState({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '' })
+  const [f, setF] = useState({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '',
+    timbroSu: 'acquisto', omaggio: 'scelta' })
+  const voce = (id: string | null | undefined) => catalogo.find((v) => v.id === id)?.nome
   async function crea(e: FormEvent) {
     e.preventDefault()
     if (!f.nome.trim()) return
@@ -132,8 +137,10 @@ function Programmi({ modulo }: { modulo: string }) {
     try {
       await salva.mutateAsync({ values: { modulo, nome: f.nome.trim(), punti_per_euro: n(f.puntiEuro) || 0, timbri_soglia: f.timbri ? Number(f.timbri) : null,
         premio_timbri: f.premio || null, benvenuto_punti: Number(f.benvenuto) || 0, referral_punti: Number(f.referral) || 0, livelli,
-        valore_punto: f.valore ? n(f.valore) : null } })
-      setF({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '' })
+        valore_punto: f.valore ? n(f.valore) : null,
+        timbri_prodotti: f.timbri && f.timbroSu !== 'acquisto' ? [f.timbroSu] : [],
+        premio_prodotto_id: f.timbri && f.omaggio !== 'scelta' ? f.omaggio : null } })
+      setF({ nome: '', puntiEuro: '1', timbri: '', premio: '', benvenuto: '0', referral: '0', livelli: '', valore: '', timbroSu: 'acquisto', omaggio: 'scelta' })
       toast.success('Programma creato')
     } catch (err) { toast.error(messaggioErrore(err)) }
   }
@@ -147,6 +154,26 @@ function Programmi({ modulo }: { modulo: string }) {
             <div className="space-y-1.5"><Label htmlFor="pg-b">Punti di benvenuto</Label><Input id="pg-b" type="number" min={0} value={f.benvenuto} onChange={(e) => setF({ ...f, benvenuto: e.target.value })} /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-t">Timbri per un premio</Label><Input id="pg-t" type="number" min={1} value={f.timbri} onChange={(e) => setF({ ...f, timbri: e.target.value })} placeholder="10" /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-pr">Premio</Label><Input id="pg-pr" value={f.premio} onChange={(e) => setF({ ...f, premio: e.target.value })} placeholder="Caffè omaggio" /></div>
+            {catalogo.length > 0 && f.timbri && (
+              <>
+                <div className="col-span-2 space-y-1.5"><Label>Un timbro per ogni</Label>
+                  <Select value={f.timbroSu} onValueChange={(v) => setF({ ...f, timbroSu: v })}>
+                    <SelectTrigger aria-label="Un timbro per ogni"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="acquisto">Acquisto, qualunque sia</SelectItem>
+                      {catalogo.map((v) => <SelectItem key={v.id} value={v.id}>{v.tipo === 'categoria' ? `Pezzo di ${v.nome}` : v.nome}</SelectItem>)}
+                    </SelectContent>
+                  </Select></div>
+                <div className="col-span-2 space-y-1.5"><Label>Prodotto in omaggio</Label>
+                  <Select value={f.omaggio} onValueChange={(v) => setF({ ...f, omaggio: v })}>
+                    <SelectTrigger aria-label="Prodotto in omaggio"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="scelta">Uno di quelli che danno il timbro</SelectItem>
+                      {catalogo.filter((v) => v.tipo === 'prodotto').map((v) => <SelectItem key={v.id} value={v.id}>{v.nome}</SelectItem>)}
+                    </SelectContent>
+                  </Select></div>
+              </>
+            )}
             <div className="space-y-1.5"><Label htmlFor="pg-r">Punti per chi presenta un amico</Label><Input id="pg-r" type="number" min={0} value={f.referral} onChange={(e) => setF({ ...f, referral: e.target.value })} /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-v">Valore di un punto in cassa (€)</Label><Input id="pg-v" inputMode="decimal" value={f.valore} onChange={(e) => setF({ ...f, valore: e.target.value })} placeholder="0,01 = cashback" /></div>
             <div className="space-y-1.5"><Label htmlFor="pg-l">Livelli (nome:punti)</Label><Input id="pg-l" value={f.livelli} onChange={(e) => setF({ ...f, livelli: e.target.value })} placeholder="Argento:500, Oro:1500" /></div>
@@ -159,7 +186,7 @@ function Programmi({ modulo }: { modulo: string }) {
           {programmi.map((p) => (
             <div key={p.id} className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm">
               <span className="min-w-48 flex-1 font-medium text-foreground">{p.nome}</span>
-              <span className="text-muted-foreground">{[Number(p.punti_per_euro) > 0 && `${Number(p.punti_per_euro)} punti/€`, p.timbri_soglia && `${p.timbri_soglia} timbri → ${p.premio_timbri ?? 'premio'}`,
+              <span className="text-muted-foreground">{[Number(p.punti_per_euro) > 0 && `${Number(p.punti_per_euro)} punti/€`, p.timbri_soglia && `${p.timbri_soglia} timbri${p.timbri_prodotti.length ? ` (uno per ogni ${voce(p.timbri_prodotti[0]) ?? 'prodotto scelto'})` : ''} → ${voce(p.premio_prodotto_id) ?? p.premio_timbri ?? 'premio'}`,
                 p.benvenuto_punti > 0 && `benvenuto ${p.benvenuto_punti}`, p.referral_punti > 0 && `presentazione ${p.referral_punti}`,
                 p.valore_punto && `cashback ${new Intl.NumberFormat('it-IT', { maximumFractionDigits: 2 }).format(Number(p.punti_per_euro) * Number(p.valore_punto) * 100)}%`,
                 (p.livelli as { nome: string; soglia: number }[]).map((l) => `${l.nome} da ${l.soglia}`).join(', ')].filter(Boolean).join(' · ')}</span>

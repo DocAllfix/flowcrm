@@ -43,7 +43,8 @@ export function FbProvider({ modulo, children }: { modulo: ModuloFb; children: R
   }, [locali, scelto])
 
   const valore = useMemo<ContestoFb>(() => {
-    const locale = locali.find((l) => l.id === scelto) ?? null
+    // Finché l'effetto non ha scelto, vale il primo: niente «Nessun locale configurato» di passaggio.
+    const locale = locali.find((l) => l.id === scelto) ?? locali[0] ?? null
     return {
       modulo,
       base: `/${modulo}`,

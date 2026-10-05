@@ -4,6 +4,7 @@
  */
 import { PageHeader } from '@/components/ui/page-header'
 import { CassaSezione } from '@/components/condivisi/CassaSezione'
+import { ConvenzioneCassa } from '@/modules/bar/componenti/ConvenzioneCassa'
 import { useFb } from '@/modules/fb/contesto'
 import { ConLocale } from '@/modules/fb/componenti/SelettoreLocale'
 
@@ -12,7 +13,7 @@ export function CassaPage() {
   return (
     <ConLocale>
       <PageHeader title="Cassa" description="Conti aperti, divisioni, pagamenti misti e chiusura della cassa a fine turno." />
-      <CassaSezione modulo={modulo} />
+      <CassaSezione modulo={modulo} estensione={modulo === 'bar' ? (ctx) => <ConvenzioneCassa {...ctx} /> : undefined} />
     </ConLocale>
   )
 }

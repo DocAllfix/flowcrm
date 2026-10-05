@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from '@/components/ui/table'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { CercaContatto, type ContattoScelto } from '@/components/condivisi/CercaContatto'
-import { FidelizzazioneSezione } from '@/components/condivisi/FidelizzazioneSezione'
+import { FidelizzazioneSezione, type VoceCatalogoFid } from '@/components/condivisi/FidelizzazioneSezione'
 import { FeedbackSezione } from '@/components/condivisi/FeedbackSezione'
 import { CampagneSezione } from '@/components/condivisi/CampagneSezione'
 import { cn } from '@/lib/utils'
@@ -27,6 +27,7 @@ import type { Tables } from '@/lib/supabase'
 import { useElenco, useRpc, useSalva, messaggioErrore } from '@/lib/queries/fondamenta'
 import type { Database } from '@/types/database.types'
 import { useFb } from '@/modules/fb/contesto'
+import { useCatalogo } from '@/modules/fb/queries'
 import { ConLocale } from '@/modules/fb/componenti/SelettoreLocale'
 import { ALLERGENI, PRENOTAZIONE_STATO, etichettaAllergene, fmtData, fmtEuro } from '@/modules/fb/stati'
 
@@ -41,6 +42,11 @@ interface Profilo {
 
 export function ClientiPage() {
   const { modulo } = useFb()
+  const { categorie, prodotti } = useCatalogo()
+  const catalogo = useMemo<VoceCatalogoFid[]>(() => [
+    ...categorie.filter((c) => c.attiva).map((c) => ({ id: c.id, nome: c.nome, tipo: 'categoria' as const })),
+    ...prodotti.filter((p) => p.stato !== 'sospeso').map((p) => ({ id: p.id, nome: p.nome, tipo: 'prodotto' as const })),
+  ], [categorie, prodotti])
   return (
     <ConLocale>
       <PageHeader title="Clienti e fidelity" description="Storico, preferenze e allergie dei clienti; tessere, gift card e coupon; recensioni e reclami; campagne." />
@@ -52,7 +58,7 @@ export function ClientiPage() {
           <TabsTrigger value="campagne">Campagne</TabsTrigger>
         </TabsList>
         <TabsContent value="clienti"><Clienti /></TabsContent>
-        <TabsContent value="fidelity"><FidelizzazioneSezione modulo={modulo} /></TabsContent>
+        <TabsContent value="fidelity"><FidelizzazioneSezione modulo={modulo} catalogo={catalogo} /></TabsContent>
         <TabsContent value="feedback"><FeedbackSezione modulo={modulo} canali={['sala', 'banco', 'telefono', 'email', 'QR al tavolo', 'recensione online']} /></TabsContent>
         <TabsContent value="campagne"><CampagneSezione modulo={modulo} /></TabsContent>
       </Tabs>
