@@ -38,6 +38,7 @@ CREATE TABLE pal_sedi (
   noshow_blocco_giorni       INT NOT NULL DEFAULT 7 CHECK (noshow_blocco_giorni >= 0), -- …blocco delle prenotazioni
   noshow_consuma_credito     BOOLEAN NOT NULL DEFAULT true,
   avvisi_email               BOOLEAN NOT NULL DEFAULT true,  -- conferme, promemoria, scadenze, pagamenti
+  referral_giorni            INT NOT NULL DEFAULT 7 CHECK (referral_giorni >= 0),  -- «porta un amico»: giorni in regalo
   attiva                     BOOLEAN NOT NULL DEFAULT true,
   note                       TEXT,
   created_at                 TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -100,6 +101,7 @@ CREATE TABLE pal_soci (
   badge                 TEXT UNIQUE,                       -- tessera o badge fisico
   qr_token              TEXT NOT NULL UNIQUE DEFAULT replace(gen_random_uuid()::text, '-', ''),  -- QR dell'app
   convenzione_id        UUID REFERENCES pal_convenzioni(id) ON DELETE SET NULL,
+  presentato_da         UUID REFERENCES pal_soci(id) ON DELETE SET NULL,     -- «porta un amico»
   trainer_id            UUID,                              -- PT di riferimento (FK aggiunta con i trainer)
   certificato_scadenza  DATE,                              -- certificato medico sportivo
   condizioni_accettate  BOOLEAN NOT NULL DEFAULT false,    -- iscrizione e regolamento sottoscritti
@@ -597,7 +599,7 @@ BEGIN
   END IF;
   IF NEW.stato = 'approvata' AND (TG_OP = 'INSERT' OR OLD.stato = 'richiesta') THEN
     -- L'autorizzazione è della direzione (o di chi la registra come amministratore).
-    IF auth.uid() IS NOT NULL AND NOT puo_amministrazione() THEN
+    IF auth.uid() IS NOT NULL AND NOT puo_amministrazione() AND current_setting('pal.interno', true) IS DISTINCT FROM '1' THEN
       RAISE EXCEPTION 'La sospensione la autorizza la direzione' USING ERRCODE = '42501';
     END IF;
     SELECT * INTO a FROM pal_abbonamenti WHERE id = NEW.abbonamento_id FOR UPDATE;
