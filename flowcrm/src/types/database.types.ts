@@ -3193,6 +3193,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "bar_convenzioni_addebiti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "bar_convenzioni_addebiti_convenzione_id_fkey"
             columns: ["convenzione_id"]
             isOneToOne: false
@@ -5327,6 +5334,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "conti_conto_padre_id_fkey"
+            columns: ["conto_padre_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "conti_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -5422,6 +5436,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "conti_pagamenti_conto_destinazione_id_fkey"
+            columns: ["conto_destinazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "conti_pagamenti_conto_id_fkey"
             columns: ["conto_id"]
             isOneToOne: false
@@ -5433,6 +5454,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -5552,6 +5580,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "conti_righe_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "conti_righe_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -5631,6 +5666,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_rimborsi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -6033,6 +6075,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -6729,6 +6778,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "eventi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -7656,6 +7712,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -10555,6 +10618,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "gift_card_conto_vendita_id_fkey"
+            columns: ["conto_vendita_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "gift_card_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -10971,6 +11041,60 @@ export type Database = {
           },
         ]
       }
+      hotel_competitor_prezzi: {
+        Row: {
+          competitor: string
+          created_at: string
+          created_by: string | null
+          data: string
+          fonte: string | null
+          id: string
+          modulo: string
+          prezzo: number
+          struttura_id: string
+          tipologia: string
+        }
+        Insert: {
+          competitor: string
+          created_at?: string
+          created_by?: string | null
+          data: string
+          fonte?: string | null
+          id?: string
+          modulo?: string
+          prezzo: number
+          struttura_id: string
+          tipologia?: string
+        }
+        Update: {
+          competitor?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fonte?: string | null
+          id?: string
+          modulo?: string
+          prezzo?: number
+          struttura_id?: string
+          tipologia?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_competitor_prezzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_competitor_prezzi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hotel_garanzie: {
         Row: {
           created_at: string
@@ -11044,6 +11168,13 @@ export type Database = {
             columns: ["prenotazione_id"]
             isOneToOne: false
             referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["prenotazione_id"]
           },
           {
@@ -11617,6 +11748,13 @@ export type Database = {
             foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
             columns: ["prenotazione_id"]
             isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
             referencedRelation: "hotel_prenotazioni"
             referencedColumns: ["id"]
           },
@@ -11788,6 +11926,13 @@ export type Database = {
             foreignKeyName: "hotel_notti_prenotazione_id_fkey"
             columns: ["prenotazione_id"]
             isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
             referencedRelation: "hotel_prenotazioni"
             referencedColumns: ["id"]
           },
@@ -11917,6 +12062,13 @@ export type Database = {
             columns: ["prenotazione_id"]
             isOneToOne: false
             referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["prenotazione_id"]
           },
           {
@@ -12162,6 +12314,13 @@ export type Database = {
             foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
             columns: ["prenotazione_id"]
             isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
             referencedRelation: "hotel_prenotazioni"
             referencedColumns: ["id"]
           },
@@ -12323,6 +12482,41 @@ export type Database = {
           },
         ]
       }
+      hotel_pickup: {
+        Row: {
+          camere_vendute: number
+          data: string
+          modulo: string
+          ricavo: number
+          rilevato_il: string
+          struttura_id: string
+        }
+        Insert: {
+          camere_vendute: number
+          data: string
+          modulo?: string
+          ricavo: number
+          rilevato_il: string
+          struttura_id: string
+        }
+        Update: {
+          camere_vendute?: number
+          data?: string
+          modulo?: string
+          ricavo?: number
+          rilevato_il?: string
+          struttura_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_pickup_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       hotel_prenotazioni: {
         Row: {
           adulti: number
@@ -12362,6 +12556,7 @@ export type Database = {
           piano_id: string | null
           prezzo_manuale: boolean
           prezzo_totale: number
+          ricerca: unknown
           richieste: string | null
           stato: Database["public"]["Enums"]["hotel_prenotazione_stato"]
           struttura_id: string
@@ -12408,6 +12603,7 @@ export type Database = {
           piano_id?: string | null
           prezzo_manuale?: boolean
           prezzo_totale?: number
+          ricerca?: never
           richieste?: string | null
           stato?: Database["public"]["Enums"]["hotel_prenotazione_stato"]
           struttura_id: string
@@ -12454,6 +12650,7 @@ export type Database = {
           piano_id?: string | null
           prezzo_manuale?: boolean
           prezzo_totale?: number
+          ricerca?: never
           richieste?: string | null
           stato?: Database["public"]["Enums"]["hotel_prenotazione_stato"]
           struttura_id?: string
@@ -12496,6 +12693,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -12700,6 +12904,13 @@ export type Database = {
             foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
             columns: ["prenotazione_id"]
             isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
             referencedRelation: "hotel_prenotazioni"
             referencedColumns: ["id"]
           },
@@ -12720,6 +12931,79 @@ export type Database = {
           {
             foreignKeyName: "hotel_pulizie_verificata_da_fkey"
             columns: ["verificata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_revenue_regole: {
+        Row: {
+          anticipo_max_giorni: number | null
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          occupazione_a: number
+          occupazione_da: number
+          priorita: number
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+          variazione_pct: number
+        }
+        Insert: {
+          anticipo_max_giorni?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          occupazione_a?: number
+          occupazione_da?: number
+          priorita?: number
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+          variazione_pct: number
+        }
+        Update: {
+          anticipo_max_giorni?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          occupazione_a?: number
+          occupazione_da?: number
+          priorita?: number
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          variazione_pct?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_revenue_regole_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_revenue_regole_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_revenue_regole_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -13108,6 +13392,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "hotel_servizi_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "hotel_servizi_prenotazioni_conto_riga_id_fkey"
             columns: ["conto_riga_id"]
             isOneToOne: false
@@ -13147,6 +13438,13 @@ export type Database = {
             columns: ["prenotazione_id"]
             isOneToOne: false
             referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["prenotazione_id"]
           },
           {
@@ -13253,6 +13551,13 @@ export type Database = {
             columns: ["prenotazione_id"]
             isOneToOne: false
             referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["prenotazione_id"]
           },
           {
@@ -13774,6 +14079,13 @@ export type Database = {
             columns: ["prenotazione_id"]
             isOneToOne: false
             referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["prenotazione_id"]
           },
           {
@@ -16795,6 +17107,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "fb_tavoli_cameriere_id_fkey"
             columns: ["cameriere_id"]
             isOneToOne: false
@@ -17147,10 +17466,68 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "hotel_prenotazioni_struttura_id_fkey"
             columns: ["struttura_id"]
             isOneToOne: false
             referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_insoluti: {
+        Row: {
+          aperto_at: string | null
+          codice: string | null
+          conto_id: string | null
+          descrizione: string | null
+          giorni: number | null
+          modulo: string | null
+          pagato: number | null
+          partenza: string | null
+          prenotazione_id: string | null
+          residuo: number | null
+          stato_prenotazione:
+            Database["public"]["Enums"]["hotel_prenotazione_stato"] | null
+          struttura_id: string | null
+          totale: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_ospiti_riepilogo: {
+        Row: {
+          contatto_id: string | null
+          email: string | null
+          modulo: string | null
+          nome: string | null
+          notti: number | null
+          prossimo_arrivo: string | null
+          soggiorni: number | null
+          spesa: number | null
+          telefono: string | null
+          ultimo_soggiorno: string | null
+          vip: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
             referencedColumns: ["id"]
           },
         ]
@@ -17880,6 +18257,15 @@ export type Database = {
         }
         Returns: Json
       }
+      hotel_applica_prezzo: {
+        Args: {
+          p_data: string
+          p_prezzo: number
+          p_struttura: string
+          p_tipologia: string
+        }
+        Returns: string
+      }
       hotel_assegna_pulizie: {
         Args: { p_giorno: string; p_persone: string[]; p_struttura: string }
         Returns: number
@@ -17893,6 +18279,20 @@ export type Database = {
         Returns: string
       }
       hotel_check_out: { Args: { p_prenotazione: string }; Returns: Json }
+      hotel_confronto_strutture: {
+        Args: { p_al: string; p_dal: string }
+        Returns: {
+          adr: number
+          camere_disponibili: number
+          camere_vendute: number
+          occupazione_pct: number
+          revpar: number
+          ricavi_totali: number
+          struttura: string
+          struttura_id: string
+          trevpar: number
+        }[]
+      }
       hotel_conto_prenotazione: {
         Args: { p_prenotazione: string }
         Returns: string
@@ -17910,6 +18310,30 @@ export type Database = {
           tipologia_id: string
           vendute: number
         }[]
+      }
+      hotel_fattura_conti: {
+        Args: {
+          p_conti: string[]
+          p_numero: string
+          p_organizzazione: string
+          p_scadenza?: string
+        }
+        Returns: string
+      }
+      hotel_forecast: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          camere: number
+          data: string
+          occupazione_pct: number
+          prevista_pct: number
+          previste: number
+          vendute: number
+        }[]
+      }
+      hotel_front_office: {
+        Args: { p_giorno?: string; p_struttura: string }
+        Returns: Json
       }
       hotel_genera_pulizie: {
         Args: { p_giorno?: string; p_struttura: string }
@@ -17930,11 +18354,16 @@ export type Database = {
           provenienza: string
         }[]
       }
+      hotel_kpi: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: Json
+      }
       hotel_no_show: { Args: { p_prenotazione: string }; Returns: number }
       hotel_opzioni_scadute: {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      hotel_ospite_profilo: { Args: { p_contatto: string }; Returns: Json }
       hotel_pasti_previsti: {
         Args: { p_giorno?: string; p_struttura: string }
         Returns: {
@@ -17960,6 +18389,20 @@ export type Database = {
           stop_vendita: boolean
         }[]
       }
+      hotel_produzione_intermediari: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          annullate: number
+          commissione: number
+          commissione_pct: number
+          intermediario_id: string
+          nome: string
+          notti: number
+          prenotazioni: number
+          ricavo: number
+          tipo: string
+        }[]
+      }
       hotel_quota: {
         Args: {
           p_adulti?: number
@@ -17974,6 +18417,26 @@ export type Database = {
           p_trattamento?: string
         }
         Returns: Json
+      }
+      hotel_reparto_riga: {
+        Args: { p_rif: string; p_rif_id: string }
+        Returns: string
+      }
+      hotel_rileva_pickup: { Args: { p_giorno?: string }; Returns: number }
+      hotel_suggerimenti_tariffe: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          data: string
+          occupazione_pct: number
+          prevista_pct: number
+          prezzo_attuale: number
+          prezzo_concorrenti: number
+          prezzo_suggerito: number
+          regola: string
+          tipologia: string
+          tipologia_id: string
+          variazione_pct: number
+        }[]
       }
       hotel_tassa_calcola: {
         Args: { p_prenotazione: string }
@@ -18128,6 +18591,22 @@ export type Database = {
         Returns: string[]
       }
       seg_fb_ricorrenze: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_abituali: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_anniversari: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_compleanni: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_inattivi: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
