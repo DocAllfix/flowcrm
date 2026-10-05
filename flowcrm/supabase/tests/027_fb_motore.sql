@@ -360,7 +360,8 @@ select lives_ok($$insert into fb_locali (modulo, nome, created_by) values ('bar'
   'con la licenza del Bar si apre un bar');
 select pg_temp.torna_postgres();
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
-select is((select format('%s|%s|%s', (select count(*) from fb_comande), (select count(*) from fb_tavoli),
+select is((select format('%s|%s|%s', (select count(*) from fb_comande where locale_id = 'b1000000-0000-0000-0000-000000000001'),
+                         (select count(*) from fb_tavoli where locale_id = 'b1000000-0000-0000-0000-000000000001'),
                          (select count(*) from fb_prodotti) > 0)),
   '0|0|t', 'solo Bar: tavoli e comande del ristorante spariscono, il catalogo condiviso resta');
 select pg_temp.torna_postgres();

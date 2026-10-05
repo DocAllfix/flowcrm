@@ -188,11 +188,11 @@ insert into fb_comande (id, locale_id, canale, convenzione_dipendente_id) values
 insert into fb_comande_righe (comanda_id, prodotto_id, quantita) values
   ('e7000000-0000-0000-0000-000000000004', 'e6000000-0000-0000-0000-000000000003', 1);
 select throws_like($$select bar_addebita_convenzione(conto_id, 'ef000000-0000-0000-0000-000000000001', 8) from fb_comande where id = 'e7000000-0000-0000-0000-000000000004'$$,
-  'Limite giornaliero di Mario Alfa superato: restano 3.00 €', 'limite giornaliero del dipendente');
+  'Limite giornaliero di Mario Alfa superato: restano 3,00 €', 'limite giornaliero del dipendente');
 update bar_convenzioni set limite_giornaliero_dipendente = null, limite_mensile_azienda = 6
  where id = 'ee000000-0000-0000-0000-000000000001';
 select throws_like($$select bar_addebita_convenzione(conto_id, 'ef000000-0000-0000-0000-000000000001', 8) from fb_comande where id = 'e7000000-0000-0000-0000-000000000004'$$,
-  'Limite mensile dell''azienda superato: restano 4.00 €', 'tetto mensile dell''azienda');
+  'Limite mensile dell''azienda superato: restano 4,00 €', 'tetto mensile dell''azienda');
 update bar_convenzioni set limite_mensile_azienda = 100 where id = 'ee000000-0000-0000-0000-000000000001';
 select bar_addebita_convenzione(conto_id, 'ef000000-0000-0000-0000-000000000001', 8) from fb_comande where id = 'e7000000-0000-0000-0000-000000000004';
 select chiudi_conto(conto_id) from fb_comande where id = 'e7000000-0000-0000-0000-000000000004';

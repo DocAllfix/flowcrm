@@ -14002,6 +14002,7 @@ export type Database = {
         Returns: Json
       }
       bar_erogato: { Args: { p_mescita: string }; Returns: number }
+      bar_euro: { Args: { p: number }; Returns: string }
       bar_fattura_convenzione: {
         Args: { p_al: string; p_convenzione: string; p_numero: string }
         Returns: string
@@ -14022,6 +14023,7 @@ export type Database = {
           unita_misura: string
         }[]
       }
+      bar_numero: { Args: { p: number }; Returns: string }
       calcola_provvigioni: {
         Args: { p_agente: string; p_periodo: string }
         Returns: number

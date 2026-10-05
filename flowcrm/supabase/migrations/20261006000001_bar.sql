@@ -106,7 +106,7 @@ BEGIN
 
   INSERT INTO fid_movimenti (tessera_id, tipo, timbri, riferimento_tipo, riferimento_id, note, created_by)
   VALUES (p_tessera, 'premio', -p.timbri_soglia, 'conto', p_conto,
-          'Omaggio: ' || v_riga.nome || ' (' || v_riga.prezzo_unitario || ' €)', auth.uid());
+          'Omaggio: ' || v_riga.nome || ' (' || replace(to_char(v_riga.prezzo_unitario, 'FM999999990.00'), '.', ',') || ' €)', auth.uid());
   UPDATE conti SET sconto_importo = sconto_importo + v_riga.prezzo_unitario,
                    note = concat_ws(' · ', note, 'Omaggio fedeltà: ' || v_riga.nome)
    WHERE id = p_conto;
@@ -249,6 +249,18 @@ $$;
 CREATE TRIGGER fb_comande_convenzione BEFORE INSERT OR UPDATE OF convenzione_dipendente_id ON fb_comande
   FOR EACH ROW EXECUTE FUNCTION fb_comanda_convenzione();
 
+-- Importi e quantità nei messaggi, all'italiana (2,60 · 0,25 · 14,3).
+CREATE OR REPLACE FUNCTION bar_euro(p NUMERIC)
+RETURNS TEXT
+LANGUAGE sql IMMUTABLE SET search_path = pg_catalog AS $$
+  SELECT replace(to_char(p, 'FM999999990.00'), '.', ',')
+$$;
+CREATE OR REPLACE FUNCTION bar_numero(p NUMERIC)
+RETURNS TEXT
+LANGUAGE sql IMMUTABLE SET search_path = pg_catalog AS $$
+  SELECT regexp_replace(replace(to_char(p, 'FM999999990.000'), '.', ','), ',?0+$', '')
+$$;
+
 -- Limiti di spesa: controllati sotto chiave della convenzione, così due
 -- addebiti contemporanei non superano insieme il tetto.
 CREATE OR REPLACE FUNCTION bar_addebito_controlla()
@@ -297,16 +309,16 @@ BEGIN
     FROM bar_convenzioni_addebiti WHERE dipendente_id = d.id;
 
   IF c.limite_mensile_azienda IS NOT NULL AND v_azienda + NEW.importo > c.limite_mensile_azienda + 0.005 THEN
-    RAISE EXCEPTION 'Limite mensile dell''azienda superato: restano % €', GREATEST(c.limite_mensile_azienda - v_azienda, 0)
+    RAISE EXCEPTION 'Limite mensile dell''azienda superato: restano % €', bar_euro(GREATEST(c.limite_mensile_azienda - v_azienda, 0))
       USING ERRCODE = 'check_violation';
   END IF;
   v_limite := COALESCE(d.limite_mensile, c.limite_mensile_dipendente);
   IF v_limite IS NOT NULL AND v_dip_mese + NEW.importo > v_limite + 0.005 THEN
-    RAISE EXCEPTION 'Limite mensile di % superato: restano % €', d.nome, GREATEST(v_limite - v_dip_mese, 0)
+    RAISE EXCEPTION 'Limite mensile di % superato: restano % €', d.nome, bar_euro(GREATEST(v_limite - v_dip_mese, 0))
       USING ERRCODE = 'check_violation';
   END IF;
   IF c.limite_giornaliero_dipendente IS NOT NULL AND v_dip_giorno + NEW.importo > c.limite_giornaliero_dipendente + 0.005 THEN
-    RAISE EXCEPTION 'Limite giornaliero di % superato: restano % €', d.nome, GREATEST(c.limite_giornaliero_dipendente - v_dip_giorno, 0)
+    RAISE EXCEPTION 'Limite giornaliero di % superato: restano % €', d.nome, bar_euro(GREATEST(c.limite_giornaliero_dipendente - v_dip_giorno, 0))
       USING ERRCODE = 'check_violation';
   END IF;
 
@@ -574,8 +586,8 @@ BEGIN
     SELECT descrizione, unita_misura INTO v_articolo, v_unita FROM mag_articoli WHERE id = x.articolo_id;
     FOR dest IN SELECT id FROM user_profiles WHERE attivo AND ruolo IN ('admin', 'manager') LOOP
       PERFORM crea_notifica(dest, 'warning', 'Consumo anomalo: ' || v_articolo,
-        'Teorico ' || v_erogato || ' ' || v_unita || ', reale ' || (x.quantita_iniziale - p_residuo) || ' ' || v_unita
-          || ' (' || v_pct || '%).', '/bar/mescita');
+        'Teorico ' || bar_numero(v_erogato) || ' ' || v_unita || ', reale ' || bar_numero(x.quantita_iniziale - p_residuo)
+          || ' ' || v_unita || ' (' || bar_numero(ROUND(v_pct, 1)) || '%).', '/bar/mescita');
     END LOOP;
   END IF;
 
@@ -883,7 +895,7 @@ DECLARE f TEXT;
 BEGIN
   FOREACH f IN ARRAY ARRAY[
     'bar_convenzione_prepara()', 'fb_comanda_convenzione()', 'bar_addebito_controlla()', 'bar_addebito_fatturato()',
-    'bar_mescita_prepara()', 'fb_menu_convenzionato()'] LOOP
+    'bar_mescita_prepara()', 'fb_menu_convenzionato()', 'bar_euro(numeric)', 'bar_numero(numeric)'] LOOP
     EXECUTE format('REVOKE ALL ON FUNCTION %s FROM PUBLIC', f);
     EXECUTE format('REVOKE ALL ON FUNCTION %s FROM anon', f);
     EXECUTE format('REVOKE ALL ON FUNCTION %s FROM authenticated', f);

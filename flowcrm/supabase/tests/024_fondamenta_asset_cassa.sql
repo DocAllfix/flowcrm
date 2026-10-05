@@ -255,7 +255,8 @@ select pg_temp.torna_postgres();
 
 update moduli_licenze set attivo = (slug = 'bar') where slug in ('ristorante', 'bar', 'hotel', 'palestra');
 select pg_temp.impersona('00000000-0000-0000-0000-00000000000c');
-select is((select format('%s|%s', (select count(*) from asset), (select count(*) from conti))), '2|0',
+select is((select format('%s|%s', (select count(*) from asset where id::text like 'a5000000-%'),
+                         (select count(*) from conti where id::text like 'c1000000-%'))), '2|0',
   'solo Bar: vede gli asset del motore fb, non i conti del ristorante');
 select is((select count(*)::int from scadenze_moduli
             where entita = 'asset' and entita_id = 'a5000000-0000-0000-0000-000000000003'),
