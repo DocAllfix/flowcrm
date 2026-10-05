@@ -1,6 +1,6 @@
 /**
  * Registro dei moduli verticali (Gare, Cantiere, Automezzi, Agenti,
- * Poliambulatori, Ristorante, Bar). Ogni modulo è un pacchetto in src/modules/<slug> che
+ * Poliambulatori, Ristorante, Bar, Hotel). Ogni modulo è un pacchetto in src/modules/<slug> che
  * dichiara qui la propria navigazione e le proprie route.
  *
  * Attivazione a due livelli:
@@ -12,7 +12,7 @@
  * nessun'altra modifica a App.tsx/Sidebar è necessaria.
  */
 import type { ReactElement } from 'react'
-import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, type LucideIcon } from 'lucide-react'
+import { Gavel, HardHat, Truck, BriefcaseBusiness, HeartPulse, UtensilsCrossed, Coffee, Hotel, type LucideIcon } from 'lucide-react'
 import { APP_CONFIG } from '@/config/app.config'
 import type { NavSection } from '@/config/nav.config'
 import { GARE_NAV } from '@/modules/gare/nav'
@@ -29,6 +29,8 @@ import { RISTORANTE_NAV } from '@/modules/ristorante/nav'
 import { ristoranteRoutes } from '@/modules/ristorante/routes'
 import { BAR_NAV } from '@/modules/bar/nav'
 import { barRoutes } from '@/modules/bar/routes'
+import { HOTEL_NAV } from '@/modules/hotel/nav'
+import { hotelRoutes } from '@/modules/hotel/routes'
 
 export interface ModuloDef {
   slug: string
@@ -100,6 +102,14 @@ export const MODULI: ModuloDef[] = [
     descrizione: 'Per bar e caffetterie: banco, mescita, convenzioni con le aziende, happy hour',
     nav: BAR_NAV,
     routes: barRoutes,
+  },
+  {
+    slug: 'hotel',
+    label: 'Hotel',
+    icon: Hotel,
+    descrizione: 'Per hotel e strutture ricettive: planning, ricevimento, housekeeping, tariffe e revenue, adempimenti',
+    nav: HOTEL_NAV,
+    routes: hotelRoutes,
   },
 ]
 

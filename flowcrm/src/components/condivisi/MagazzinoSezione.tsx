@@ -69,8 +69,9 @@ export function MagazzinoSezione({ modulo, moduli, extra = [], riordino }: Props
   const { data: lotti = [] } = useElenco<LottoStato>('mag_lotti_stato', { filtri: { modulo: moduli }, ordine: [{ colonna: 'fine_vita' }] })
   const sotto = giacenze.filter((g) => g.sotto_scorta).length
   const inScadenza = lotti.filter((l) => Number(l.residuo) > 0 && l.giorni_residui !== null && l.giorni_residui <= 3).length
+  const [scheda, setScheda] = useState('giacenze')
   return (
-    <Tabs defaultValue="giacenze">
+    <Tabs value={scheda} onValueChange={setScheda}>
       <TabsList className="mb-4 flex-wrap">
         <TabsTrigger value="giacenze">Giacenze{sotto ? ` (${sotto} sotto scorta)` : ''}</TabsTrigger>
         <TabsTrigger value="lotti">Lotti e scadenze{inScadenza ? ` (${inScadenza})` : ''}</TabsTrigger>
@@ -82,8 +83,8 @@ export function MagazzinoSezione({ modulo, moduli, extra = [], riordino }: Props
         {extra.map((e) => <TabsTrigger key={e.valore} value={e.valore}>{e.etichetta}</TabsTrigger>)}
       </TabsList>
       <TabsContent value="giacenze"><Giacenze modulo={modulo} moduli={moduli} giacenze={giacenze} /></TabsContent>
-      <TabsContent value="lotti"><Lotti lotti={lotti} /></TabsContent>
-      <TabsContent value="movimenti"><Movimenti moduli={moduli} /></TabsContent>
+      <TabsContent value="lotti"><Lotti lotti={lotti} onOrdini={() => setScheda('ordini')} /></TabsContent>
+      <TabsContent value="movimenti"><Movimenti moduli={moduli} onGiacenze={() => setScheda('giacenze')} /></TabsContent>
       <TabsContent value="ordini"><Ordini modulo={modulo} moduli={moduli} /></TabsContent>
       <TabsContent value="riordino"><RiordinoTab modulo={modulo} moduli={moduli} previsto={riordino} /></TabsContent>
       <TabsContent value="inventari"><Inventari modulo={modulo} moduli={moduli} /></TabsContent>
@@ -204,13 +205,14 @@ function Giacenze({ modulo, moduli, giacenze }: { modulo: string; moduli: string
   )
 }
 
-function Lotti({ lotti }: { lotti: LottoStato[] }) {
+function Lotti({ lotti, onOrdini }: { lotti: LottoStato[]; onOrdini: () => void }) {
   const [tutti, setTutti] = useState(false)
   const elenco = lotti.filter((l) => tutti || Number(l.residuo) > 0)
   return (
     <div className="space-y-3">
       <label className="flex items-center gap-2 text-sm text-muted-foreground"><input type="checkbox" checked={tutti} onChange={(e) => setTutti(e.target.checked)} /> Mostra anche i lotti esauriti</label>
-      {elenco.length === 0 ? <EmptyState compatto icon={ClipboardCheck} title="Nessun lotto" description="I lotti nascono al ricevimento delle merci." /> : (
+      {elenco.length === 0 ? <EmptyState compatto icon={ClipboardCheck} title="Nessun lotto" description="I lotti nascono al ricevimento delle merci."
+        action={<Button variant="outline" onClick={onOrdini}>Ricevi la merce</Button>} /> : (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader><TableRow><TableHead>Lotto</TableHead><TableHead>Articolo</TableHead><TableHead>Ubicazione</TableHead>
@@ -239,10 +241,11 @@ function Lotti({ lotti }: { lotti: LottoStato[] }) {
   )
 }
 
-function Movimenti({ moduli }: { moduli: string[] }) {
+function Movimenti({ moduli, onGiacenze }: { moduli: string[]; onGiacenze: () => void }) {
   const articoli = useArticoli(moduli)
   const { data: mov = [] } = useElenco<Movimento>('mag_movimenti', { filtri: { modulo: moduli }, ordine: [{ colonna: 'eseguito_at', crescente: false }], limite: 200 })
-  return mov.length === 0 ? <EmptyState compatto icon={Truck} title="Nessun movimento" description="Carichi, vendite e uscite compariranno qui." /> : (
+  return mov.length === 0 ? <EmptyState compatto icon={Truck} title="Nessun movimento" description="Carichi, vendite e uscite compariranno qui."
+    action={<Button variant="outline" onClick={onGiacenze}>Vai alle giacenze</Button>} /> : (
     <Card className="overflow-hidden">
       <Table>
         <TableHeader><TableRow><TableHead className="text-right">Quando</TableHead><TableHead>Articolo</TableHead><TableHead>Movimento</TableHead><TableHead className="text-right">Quantità</TableHead><TableHead>Riferimento</TableHead></TableRow></TableHeader>
@@ -293,7 +296,7 @@ function Ordini({ modulo, moduli }: { modulo: string; moduli: string[] }) {
           ))}
         </ul>
       </Card>
-      {scelto ? <DettaglioOrdine ordine={scelto} articoli={articoli} /> : <EmptyState icon={ShoppingCart} title="Scegli o crea un ordine" description="Righe, invio al fornitore e ricevimento della merce con lotto e scadenza." />}
+      {scelto ? <DettaglioOrdine ordine={scelto} articoli={articoli} /> : <EmptyState icon={ShoppingCart} filtrato title="Scegli o crea un ordine" description="Righe, invio al fornitore e ricevimento della merce con lotto e scadenza." />}
     </div>
   )
 }
@@ -399,7 +402,7 @@ function RiordinoTab({ modulo, moduli, previsto }: { modulo: string; moduli: str
     return (
       <div className="space-y-3">
         {previsto?.controlli}
-        <EmptyState icon={ShoppingCart} title="Nulla da riordinare" filtrato={!!previsto}
+        <EmptyState icon={ShoppingCart} title="Nulla da riordinare" filtrato
           description={previsto ? 'Le scorte coprono il periodo scelto: allungalo per guardare più avanti.' : 'Nessun articolo è sotto la scorta minima.'} />
       </div>
     )
@@ -514,7 +517,7 @@ function Fornitori({ modulo }: { modulo: string }) {
       <Card className="p-4">
         <div className="flex flex-wrap items-end gap-3">
           <div className="min-w-56 flex-1 space-y-1.5"><Label>Fornitore</Label>
-            <Select value={v.fornitore} onValueChange={(x) => setV({ ...v, fornitore: x })}><SelectTrigger aria-label="Fornitore"><SelectValue placeholder="Scegli…" /></SelectTrigger>
+            <Select value={v.fornitore} onValueChange={(x) => setV({ ...v, fornitore: x })}><SelectTrigger id="fv-f" aria-label="Fornitore"><SelectValue placeholder="Scegli…" /></SelectTrigger>
               <SelectContent>{fornitori.map((o) => <SelectItem key={o.id} value={o.id}>{o.ragione_sociale}</SelectItem>)}</SelectContent></Select></div>
           {voto('prezzo')}{voto('qualita')}{voto('puntualita')}{voto('completezza')}{voto('continuita')}
           <div className="min-w-48 flex-1 space-y-1.5"><Label htmlFor="fv-nc">Non conformità (se c'è stata)</Label><Input id="fv-nc" value={v.non_conformita} onChange={(e) => setV({ ...v, non_conformita: e.target.value })} placeholder="Merce danneggiata, temperatura fuori norma…" /></div>
@@ -523,7 +526,8 @@ function Fornitori({ modulo }: { modulo: string }) {
             { onSuccess: () => toast.success('Valutazione registrata'), onError: (e) => toast.error(messaggioErrore(e)) })}><Star className="h-4 w-4" /> Valuta</BottoneScrittura>
         </div>
       </Card>
-      {rating.length === 0 ? <EmptyState compatto icon={Star} title="Nessuna valutazione" description="Valuta prezzo, qualità, puntualità e completezza delle consegne." /> : (
+      {rating.length === 0 ? <EmptyState compatto icon={Star} title="Nessuna valutazione" description="Valuta prezzo, qualità, puntualità e completezza delle consegne."
+        action={<Button variant="outline" onClick={() => document.getElementById('fv-f')?.focus()}>Valuta un fornitore</Button>} /> : (
         <Card className="overflow-hidden">
           <Table>
             <TableHeader><TableRow><TableHead>Fornitore</TableHead><TableHead className="text-right">Valutazioni</TableHead><TableHead className="text-right">Prezzo</TableHead><TableHead className="text-right">Qualità</TableHead><TableHead className="text-right">Puntualità</TableHead><TableHead className="text-right">Completezza</TableHead><TableHead className="text-right">Continuità</TableHead><TableHead className="text-right">Non conformità</TableHead><TableHead className="text-right">Punteggio</TableHead></TableRow></TableHeader>

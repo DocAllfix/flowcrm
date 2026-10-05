@@ -37,15 +37,16 @@ const euro = (v: number | string | null | undefined) => v == null ? '—' : new 
 export interface VoceCatalogoFid { id: string; nome: string; tipo: 'categoria' | 'prodotto' }
 
 export function FidelizzazioneSezione({ modulo, catalogo }: { modulo: string; catalogo?: VoceCatalogoFid[] }) {
+  const [scheda, setScheda] = useState('tessere')
   return (
-    <Tabs defaultValue="tessere">
+    <Tabs value={scheda} onValueChange={setScheda}>
       <TabsList className="mb-4 flex-wrap">
         <TabsTrigger value="tessere">Tessere</TabsTrigger>
         <TabsTrigger value="programmi">Programmi</TabsTrigger>
         <TabsTrigger value="gift">Gift card</TabsTrigger>
         <TabsTrigger value="coupon">Coupon</TabsTrigger>
       </TabsList>
-      <TabsContent value="tessere"><Tessere modulo={modulo} /></TabsContent>
+      <TabsContent value="tessere"><Tessere modulo={modulo} onProgrammi={() => setScheda('programmi')} /></TabsContent>
       <TabsContent value="programmi"><Programmi modulo={modulo} catalogo={catalogo} /></TabsContent>
       <TabsContent value="gift"><GiftCards modulo={modulo} /></TabsContent>
       <TabsContent value="coupon"><Coupons modulo={modulo} /></TabsContent>
@@ -57,7 +58,7 @@ function useProgrammi(modulo: string) {
   return useElenco<Programma>('fid_programmi', { filtri: { modulo }, ordine: [{ colonna: 'nome' }] }).data ?? []
 }
 
-function Tessere({ modulo }: { modulo: string }) {
+function Tessere({ modulo, onProgrammi }: { modulo: string; onProgrammi: () => void }) {
   const programmi = useProgrammi(modulo)
   const { data: saldi = [] } = useElenco<Saldo>('fid_saldi', { filtri: { modulo }, ordine: [{ colonna: 'punti', crescente: false }] })
   const ids = saldi.map((s) => s.contatto_id).filter(Boolean) as string[]
@@ -72,7 +73,8 @@ function Tessere({ modulo }: { modulo: string }) {
   const [riscatto, setRiscatto] = useState<Record<string, string>>({})
   const cliente = (id: string | null) => { const c = clienti.find((x) => x.id === id); return c ? `${c.nome} ${c.cognome ?? ''}`.trim() : '—' }
 
-  if (!programmi.length) return <EmptyState icon={CreditCard} title="Nessun programma fedeltà" description="Crea prima un programma nella scheda «Programmi»: punti, timbri o livelli." />
+  if (!programmi.length) return <EmptyState icon={CreditCard} title="Nessun programma fedeltà" description="Crea prima un programma: punti, timbri o livelli."
+    action={<Button variant="outline" onClick={onProgrammi}>Crea un programma</Button>} />
   return (
     <div className="space-y-4">
       <Card className="flex flex-wrap items-end gap-3 p-4">

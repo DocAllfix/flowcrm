@@ -81,7 +81,7 @@ export function TurniSezione({ modulo, reparti, extra }: { modulo: string; repar
       </div>
 
       {persone.length === 0 ? (
-        <EmptyState icon={Plus} title="Nessun dipendente" description="I dipendenti si registrano in Amministrazione → Personale; qui si pianificano i loro turni."
+        <EmptyState icon={Plus} title="Nessun dipendente" filtrato={!isManager} description="I dipendenti si registrano in Amministrazione → Personale; qui si pianificano i loro turni."
           action={isManager ? <Button asChild variant="outline"><Link to="/personale">Vai al personale</Link></Button> : undefined} />
       ) : (
         <Card className="overflow-x-auto">

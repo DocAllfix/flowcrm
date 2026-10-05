@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Card } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { EmptyState } from '@/components/ui/empty-state'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BottoneScrittura } from '@/components/BottoneScrittura'
 import { cn } from '@/lib/utils'
@@ -49,7 +50,7 @@ export function CassaSezione({ modulo, estensione }: { modulo: string; estension
   const [params, setParams] = useSearchParams()
   const contoId = params.get('conto')
   useDalVivo(['fb_comande_righe', 'fb_comande'])
-  const { data: conti = [] } = useElenco<Conto>('conti', { filtri: { modulo, stato: 'aperto' }, ordine: [{ colonna: 'aperto_at' }] })
+  const { data: conti = [], isLoading } = useElenco<Conto>('conti', { filtri: { modulo, stato: 'aperto' }, ordine: [{ colonna: 'aperto_at' }] })
   const { data: saldi = [] } = useElenco<Saldo>('conti_saldi', { filtri: { modulo, stato: 'aperto' } })
   const saldo = (id: string) => saldi.find((s) => s.conto_id === id)
   const scelto = useMemo(() => conti.find((c) => c.id === contoId) ?? null, [conti, contoId])
@@ -87,7 +88,8 @@ export function CassaSezione({ modulo, estensione }: { modulo: string; estension
           )}
         </Card>
         {scelto ? <DettaglioConto conto={scelto} conti={conti} modulo={modulo} estensione={estensione} onChiuso={() => setParams({})} />
-          : <EmptyState icon={Receipt} title="Scegli un conto" description="A sinistra i conti aperti: tavoli, banco, camere, clienti." />}
+          : isLoading && contoId ? <Skeleton className="h-64" />
+          : <EmptyState icon={Receipt} filtrato title="Scegli un conto" description="A sinistra i conti aperti: tavoli, banco, camere, clienti." />}
       </div>
     </div>
   )

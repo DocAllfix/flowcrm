@@ -121,7 +121,7 @@ function Registri({ modulo, moduli, stati }: { modulo: string; moduli: string[];
         </Card>
         {nuovo ? <NuovoPunto modulo={modulo} onCreato={(id) => { setNuovo(false); setSceltoId(id) }} />
           : scelto ? <Registra punto={scelto} />
-          : <EmptyState icon={ClipboardCheck} title="Scegli un punto di controllo" description="Registra la temperatura, la pulizia o il ricevimento: l'esito lo calcola il sistema dalle soglie." />}
+          : <EmptyState icon={ClipboardCheck} filtrato title="Scegli un punto di controllo" description="Registra la temperatura, la pulizia o il ricevimento: l'esito lo calcola il sistema dalle soglie." />}
       </div>
     </div>
   )
@@ -319,7 +319,8 @@ function Attrezzature({ modulo, moduli, categorie }: { modulo: string; moduli: s
         </form>
       </Card>
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-        {asset.length === 0 ? <EmptyState icon={Wrench} title="Nessuna attrezzatura" description="Forni, frigoriferi, lavastoviglie, macchine da caffè, impianti." /> : (
+        {asset.length === 0 ? <EmptyState icon={Wrench} title="Nessuna attrezzatura" description="Forni, frigoriferi, lavastoviglie, macchine da caffè, impianti."
+          action={<Button variant="outline" onClick={() => document.getElementById('as-d')?.focus()}>Aggiungi la prima</Button>} /> : (
           <Card className="h-fit overflow-hidden">
             <Table>
               <TableHeader><TableRow><TableHead>Attrezzatura</TableHead><TableHead>Stato</TableHead><TableHead className="text-right">Guasti</TableHead><TableHead className="text-right">Costo interventi</TableHead></TableRow></TableHeader>

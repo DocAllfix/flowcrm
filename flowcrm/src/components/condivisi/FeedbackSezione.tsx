@@ -29,9 +29,17 @@ const TIPI: Record<string, string> = { nps: 'NPS', questionario: 'Questionario',
 const STATI: Record<string, { label: string; tone: 'warning' | 'info' | 'success' | 'neutral' }> = {
   ricevuto: { label: 'Ricevuto', tone: 'warning' }, in_gestione: { label: 'In gestione', tone: 'info' }, risolto: { label: 'Risolto', tone: 'success' }, chiuso: { label: 'Chiuso', tone: 'neutral' } }
 
-export function FeedbackSezione({ modulo, canali }: { modulo: string; canali: string[] }) {
-  const { data: nps = [] } = useElenco<Nps>('feedback_nps', { filtri: { modulo }, ordine: [{ colonna: 'mese', crescente: false }], limite: 6 })
-  const { data: elenco = [] } = useElenco<Feedback>('feedback', { filtri: { modulo }, ordine: [{ colonna: 'ricevuto_at', crescente: false }], limite: 100 })
+export function FeedbackSezione({ modulo, canali, entita, aspetti = [] }: {
+  modulo: string; canali: string[]
+  /** Riscontro legato a una cosa precisa (un soggiorno, un ordine): elenco solo suo, cliente già scelto. */
+  entita?: { tipo: string; id: string; contatto?: ContattoScelto | null }
+  /** Voti 1–5 per aspetto (camera, ristorante, personale…), salvati nelle risposte. */
+  aspetti?: string[]
+}) {
+  const { data: nps = [] } = useElenco<Nps>('feedback_nps', { filtri: { modulo }, ordine: [{ colonna: 'mese', crescente: false }], limite: 6, abilitato: !entita })
+  const { data: elenco = [] } = useElenco<Feedback>('feedback', {
+    filtri: entita ? { modulo, entita_tipo: entita.tipo, entita_id: entita.id } : { modulo }, ordine: [{ colonna: 'ricevuto_at', crescente: false }], limite: 100,
+  })
   const salva = useSalva('feedback', ['feedback_nps'])
   const [tipo, setTipo] = useState('nps')
   const [voto, setVoto] = useState<number | null>(null)
@@ -39,16 +47,20 @@ export function FeedbackSezione({ modulo, canali }: { modulo: string; canali: st
   const [testo, setTesto] = useState('')
   const [canale, setCanale] = useState(canali[0] ?? 'banco')
   const [nome, setNome] = useState('')
-  const [contatto, setContatto] = useState<ContattoScelto | null>(null)
+  const [contatto, setContatto] = useState<ContattoScelto | null>(entita?.contatto ?? null)
   const [risposte, setRisposte] = useState<Record<string, string>>({})
+  const [voti, setVoti] = useState<Record<string, number>>({})
   const corrente = nps[0]
 
   async function registra(e: FormEvent) {
     e.preventDefault()
     if (tipo === 'nps' && voto === null) { toast.error('Scegli il voto da 0 a 10'); return }
     try {
-      await salva.mutateAsync({ values: { modulo, tipo: tipo as Feedback['tipo'], nps: voto, valutazione: stelle, testo: testo.trim() || null, canale, contatto_id: contatto?.id ?? null } })
-      toast.success('Registrato'); setVoto(null); setStelle(null); setTesto(''); setContatto(null); setNome('')
+      await salva.mutateAsync({ values: { modulo, tipo: tipo as Feedback['tipo'], nps: voto, valutazione: stelle, testo: testo.trim() || null, canale,
+        contatto_id: contatto?.id ?? null, entita_tipo: entita?.tipo ?? null, entita_id: entita?.id ?? null,
+        ...(Object.keys(voti).length ? { risposte: voti } : {}) } })
+      toast.success('Registrato'); setVoto(null); setStelle(null); setTesto(''); setVoti({})
+      if (!entita) { setContatto(null); setNome('') }
     } catch (err) { toast.error(messaggioErrore(err)) }
   }
 
@@ -69,9 +81,9 @@ export function FeedbackSezione({ modulo, canali }: { modulo: string; canali: st
               <SelectContent>{Object.entries(TIPI).map(([k, l]) => <SelectItem key={k} value={k}>{l}</SelectItem>)}</SelectContent></Select></div>
             <div className="w-36 space-y-1.5"><Label>Canale</Label><Select value={canale} onValueChange={setCanale}><SelectTrigger aria-label="Canale"><SelectValue /></SelectTrigger>
               <SelectContent>{canali.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent></Select></div>
-            <div className="min-w-56 flex-1 space-y-1.5"><Label htmlFor="fb-c">Cliente (facoltativo)</Label>
+            {!entita && <div className="min-w-56 flex-1 space-y-1.5"><Label htmlFor="fb-c">Cliente (facoltativo)</Label>
               <CercaContatto id="fb-c" valore={nome} contattoId={contatto?.id ?? null} onTesto={(v) => { setNome(v); setContatto(null) }}
-                onScegli={(c) => { setContatto(c); setNome(`${c.nome} ${c.cognome ?? ''}`.trim()) }} /></div>
+                onScegli={(c) => { setContatto(c); setNome(`${c.nome} ${c.cognome ?? ''}`.trim()) }} /></div>}
           </div>
           {(tipo === 'nps' || tipo === 'questionario') && (
             <div><p className="mb-1.5 text-sm text-foreground">Quanto ci consiglierebbe a un amico? (0–10)</p>
@@ -88,11 +100,20 @@ export function FeedbackSezione({ modulo, canali }: { modulo: string; canali: st
                 <button key={i} type="button" role="radio" aria-checked={stelle === i} onClick={() => setStelle(i)}
                   className={cn('size-9 rounded-md border text-sm', stelle === i ? 'border-primary bg-accent text-accent-foreground' : 'border-border text-muted-foreground')}>{i}</button>))}</div></div>
           )}
+          {aspetti.length > 0 && tipo !== 'reclamo' && (
+            <div className="grid gap-2 sm:grid-cols-2">{aspetti.map((a) => (
+              <div key={a}><p className="mb-1 text-sm text-foreground">{a} (1–5)</p>
+                <div className="flex gap-1" role="radiogroup" aria-label={`Voto ${a}`}>{[1, 2, 3, 4, 5].map((i) => (
+                  <button key={i} type="button" role="radio" aria-checked={voti[a] === i} onClick={() => setVoti({ ...voti, [a]: i })}
+                    className={cn('size-9 rounded-md border text-sm', voti[a] === i ? 'border-primary bg-accent text-accent-foreground' : 'border-border text-muted-foreground')}>{i}</button>))}</div></div>
+            ))}</div>
+          )}
           <div className="space-y-1.5"><Label htmlFor="fb-t">{tipo === 'reclamo' ? 'Cosa non è andato' : 'Commento'}</Label><Textarea id="fb-t" rows={2} value={testo} onChange={(e) => setTesto(e.target.value)} /></div>
           <BottoneScrittura type="submit">Registra</BottoneScrittura>
         </form>
       </Card>
-      {elenco.length === 0 ? <EmptyState compatto icon={MessageSquareHeart} title="Ancora nessun riscontro" description="Voti, recensioni e reclami dei clienti compariranno qui." /> : (
+      {elenco.length === 0 ? <EmptyState compatto icon={MessageSquareHeart} title="Ancora nessun riscontro" description="Voti, recensioni e reclami dei clienti compariranno qui."
+        action={<Button variant="outline" onClick={() => document.getElementById('fb-t')?.focus()}>Registra il primo</Button>} /> : (
         <Card className="divide-y divide-border">
           {elenco.map((f) => {
             const st = STATI[f.stato] ?? STATI.ricevuto
@@ -103,6 +124,8 @@ export function FeedbackSezione({ modulo, canali }: { modulo: string; canali: st
                   <Badge tone={f.tipo === 'reclamo' ? 'danger' : 'neutral'}>{TIPI[f.tipo]}</Badge>
                   {f.nps !== null && <span className="tabular-nums text-foreground">NPS {f.nps}</span>}
                   {f.valutazione !== null && <span className="tabular-nums text-foreground">{f.valutazione}/5</span>}
+                  {f.risposte && typeof f.risposte === 'object' && !Array.isArray(f.risposte) && Object.entries(f.risposte).map(([k, v]) => (
+                    <span key={k} className="tabular-nums text-xs text-muted-foreground">{k} {String(v)}/5</span>))}
                   <span className="min-w-40 flex-1 text-muted-foreground">{f.testo ?? '—'}</span>
                   <span className="text-xs text-muted-foreground">{new Date(f.ricevuto_at).toLocaleDateString('it-IT')} · {f.canale ?? ''}</span>
                   {gestibile && <Badge tone={st.tone}>{st.label}</Badge>}

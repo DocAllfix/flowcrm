@@ -3193,6 +3193,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "bar_convenzioni_addebiti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "bar_convenzioni_addebiti_convenzione_id_fkey"
             columns: ["convenzione_id"]
             isOneToOne: false
@@ -5230,6 +5237,7 @@ export type Database = {
       }
       conti: {
         Row: {
+          accetta_acconti: boolean
           aperto_at: string
           chiuso_at: string | null
           codice: string | null
@@ -5254,6 +5262,7 @@ export type Database = {
           updated_by: string | null
         }
         Insert: {
+          accetta_acconti?: boolean
           aperto_at?: string
           chiuso_at?: string | null
           codice?: string | null
@@ -5278,6 +5287,7 @@ export type Database = {
           updated_by?: string | null
         }
         Update: {
+          accetta_acconti?: boolean
           aperto_at?: string
           chiuso_at?: string | null
           codice?: string | null
@@ -5321,6 +5331,13 @@ export type Database = {
             columns: ["conto_padre_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_conto_padre_id_fkey"
+            columns: ["conto_padre_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -5419,6 +5436,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "conti_pagamenti_conto_destinazione_id_fkey"
+            columns: ["conto_destinazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "conti_pagamenti_conto_id_fkey"
             columns: ["conto_id"]
             isOneToOne: false
@@ -5430,6 +5454,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_pagamenti_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -5549,6 +5580,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "conti_righe_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "conti_righe_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -5572,6 +5610,74 @@ export type Database = {
           {
             foreignKeyName: "conti_righe_updated_by_fkey"
             columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conti_rimborsi: {
+        Row: {
+          conto_id: string
+          created_at: string
+          created_by: string | null
+          eseguito_at: string
+          id: string
+          importo: number
+          metodo: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo: string
+          motivo: string
+          riferimento: string | null
+        }
+        Insert: {
+          conto_id: string
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          id?: string
+          importo: number
+          metodo: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo: string
+          motivo: string
+          riferimento?: string | null
+        }
+        Update: {
+          conto_id?: string
+          created_at?: string
+          created_by?: string | null
+          eseguito_at?: string
+          id?: string
+          importo?: number
+          metodo?: Database["public"]["Enums"]["pagamento_metodo"]
+          modulo?: string
+          motivo?: string
+          riferimento?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conti_rimborsi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conti_rimborsi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_rimborsi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "conti_rimborsi_created_by_fkey"
+            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "user_profiles"
             referencedColumns: ["id"]
@@ -5969,6 +6075,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "coupon_utilizzi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -6665,6 +6778,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "eventi_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -7592,6 +7712,13 @@ export type Database = {
             columns: ["conto_id"]
             isOneToOne: false
             referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
             referencedColumns: ["conto_id"]
           },
           {
@@ -10491,6 +10618,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "gift_card_conto_vendita_id_fkey"
+            columns: ["conto_vendita_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "gift_card_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -10565,6 +10699,3503 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "gift_card_saldi"
             referencedColumns: ["gift_card_id"]
+          },
+        ]
+      }
+      hotel_aree: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          edificio: string | null
+          id: string
+          modulo: string
+          nome: string
+          ordine: number
+          piano: number | null
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          edificio?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          ordine?: number
+          piano?: number | null
+          struttura_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          edificio?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          piano?: number | null
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_aree_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_aree_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_aree_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_biancheria: {
+        Row: {
+          cicli_vita: number | null
+          costo_lavaggio: number | null
+          costo_unitario: number | null
+          created_at: string
+          created_by: string | null
+          descrizione: string
+          dotazione: number
+          id: string
+          in_lavanderia: number
+          lavaggi_totali: number
+          modulo: string
+          note: string | null
+          scorta_minima: number
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cicli_vita?: number | null
+          costo_lavaggio?: number | null
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione: string
+          dotazione?: number
+          id?: string
+          in_lavanderia?: number
+          lavaggi_totali?: number
+          modulo?: string
+          note?: string | null
+          scorta_minima?: number
+          struttura_id: string
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cicli_vita?: number | null
+          costo_lavaggio?: number | null
+          costo_unitario?: number | null
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string
+          dotazione?: number
+          id?: string
+          in_lavanderia?: number
+          lavaggi_totali?: number
+          modulo?: string
+          note?: string | null
+          scorta_minima?: number
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_biancheria_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_biancheria_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_biancheria_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_biancheria_movimenti: {
+        Row: {
+          biancheria_id: string
+          costo: number | null
+          created_at: string
+          created_by: string | null
+          data: string
+          id: string
+          lavanderia_id: string | null
+          modulo: string
+          note: string | null
+          quantita: number
+          tipo: string
+        }
+        Insert: {
+          biancheria_id: string
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          lavanderia_id?: string | null
+          modulo?: string
+          note?: string | null
+          quantita: number
+          tipo: string
+        }
+        Update: {
+          biancheria_id?: string
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          id?: string
+          lavanderia_id?: string | null
+          modulo?: string
+          note?: string | null
+          quantita?: number
+          tipo?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_biancheria_movimenti_biancheria_id_fkey"
+            columns: ["biancheria_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_biancheria"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_biancheria_movimenti_biancheria_id_fkey"
+            columns: ["biancheria_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_biancheria_stato"
+            referencedColumns: ["biancheria_id"]
+          },
+          {
+            foreignKeyName: "hotel_biancheria_movimenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_biancheria_movimenti_lavanderia_id_fkey"
+            columns: ["lavanderia_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_camere: {
+        Row: {
+          accessibile: boolean
+          attiva: boolean
+          balcone: boolean
+          created_at: string
+          created_by: string | null
+          dotazioni: string[]
+          edificio: string | null
+          fuori_servizio: boolean
+          fuori_servizio_fino: string | null
+          fuori_servizio_motivo: string | null
+          id: string
+          letti: string | null
+          metri_quadri: number | null
+          modulo: string
+          note: string | null
+          numero: string
+          ordine: number
+          piano: number | null
+          posti_letto: number | null
+          servizi: string[]
+          stato_pulizia: Database["public"]["Enums"]["hotel_pulizia_stato"]
+          struttura_id: string
+          tariffa_standard: number | null
+          tipologia_id: string
+          updated_at: string
+          updated_by: string | null
+          vista: string | null
+        }
+        Insert: {
+          accessibile?: boolean
+          attiva?: boolean
+          balcone?: boolean
+          created_at?: string
+          created_by?: string | null
+          dotazioni?: string[]
+          edificio?: string | null
+          fuori_servizio?: boolean
+          fuori_servizio_fino?: string | null
+          fuori_servizio_motivo?: string | null
+          id?: string
+          letti?: string | null
+          metri_quadri?: number | null
+          modulo?: string
+          note?: string | null
+          numero: string
+          ordine?: number
+          piano?: number | null
+          posti_letto?: number | null
+          servizi?: string[]
+          stato_pulizia?: Database["public"]["Enums"]["hotel_pulizia_stato"]
+          struttura_id: string
+          tariffa_standard?: number | null
+          tipologia_id: string
+          updated_at?: string
+          updated_by?: string | null
+          vista?: string | null
+        }
+        Update: {
+          accessibile?: boolean
+          attiva?: boolean
+          balcone?: boolean
+          created_at?: string
+          created_by?: string | null
+          dotazioni?: string[]
+          edificio?: string | null
+          fuori_servizio?: boolean
+          fuori_servizio_fino?: string | null
+          fuori_servizio_motivo?: string | null
+          id?: string
+          letti?: string | null
+          metri_quadri?: number | null
+          modulo?: string
+          note?: string | null
+          numero?: string
+          ordine?: number
+          piano?: number | null
+          posti_letto?: number | null
+          servizi?: string[]
+          stato_pulizia?: Database["public"]["Enums"]["hotel_pulizia_stato"]
+          struttura_id?: string
+          tariffa_standard?: number | null
+          tipologia_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          vista?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_camere_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_camere_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_camere_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_camere_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_competitor_prezzi: {
+        Row: {
+          competitor: string
+          created_at: string
+          created_by: string | null
+          data: string
+          fonte: string | null
+          id: string
+          modulo: string
+          prezzo: number
+          struttura_id: string
+          tipologia: string
+        }
+        Insert: {
+          competitor: string
+          created_at?: string
+          created_by?: string | null
+          data: string
+          fonte?: string | null
+          id?: string
+          modulo?: string
+          prezzo: number
+          struttura_id: string
+          tipologia?: string
+        }
+        Update: {
+          competitor?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          fonte?: string | null
+          id?: string
+          modulo?: string
+          prezzo?: number
+          struttura_id?: string
+          tipologia?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_competitor_prezzi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_competitor_prezzi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_garanzie: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          importo: number | null
+          modulo: string
+          note: string | null
+          prenotazione_id: string
+          riferimento: string | null
+          scadenza: string | null
+          stato: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id: string
+          riferimento?: string | null
+          scadenza?: string | null
+          stato?: string
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          importo?: number | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string
+          riferimento?: string | null
+          scadenza?: string | null
+          stato?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_garanzie_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_garanzie_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_gruppi: {
+        Row: {
+          arrivo: string
+          codice: string | null
+          created_at: string
+          created_by: string | null
+          fatturazione: string
+          id: string
+          intermediario_id: string | null
+          modulo: string
+          nome: string
+          note: string | null
+          organizzazione_id: string | null
+          partenza: string
+          piano_id: string | null
+          referente_id: string | null
+          rilascio: string | null
+          servizi: string | null
+          stato: string
+          struttura_id: string
+          trattamento_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          arrivo: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          fatturazione?: string
+          id?: string
+          intermediario_id?: string | null
+          modulo?: string
+          nome: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partenza: string
+          piano_id?: string | null
+          referente_id?: string | null
+          rilascio?: string | null
+          servizi?: string | null
+          stato?: string
+          struttura_id: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          arrivo?: string
+          codice?: string | null
+          created_at?: string
+          created_by?: string | null
+          fatturazione?: string
+          id?: string
+          intermediario_id?: string | null
+          modulo?: string
+          nome?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partenza?: string
+          piano_id?: string | null
+          referente_id?: string | null
+          rilascio?: string | null
+          servizi?: string | null
+          stato?: string
+          struttura_id?: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_gruppi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_intermediario_id_fkey"
+            columns: ["intermediario_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_intermediari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_piano_id_fkey"
+            columns: ["piano_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_piani_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_referente_id_fkey"
+            columns: ["referente_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_trattamento_id_fkey"
+            columns: ["trattamento_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_trattamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_gruppi_blocchi: {
+        Row: {
+          camere: number
+          created_at: string
+          created_by: string | null
+          gruppo_id: string
+          id: string
+          modulo: string
+          prezzo: number | null
+          tipologia_id: string
+        }
+        Insert: {
+          camere: number
+          created_at?: string
+          created_by?: string | null
+          gruppo_id: string
+          id?: string
+          modulo?: string
+          prezzo?: number | null
+          tipologia_id: string
+        }
+        Update: {
+          camere?: number
+          created_at?: string
+          created_by?: string | null
+          gruppo_id?: string
+          id?: string
+          modulo?: string
+          prezzo?: number | null
+          tipologia_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_gruppi_blocchi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_blocchi_gruppo_id_fkey"
+            columns: ["gruppo_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_gruppi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_gruppi_blocchi_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_intermediari: {
+        Row: {
+          attivo: boolean
+          codice_canale: string | null
+          commissione_pct: number
+          condizioni_pagamento: string | null
+          contratto_al: string | null
+          contratto_dal: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          note: string | null
+          organizzazione_id: string
+          struttura_id: string | null
+          tariffa_netta: boolean
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          codice_canale?: string | null
+          commissione_pct?: number
+          condizioni_pagamento?: string | null
+          contratto_al?: string | null
+          contratto_dal?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id: string
+          struttura_id?: string | null
+          tariffa_netta?: boolean
+          tipo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          codice_canale?: string | null
+          commissione_pct?: number
+          condizioni_pagamento?: string | null
+          contratto_al?: string | null
+          contratto_dal?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string
+          struttura_id?: string | null
+          tariffa_netta?: boolean
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_intermediari_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_intermediari_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_intermediari_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_intermediari_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_manutenzioni: {
+        Row: {
+          area_id: string | null
+          asset_id: string | null
+          camera_id: string | null
+          categoria: string
+          codice: string | null
+          costo: number | null
+          created_at: string
+          created_by: string | null
+          data_intervento: string | null
+          descrizione: string
+          id: string
+          mette_fuori_servizio: boolean
+          modulo: string
+          note: string | null
+          priorita: string
+          pulizia_id: string | null
+          risolta_at: string | null
+          segnalata_da: string | null
+          stato: string
+          struttura_id: string
+          tecnico_esterno: string | null
+          tecnico_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          area_id?: string | null
+          asset_id?: string | null
+          camera_id?: string | null
+          categoria?: string
+          codice?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_intervento?: string | null
+          descrizione: string
+          id?: string
+          mette_fuori_servizio?: boolean
+          modulo?: string
+          note?: string | null
+          priorita?: string
+          pulizia_id?: string | null
+          risolta_at?: string | null
+          segnalata_da?: string | null
+          stato?: string
+          struttura_id: string
+          tecnico_esterno?: string | null
+          tecnico_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          area_id?: string | null
+          asset_id?: string | null
+          camera_id?: string | null
+          categoria?: string
+          codice?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_intervento?: string | null
+          descrizione?: string
+          id?: string
+          mette_fuori_servizio?: boolean
+          modulo?: string
+          note?: string | null
+          priorita?: string
+          pulizia_id?: string | null
+          risolta_at?: string | null
+          segnalata_da?: string | null
+          stato?: string
+          struttura_id?: string
+          tecnico_esterno?: string | null
+          tecnico_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_manutenzioni_area_id_fkey"
+            columns: ["area_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_aree"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "asset_indicatori"
+            referencedColumns: ["asset_id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["camera_id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_pulizia_id_fkey"
+            columns: ["pulizia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_pulizie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_segnalata_da_fkey"
+            columns: ["segnalata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_tecnico_id_fkey"
+            columns: ["tecnico_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_manutenzioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_minibar_consumi: {
+        Row: {
+          articolo_id: string
+          camera_id: string
+          conto_riga_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          note: string | null
+          prenotazione_id: string | null
+          prezzo_unitario: number | null
+          quantita: number
+          rifornito: boolean
+          rilevato_at: string
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id: string
+          camera_id: string
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          prezzo_unitario?: number | null
+          quantita: number
+          rifornito?: boolean
+          rilevato_at?: string
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string
+          camera_id?: string
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          prezzo_unitario?: number | null
+          quantita?: number
+          rifornito?: boolean
+          rilevato_at?: string
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_minibar_consumi_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["camera_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_conto_riga_id_fkey"
+            columns: ["conto_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_consumi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_minibar_dotazioni: {
+        Row: {
+          articolo_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          ordine: number
+          prezzo: number
+          quantita: number
+          struttura_id: string
+          tipologia_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          articolo_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          ordine?: number
+          prezzo: number
+          quantita?: number
+          struttura_id: string
+          tipologia_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          articolo_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          ordine?: number
+          prezzo?: number
+          quantita?: number
+          struttura_id?: string
+          tipologia_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_articoli"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_articolo_id_fkey"
+            columns: ["articolo_id"]
+            isOneToOne: false
+            referencedRelation: "mag_giacenze"
+            referencedColumns: ["articolo_id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_minibar_dotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_notti: {
+        Row: {
+          conto_riga_id: string | null
+          created_at: string
+          data: string
+          id: string
+          modulo: string
+          prenotazione_id: string
+          prezzo_camera: number
+          prezzo_trattamento: number
+        }
+        Insert: {
+          conto_riga_id?: string | null
+          created_at?: string
+          data: string
+          id?: string
+          modulo?: string
+          prenotazione_id: string
+          prezzo_camera?: number
+          prezzo_trattamento?: number
+        }
+        Update: {
+          conto_riga_id?: string | null
+          created_at?: string
+          data?: string
+          id?: string
+          modulo?: string
+          prenotazione_id?: string
+          prezzo_camera?: number
+          prezzo_trattamento?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_notti_conto_riga_id_fkey"
+            columns: ["conto_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_notti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_oggetti_smarriti: {
+        Row: {
+          area: string | null
+          camera_id: string | null
+          categoria: string | null
+          codice: string | null
+          contatto_id: string | null
+          created_at: string
+          created_by: string | null
+          custodia_fino: string | null
+          descrizione: string
+          id: string
+          modalita_restituzione: string | null
+          modulo: string
+          note: string | null
+          prenotazione_id: string | null
+          proprietario: string | null
+          restituito_il: string | null
+          spedizione: string | null
+          stato: string
+          struttura_id: string
+          trovato_da: string | null
+          trovato_il: string
+          ubicazione: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          area?: string | null
+          camera_id?: string | null
+          categoria?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          custodia_fino?: string | null
+          descrizione: string
+          id?: string
+          modalita_restituzione?: string | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          proprietario?: string | null
+          restituito_il?: string | null
+          spedizione?: string | null
+          stato?: string
+          struttura_id: string
+          trovato_da?: string | null
+          trovato_il?: string
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          area?: string | null
+          camera_id?: string | null
+          categoria?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          custodia_fino?: string | null
+          descrizione?: string
+          id?: string
+          modalita_restituzione?: string | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          proprietario?: string | null
+          restituito_il?: string | null
+          spedizione?: string | null
+          stato?: string
+          struttura_id?: string
+          trovato_da?: string | null
+          trovato_il?: string
+          ubicazione?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["camera_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_trovato_da_fkey"
+            columns: ["trovato_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_oggetti_smarriti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_ospiti: {
+        Row: {
+          allergie: string | null
+          cittadinanza: string | null
+          codice_cittadinanza: string | null
+          codice_comune_nascita: string | null
+          codice_luogo_documento: string | null
+          codice_stato_nascita: string | null
+          comune_nascita: string | null
+          contatto_id: string
+          created_at: string
+          created_by: string | null
+          data_nascita: string | null
+          documento_luogo: string | null
+          documento_numero: string | null
+          documento_scadenza: string | null
+          documento_tipo: string | null
+          id: string
+          modulo: string
+          note: string | null
+          preferenze: string | null
+          provincia_nascita: string | null
+          residenza_comune: string | null
+          residenza_provincia: string | null
+          residenza_stato: string | null
+          sesso: string | null
+          stato_nascita: string | null
+          updated_at: string
+          updated_by: string | null
+          vip: boolean
+        }
+        Insert: {
+          allergie?: string | null
+          cittadinanza?: string | null
+          codice_cittadinanza?: string | null
+          codice_comune_nascita?: string | null
+          codice_luogo_documento?: string | null
+          codice_stato_nascita?: string | null
+          comune_nascita?: string | null
+          contatto_id: string
+          created_at?: string
+          created_by?: string | null
+          data_nascita?: string | null
+          documento_luogo?: string | null
+          documento_numero?: string | null
+          documento_scadenza?: string | null
+          documento_tipo?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          provincia_nascita?: string | null
+          residenza_comune?: string | null
+          residenza_provincia?: string | null
+          residenza_stato?: string | null
+          sesso?: string | null
+          stato_nascita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vip?: boolean
+        }
+        Update: {
+          allergie?: string | null
+          cittadinanza?: string | null
+          codice_cittadinanza?: string | null
+          codice_comune_nascita?: string | null
+          codice_luogo_documento?: string | null
+          codice_stato_nascita?: string | null
+          comune_nascita?: string | null
+          contatto_id?: string
+          created_at?: string
+          created_by?: string | null
+          data_nascita?: string | null
+          documento_luogo?: string | null
+          documento_numero?: string | null
+          documento_scadenza?: string | null
+          documento_tipo?: string | null
+          id?: string
+          modulo?: string
+          note?: string | null
+          preferenze?: string | null
+          provincia_nascita?: string | null
+          residenza_comune?: string | null
+          residenza_provincia?: string | null
+          residenza_stato?: string | null
+          sesso?: string | null
+          stato_nascita?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          vip?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_ospiti_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: true
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_ospiti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_ospiti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_parcheggio: {
+        Row: {
+          conto_riga_id: string | null
+          created_at: string
+          created_by: string | null
+          giorni: number | null
+          id: string
+          ingresso_at: string
+          modulo: string
+          note: string | null
+          posto: string | null
+          prenotazione_id: string | null
+          struttura_id: string
+          targa: string
+          tariffa_giorno: number
+          updated_at: string
+          updated_by: string | null
+          uscita_at: string | null
+          veicolo: string | null
+        }
+        Insert: {
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          giorni?: number | null
+          id?: string
+          ingresso_at?: string
+          modulo?: string
+          note?: string | null
+          posto?: string | null
+          prenotazione_id?: string | null
+          struttura_id: string
+          targa: string
+          tariffa_giorno?: number
+          updated_at?: string
+          updated_by?: string | null
+          uscita_at?: string | null
+          veicolo?: string | null
+        }
+        Update: {
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          giorni?: number | null
+          id?: string
+          ingresso_at?: string
+          modulo?: string
+          note?: string | null
+          posto?: string | null
+          prenotazione_id?: string | null
+          struttura_id?: string
+          targa?: string
+          tariffa_giorno?: number
+          updated_at?: string
+          updated_by?: string | null
+          uscita_at?: string | null
+          veicolo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_parcheggio_conto_riga_id_fkey"
+            columns: ["conto_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_parcheggio_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_piani_tariffari: {
+        Row: {
+          anticipo_max_giorni: number | null
+          anticipo_min_giorni: number | null
+          attivo: boolean
+          base_piano_id: string | null
+          canali: string[]
+          cancellazione_giorni: number
+          caparra_pct: number
+          codice: string
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          giorni_arrivo: number[]
+          id: string
+          modulo: string
+          nome: string
+          ordine: number
+          organizzazione_id: string | null
+          penale_pct: number
+          rimborsabile: boolean
+          servizi_inclusi: string[]
+          soggiorno_max: number | null
+          soggiorno_min: number | null
+          struttura_id: string
+          tipo: string
+          trattamento_id: string | null
+          updated_at: string
+          updated_by: string | null
+          valido_al: string | null
+          valido_dal: string | null
+          variazione_pct: number
+        }
+        Insert: {
+          anticipo_max_giorni?: number | null
+          anticipo_min_giorni?: number | null
+          attivo?: boolean
+          base_piano_id?: string | null
+          canali?: string[]
+          cancellazione_giorni?: number
+          caparra_pct?: number
+          codice: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          giorni_arrivo?: number[]
+          id?: string
+          modulo?: string
+          nome: string
+          ordine?: number
+          organizzazione_id?: string | null
+          penale_pct?: number
+          rimborsabile?: boolean
+          servizi_inclusi?: string[]
+          soggiorno_max?: number | null
+          soggiorno_min?: number | null
+          struttura_id: string
+          tipo?: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+          variazione_pct?: number
+        }
+        Update: {
+          anticipo_max_giorni?: number | null
+          anticipo_min_giorni?: number | null
+          attivo?: boolean
+          base_piano_id?: string | null
+          canali?: string[]
+          cancellazione_giorni?: number
+          caparra_pct?: number
+          codice?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          giorni_arrivo?: number[]
+          id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          organizzazione_id?: string | null
+          penale_pct?: number
+          rimborsabile?: boolean
+          servizi_inclusi?: string[]
+          soggiorno_max?: number | null
+          soggiorno_min?: number | null
+          struttura_id?: string
+          tipo?: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          valido_al?: string | null
+          valido_dal?: string | null
+          variazione_pct?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_piani_tariffari_base_piano_id_fkey"
+            columns: ["base_piano_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_piani_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_piani_tariffari_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_piani_tariffari_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_piani_tariffari_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_piani_tariffari_trattamento_id_fkey"
+            columns: ["trattamento_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_trattamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_piani_tariffari_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_pickup: {
+        Row: {
+          camere_vendute: number
+          data: string
+          modulo: string
+          ricavo: number
+          rilevato_il: string
+          struttura_id: string
+        }
+        Insert: {
+          camere_vendute: number
+          data: string
+          modulo?: string
+          ricavo: number
+          rilevato_il: string
+          struttura_id: string
+        }
+        Update: {
+          camere_vendute?: number
+          data?: string
+          modulo?: string
+          ricavo?: number
+          rilevato_il?: string
+          struttura_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_pickup_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_prenotazioni: {
+        Row: {
+          adulti: number
+          annullata_at: string | null
+          arrivo: string
+          arrivo_ora: string | null
+          bambini: number
+          camera_id: string | null
+          canale: string
+          canale_riferimento: string | null
+          caparra_richiesta: number
+          caparra_scadenza: string | null
+          check_in_at: string | null
+          check_out_at: string | null
+          codice: string | null
+          contatto_id: string | null
+          conto_id: string | null
+          created_at: string
+          created_by: string | null
+          early_check_in: boolean
+          gruppo_id: string | null
+          id: string
+          intermediario_id: string | null
+          late_check_out: boolean
+          metodo_pagamento: string | null
+          modulo: string
+          motivo_annullamento: string | null
+          note: string | null
+          notti: number | null
+          opzione_scadenza: string | null
+          organizzazione_id: string | null
+          ospite_nome: string
+          pagatore_contatto_id: string | null
+          partenza: string
+          penale: number | null
+          periodo: unknown
+          piano_id: string | null
+          prezzo_manuale: boolean
+          prezzo_totale: number
+          ricerca: unknown
+          richieste: string | null
+          stato: Database["public"]["Enums"]["hotel_prenotazione_stato"]
+          struttura_id: string
+          tipologia_id: string
+          trattamento_id: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          adulti?: number
+          annullata_at?: string | null
+          arrivo: string
+          arrivo_ora?: string | null
+          bambini?: number
+          camera_id?: string | null
+          canale?: string
+          canale_riferimento?: string | null
+          caparra_richiesta?: number
+          caparra_scadenza?: string | null
+          check_in_at?: string | null
+          check_out_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          early_check_in?: boolean
+          gruppo_id?: string | null
+          id?: string
+          intermediario_id?: string | null
+          late_check_out?: boolean
+          metodo_pagamento?: string | null
+          modulo?: string
+          motivo_annullamento?: string | null
+          note?: string | null
+          notti?: never
+          opzione_scadenza?: string | null
+          organizzazione_id?: string | null
+          ospite_nome: string
+          pagatore_contatto_id?: string | null
+          partenza: string
+          penale?: number | null
+          periodo?: never
+          piano_id?: string | null
+          prezzo_manuale?: boolean
+          prezzo_totale?: number
+          ricerca?: never
+          richieste?: string | null
+          stato?: Database["public"]["Enums"]["hotel_prenotazione_stato"]
+          struttura_id: string
+          tipologia_id: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          adulti?: number
+          annullata_at?: string | null
+          arrivo?: string
+          arrivo_ora?: string | null
+          bambini?: number
+          camera_id?: string | null
+          canale?: string
+          canale_riferimento?: string | null
+          caparra_richiesta?: number
+          caparra_scadenza?: string | null
+          check_in_at?: string | null
+          check_out_at?: string | null
+          codice?: string | null
+          contatto_id?: string | null
+          conto_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          early_check_in?: boolean
+          gruppo_id?: string | null
+          id?: string
+          intermediario_id?: string | null
+          late_check_out?: boolean
+          metodo_pagamento?: string | null
+          modulo?: string
+          motivo_annullamento?: string | null
+          note?: string | null
+          notti?: never
+          opzione_scadenza?: string | null
+          organizzazione_id?: string | null
+          ospite_nome?: string
+          pagatore_contatto_id?: string | null
+          partenza?: string
+          penale?: number | null
+          periodo?: never
+          piano_id?: string | null
+          prezzo_manuale?: boolean
+          prezzo_totale?: number
+          ricerca?: never
+          richieste?: string | null
+          stato?: Database["public"]["Enums"]["hotel_prenotazione_stato"]
+          struttura_id?: string
+          tipologia_id?: string
+          trattamento_id?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["camera_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_gruppo_id_fkey"
+            columns: ["gruppo_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_gruppi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_intermediario_id_fkey"
+            columns: ["intermediario_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_intermediari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_pagatore_contatto_id_fkey"
+            columns: ["pagatore_contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_piano_id_fkey"
+            columns: ["piano_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_piani_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_trattamento_id_fkey"
+            columns: ["trattamento_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_trattamenti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_pulizie: {
+        Row: {
+          anomalie: string | null
+          assegnata_a: string | null
+          camera_id: string
+          created_at: string
+          created_by: string | null
+          data: string
+          esito_controllo: string | null
+          fine_at: string | null
+          id: string
+          inizio_at: string | null
+          minuti_effettivi: number | null
+          minuti_previsti: number | null
+          modulo: string
+          note: string | null
+          prenotazione_id: string | null
+          priorita: string
+          stato: string
+          struttura_id: string
+          tipo: Database["public"]["Enums"]["hotel_pulizia_tipo"]
+          updated_at: string
+          updated_by: string | null
+          verificata_at: string | null
+          verificata_da: string | null
+        }
+        Insert: {
+          anomalie?: string | null
+          assegnata_a?: string | null
+          camera_id: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          esito_controllo?: string | null
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string | null
+          minuti_effettivi?: number | null
+          minuti_previsti?: number | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          priorita?: string
+          stato?: string
+          struttura_id: string
+          tipo: Database["public"]["Enums"]["hotel_pulizia_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          verificata_at?: string | null
+          verificata_da?: string | null
+        }
+        Update: {
+          anomalie?: string | null
+          assegnata_a?: string | null
+          camera_id?: string
+          created_at?: string
+          created_by?: string | null
+          data?: string
+          esito_controllo?: string | null
+          fine_at?: string | null
+          id?: string
+          inizio_at?: string | null
+          minuti_effettivi?: number | null
+          minuti_previsti?: number | null
+          modulo?: string
+          note?: string | null
+          prenotazione_id?: string | null
+          priorita?: string
+          stato?: string
+          struttura_id?: string
+          tipo?: Database["public"]["Enums"]["hotel_pulizia_tipo"]
+          updated_at?: string
+          updated_by?: string | null
+          verificata_at?: string | null
+          verificata_da?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_pulizie_assegnata_a_fkey"
+            columns: ["assegnata_a"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_camera_id_fkey"
+            columns: ["camera_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["camera_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_pulizie_verificata_da_fkey"
+            columns: ["verificata_da"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_revenue_regole: {
+        Row: {
+          anticipo_max_giorni: number | null
+          attiva: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          occupazione_a: number
+          occupazione_da: number
+          priorita: number
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+          variazione_pct: number
+        }
+        Insert: {
+          anticipo_max_giorni?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          occupazione_a?: number
+          occupazione_da?: number
+          priorita?: number
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+          variazione_pct: number
+        }
+        Update: {
+          anticipo_max_giorni?: number | null
+          attiva?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          occupazione_a?: number
+          occupazione_da?: number
+          priorita?: number
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+          variazione_pct?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_revenue_regole_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_revenue_regole_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_revenue_regole_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_sale: {
+        Row: {
+          attiva: boolean
+          attrezzature: string[]
+          capienze: NonNullable<Json>
+          created_at: string
+          created_by: string | null
+          id: string
+          metri_quadri: number | null
+          modulo: string
+          nome: string
+          note: string | null
+          prezzo_giornata: number | null
+          prezzo_mezza_giornata: number | null
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          attrezzature?: string[]
+          capienze?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metri_quadri?: number | null
+          modulo?: string
+          nome: string
+          note?: string | null
+          prezzo_giornata?: number | null
+          prezzo_mezza_giornata?: number | null
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          attrezzature?: string[]
+          capienze?: NonNullable<Json>
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          metri_quadri?: number | null
+          modulo?: string
+          nome?: string
+          note?: string | null
+          prezzo_giornata?: number | null
+          prezzo_mezza_giornata?: number | null
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_sale_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_sale_prenotazioni: {
+        Row: {
+          allestimento: string | null
+          attrezzature: string[]
+          catering: string | null
+          coffee_break: number
+          created_at: string
+          created_by: string | null
+          evento_id: string | null
+          fine: string
+          gruppo_id: string | null
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          organizzazione_id: string | null
+          partecipanti: number | null
+          periodo: unknown
+          prezzo: number | null
+          sala_id: string
+          stato: string
+          struttura_id: string
+          titolo: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          allestimento?: string | null
+          attrezzature?: string[]
+          catering?: string | null
+          coffee_break?: number
+          created_at?: string
+          created_by?: string | null
+          evento_id?: string | null
+          fine: string
+          gruppo_id?: string | null
+          id?: string
+          inizio: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partecipanti?: number | null
+          periodo?: never
+          prezzo?: number | null
+          sala_id: string
+          stato?: string
+          struttura_id: string
+          titolo: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          allestimento?: string | null
+          attrezzature?: string[]
+          catering?: string | null
+          coffee_break?: number
+          created_at?: string
+          created_by?: string | null
+          evento_id?: string | null
+          fine?: string
+          gruppo_id?: string | null
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          organizzazione_id?: string | null
+          partecipanti?: number | null
+          periodo?: never
+          prezzo?: number | null
+          sala_id?: string
+          stato?: string
+          struttura_id?: string
+          titolo?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_evento_id_fkey"
+            columns: ["evento_id"]
+            isOneToOne: false
+            referencedRelation: "eventi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_gruppo_id_fkey"
+            columns: ["gruppo_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_gruppi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_organizzazione_id_fkey"
+            columns: ["organizzazione_id"]
+            isOneToOne: false
+            referencedRelation: "organizzazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_sala_id_fkey"
+            columns: ["sala_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_sale"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_sale_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_servizi: {
+        Row: {
+          aliquota_iva: number
+          attivo: boolean
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          durata_min: number | null
+          id: string
+          modulo: string
+          nome: string
+          prezzo: number
+          richiede_operatore: boolean
+          risorse: string[]
+          struttura_id: string
+          tipo: string
+          unita: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          aliquota_iva?: number
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          durata_min?: number | null
+          id?: string
+          modulo?: string
+          nome: string
+          prezzo?: number
+          richiede_operatore?: boolean
+          risorse?: string[]
+          struttura_id: string
+          tipo?: string
+          unita?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          aliquota_iva?: number
+          attivo?: boolean
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          durata_min?: number | null
+          id?: string
+          modulo?: string
+          nome?: string
+          prezzo?: number
+          richiede_operatore?: boolean
+          risorse?: string[]
+          struttura_id?: string
+          tipo?: string
+          unita?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_servizi_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_servizi_prenotazioni: {
+        Row: {
+          contatto_id: string | null
+          conto_id: string | null
+          conto_riga_id: string | null
+          created_at: string
+          created_by: string | null
+          fine: string
+          id: string
+          inizio: string
+          modulo: string
+          note: string | null
+          operatore_id: string | null
+          ospite_nome: string
+          periodo: unknown
+          prenotazione_id: string | null
+          prezzo_unitario: number | null
+          quantita: number
+          risorsa: string | null
+          servizio_id: string
+          stato: string
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          contatto_id?: string | null
+          conto_id?: string | null
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          fine: string
+          id?: string
+          inizio: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          ospite_nome: string
+          periodo?: never
+          prenotazione_id?: string | null
+          prezzo_unitario?: number | null
+          quantita?: number
+          risorsa?: string | null
+          servizio_id: string
+          stato?: string
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          contatto_id?: string | null
+          conto_id?: string | null
+          conto_riga_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          fine?: string
+          id?: string
+          inizio?: string
+          modulo?: string
+          note?: string | null
+          operatore_id?: string | null
+          ospite_nome?: string
+          periodo?: never
+          prenotazione_id?: string | null
+          prezzo_unitario?: number | null
+          quantita?: number
+          risorsa?: string | null
+          servizio_id?: string
+          stato?: string
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_conto_riga_id_fkey"
+            columns: ["conto_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_operatore_id_fkey"
+            columns: ["operatore_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_servizio_id_fkey"
+            columns: ["servizio_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_servizi"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_servizi_prenotazioni_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_soggiorno_ospiti: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          esenzione_tassa: string | null
+          id: string
+          inviato_alloggiati_at: string | null
+          modulo: string
+          ospite_id: string
+          prenotazione_id: string
+          tipo_alloggiato: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          esenzione_tassa?: string | null
+          id?: string
+          inviato_alloggiati_at?: string | null
+          modulo?: string
+          ospite_id: string
+          prenotazione_id: string
+          tipo_alloggiato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          esenzione_tassa?: string | null
+          id?: string
+          inviato_alloggiati_at?: string | null
+          modulo?: string
+          ospite_id?: string
+          prenotazione_id?: string
+          tipo_alloggiato?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_ospite_id_fkey"
+            columns: ["ospite_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_ospiti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_soggiorno_ospiti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_strutture: {
+        Row: {
+          attiva: boolean
+          cambio_biancheria_giorni: number
+          cap: string | null
+          categoria: string | null
+          check_in_dalle: string
+          check_out_entro: string
+          codice_alloggiati: string | null
+          codice_cir: string | null
+          codice_istat: string | null
+          comune: string | null
+          costo_orario_medio: number | null
+          created_at: string
+          created_by: string | null
+          edifici: string[]
+          email: string | null
+          id: string
+          indirizzo: string | null
+          minuti_pulizia_partenza: number
+          minuti_pulizia_soggiorno: number
+          modulo: string
+          nome: string
+          note: string | null
+          piani: number | null
+          posti_auto: number | null
+          provincia: string | null
+          servizi: string[]
+          sito: string | null
+          telefono: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          cambio_biancheria_giorni?: number
+          cap?: string | null
+          categoria?: string | null
+          check_in_dalle?: string
+          check_out_entro?: string
+          codice_alloggiati?: string | null
+          codice_cir?: string | null
+          codice_istat?: string | null
+          comune?: string | null
+          costo_orario_medio?: number | null
+          created_at?: string
+          created_by?: string | null
+          edifici?: string[]
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          minuti_pulizia_partenza?: number
+          minuti_pulizia_soggiorno?: number
+          modulo?: string
+          nome: string
+          note?: string | null
+          piani?: number | null
+          posti_auto?: number | null
+          provincia?: string | null
+          servizi?: string[]
+          sito?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          cambio_biancheria_giorni?: number
+          cap?: string | null
+          categoria?: string | null
+          check_in_dalle?: string
+          check_out_entro?: string
+          codice_alloggiati?: string | null
+          codice_cir?: string | null
+          codice_istat?: string | null
+          comune?: string | null
+          costo_orario_medio?: number | null
+          created_at?: string
+          created_by?: string | null
+          edifici?: string[]
+          email?: string | null
+          id?: string
+          indirizzo?: string | null
+          minuti_pulizia_partenza?: number
+          minuti_pulizia_soggiorno?: number
+          modulo?: string
+          nome?: string
+          note?: string | null
+          piani?: number | null
+          posti_auto?: number | null
+          provincia?: string | null
+          servizi?: string[]
+          sito?: string | null
+          telefono?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_strutture_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_strutture_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_tariffe: {
+        Row: {
+          al: string
+          chiuso_arrivo: boolean
+          chiuso_partenza: boolean
+          created_at: string
+          created_by: string | null
+          dal: string
+          giorni: number[]
+          id: string
+          modulo: string
+          piano_id: string
+          prezzo: number
+          priorita: number
+          riduzione_singola: number
+          soggiorno_min: number | null
+          stop_vendita: boolean
+          struttura_id: string
+          supplemento_persona: number
+          tipologia_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al: string
+          chiuso_arrivo?: boolean
+          chiuso_partenza?: boolean
+          created_at?: string
+          created_by?: string | null
+          dal: string
+          giorni?: number[]
+          id?: string
+          modulo?: string
+          piano_id: string
+          prezzo: number
+          priorita?: number
+          riduzione_singola?: number
+          soggiorno_min?: number | null
+          stop_vendita?: boolean
+          struttura_id: string
+          supplemento_persona?: number
+          tipologia_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string
+          chiuso_arrivo?: boolean
+          chiuso_partenza?: boolean
+          created_at?: string
+          created_by?: string | null
+          dal?: string
+          giorni?: number[]
+          id?: string
+          modulo?: string
+          piano_id?: string
+          prezzo?: number
+          priorita?: number
+          riduzione_singola?: number
+          soggiorno_min?: number | null
+          stop_vendita?: boolean
+          struttura_id?: string
+          supplemento_persona?: number
+          tipologia_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_tariffe_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tariffe_piano_id_fkey"
+            columns: ["piano_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_piani_tariffari"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tariffe_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tariffe_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tariffe_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_tassa_regole: {
+        Row: {
+          al: string | null
+          comune: string
+          created_at: string
+          created_by: string | null
+          dal: string | null
+          esenzioni: string[]
+          eta_esenzione_sotto: number | null
+          id: string
+          importo_notte: number
+          modulo: string
+          note: string | null
+          notti_max: number | null
+          riduzioni: NonNullable<Json>
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          al?: string | null
+          comune: string
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          esenzioni?: string[]
+          eta_esenzione_sotto?: number | null
+          id?: string
+          importo_notte: number
+          modulo?: string
+          note?: string | null
+          notti_max?: number | null
+          riduzioni?: NonNullable<Json>
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          al?: string | null
+          comune?: string
+          created_at?: string
+          created_by?: string | null
+          dal?: string | null
+          esenzioni?: string[]
+          eta_esenzione_sotto?: number | null
+          id?: string
+          importo_notte?: number
+          modulo?: string
+          note?: string | null
+          notti_max?: number | null
+          riduzioni?: NonNullable<Json>
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_tassa_regole_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tassa_regole_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tassa_regole_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_tipologie: {
+        Row: {
+          attiva: boolean
+          categoria: string
+          codice: string
+          created_at: string
+          created_by: string | null
+          descrizione: string | null
+          dotazioni: string[]
+          id: string
+          modulo: string
+          nome: string
+          occupazione_base: number
+          occupazione_max: number
+          occupazione_min: number
+          ordine: number
+          politiche: string | null
+          prezzo_base: number
+          struttura_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attiva?: boolean
+          categoria?: string
+          codice: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          dotazioni?: string[]
+          id?: string
+          modulo?: string
+          nome: string
+          occupazione_base?: number
+          occupazione_max?: number
+          occupazione_min?: number
+          ordine?: number
+          politiche?: string | null
+          prezzo_base?: number
+          struttura_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attiva?: boolean
+          categoria?: string
+          codice?: string
+          created_at?: string
+          created_by?: string | null
+          descrizione?: string | null
+          dotazioni?: string[]
+          id?: string
+          modulo?: string
+          nome?: string
+          occupazione_base?: number
+          occupazione_max?: number
+          occupazione_min?: number
+          ordine?: number
+          politiche?: string | null
+          prezzo_base?: number
+          struttura_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_tipologie_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tipologie_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_tipologie_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_transfer: {
+        Row: {
+          autista: string | null
+          autista_id: string | null
+          conto_riga_id: string | null
+          costo: number | null
+          created_at: string
+          created_by: string | null
+          data_ora: string
+          direzione: string
+          id: string
+          luogo: string
+          modulo: string
+          note: string | null
+          ospite_nome: string
+          passeggeri: number
+          prenotazione_id: string | null
+          prezzo: number | null
+          riferimento: string | null
+          stato: string
+          struttura_id: string
+          tipo: string
+          updated_at: string
+          updated_by: string | null
+          veicolo: string | null
+        }
+        Insert: {
+          autista?: string | null
+          autista_id?: string | null
+          conto_riga_id?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_ora: string
+          direzione?: string
+          id?: string
+          luogo: string
+          modulo?: string
+          note?: string | null
+          ospite_nome: string
+          passeggeri?: number
+          prenotazione_id?: string | null
+          prezzo?: number | null
+          riferimento?: string | null
+          stato?: string
+          struttura_id: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo?: string | null
+        }
+        Update: {
+          autista?: string | null
+          autista_id?: string | null
+          conto_riga_id?: string | null
+          costo?: number | null
+          created_at?: string
+          created_by?: string | null
+          data_ora?: string
+          direzione?: string
+          id?: string
+          luogo?: string
+          modulo?: string
+          note?: string | null
+          ospite_nome?: string
+          passeggeri?: number
+          prenotazione_id?: string | null
+          prezzo?: number | null
+          riferimento?: string | null
+          stato?: string
+          struttura_id?: string
+          tipo?: string
+          updated_at?: string
+          updated_by?: string | null
+          veicolo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_transfer_autista_id_fkey"
+            columns: ["autista_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_conto_riga_id_fkey"
+            columns: ["conto_riga_id"]
+            isOneToOne: false
+            referencedRelation: "conti_righe"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["arrivo_id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_camere_stato"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_conti_in_casa"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["prenotazione_id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_prenotazione_id_fkey"
+            columns: ["prenotazione_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_prenotazioni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_transfer_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_trattamenti: {
+        Row: {
+          attivo: boolean
+          bevande: boolean
+          cena: boolean
+          codice: string
+          colazione: boolean
+          created_at: string
+          created_by: string | null
+          id: string
+          modulo: string
+          nome: string
+          ordine: number
+          pranzo: boolean
+          servizi_inclusi: string[]
+          struttura_id: string
+          supplemento_adulto: number
+          supplemento_bambino: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          attivo?: boolean
+          bevande?: boolean
+          cena?: boolean
+          codice: string
+          colazione?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome: string
+          ordine?: number
+          pranzo?: boolean
+          servizi_inclusi?: string[]
+          struttura_id: string
+          supplemento_adulto?: number
+          supplemento_bambino?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          attivo?: boolean
+          bevande?: boolean
+          cena?: boolean
+          codice?: string
+          colazione?: boolean
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          modulo?: string
+          nome?: string
+          ordine?: number
+          pranzo?: boolean
+          servizi_inclusi?: string[]
+          struttura_id?: string
+          supplemento_adulto?: number
+          supplemento_bambino?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_trattamenti_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_trattamenti_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_trattamenti_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -13479,6 +17110,13 @@ export type Database = {
             referencedColumns: ["conto_id"]
           },
           {
+            foreignKeyName: "fb_comande_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
             foreignKeyName: "fb_tavoli_cameriere_id_fkey"
             columns: ["cameriere_id"]
             isOneToOne: false
@@ -13691,6 +17329,211 @@ export type Database = {
           stato: string | null
         }
         Relationships: []
+      }
+      hotel_biancheria_stato: {
+        Row: {
+          biancheria_id: string | null
+          cicli_vita: number | null
+          da_sostituire: boolean | null
+          descrizione: string | null
+          disponibili: number | null
+          dotazione: number | null
+          in_lavanderia: number | null
+          lavaggi_medi: number | null
+          lavanderia_30_giorni: number | null
+          modulo: string | null
+          persi_90_giorni: number | null
+          scorta_minima: number | null
+          sotto_scorta: boolean | null
+          struttura_id: string | null
+          tipo: string | null
+        }
+        Insert: {
+          biancheria_id?: string | null
+          cicli_vita?: number | null
+          da_sostituire?: never
+          descrizione?: string | null
+          disponibili?: never
+          dotazione?: number | null
+          in_lavanderia?: number | null
+          lavaggi_medi?: never
+          lavanderia_30_giorni?: never
+          modulo?: string | null
+          persi_90_giorni?: never
+          scorta_minima?: number | null
+          sotto_scorta?: never
+          struttura_id?: string | null
+          tipo?: string | null
+        }
+        Update: {
+          biancheria_id?: string | null
+          cicli_vita?: number | null
+          da_sostituire?: never
+          descrizione?: string | null
+          disponibili?: never
+          dotazione?: number | null
+          in_lavanderia?: number | null
+          lavaggi_medi?: never
+          lavanderia_30_giorni?: never
+          modulo?: string | null
+          persi_90_giorni?: never
+          scorta_minima?: number | null
+          sotto_scorta?: never
+          struttura_id?: string | null
+          tipo?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_biancheria_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_camere_stato: {
+        Row: {
+          arrivo_id: string | null
+          arrivo_oggi: boolean | null
+          arrivo_ora: string | null
+          arrivo_ospite: string | null
+          camera_id: string | null
+          edificio: string | null
+          fuori_servizio: boolean | null
+          fuori_servizio_motivo: string | null
+          modulo: string | null
+          numero: string | null
+          ordine: number | null
+          ospite_nome: string | null
+          ospiti: number | null
+          partenza_oggi: boolean | null
+          partenza_prevista: string | null
+          piano: number | null
+          posti_letto: number | null
+          prenotazione_id: string | null
+          stato: string | null
+          stato_pulizia:
+            Database["public"]["Enums"]["hotel_pulizia_stato"] | null
+          struttura_id: string | null
+          tipologia: string | null
+          tipologia_codice: string | null
+          tipologia_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_camere_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_camere_tipologia_id_fkey"
+            columns: ["tipologia_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_tipologie"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_conti_in_casa: {
+        Row: {
+          arrivo: string | null
+          camera: string | null
+          cena: boolean | null
+          colazione: boolean | null
+          conto_id: string | null
+          modulo: string | null
+          ospite_nome: string | null
+          partenza: string | null
+          pranzo: boolean | null
+          prenotazione_id: string | null
+          residuo: number | null
+          struttura_id: string | null
+          trattamento: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "conti_saldi"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_conto_id_fkey"
+            columns: ["conto_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_insoluti"
+            referencedColumns: ["conto_id"]
+          },
+          {
+            foreignKeyName: "hotel_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_insoluti: {
+        Row: {
+          aperto_at: string | null
+          codice: string | null
+          conto_id: string | null
+          descrizione: string | null
+          giorni: number | null
+          modulo: string | null
+          pagato: number | null
+          partenza: string | null
+          prenotazione_id: string | null
+          residuo: number | null
+          stato_prenotazione:
+            Database["public"]["Enums"]["hotel_prenotazione_stato"] | null
+          struttura_id: string | null
+          totale: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_struttura_id_fkey"
+            columns: ["struttura_id"]
+            isOneToOne: false
+            referencedRelation: "hotel_strutture"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      hotel_ospiti_riepilogo: {
+        Row: {
+          contatto_id: string | null
+          email: string | null
+          modulo: string | null
+          nome: string | null
+          notti: number | null
+          prossimo_arrivo: string | null
+          soggiorni: number | null
+          spesa: number | null
+          telefono: string | null
+          ultimo_soggiorno: string | null
+          vip: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hotel_prenotazioni_contatto_id_fkey"
+            columns: ["contatto_id"]
+            isOneToOne: false
+            referencedRelation: "contatti"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mag_giacenze: {
         Row: {
@@ -14375,6 +18218,278 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      hotel_addebita_notti: {
+        Args: { p_fino: string; p_prenotazione: string }
+        Returns: number
+      }
+      hotel_addebito: {
+        Args: {
+          p_aliquota: number
+          p_descrizione: string
+          p_prenotazione: string
+          p_prezzo: number
+          p_quantita: number
+          p_rif_id: string
+          p_rif_tipo: string
+        }
+        Returns: string
+      }
+      hotel_alloggiati_controllo: {
+        Args: { p_giorno: string; p_struttura: string }
+        Returns: {
+          mancanti: string[]
+          ospite: string
+          prenotazione: string
+          soggiorno_ospite_id: string
+          tipo_alloggiato: string
+        }[]
+      }
+      hotel_alloggiati_file: {
+        Args: { p_giorno: string; p_struttura: string }
+        Returns: string
+      }
+      hotel_alloggiati_segna_inviati: {
+        Args: { p_giorno: string; p_struttura: string }
+        Returns: number
+      }
+      hotel_annulla_prenotazione: {
+        Args: {
+          p_motivo: string
+          p_prenotazione: string
+          p_rimborso_metodo?: Database["public"]["Enums"]["pagamento_metodo"]
+        }
+        Returns: Json
+      }
+      hotel_applica_prezzo: {
+        Args: {
+          p_data: string
+          p_prezzo: number
+          p_struttura: string
+          p_tipologia: string
+        }
+        Returns: string
+      }
+      hotel_ari: {
+        Args: {
+          p_al: string
+          p_canale?: string
+          p_dal: string
+          p_struttura: string
+        }
+        Returns: {
+          chiuso_arrivo: boolean
+          chiuso_partenza: boolean
+          data: string
+          disponibili: number
+          piano: string
+          piano_codice: string
+          prezzo: number
+          soggiorno_min: number
+          stop_vendita: boolean
+          tipologia: string
+          tipologia_codice: string
+        }[]
+      }
+      hotel_assegna_pulizie: {
+        Args: { p_giorno: string; p_persone: string[]; p_struttura: string }
+        Returns: number
+      }
+      hotel_audit_notturno: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      hotel_check_in: {
+        Args: { p_camera?: string; p_prenotazione: string }
+        Returns: string
+      }
+      hotel_check_out: { Args: { p_prenotazione: string }; Returns: Json }
+      hotel_confronto_strutture: {
+        Args: { p_al: string; p_dal: string }
+        Returns: {
+          adr: number
+          camere_disponibili: number
+          camere_vendute: number
+          occupazione_pct: number
+          revpar: number
+          ricavi_totali: number
+          struttura: string
+          struttura_id: string
+          trevpar: number
+        }[]
+      }
+      hotel_conto_prenotazione: {
+        Args: { p_prenotazione: string }
+        Returns: string
+      }
+      hotel_disponibilita: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          bloccate: number
+          camere: number
+          data: string
+          disponibili: number
+          fuori_servizio: number
+          overbooking: boolean
+          tipologia: string
+          tipologia_id: string
+          vendute: number
+        }[]
+      }
+      hotel_fattura_conti: {
+        Args: {
+          p_conti: string[]
+          p_numero: string
+          p_organizzazione: string
+          p_scadenza?: string
+        }
+        Returns: string
+      }
+      hotel_forecast: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          camere: number
+          data: string
+          occupazione_pct: number
+          prevista_pct: number
+          previste: number
+          vendute: number
+        }[]
+      }
+      hotel_front_office: {
+        Args: { p_giorno?: string; p_struttura: string }
+        Returns: Json
+      }
+      hotel_genera_pulizie: {
+        Args: { p_giorno?: string; p_struttura: string }
+        Returns: number
+      }
+      hotel_genera_pulizie_tutte: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      hotel_in_casa: { Args: { p_camera: string }; Returns: string }
+      hotel_istat_movimento: {
+        Args: { p_giorno: string; p_struttura: string }
+        Returns: {
+          arrivi: number
+          italiano: boolean
+          partenze: number
+          presenze: number
+          provenienza: string
+        }[]
+      }
+      hotel_kpi: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: Json
+      }
+      hotel_no_show: { Args: { p_prenotazione: string }; Returns: number }
+      hotel_opzioni_scadute: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      hotel_ospite_profilo: { Args: { p_contatto: string }; Returns: Json }
+      hotel_pasti_previsti: {
+        Args: { p_giorno?: string; p_struttura: string }
+        Returns: {
+          camera: string
+          ospite: string
+          pasto: string
+          persone: number
+          trattamento: string
+        }[]
+      }
+      hotel_prezzo_notte: {
+        Args: {
+          p_data: string
+          p_persone: number
+          p_piano: string
+          p_tipologia: string
+        }
+        Returns: {
+          chiuso_arrivo: boolean
+          chiuso_partenza: boolean
+          prezzo: number
+          soggiorno_min: number
+          stop_vendita: boolean
+        }[]
+      }
+      hotel_produzione_intermediari: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          annullate: number
+          commissione: number
+          commissione_pct: number
+          intermediario_id: string
+          nome: string
+          notti: number
+          prenotazioni: number
+          ricavo: number
+          tipo: string
+        }[]
+      }
+      hotel_quota: {
+        Args: {
+          p_adulti?: number
+          p_arrivo: string
+          p_bambini?: number
+          p_canale?: string
+          p_partenza: string
+          p_piano?: string
+          p_prenotata_il?: string
+          p_struttura: string
+          p_tipologia: string
+          p_trattamento?: string
+        }
+        Returns: Json
+      }
+      hotel_reparto_riga: {
+        Args: { p_rif: string; p_rif_id: string }
+        Returns: string
+      }
+      hotel_rileva_pickup: { Args: { p_giorno?: string }; Returns: number }
+      hotel_suggerimenti_tariffe: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          data: string
+          occupazione_pct: number
+          prevista_pct: number
+          prezzo_attuale: number
+          prezzo_concorrenti: number
+          prezzo_suggerito: number
+          regola: string
+          tipologia: string
+          tipologia_id: string
+          variazione_pct: number
+        }[]
+      }
+      hotel_tassa_calcola: {
+        Args: { p_prenotazione: string }
+        Returns: {
+          esenzione: string
+          eta: number
+          importo: number
+          nome: string
+          notti: number
+          notti_tassabili: number
+          ospite_id: string
+        }[]
+      }
+      hotel_tassa_rendiconto: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          arrivo: string
+          codice: string
+          dovuto: number
+          esenzioni: string
+          notti: number
+          notti_tassabili: number
+          ospite: string
+          ospiti: number
+          partenza: string
+          prenotazione_id: string
+          riscosso: number
+        }[]
+      }
       html_escape: { Args: { p: string }; Returns: string }
       invia_campagna: { Args: { p_campagna: string }; Returns: number }
       invia_campagne_programmate: {
@@ -14516,6 +18631,26 @@ export type Database = {
         Returns: string[]
       }
       seg_fb_ricorrenze: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_abituali: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_anniversari: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_compleanni: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_partiti: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }
@@ -14763,6 +18898,23 @@ export type Database = {
         | "annullata"
       gara_tipologia: "lavori" | "servizi" | "forniture"
       gift_card_stato: "attiva" | "annullata"
+      hotel_prenotazione_stato:
+        | "richiesta"
+        | "opzionata"
+        | "confermata"
+        | "in_soggiorno"
+        | "partita"
+        | "annullata"
+        | "no_show"
+      hotel_pulizia_stato: "da_pulire" | "in_pulizia" | "pulita" | "verificata"
+      hotel_pulizia_tipo:
+        | "partenza"
+        | "soggiorno"
+        | "ordinaria"
+        | "straordinaria"
+        | "cambio_biancheria"
+        | "cambio_asciugamani"
+        | "profonda"
       lead_fonte: "fiera" | "referral" | "linkedin" | "web" | "evento" | "altro"
       mag_inventario_stato: "aperto" | "chiuso"
       mag_movimento_tipo:
@@ -14856,6 +19008,8 @@ export type Database = {
         | "emergenza"
         | "pericolo"
         | "danno"
+        | "furto"
+        | "non_conformita"
       sinistro_stato: "aperto" | "in_lavorazione" | "liquidato" | "chiuso"
       tassa_stato: "da_pagare" | "pagata" | "scaduta"
       tipo_contratto:
@@ -15811,6 +19965,25 @@ export const Constants = {
       ],
       gara_tipologia: ["lavori", "servizi", "forniture"],
       gift_card_stato: ["attiva", "annullata"],
+      hotel_prenotazione_stato: [
+        "richiesta",
+        "opzionata",
+        "confermata",
+        "in_soggiorno",
+        "partita",
+        "annullata",
+        "no_show",
+      ],
+      hotel_pulizia_stato: ["da_pulire", "in_pulizia", "pulita", "verificata"],
+      hotel_pulizia_tipo: [
+        "partenza",
+        "soggiorno",
+        "ordinaria",
+        "straordinaria",
+        "cambio_biancheria",
+        "cambio_asciugamani",
+        "profonda",
+      ],
       lead_fonte: ["fiera", "referral", "linkedin", "web", "evento", "altro"],
       mag_inventario_stato: ["aperto", "chiuso"],
       mag_movimento_tipo: [
@@ -15926,6 +20099,8 @@ export const Constants = {
         "emergenza",
         "pericolo",
         "danno",
+        "furto",
+        "non_conformita",
       ],
       sinistro_stato: ["aperto", "in_lavorazione", "liquidato", "chiuso"],
       tassa_stato: ["da_pagare", "pagata", "scaduta"],
