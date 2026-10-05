@@ -11954,6 +11954,7 @@ export type Database = {
           modulo: string
           note: string | null
           prenotazione_id: string | null
+          proprietario: string | null
           restituito_il: string | null
           spedizione: string | null
           stato: string
@@ -11979,6 +11980,7 @@ export type Database = {
           modulo?: string
           note?: string | null
           prenotazione_id?: string | null
+          proprietario?: string | null
           restituito_il?: string | null
           spedizione?: string | null
           stato?: string
@@ -12004,6 +12006,7 @@ export type Database = {
           modulo?: string
           note?: string | null
           prenotazione_id?: string | null
+          proprietario?: string | null
           restituito_il?: string | null
           spedizione?: string | null
           stato?: string
@@ -18266,6 +18269,27 @@ export type Database = {
         }
         Returns: string
       }
+      hotel_ari: {
+        Args: {
+          p_al: string
+          p_canale?: string
+          p_dal: string
+          p_struttura: string
+        }
+        Returns: {
+          chiuso_arrivo: boolean
+          chiuso_partenza: boolean
+          data: string
+          disponibili: number
+          piano: string
+          piano_codice: string
+          prezzo: number
+          soggiorno_min: number
+          stop_vendita: boolean
+          tipologia: string
+          tipologia_codice: string
+        }[]
+      }
       hotel_assegna_pulizie: {
         Args: { p_giorno: string; p_persone: string[]; p_struttura: string }
         Returns: number
@@ -18450,6 +18474,22 @@ export type Database = {
           ospite_id: string
         }[]
       }
+      hotel_tassa_rendiconto: {
+        Args: { p_al: string; p_dal: string; p_struttura: string }
+        Returns: {
+          arrivo: string
+          codice: string
+          dovuto: number
+          esenzioni: string
+          notti: number
+          notti_tassabili: number
+          ospite: string
+          ospiti: number
+          partenza: string
+          prenotazione_id: string
+          riscosso: number
+        }[]
+      }
       html_escape: { Args: { p: string }; Returns: string }
       invia_campagna: { Args: { p_campagna: string }; Returns: number }
       invia_campagne_programmate: {
@@ -18607,6 +18647,10 @@ export type Database = {
         Returns: string[]
       }
       seg_hotel_inattivi: {
+        Args: { p_modulo: string; p_parametri: Json }
+        Returns: string[]
+      }
+      seg_hotel_partiti: {
         Args: { p_modulo: string; p_parametri: Json }
         Returns: string[]
       }

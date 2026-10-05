@@ -116,30 +116,8 @@ export const ALLERGENI: { valore: string; label: string }[] = [
 ]
 export const etichettaAllergene = (v: string) => ALLERGENI.find((a) => a.valore === v)?.label ?? v
 
-export const fmtEuro = (n: number | string | null | undefined, decimali = 2) =>
-  n === null || n === undefined || n === '' ? '—'
-    : new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: decimali,
-        maximumFractionDigits: decimali }).format(Number(n))
-
-export const fmtNumero = (n: number | string | null | undefined, decimali = 0) =>
-  n === null || n === undefined || n === '' ? '—'
-    : new Intl.NumberFormat('it-IT', { maximumFractionDigits: decimali }).format(Number(n))
-
-export const fmtOra = (iso: string | null | undefined) =>
-  iso ? new Date(iso).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '—'
-
-export const fmtData = (iso: string | null | undefined) =>
-  iso ? new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '—'
-
-export const fmtGiornoOra = (iso: string | null | undefined) =>
-  iso ? new Date(iso).toLocaleString('it-IT', { weekday: 'short', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—'
+export { fmtEuro, fmtNumero, fmtOra, fmtData, fmtGiornoOra, oggiIso } from '@/lib/formato'
 
 /** Minuti trascorsi da un istante. */
 export const minutiDa = (iso: string | null | undefined, ora = Date.now()) =>
   iso ? Math.max(0, Math.floor((ora - new Date(iso).getTime()) / 60000)) : 0
-
-/** Data locale AAAA-MM-GG (fuso del browser, che in sala è quello del locale). */
-export const oggiIso = () => {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-}
