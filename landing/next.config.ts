@@ -42,12 +42,14 @@ const config: NextConfig = {
     return [{ source: "/:path*", headers: INTESTAZIONI }];
   },
   /**
-   * Un solo indirizzo indicizzato. `www.pmiflow.eu` e i due host `.it` rimandano con 308
-   * a `https://pmiflow.eu`, conservando il percorso. I redirect di dominio si possono
+   * Un solo indirizzo indicizzato. `www.pmiflow.eu`, i due host `.it` e l'indirizzo di
+   * produzione su `vercel.app` (un doppione del sito, come fa evalisdeck) rimandano con
+   * 308 a `https://pmiflow.eu`, conservando il percorso. Le anteprime
+   * (`pmiflow-landing-<hash>…vercel.app`) non combaciano e restano raggiungibili. I redirect di dominio si possono
    * dare anche dal pannello di Vercel: qui stanno nel codice, così si rivedono in un diff.
    */
   async redirects() {
-    return ["www.pmiflow.eu", "pmiflow.it", "www.pmiflow.it"].map((host) => ({
+    return ["www.pmiflow.eu", "pmiflow.it", "www.pmiflow.it", "pmiflow-landing.vercel.app"].map((host) => ({
       source: "/:path*",
       has: [{ type: "host" as const, value: host }],
       destination: "https://pmiflow.eu/:path*",
