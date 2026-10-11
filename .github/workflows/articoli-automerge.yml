@@ -64,6 +64,26 @@ jobs:
               gh pr comment "$N" --body "Unione automatica sospesa: il controllo editoriale o il build non passano. Vedi l'esecuzione ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
               echo "::endgroup::"; continue
             fi
-            gh pr merge "$N" --merge --delete-branch && echo "PR #$N unita"
+            # Due PR di articolo toccano entrambe `landing/redazione/piano.yaml`.
+            # Finché se ne unisce una per volta non succede niente; ma se una resta
+            # indietro (etichetta `fermo`, anteprima rossa, correzioni del titolare)
+            # la successiva nasce comunque e la prima va in conflitto. Senza questo
+            # riallineamento resterebbe aperta per sempre, perché nessuno fa rebase.
+            if ! gh pr merge "$N" --merge --delete-branch; then
+              echo "PR #$N: unione respinta, provo il riallineamento su main"
+              RAMO=$(gh pr view "$N" --json headRefName --jq .headRefName)
+              git fetch -q origin main
+              if git rebase -q origin/main && git push -q --force-with-lease origin "HEAD:$RAMO"; then
+                gh pr edit "$N" --remove-label da-riallineare >/dev/null 2>&1 || true
+                echo "PR #$N riallineata: si unirà al giro di domani"
+              else
+                git rebase --abort 2>/dev/null || true
+                gh pr edit "$N" --add-label da-riallineare >/dev/null 2>&1 || true
+                gh pr comment "$N" --body "Unione sospesa: questa PR è in conflitto con \`main\` e il riallineamento automatico non è riuscito. Di solito è \`landing/redazione/piano.yaml\`, toccato anche da un'altra PR di articolo. Va risolto a mano, poi l'unione automatica riprende da sola."
+                echo "PR #$N: conflitto non risolvibile da solo, etichettata da-riallineare"
+              fi
+            else
+              echo "PR #$N unita"
+            fi
             echo "::endgroup::"
           done

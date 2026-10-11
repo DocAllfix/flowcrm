@@ -71,6 +71,36 @@ jobs:
             --max-turns 90
             --allowedTools "Read,Glob,Grep,Skill,WebSearch,WebFetch,Edit(landing/src/contenuti/blog/**),Write(landing/src/contenuti/blog/**),Edit(landing/public/blog/**),Write(landing/public/blog/**),Bash(node landing/scripts/redazione.mjs:*),Bash(npm --prefix landing run verifica-articoli:*),Bash(rm landing/src/contenuti/blog/:*),Bash(ls:*)"
 
+      # Quando la scrittura fallisce, il registro dice solo «is_error: true» e non
+      # perché. L'1, il 5 e l'8 ottobre 2026 è successo tre volte di fila: per
+      # capirlo è servita un'esecuzione manuale a pagamento, e la causa era a monte
+      # (`claude-code-action@v1` è un'etichetta mobile, una sua versione si era
+      # rotta). Questo passo mette la causa nel registro la prima volta.
+      - name: Diagnosi, se la scrittura fallisce
+        if: failure() && steps.scrittura.outcome == 'failure'
+        env:
+          ESECUZIONE: ${{ steps.scrittura.outputs.execution_file }}
+        run: |
+          {
+            echo "## Perché la scrittura è fallita"
+            echo ""
+            echo "Versione della CLI installata dall'azione: \`$(claude --version 2>/dev/null || echo sconosciuta)\`."
+            echo ""
+            echo "Se qui sotto l'agente risulta fermato in pochi secondi, con costo zero e"
+            echo "senza uso del modello, il guasto NON è nei contenuti: è nell'azione o nel"
+            echo "token. Confronta la versione qui sopra con quella dell'ultima esecuzione"
+            echo "riuscita prima di cercare altrove."
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${ESECUZIONE:-}" ] && [ -f "$ESECUZIONE" ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            tail -c 15000 "$ESECUZIONE" >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            tail -c 15000 "$ESECUZIONE"
+          else
+            echo "Nessun file di esecuzione: l'agente si è fermato prima di scriverlo." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       # Solo ciò che l'agente poteva toccare: un articolo nuovo (più eventuali immagini) e
       # il piano. Qualunque altra modifica ferma tutto.
       - name: Cosa è stato scritto

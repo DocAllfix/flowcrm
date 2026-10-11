@@ -1,0 +1,125 @@
+name: Sentinella della redazione
+
+# Perché esiste.
+# Dal 1° all'11 ottobre 2026 la redazione del blog ha fallito TRE esecuzioni
+# programmate di fila e non se n'è accorto nessuno: la mail al titolare parte solo
+# quando una PR nasce (redazione.yml, passo «Mail al titolare»), quindi un guasto
+# PRIMA della PR è muto per definizione. La causa era a monte — `claude-code-action@v1`
+# è un'etichetta mobile e una sua versione si era rotta — ed è stata corretta a monte,
+# senza che da noi cambiasse niente. Cioè: la prossima volta che succede, succede
+# ancora, e l'unica difesa è accorgersene in un giorno invece che in undici.
+#
+# Questa sentinella apre una issue (che manda l'email a chi segue il repository) e la
+# chiude da sola quando torna tutto a posto. Tre segnali, dal più rapido al più lento:
+#
+#   1. l'ULTIMA esecuzione di redazione.yml è finita male → si sa il giorno dopo;
+#   2. nessuna PR di articolo da più di 8 giorni → rete di sicurezza se il flusso
+#      «riesce» ma non produce (l'agente esce senza scrivere niente);
+#   3. una PR di articolo aperta da più di 5 giorni → si è incagliata (conflitto,
+#      anteprima Vercel rossa, controllo editoriale che non passa).
+#
+# Il primo è il segnale PRIMARIO perché il nostro agente gira dentro un flusso GitHub:
+# un flusso che fallisce si vede giorni prima di uno che smette di produrre.
+
+on:
+  schedule:
+    - cron: "0 7 * * *" # ogni mattina, 07:00 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: sentinella-redazione
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+  actions: read
+
+jobs:
+  controlla:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      TITOLO: "La redazione del blog è ferma"
+    steps:
+      - name: Raccogli i motivi
+        id: motivi
+        run: |
+          set -euo pipefail
+          ADESSO=$(date -u +%s)
+          MOTIVI=""
+
+          # ── 1. esito dell'ultima esecuzione della redazione ─────────────
+          ULTIMA=$(gh run list --repo "$REPO" --workflow=redazione.yml --limit 1 \
+            --json conclusion,status,createdAt,url --jq '.[0] // empty')
+          if [ -n "$ULTIMA" ]; then
+            ESITO=$(echo "$ULTIMA" | jq -r '.conclusion // ""')
+            STATO=$(echo "$ULTIMA" | jq -r '.status')
+            URL=$(echo "$ULTIMA" | jq -r '.url')
+            QUANDO=$(echo "$ULTIMA" | jq -r '.createdAt' | cut -c1-10)
+            if [ "$STATO" = "completed" ] && [ "$ESITO" != "success" ]; then
+              MOTIVI="${MOTIVI}- L'ultima esecuzione della redazione (${QUANDO}) è finita con esito **${ESITO}**: ${URL}"$'\n'
+            fi
+          else
+            MOTIVI="${MOTIVI}- Non risulta nessuna esecuzione di \`redazione.yml\`."$'\n'
+          fi
+
+          # ── 2. da quanto non nasce una PR di articolo ───────────────────
+          NASCITA=$(gh pr list --repo "$REPO" --label articolo-automatico --state all --limit 1 \
+            --json createdAt --jq '.[0].createdAt // empty')
+          if [ -z "$NASCITA" ]; then
+            MOTIVI="${MOTIVI}- Non è mai nata una PR di articolo: la redazione non ha ancora prodotto niente."$'\n'
+          else
+            GIORNI=$(( (ADESSO - $(date -u -d "$NASCITA" +%s)) / 86400 ))
+            if [ "$GIORNI" -gt 8 ]; then
+              MOTIVI="${MOTIVI}- Nessuna PR di articolo da **${GIORNI} giorni** (l'ultima è del $(echo "$NASCITA" | cut -c1-10)); ne sono attesi due a settimana."$'\n'
+            fi
+          fi
+
+          # ── 3. PR incagliate ────────────────────────────────────────────
+          INCAGLIATE=$(gh pr list --repo "$REPO" --label articolo-automatico --state open \
+            --json number,createdAt,url --jq \
+            "[.[] | select(($ADESSO - (.createdAt | fromdateiso8601)) > 432000)] | .[] | \"- La PR \(.url) è aperta da più di 5 giorni: si è incagliata.\"")
+          if [ -n "$INCAGLIATE" ]; then
+            MOTIVI="${MOTIVI}${INCAGLIATE}"$'\n'
+          fi
+
+          if [ -n "$MOTIVI" ]; then
+            echo "ferma=si" >> "$GITHUB_OUTPUT"
+            { echo "testo<<FINE"; echo "$MOTIVI"; echo "FINE"; } >> "$GITHUB_OUTPUT"
+            echo "$MOTIVI"
+          else
+            echo "ferma=no" >> "$GITHUB_OUTPUT"
+            echo "tutto a posto"
+          fi
+
+      - name: Apri o aggiorna l'avviso
+        if: steps.motivi.outputs.ferma == 'si'
+        run: |
+          set -euo pipefail
+          CORPO=$(printf '%s\n' \
+            "La redazione del blog non sta funzionando. Motivi rilevati stamattina:" \
+            "" \
+            "${{ steps.motivi.outputs.testo }}" \
+            "Cosa guardare per primo: l'esito dell'ultima esecuzione di [redazione.yml](${{ github.server_url }}/${{ github.repository }}/actions/workflows/redazione.yml). Se il passo «Scrittura» fallisce in pochi secondi senza costo e senza uso del modello, il guasto è nell'azione \`anthropics/claude-code-action@v1\` o nel token, non nei contenuti: il passo «Diagnosi» della stessa esecuzione stampa l'output dell'agente." \
+            "" \
+            "Questa issue è aperta dalla sentinella e **si chiude da sola** quando la redazione riparte.")
+          ESISTE=$(gh issue list --repo "$REPO" --label redazione-ferma --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$ESISTE" ]; then
+            gh issue edit "$ESISTE" --repo "$REPO" --body "$CORPO"
+            echo "avviso #$ESISTE aggiornato"
+          else
+            gh issue create --repo "$REPO" --title "$TITOLO" --label redazione-ferma --body "$CORPO"
+          fi
+
+      - name: Chiudi l'avviso se è tornato tutto a posto
+        if: steps.motivi.outputs.ferma == 'no'
+        run: |
+          set -euo pipefail
+          for N in $(gh issue list --repo "$REPO" --label redazione-ferma --state open --json number --jq '.[].number'); do
+            gh issue close "$N" --repo "$REPO" --comment "La redazione è ripartita: ultima esecuzione riuscita e PR di articolo nei tempi. Chiusa dalla sentinella."
+            echo "avviso #$N chiuso"
+          done

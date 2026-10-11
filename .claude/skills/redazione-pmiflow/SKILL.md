@@ -31,6 +31,16 @@ scrivi come se non dovesse correggere niente.
    del piano (slug, settore, titolo provvisorio, parola chiave, correlate, intento,
    angolo) e la **data** di uscita già calcolata. Non scegliere un'altra voce né un'altra
    data. Se `voce` è `null`, fermati senza scrivere niente.
+
+   **Se quella voce non si può scrivere** — la fonte ufficiale non è raggiungibile, i
+   numeri non sono verificabili, l'argomento si è rivelato fuori portata — non fermare
+   l'esecuzione e non ripiegare su un'altra voce a mano: esegui
+   `node landing/scripts/redazione.mjs sospendi <slug> "<motivo>"` e poi di nuovo
+   `prossimo`, che ti darà la successiva. La voce va in fondo alla coda e si riprova; al
+   terzo tentativo diventa `sospesa` e resta nel piano col suo `motivo`, da leggere.
+   **Fallo una volta sola per esecuzione**: se anche la seconda voce non si può
+   scrivere, fermati senza scrivere niente — due voci impossibili di fila non sono un
+   problema della voce, sono un problema a monte, e lo deve vedere una persona.
 2. **Ricerca** (massimo 8 ricerche e 8 pagine lette):
    - cerca la parola chiave su WebSearch e guarda cosa c'è già nei primi risultati: il tuo
      articolo deve rispondere meglio e più concretamente, non ripeterli;
