@@ -59,6 +59,48 @@ const COLONNE = [
  * Si stampano quando esistono, e finché mancano `verifica-seo.mjs` lo segnala invece
  * di lasciar passare un piede vuoto.
  */
+/**
+ * La firma di chi ha sviluppato PMIFlow, in fondo a ogni pagina pubblica.
+ *
+ * ⚠️ Il collegamento è DOFOLLOW di proposito: niente `nofollow`, `sponsored` né `ugc`.
+ * Non è un refuso e non va «corretto» da chi passa di qui: è una scelta del titolare,
+ * che possiede entrambi i siti. `rel` porta solo `noopener`, che serve alla sicurezza
+ * di `target="_blank"` e non tocca l'indicizzazione.
+ *
+ * Il tracciato principale del marchio è quasi nero (#14171c) e sul fondo notte del
+ * piede sparirebbe. Non va messo su una piastrella chiara (prima stesura, scartata):
+ * la variante per fondi scuri la indica Axialoop stessa — quella parte prende
+ * `currentColor`, quindi il colore del testo accanto, mentre blu e verde restano i
+ * loro. Così il marchio si vede senza essere ritinto a nostro gusto.
+ *
+ * Il nome è TESTO, non parte dell'immagine: un'immagine non si legge né si traduce.
+ *
+ * L'`aria-label` RIPETE il testo visibile prima di aggiungere il resto, e non è una
+ * ridondanza: WCAG 2.5.3 «Label in Name» chiede che il nome accessibile contenga
+ * l'etichetta visibile. Chi usa i comandi vocali dice quello che legge — «powered by
+ * Axialoop» — e con un nome che non comincia così il collegamento non si attiva.
+ */
+function FirmaAxialoop() {
+  return (
+    <a
+      href="https://www.axialoop.com/it"
+      target="_blank"
+      rel="noopener"
+      aria-label="powered by Axialoop: sito di Axialoop, che ha sviluppato PMIFlow (si apre in una nuova scheda)"
+      className="inline-flex shrink-0 items-center gap-2 py-1 text-[0.9375rem] hover:text-carta"
+    >
+      <svg viewBox="0 0 497 494" className="size-4.5 shrink-0" aria-hidden="true">
+          <path fill="currentColor" fillRule="evenodd" d="M247 4 L139 67 L137 161 L5 238 L4 348 L210 470 L251 490 L492 350 L493 238 L358 158 L358 67 Z M245 231 L248 243 L347 301 L250 358 L197 328 L197 260 Z" />
+          <path fill="#5683a9" d="M428 317 L377 290 L256 362 L307 389 L428 320 Z M142 293 L190 323 L193 322 L192 265 Z M10 245 L10 347 L201 459 L246 482 L246 428 L62 321 L60 274 Z M361 231 L355 240 L308 269 L308 272 L349 296 L376 283 L376 241 Z M360 167 L360 224 L434 267 L484 240 Z M246 75 L199 101 L199 188 L246 161 Z M148 67 L193 95 L204 92 L248 66 L301 96 L350 69 L250 9 Z" />
+          <path fill="#7cbb84" d="M70 317 L248 422 L297 395 L290 388 L120 289 Z M382 246 L383 284 L432 311 L432 273 Z M188 193 L138 166 L17 236 L15 240 L66 267 L183 199 Z M252 76 L253 240 L300 265 L300 103 Z M144 75 L144 159 L193 187 L193 103 Z" />
+      </svg>
+      <span>
+        powered by <span className="font-semibold">Axialoop</span>
+      </span>
+    </a>
+  );
+}
+
 export function Piede() {
   const anno = LEGALI_AGGIORNATI_AL.slice(0, 4);
   const legali = datiImpresa();
@@ -87,7 +129,8 @@ export function Piede() {
         </nav>
       </div>
       <div className="border-t border-filo-notte">
-        <p className="mx-auto w-full max-w-6xl px-4 py-6 text-[0.8125rem] leading-relaxed sm:px-6">
+        <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-8 gap-y-4 px-4 py-6 sm:px-6">
+        <p className="text-[0.8125rem] leading-relaxed">
           © {anno} PMIFlow
           {legali.map(([etichetta, valore]) => (
             <span key={etichetta}>
@@ -110,6 +153,8 @@ export function Piede() {
             {IMPRESA.email}
           </a>
         </p>
+        <FirmaAxialoop />
+        </div>
       </div>
     </footer>
   );
