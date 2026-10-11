@@ -14,7 +14,7 @@ import path from "node:path";
  * cambiano senza ridisegnare. Il disegno in sé è decorativo (`aria-hidden`): quello
  * che dice sta già scritto accanto.
  *
- * Sulle sezioni notte il cotto va schiarito (#e67e54): lo fa `.diagramma-notte` in
+ * Sulle sezioni notte il cotto va schiarito (#e77c5b): lo fa `.diagramma-notte` in
  * globals.css, perché `fill` da CSS vince sull'attributo di presentazione.
  */
 type Nome = "istanza-privata" | "moduli" | "backup";

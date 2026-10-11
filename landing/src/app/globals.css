@@ -2,29 +2,42 @@
 
 /* ═══════════════════════════════════════════════════════════════════
    PMIFlow · token di marca.
-   Riferimento: i manifesti Olivetti. Rosso cotto su carta calda, inchiostro
+   Riferimento: i manifesti Olivetti. Rosso cotto su carta, inchiostro
    blu-nero, un solo blocco pieno di colore per pagina (la chiamata finale).
    Contrasti CALCOLATI (OKLCH → sRGB → WCAG 2.x), non stimati:
-     inchiostro/carta 16.6 · tenue/carta 6.25 · bianco/cotto 5.2 ·
-     cotto/carta 4.98 · carta/notte 17.7 · cotto-notte/notte 6.56
+     inchiostro/carta 16.58 · tenue/carta 6.25 · bianco/cotto 5.70 ·
+     cotto/carta 5.46 · carta/notte 17.68 · cotto-notte/notte 6.54
    NON sono i colori di default dell'app (#ff5c35 / #33475b): quelli sono
    i colori di HubSpot, e un CRM nei colori di HubSpot sembra un clone.
+
+   ── Perché la carta non è più calda (11/10/2026) ──────────────────
+   Era `oklch(… 85)`, cioè crema. Il riferimento evalisacademy.it — altro
+   progetto dello stesso committente, e il modello dichiarato di sei
+   componenti di questa landing — ha il fondo a tinta 78 e l'accento a 40.
+   Il nostro accento stava a 38: DUE GRADI dal loro. Misurato: due siti
+   indistinguibili al primo sguardo, e il fondo pesa più dell'accento
+   perché occupa quasi tutto lo schermo.
+   Quindi la carta passa a tinta 255 (appena fredda, la stessa famiglia
+   dell'inchiostro) e il cotto da 38 a 34 con un filo di luce in meno: la
+   distanza percettiva dall'accento di Academy sale del 19% e l'arancione
+   resta il nostro. Tutti i contrasti qui sopra sono SALITI, nessuno è
+   scceso: ricalcolati, non sperati.
    ═══════════════════════════════════════════════════════════════════ */
 
 @theme {
-  --color-carta: oklch(0.985 0.006 85);
-  --color-carta-2: oklch(0.962 0.009 85);
-  --color-foglio: oklch(0.995 0.003 85); /* il "bianco" delle carte: mai #fff */
+  --color-carta: oklch(0.985 0.003 255);
+  --color-carta-2: oklch(0.958 0.004 255);
+  --color-foglio: oklch(0.995 0.002 255); /* il "bianco" delle carte: mai #fff */
   --color-inchiostro: oklch(0.22 0.025 255);
   --color-tenue: oklch(0.48 0.02 255);
-  --color-filo: oklch(0.905 0.008 85);
-  --color-cotto: oklch(0.55 0.155 38);
-  --color-cotto-scuro: oklch(0.47 0.14 38);
+  --color-filo: oklch(0.9 0.004 255);
+  --color-cotto: oklch(0.53 0.16 34);
+  --color-cotto-scuro: oklch(0.455 0.145 34);
   --color-notte: oklch(0.19 0.02 255);
   --color-notte-2: oklch(0.235 0.022 255);
   --color-filo-notte: oklch(0.32 0.02 255);
   --color-tenue-notte: oklch(0.76 0.012 255);
-  --color-cotto-notte: oklch(0.7 0.14 42);
+  --color-cotto-notte: oklch(0.7 0.14 38);
 
   --font-sans: var(--font-archivo), "Segoe UI", system-ui, sans-serif;
 
@@ -134,7 +147,7 @@
     transition-timing-function: var(--ease-uscita);
   }
   .bottone:active { transform: translateY(1px); }
-  .bottone-primario { background: var(--color-cotto); color: oklch(0.99 0.004 85); }
+  .bottone-primario { background: var(--color-cotto); color: oklch(0.99 0.002 255); }
   .bottone-primario:hover { background: var(--color-cotto-scuro); }
   .bottone-secondario { box-shadow: inset 0 0 0 1px var(--color-inchiostro); color: var(--color-inchiostro); }
   .bottone-secondario:hover { background: var(--color-inchiostro); color: var(--color-carta); }
@@ -266,9 +279,9 @@
   .diagramma-notte .etichetta-tenue { color: var(--color-tenue-notte); }
   .diagramma .etichetta-accento { color: var(--color-cotto); }
   .diagramma .etichetta-su-pieno { color: var(--color-carta); }
-  .diagramma-notte [fill="#ba4823"] { fill: var(--color-cotto-notte); }
-  .diagramma-notte [stroke="#ba4823"] { stroke: var(--color-cotto-notte); }
-  .diagramma-notte [fill="#f6e4dc"] { fill: oklch(0.7 0.14 42 / 0.14); }
+  .diagramma-notte [fill="#b53e23"] { fill: var(--color-cotto-notte); }
+  .diagramma-notte [stroke="#b53e23"] { stroke: var(--color-cotto-notte); }
+  .diagramma-notte [fill="#fddfd7"] { fill: oklch(0.7 0.14 38 / 0.14); }
   .diagramma-notte .etichetta-accento { color: var(--color-cotto-notte); }
   .diagramma-notte .etichetta-su-pieno { color: var(--color-notte); }
 }

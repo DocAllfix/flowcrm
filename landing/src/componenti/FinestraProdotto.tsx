@@ -2,10 +2,17 @@
  * La finestra del prodotto nell'hero: il programma dentro un browser, con il menu
  * laterale che si può davvero usare (Cruscotto · Trattative · Cantieri).
  *
- * Preso dal riferimento `FormazioneEvalis` (evalisacademy.it): lì la dashboard sta in
- * una cornice di browser e il menu è esplorabile, ed è ciò che il committente indica
- * come «la schermata del sistema». Qui in più l'indirizzo dice il nostro
- * differenziante: `rossi-impianti.pmiflow.it`, il nome e il logo sono del cliente.
+ * ⚠️ La cornice di browser NON c'è più (11/10/2026). Era presa dal riferimento
+ * `FormazioneEvalis` (evalisacademy.it) — barra grigia, tre pallini, indirizzo al
+ * centro — ed era il gesto più riconoscibile di quel sito: due progetti dello stesso
+ * committente che si somigliavano al primo sguardo. Il menu esplorabile resta, perché
+ * quello è ciò che il committente indica come «la schermata del sistema».
+ *
+ * L'indirizzo `rossi-impianti.pmiflow.it` non è sparito: è diventato una didascalia
+ * sopra il pannello, quindi il differenziante (dominio, nome e logo del cliente) si
+ * legge ancora. Il pannello esce dal bordo destro invece di galleggiare con l'ombra:
+ * la sezione dell'eroe ha già `overflow-hidden`, è il taglio che lo rende credibile —
+ * non la fotografia di un browser, ma il programma.
  *
  * ZERO JavaScript: le viste sono tre radio e `:has()` in globals.css (`.finestra`).
  * Le etichette esistono due volte, nel menu laterale (da tablet in su) e in una barra
@@ -154,21 +161,24 @@ export function FinestraProdotto() {
         ))}
       </div>
 
+      {/* L'indirizzo dell'istanza era dentro una barra del browser; ora è una
+          didascalia. Dice la stessa cosa — il dominio è del cliente — ma non
+          finge un browser che non c'è: il pannello sotto è il programma. */}
+      <p className="mb-3 flex items-center gap-2 font-mono text-[0.8125rem] text-tenue">
+        <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-cotto" />
+        <span>rossi-impianti.pmiflow.it</span>
+      </p>
+
       <div className="[container-type:inline-size]">
         <div
           aria-label="Anteprima di PMIFlow nell'istanza di un cliente, Rossi Impianti"
-          className="overflow-hidden rounded-[1.1em] border border-filo bg-carta text-[clamp(6.5px,1.95cqw,11px)] shadow-[0_2.4em_4.8em_-2.4em_oklch(0.22_0.025_255/0.35),0_0.2em_0.6em_-0.2em_oklch(0.22_0.025_255/0.12)]"
+          // Il taglio è VERO: il margine negativo porta il bordo destro fino al
+          // bordo della finestra, non 40px più in là. `max(0px, …)` lo azzera
+          // sotto i 72rem (la larghezza del contenitore dell'eroe) e `1.5rem` è
+          // il suo `sm:px-6`: senza quei due termini il pannello o resta corto
+          // o sfora dove non deve. La sezione dell'eroe ha già `overflow-hidden`.
+          className="overflow-hidden rounded-[0.4em] border border-filo bg-carta text-[clamp(6.5px,1.95cqw,11px)] lg:-mr-[max(0px,(100vw-72rem)/2+1.5rem)] lg:rounded-r-none lg:border-r-0"
         >
-          {/* barra del browser */}
-          <div aria-hidden="true" className="flex items-center gap-[0.5em] border-b border-filo bg-foglio px-[1.2em] py-[0.9em]">
-            <span className="size-[0.8em] rounded-full bg-filo" />
-            <span className="size-[0.8em] rounded-full bg-filo" />
-            <span className="size-[0.8em] rounded-full bg-filo" />
-            <span className="mx-auto rounded-[0.5em] bg-carta-2 px-[1.2em] py-[0.35em] font-mono text-[0.95em] text-tenue">
-              rossi-impianti.pmiflow.it
-            </span>
-          </div>
-
           <div className="grid h-[30.5em] grid-cols-[12.5em_1fr]">
             {/* menu laterale con il marchio del CLIENTE, non il nostro */}
             <nav aria-label="Menu dell'anteprima" className="border-r border-filo bg-foglio px-[0.9em] py-[1.2em]">

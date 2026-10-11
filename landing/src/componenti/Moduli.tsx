@@ -29,7 +29,7 @@ const EVIDENZA = [
     (m) =>
       `.sezione-moduli:has([data-modulo="${m.id}"]:is(:hover,:focus-visible)) :is(${m.aggancia
         .map((g) => `[data-gruppo="${g}"]`)
-        .join(",")}){opacity:1;border-color:var(--color-cotto-notte);background:oklch(0.7 0.14 42 / 0.1)}`,
+        .join(",")}){opacity:1;border-color:var(--color-cotto-notte);background:oklch(0.7 0.14 38 / 0.1)}`,
   ),
   ".sezione-moduli .modulo-settore:is(:hover,:focus-visible){border-color:var(--color-cotto-notte);background:oklch(1 0 0 / 0.03)}",
 ].join("\n");

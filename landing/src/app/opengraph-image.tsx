@@ -14,8 +14,8 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const NOTTE = "#0e141d";
-const CARTA = "#fcfaf6";
-const COTTO_NOTTE = "#e67e54";
+const CARTA = "#f9fafc";
+const COTTO_NOTTE = "#e77c5b";
 const TENUE_NOTTE = "#b3b8bf";
 const GLIFO =
   "M12 52V20A10 10 0 0 1 22 10H40A13 13 0 0 1 40 36H27V28H40A5 5 0 0 0 40 18H22A2 2 0 0 0 20 20V52ZM27 44H53V52H27Z";

@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "CRM e gestione per le piccole imprese italiane.",
     start_url: "/",
     display: "browser",
-    background_color: "#fcfaf6",
-    theme_color: "#fcfaf6",
+    background_color: "#f9fafc",
+    theme_color: "#f9fafc",
     lang: "it",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
