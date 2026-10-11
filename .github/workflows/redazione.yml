@@ -155,6 +155,21 @@ jobs:
           git config user.email "alessiokenan@gmail.com"
           git checkout -b "articolo/$SLUG"
           git commit -q -m "Blog: $TITOLO"
+          # Un ramo rimasto da un tentativo finito male fa rifiutare la spinta
+          # («fetch first») e blocca la redazione PER SEMPRE: il ramo si chiama come
+          # lo slug, e lo slug della prossima voce del piano non cambia. Successo
+          # davvero l'11/10/2026 con `articolo/pneumatici-invernali-mezzi-aziendali`.
+          # Se quel ramo non ha una PR aperta è spazzatura e si toglie; se ce l'ha,
+          # qualcosa non torna e ci si ferma invece di sovrascrivere il lavoro.
+          if git ls-remote --exit-code --heads origin "articolo/$SLUG" >/dev/null 2>&1; then
+            APERTA=$(gh pr list --head "articolo/$SLUG" --state open --json number --jq '.[0].number // empty')
+            if [ -n "$APERTA" ]; then
+              echo "::error::esiste già la PR #$APERTA sul ramo articolo/$SLUG: non la sovrascrivo"
+              exit 1
+            fi
+            echo "ramo articolo/$SLUG rimasto da un tentativo precedente, senza PR: lo rimuovo"
+            git push -q origin --delete "articolo/$SLUG"
+          fi
           git push -q origin "articolo/$SLUG"
           CORPO=$(printf '%s\n' \
             "Articolo scritto dall'agente di redazione, **firmato Alessandro Di Lonardo**." \
