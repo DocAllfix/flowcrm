@@ -63,7 +63,8 @@ voci:
     correlate: ["percentuale provvigioni agenti di commercio", "pagamento provvigioni agenti di commercio"]
     intento: informativo
     angolo: "Base di calcolo, piani provvigionali a scaglioni con esempio in percentuali, quando si liquidano, cosa mettere nel mandato."
-    stato: da-scrivere
+    stato: scritto
+    data: 2026-11-01
 
   - slug: ridurre-no-show-ambulatorio
     settore: poliambulatori
