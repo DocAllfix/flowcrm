@@ -56,15 +56,6 @@ voci:
     stato: scritto
     data: 2026-10-14
 
-  - slug: provvigioni-agenti-come-calcolarle
-    settore: agenti
-    titolo: "Provvigioni degli agenti di commercio: come si calcolano"
-    parolaChiave: "calcolo provvigioni agenti di commercio"
-    correlate: ["percentuale provvigioni agenti di commercio", "pagamento provvigioni agenti di commercio"]
-    intento: informativo
-    angolo: "Base di calcolo, piani provvigionali a scaglioni con esempio in percentuali, quando si liquidano, cosa mettere nel mandato."
-    stato: da-scrivere
-
   - slug: ridurre-no-show-ambulatorio
     settore: poliambulatori
     titolo: "Pazienti che non si presentano: come ridurre i no show"
@@ -72,7 +63,8 @@ voci:
     correlate: ["disdette appuntamenti studio medico", "promemoria appuntamenti"]
     intento: pratico
     angolo: "Perché succede, promemoria e conferme, politica di disdetta, lista d'attesa, misurare il tasso di no show per professionista."
-    stato: da-scrivere
+    stato: scritto
+    data: 2026-11-22
 
   - slug: rapportino-giornaliero-cantiere
     settore: cantiere
@@ -580,3 +572,14 @@ voci:
     intento: pratico
     angolo: "Quando chiedere, termini, come formulare la domanda (esempi), come usare le risposte pubblicate."
     stato: da-scrivere
+
+  - slug: provvigioni-agenti-come-calcolarle
+    settore: agenti
+    titolo: "Provvigioni degli agenti di commercio: come si calcolano"
+    parolaChiave: "calcolo provvigioni agenti di commercio"
+    correlate: ["percentuale provvigioni agenti di commercio", "pagamento provvigioni agenti di commercio"]
+    intento: informativo
+    angolo: "Base di calcolo, piani provvigionali a scaglioni con esempio in percentuali, quando si liquidano, cosa mettere nel mandato."
+    stato: da-scrivere
+    tentativi: 1
+    motivo: "Normattiva non restituisce il testo degli artt. 1748-1749 c.c. (solo indice) e nessun'altra fonte ufficiale aperta lo riporta: termini di maturazione e liquidazione delle provvigioni non verificabili"
